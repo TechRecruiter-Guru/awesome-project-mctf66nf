@@ -72,21 +72,27 @@ REACT_APP_API_URL=https://YOUR-RENDER-URL.onrender.com
 ```
 
 #### Step 2: Deploy to Vercel
+
+**🚨 IMPORTANT: You MUST set the Root Directory to `frontend`**
+
 1. Go to https://vercel.com
 2. Sign up (use GitHub)
 3. Click "Add New" → "Project"
 4. Import your repository
-5. Configure:
-   - **Framework Preset**: Create React App
-   - **Root Directory**: `frontend`
-   - **Build Command**: `npm run build`
-   - **Output Directory**: `build`
-6. Add Environment Variable:
+5. **Configure Build Settings** (CRITICAL):
+   - **Root Directory**: Click "Edit" and type `frontend` (⚠️ This is the most important step!)
+   - **Framework Preset**: Create React App (auto-detected)
+   - **Build Command**: `npm run build` (auto-detected)
+   - **Output Directory**: `build` (auto-detected)
+6. **Add Environment Variable**:
+   - Click "Environment Variables"
    - **Key**: `REACT_APP_API_URL`
    - **Value**: `https://YOUR-RENDER-URL.onrender.com`
 7. Click "Deploy"
 8. Wait 1-2 minutes
 9. Click on your live URL!
+
+**Alternative**: A `vercel.json` configuration file has been included in the repository root to help with deployment.
 
 ### ✅ Done! Your app is live!
 
