@@ -115,6 +115,7 @@ class Job(db.Model):
 
     # Status
     status = db.Column(db.String(50), default='open')  # open, closed, on-hold
+    confidential = db.Column(db.Boolean, default=False)  # Stealth mode - hide company name
     posted_date = db.Column(db.DateTime, default=datetime.utcnow)
     closing_date = db.Column(db.DateTime)
 
@@ -125,11 +126,15 @@ class Job(db.Model):
     # Relationships
     applications = db.relationship('Application', backref='job', lazy=True, cascade='all, delete-orphan')
 
-    def to_dict(self):
+    def to_dict(self, show_company=False):
+        """
+        Convert job to dict. If confidential and show_company is False,
+        hide the company name (stealth mode for candidates)
+        """
         return {
             'id': self.id,
             'title': self.title,
-            'company': self.company,
+            'company': self.company if (not self.confidential or show_company) else 'Confidential Company',
             'location': self.location,
             'job_type': self.job_type,
             'description': self.description,
@@ -143,6 +148,7 @@ class Job(db.Model):
             'salary_max': self.salary_max,
             'currency': self.currency,
             'status': self.status,
+            'confidential': self.confidential,
             'posted_date': self.posted_date.isoformat() if self.posted_date else None,
             'closing_date': self.closing_date.isoformat() if self.closing_date else None,
             'created_at': self.created_at.isoformat(),
@@ -423,7 +429,8 @@ def create_job():
         salary_min=data.get('salary_min'),
         salary_max=data.get('salary_max'),
         currency=data.get('currency', 'USD'),
-        status=data.get('status', 'open')
+        status=data.get('status', 'open'),
+        confidential=data.get('confidential', False)
     )
 
     db.session.add(job)
@@ -441,7 +448,7 @@ def update_job(job_id):
     for field in ['title', 'company', 'location', 'job_type', 'description',
                   'requirements', 'responsibilities', 'required_expertise',
                   'required_skills', 'education_required', 'research_focus',
-                  'salary_min', 'salary_max', 'currency', 'status']:
+                  'salary_min', 'salary_max', 'currency', 'status', 'confidential']:
         if field in data:
             setattr(job, field, data[field])
 
@@ -456,6 +463,13 @@ def delete_job(job_id):
     db.session.delete(job)
     db.session.commit()
     return jsonify({"message": "Job deleted successfully"})
+
+
+@app.route('/api/jobs/<int:job_id>/reveal', methods=['POST'])
+def reveal_job_company(job_id):
+    """Reveal company name for confidential job (when company shows interest)"""
+    job = Job.query.get_or_404(job_id)
+    return jsonify(job.to_dict(show_company=True))
 
 
 # ==================== APPLICATIONS ====================

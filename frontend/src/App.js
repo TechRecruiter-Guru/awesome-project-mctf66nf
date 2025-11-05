@@ -323,14 +323,15 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
     title: '',
     company: '',
     required_expertise: '',
-    education_required: ''
+    education_required: '',
+    confidential: false
   });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/api/jobs`, newJob);
-      setNewJob({ title: '', company: '', required_expertise: '', education_required: '' });
+      setNewJob({ title: '', company: '', required_expertise: '', education_required: '', confidential: false });
       setShowForm(false);
       onRefresh();
     } catch (err) {
@@ -379,6 +380,16 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             <option value="Masters">Masters</option>
             <option value="Bachelors">Bachelors</option>
           </select>
+          <div className="checkbox-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={newJob.confidential}
+                onChange={(e) => setNewJob({ ...newJob, confidential: e.target.checked })}
+              />
+              <span className="checkbox-label">🔒 Confidential (Stealth Mode) - Hide company name from candidates</span>
+            </label>
+          </div>
           <button type="submit" className="btn-primary">Create Job</button>
         </form>
       )}
@@ -392,14 +403,21 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
       ) : (
         <div className="jobs-list">
           {jobs.map((job) => (
-            <div key={job.id} className="job-card">
+            <div key={job.id} className={`job-card ${job.confidential ? 'confidential' : ''}`}>
               <div className="job-header">
                 <h3>{job.title}</h3>
                 <span className={`status-badge ${job.status}`}>{job.status}</span>
               </div>
-              <p className="company">🏢 {job.company}</p>
+              <p className="company">
+                {job.confidential && '🔒 '}
+                🏢 {job.company}
+                {job.confidential && ' (Confidential)'}
+              </p>
               {job.required_expertise && <p>🎯 {job.required_expertise}</p>}
               {job.education_required && <p>🎓 {job.education_required} required</p>}
+              {job.confidential && (
+                <p className="stealth-notice">⚠️ Company name hidden until interest shown</p>
+              )}
               {job.application_count > 0 && (
                 <p className="applications-count">📋 {job.application_count} applications</p>
               )}
