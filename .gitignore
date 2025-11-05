@@ -18,3 +18,9 @@ build/
 
 # Logs
 *.log
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+instance/
