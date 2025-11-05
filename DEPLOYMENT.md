@@ -275,6 +275,15 @@ psycopg2-binary==2.9.9
 - Check Python version (use 3.8+)
 - Clear cache and rebuild
 
+### Vercel: "No Output Directory named 'build' found"
+This happens if the Root Directory is not set correctly:
+1. Go to your Vercel project → Settings → General
+2. Find "Root Directory"
+3. Click "Edit" and enter: `frontend`
+4. Click "Save"
+5. Go to Deployments tab and redeploy
+6. Alternatively, the repository includes `vercel.json` configs to help with this
+
 ---
 
 ## 📞 Quick Deploy Commands
