@@ -1,4 +1,4 @@
-# 📝 Task Manager MVP
+# 🤖 AI/ML Applicant Tracking System
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![React](https://img.shields.io/badge/React-18.2.0-blue.svg)](https://reactjs.org/)
@@ -6,40 +6,54 @@
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 [![GitHub issues](https://img.shields.io/github/issues/TechRecruiter-Guru/awesome-project-mctf66nf)](https://github.com/TechRecruiter-Guru/awesome-project-mctf66nf/issues)
 
-A full-stack task management application built with modern web technologies. This MVP demonstrates CRUD operations with a beautiful, responsive UI and is deployed and production-ready!
+**An Applicant Tracking System specifically designed for recruiting AI/ML talent by tracking research profiles, publications, and academic credentials that traditional ATS platforms overlook.**
+
+## 🌟 Why This ATS is Different
+
+Traditional ATS platforms fail to capture the most important signals when recruiting AI/ML researchers and practitioners:
+- **Research publications** on arXiv, Google Scholar
+- **Academic impact** measured by H-index and citations
+- **Conference contributions** (NeurIPS, ICML, CVPR, etc.)
+- **Open source contributions** and technical portfolios
+- **Research focus areas** (Computer Vision, NLP, Reinforcement Learning, etc.)
+
+This ATS solves that problem by putting **research credentials first**.
 
 ## 🌐 Live Demo
 
-- **Frontend**: [Coming Soon - Deploy to Vercel]
-- **Backend API**: [Coming Soon - Your Render URL]
+- **Frontend**: [Deploy to Vercel - Instructions below]
+- **Backend API**: [Deploy to Render - Instructions below]
 - **API Health Check**: `GET /api/health`
 
 > **Note**: Backend may take 30-60 seconds to wake up on first request (free tier)
 
-## ✨ Features
+## ✨ Key Features
 
-- ✅ **Create, Read, Update, and Delete tasks** - Full CRUD functionality
-- 📊 **Track task completion status** - Mark tasks as complete/incomplete
-- 🎨 **Modern, responsive UI** - Beautiful gradient design that works on all devices
-- 🔄 **Real-time API status monitoring** - Live health check indicator
-- 💾 **Persistent storage** - SQLite database with SQLAlchemy ORM
-- 🚀 **RESTful API** - Clean, standard API architecture
-- 🌍 **Production deployed** - Live on Render (backend) and Vercel (frontend)
-- 🐳 **Docker support** - Containerized for easy deployment
+### 🎓 Academic & Research Tracking
+- **Google Scholar Integration** - Track publications and citations
+- **arXiv Author Profiles** - Link to research paper preprints
+- **ORCID Support** - Persistent researcher identifiers
+- **ResearchGate Profiles** - Academic networking presence
+- **H-Index Tracking** - Measure research impact
+- **Citation Metrics** - Track academic influence
+- **Publication History** - Full paper cataloging with venues and citations
 
-## 📸 Screenshots
+### 💼 Standard ATS Features
+- **Candidate Management** - Full CRUD for AI/ML candidates
+- **Job Posting** - AI/ML-specific job requirements
+- **Application Tracking** - Link candidates to positions
+- **Pipeline Management** - Track hiring stages
+- **Research-Based Scoring** - Rate candidates on technical + research fit
+- **Skills & Expertise** - Categorize by AI/ML specialization
 
-<!-- Add screenshots here once you have them -->
-<!-- ![Task Manager UI](screenshots/main-ui.png) -->
-
-*Screenshots coming soon! Feel free to contribute by adding them.*
+### 🔍 AI/ML-Specific Fields
+- **Research Focus Areas**: Computer Vision, NLP, RL, MLOps, etc.
+- **Conference Publications**: NeurIPS, ICML, CVPR, ICLR, etc.
+- **Education Level**: PhD, Masters, Bachelors
+- **Technical Skills**: PyTorch, TensorFlow, CUDA, etc.
+- **Source Tracking**: Found via LinkedIn, Google Scholar, arXiv, referral
 
 ## 🛠 Tech Stack
-
-### Frontend
-- **React 18** - Modern React with Hooks
-- **Axios** - HTTP client for API calls
-- **CSS3** - Custom styling with gradients and animations
 
 ### Backend
 - **Flask** - Lightweight Python web framework
@@ -48,8 +62,19 @@ A full-stack task management application built with modern web technologies. Thi
 - **Flask-CORS** - Cross-origin resource sharing
 - **Gunicorn** - Production WSGI server
 
+### Frontend
+- **React 18** - Modern React with Hooks
+- **Axios** - HTTP client for API calls
+- **CSS3** - Custom professional styling
+
+### Data Models
+- **Candidate** - With research profile fields
+- **Job** - AI/ML position with research requirements
+- **Application** - Candidate-job linkage with scoring
+- **Publication** - Research paper tracking
+
 ### DevOps
-- **Docker** - Containerization
+- **Docker** - Containerization ready
 - **Vercel** - Frontend hosting
 - **Render** - Backend hosting
 - **Git** - Version control
@@ -96,7 +121,7 @@ npm start
 
 The frontend will start on `http://localhost:3000` and automatically open in your browser.
 
-✅ You should see the Task Manager interface!
+✅ You should see the AI/ML ATS interface!
 
 ### 🐳 Docker Setup (Alternative)
 
@@ -116,74 +141,100 @@ Both frontend and backend will start automatically!
 - **Local**: `http://localhost:5000`
 - **Production**: `https://your-api.onrender.com`
 
-### Endpoints
+### Core Endpoints
+
+#### Candidates
 
 | Method | Endpoint | Description | Request Body |
 |--------|----------|-------------|--------------|
-| GET | `/api/health` | Health check | None |
-| GET | `/api/items` | Get all tasks | None |
-| POST | `/api/items` | Create a new task | `{"text": "Task description"}` |
-| PUT | `/api/items/:id` | Update a task | `{"text": "Updated", "completed": true}` |
-| DELETE | `/api/items/:id` | Delete a task | None |
+| GET | `/api/candidates` | Get all candidates | None |
+| GET | `/api/candidates/:id` | Get candidate with full details | None |
+| POST | `/api/candidates` | Create new candidate | Candidate object |
+| PUT | `/api/candidates/:id` | Update candidate | Updated fields |
+| DELETE | `/api/candidates/:id` | Delete candidate | None |
 
-### Example API Usage
+#### Jobs
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| GET | `/api/jobs` | Get all jobs | None |
+| GET | `/api/jobs/:id` | Get job with applications | None |
+| POST | `/api/jobs` | Create new job | Job object |
+| PUT | `/api/jobs/:id` | Update job | Updated fields |
+| DELETE | `/api/jobs/:id` | Delete job | None |
+
+#### Applications
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| GET | `/api/applications` | Get all applications | None |
+| POST | `/api/applications` | Create application | Application object |
+| PUT | `/api/applications/:id` | Update application | Updated fields |
+| DELETE | `/api/applications/:id` | Delete application | None |
+
+#### Publications
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| GET | `/api/candidates/:id/publications` | Get candidate's publications | None |
+| POST | `/api/publications` | Add publication | Publication object |
+| DELETE | `/api/publications/:id` | Delete publication | None |
+
+#### Dashboard
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/stats` | Get dashboard statistics |
+| GET | `/api/health` | Health check |
+
+### Example: Create AI/ML Candidate
 
 ```bash
-# Health check
-curl http://localhost:5000/api/health
-
-# Get all tasks
-curl http://localhost:5000/api/items
-
-# Create a new task
-curl -X POST http://localhost:5000/api/items \
+curl -X POST http://localhost:5000/api/candidates \
   -H "Content-Type: application/json" \
-  -d '{"text":"Buy groceries"}'
+  -d '{
+    "first_name": "Jane",
+    "last_name": "Doe",
+    "email": "jane.doe@university.edu",
+    "primary_expertise": "Computer Vision",
+    "google_scholar_url": "https://scholar.google.com/citations?user=XXXXX",
+    "h_index": 25,
+    "citation_count": 1500,
+    "years_experience": 5
+  }'
+```
 
-# Update a task (mark as completed)
-curl -X PUT http://localhost:5000/api/items/1 \
+### Example: Create AI/ML Job
+
+```bash
+curl -X POST http://localhost:5000/api/jobs \
   -H "Content-Type: application/json" \
-  -d '{"completed":true}'
-
-# Delete a task
-curl -X DELETE http://localhost:5000/api/items/1
+  -d '{
+    "title": "Senior ML Research Scientist",
+    "company": "TechCorp AI Lab",
+    "required_expertise": "Deep Learning",
+    "education_required": "PhD",
+    "research_focus": "Computer Vision and Multimodal Learning",
+    "salary_min": 150000,
+    "salary_max": 250000
+  }'
 ```
 
-### Response Format
+### Example: Add Publication
 
-Success Response (200 OK):
-```json
-{
-  "id": 1,
-  "text": "Buy groceries",
-  "completed": false
-}
+```bash
+curl -X POST http://localhost:5000/api/publications \
+  -H "Content-Type: application/json" \
+  -d '{
+    "candidate_id": 1,
+    "title": "Attention Is All You Need",
+    "venue": "NeurIPS 2017",
+    "year": 2017,
+    "arxiv_id": "1706.03762",
+    "citation_count": 50000,
+    "research_area": "Natural Language Processing"
+  }'
 ```
-
-Error Response (404 Not Found):
-```json
-{
-  "error": "Item not found"
-}
-```
-
-## 🎨 Features Overview
-
-### Frontend Highlights
-- **React Hooks** - useState and useEffect for state management
-- **Responsive Design** - Mobile-first approach with media queries
-- **Error Handling** - Comprehensive error states and user feedback
-- **Loading States** - Visual feedback during API operations
-- **Task Statistics** - Real-time count of total and completed tasks
-- **Smooth Animations** - Polished user experience
-
-### Backend Highlights
-- **RESTful API** - Standard HTTP methods and status codes
-- **Database Models** - SQLAlchemy ORM for data persistence
-- **CORS Enabled** - Cross-origin requests supported
-- **Input Validation** - Request validation and error handling
-- **Auto-initialization** - Database tables created automatically
-- **Production Ready** - Gunicorn server for deployment
 
 ## 📁 Project Structure
 
@@ -196,18 +247,18 @@ awesome-project-mctf66nf/
 │   ├── public/
 │   │   └── index.html           # HTML template
 │   ├── src/
-│   │   ├── App.js               # Main React component
-│   │   ├── App.css              # Component styles
+│   │   ├── App.js               # Main ATS interface
+│   │   ├── App.css              # ATS styling
 │   │   ├── index.js             # React entry point
 │   │   └── index.css            # Global styles
 │   ├── Dockerfile               # Frontend container
 │   ├── package.json             # Frontend dependencies
 │   └── vercel.json              # Vercel config
 ├── backend/
-│   ├── app.py                   # Flask application
+│   ├── app.py                   # Flask ATS API
 │   ├── requirements.txt         # Python dependencies
 │   ├── Dockerfile               # Backend container
-│   └── tasks.db                 # SQLite database (auto-generated)
+│   └── ats.db                   # SQLite database (auto-generated)
 ├── docker-compose.yml           # Docker orchestration
 ├── vercel.json                  # Vercel monorepo config
 ├── railway.toml                 # Railway config
@@ -217,6 +268,55 @@ awesome-project-mctf66nf/
 ├── CONTRIBUTORS.md              # List of contributors
 └── README.md                    # You are here!
 ```
+
+## 🎨 Data Models
+
+### Candidate
+```python
+- Basic Info: first_name, last_name, email, phone, location
+- Professional: linkedin_url, github_url, portfolio_url, resume_url
+- Research Profile: google_scholar_url, research_gate_url, arxiv_author_id, orcid_id
+- Metrics: h_index, citation_count
+- AI/ML: primary_expertise, skills, years_experience
+- Status: status, rating, notes
+```
+
+### Job
+```python
+- Basic: title, company, location, job_type
+- Details: description, requirements, responsibilities
+- AI/ML: required_expertise, required_skills, education_required, research_focus
+- Compensation: salary_min, salary_max, currency
+- Status: status, posted_date, closing_date
+```
+
+### Application
+```python
+- Links: candidate_id, job_id
+- Status: status, stage, source
+- Tracking: applied_date, last_contact_date, interview_date
+- Scoring: technical_score, research_score, culture_fit_score, overall_score
+```
+
+### Publication
+```python
+- Details: title, authors, venue, year
+- Links: paper_url, arxiv_id, doi
+- Metrics: citation_count
+- Categories: research_area, keywords, abstract
+```
+
+## 🚢 Deployment
+
+Want to deploy your own instance? Check out our comprehensive [DEPLOYMENT.md](DEPLOYMENT.md) guide!
+
+### Quick Deploy Options
+
+- **Frontend**: Vercel (recommended) or Netlify
+- **Backend**: Render (recommended) or Railway
+- **Full Stack**: Railway or Docker
+
+See [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step instructions.
 
 ## 🔧 Development
 
@@ -232,44 +332,16 @@ awesome-project-mctf66nf/
 - Restart the Python server to see changes
 - Use `Ctrl+C` to stop, then `python app.py` to restart
 
-### Connecting Frontend to Backend
+### Adding New Features
 
-The frontend connects to the backend via the `API_URL` in `frontend/src/App.js`:
+Some ideas for contributors:
 
-```javascript
-const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
-```
-
-For production, set the `REACT_APP_API_URL` environment variable.
-
-## 🚢 Deployment
-
-Want to deploy your own instance? Check out our comprehensive [DEPLOYMENT.md](DEPLOYMENT.md) guide!
-
-### Quick Deploy Options
-
-- **Frontend**: Vercel (recommended) or Netlify
-- **Backend**: Render (recommended) or Railway
-- **Full Stack**: Railway or Docker
-
-See [DEPLOYMENT.md](DEPLOYMENT.md) for step-by-step instructions.
-
-## 🧪 Testing
-
-The application can be tested via:
-
-1. **React UI** - Use the web interface
-2. **API endpoints** - Use curl or your favorite API client
-3. **API testing tools** - Postman, Insomnia, etc.
-
-### Manual Testing Checklist
-
-- [ ] Create a new task
-- [ ] Mark task as complete
-- [ ] Edit task text
-- [ ] Delete a task
-- [ ] Refresh page (data persists)
-- [ ] Check API health endpoint
+1. **Google Scholar API Integration** - Auto-fetch publications
+2. **arXiv API Integration** - Automatic paper importing
+3. **AI-Powered Candidate Matching** - ML-based job matching
+4. **Email Integration** - Automated candidate outreach
+5. **Resume Parser** - Extract info from CVs
+6. **Conference Tracker** - Track accepted papers at top venues
 
 ## 🤝 Contributing
 
@@ -291,6 +363,7 @@ New to open source? Look for issues labeled:
 - `good first issue` - Perfect for beginners
 - `help wanted` - We need help!
 - `documentation` - Improve our docs
+- `api-integration` - Add Google Scholar, arXiv APIs
 
 ### Contributors
 
@@ -298,20 +371,56 @@ See [CONTRIBUTORS.md](CONTRIBUTORS.md) for the list of amazing people who have c
 
 ## 📋 Roadmap
 
-Future features and improvements:
+### Phase 1: Core ATS (✅ Complete)
+- [x] Candidate management with research profiles
+- [x] Job posting management
+- [x] Application tracking
+- [x] Publication tracking
+- [x] Dashboard and statistics
 
-- [ ] User authentication and authorization
-- [ ] Task categories/tags
-- [ ] Due dates and reminders
-- [ ] Task priority levels
-- [ ] Search and filter functionality
-- [ ] Dark mode toggle
-- [ ] Export tasks (CSV, JSON)
-- [ ] Unit and integration tests
-- [ ] PostgreSQL database option
-- [ ] Real-time updates with WebSockets
+### Phase 2: API Integrations (🔄 In Progress)
+- [ ] Google Scholar API integration
+- [ ] arXiv API for automatic paper fetching
+- [ ] ORCID API integration
+- [ ] GitHub API for repository analysis
+- [ ] LinkedIn scraping (ethically)
+
+### Phase 3: AI/ML Features
+- [ ] AI-powered candidate-job matching
+- [ ] Research impact scoring algorithm
+- [ ] Resume parsing with NLP
+- [ ] Automated skill extraction
+- [ ] Conference publication tracking (NeurIPS, ICML, CVPR)
+
+### Phase 4: Advanced Features
+- [ ] Email campaign automation
+- [ ] Interview scheduling
+- [ ] Offer management
+- [ ] Analytics dashboard
+- [ ] Team collaboration features
+- [ ] PostgreSQL support for production
 
 Want to help with any of these? Check out [CONTRIBUTING.md](CONTRIBUTING.md)!
+
+## 🎯 Use Cases
+
+### For Recruiters
+- Track AI/ML candidates with comprehensive research profiles
+- Evaluate candidates based on research impact
+- Source candidates from Google Scholar and arXiv
+- Match candidates to jobs based on research expertise
+
+### For Hiring Managers
+- Review candidates' publication history
+- Assess technical depth through research contributions
+- Find candidates with specific AI/ML expertise
+- Track candidates through interview pipeline
+
+### For Research Labs
+- Recruit PhD candidates and postdocs
+- Find collaborators with specific research backgrounds
+- Track candidates from academic conferences
+- Evaluate research fit for lab positions
 
 ## 🐛 Known Issues
 
@@ -323,22 +432,44 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- React team for the amazing framework
-- Flask team for the lightweight backend
+- Flask and React teams for amazing frameworks
+- The AI/ML research community for inspiration
 - All our contributors!
 
 ## 📞 Contact & Support
 
 - **Issues**: [GitHub Issues](https://github.com/TechRecruiter-Guru/awesome-project-mctf66nf/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/TechRecruiter-Guru/awesome-project-mctf66nf/discussions)
-- **Email**: [Add your email if you want]
+- **Project Maintainer**: TechRecruiter-Guru
 
 ## ⭐ Show Your Support
 
 If you like this project, please give it a ⭐ on GitHub!
 
+This ATS fills a critical gap in recruiting AI/ML talent by recognizing that **research credentials matter** as much as work experience.
+
 ---
 
-**Built with ❤️ by the open source community**
+## 🌍 Why This Matters
+
+Traditional ATS platforms treat all candidates the same. But when recruiting for AI/ML roles, the most qualified candidates often have:
+
+- **Strong publication records** rather than traditional work history
+- **Open source contributions** on GitHub
+- **Conference presentations** at NeurIPS, ICML, CVPR
+- **Research impact** measured by citations and H-index
+- **Academic credentials** from top programs
+
+This ATS puts those signals first, making it easier to find and evaluate top AI/ML talent.
+
+---
+
+**Built with ❤️ by TechRecruiter-Guru and the open source community**
 
 Ready to contribute? Start with our [Contributing Guide](CONTRIBUTING.md)!
+
+---
+
+## 🚀 Star History
+
+If this project helped you, consider giving it a star! Every star motivates us to keep improving the platform.
