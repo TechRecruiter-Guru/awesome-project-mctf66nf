@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚀 Outreach Campaign Tracker</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+
+        .header h1 {
+            color: #2d3748;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: #718096;
+            font-size: 1.1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .number {
+            font-size: 3rem;
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .stat-card .label {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-top: 5px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .tab-button {
+            background: white;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-button:hover {
+            background: #f7fafc;
+        }
+
+        .tab-button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .platforms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .platform-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .platform-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.15);
+        }
+
+        .platform-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .platform-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .status-badge {
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+
+        .status-draft { background: #fef3c7; color: #92400e; }
+        .status-scheduled { background: #dbeafe; color: #1e40af; }
+        .status-posted { background: #d1fae5; color: #065f46; }
+
+        .platform-info {
+            color: #718096;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .platform-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5568d3;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e0;
+        }
+
+        .btn-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #059669;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 800px;
+            max-height: 80vh;
+            overflow-y: auto;
+            width: 90%;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2d3748;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #718096;
+        }
+
+        .content-box {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            white-space: pre-wrap;
+            font-family: monospace;
+            font-size: 0.9rem;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .copy-success {
+            background: #d1fae5;
+            color: #065f46;
+            padding: 10px 20px;
+            border-radius: 6px;
+            margin-top: 10px;
+            display: none;
+        }
+
+        .copy-success.show {
+            display: block;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #cbd5e0;
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            font-family: inherit;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .progress-bar {
+            background: #e2e8f0;
+            height: 8px;
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            height: 100%;
+            transition: width 0.3s;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🚀 Outreach Campaign Tracker</h1>
+            <p>Track your AI/ML ATS contributor outreach across platforms</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="number" id="total-platforms">0</div>
+                <div class="label">Total Platforms</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="posted-count">0</div>
+                <div class="label">Posted</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="scheduled-count">0</div>
+                <div class="label">Scheduled</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="draft-count">0</div>
+                <div class="label">Drafts</div>
+            </div>
+            <div class="stat-card">
+                <div class="number" id="total-views">0</div>
+                <div class="label">Total Views</div>
+            </div>
+        </div>
+
+        <div class="progress-bar">
+            <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab-button active" onclick="switchTab('platforms')">📊 Platforms</button>
+            <button class="tab-button" onclick="switchTab('content')">📝 Content Templates</button>
+            <button class="tab-button" onclick="switchTab('analytics')">📈 Analytics</button>
+        </div>
+
+        <div id="platforms-tab" class="tab-content active">
+            <div class="platforms-grid" id="platforms-grid"></div>
+        </div>
+
+        <div id="content-tab" class="tab-content">
+            <div class="platforms-grid" id="content-grid"></div>
+        </div>
+
+        <div id="analytics-tab" class="tab-content">
+            <div style="background: white; padding: 30px; border-radius: 12px;">
+                <h2 style="margin-bottom: 20px;">Campaign Analytics</h2>
+                <div id="analytics-content"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for viewing/editing content -->
+    <div id="content-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title" id="modal-title">Post Content</div>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script>
+        // Content templates
+        const contentTemplates = {
+            short: `🚀 Just launched an open-source AI/ML Applicant Tracking System!
+
+Unlike traditional ATS, it tracks what actually matters for AI/ML recruiting:
+🎓 Google Scholar profiles
+📊 H-index & citations
+📄 arXiv publications
+🔒 Stealth mode for confidential roles
+
+Built with React + Flask. First contributors welcome!
+
+Live demo: https://awesome-project-mctf66nf-techrecruiter-gurus-projects.vercel.app/
+Repo: https://github.com/TechRecruiter-Guru/awesome-project-mctf66nf
+
+#OpenSource #MachineLearning #TechRecruiting`,
+
+            medium: `**AI/ML ATS that tracks research credentials traditional platforms miss**
+
+Hey everyone! 👋
+
+I built an open-source Applicant Tracking System specifically for recruiting AI/ML talent.
+
+**The Problem:**
+Traditional ATS platforms (Greenhouse, Lever, etc.) completely miss the most important signals when recruiting AI/ML researchers:
+- Research publications (arXiv, Google Scholar)
+- Academic impact (H-index, citations)
+- Conference contributions (NeurIPS, ICML, CVPR)
+- Research focus areas
+
+**The Solution:**
+An ATS that puts research credentials first, with features like:
+- 🎓 Google Scholar / arXiv / ORCID integration fields
+- 📊 H-index and citation tracking
+- 📚 Publication management
+- 🔒 Stealth mode for confidential job postings (hide company names)
+- 🧠 AI/ML specialization tracking (CV, NLP, RL, etc.)
+
+**Tech Stack:**
+- Frontend: React 18
+- Backend: Flask + SQLAlchemy
+- Deployment: Vercel + Render
+
+**Live Demo:** https://awesome-project-mctf66nf-techrecruiter-gurus-projects.vercel.app/
+
+**Looking for contributors!**
+- Google Scholar API integration
+- arXiv API integration
+- Advanced search/filtering
+- Analytics dashboard
+- Mobile responsiveness
+
+**Repo:** https://github.com/TechRecruiter-Guru/awesome-project-mctf66nf
+
+Would love feedback from recruiters and ML engineers!`
+        };
+
+        // Platform data
+        const platforms = [
+            { name: "Twitter/X", url: "https://twitter.com", audience: "500M+", category: "social", content: "short", status: "draft", views: 0, date: "2025-11-06" },
+            { name: "LinkedIn Personal", url: "https://linkedin.com", audience: "900M", category: "social", content: "short", status: "draft", views: 0, date: "2025-11-06" },
+            { name: "Hacker News", url: "https://news.ycombinator.com", audience: "5M+", category: "dev", content: "medium", status: "draft", views: 0, date: "2025-11-06" },
+            { name: "r/opensource", url: "https://www.reddit.com/r/opensource/", audience: "349k", category: "reddit", content: "medium", status: "draft", views: 0, date: "2025-11-06" },
+            { name: "r/MachineLearning", url: "https://www.reddit.com/r/MachineLearning/", audience: "2.9M", category: "reddit", content: "medium", status: "draft", views: 0, date: "2025-11-09", note: "Post on Saturday!" },
+            { name: "r/Python", url: "https://www.reddit.com/r/Python/", audience: "1.4M", category: "reddit", content: "medium", status: "draft", views: 0, date: "2025-11-07" },
+            { name: "r/reactjs", url: "https://www.reddit.com/r/reactjs/", audience: "508k", category: "reddit", content: "medium", status: "draft", views: 0, date: "2025-11-07" },
+            { name: "Dev.to", url: "https://dev.to", audience: "1M+", category: "dev", content: "medium", status: "draft", views: 0, date: "2025-11-06" },
+            { name: "Product Hunt", url: "https://www.producthunt.com", audience: "10M+", category: "launch", content: "short", status: "draft", views: 0, date: "2025-11-12", note: "Tuesday-Thursday" },
+            { name: "Indie Hackers", url: "https://www.indiehackers.com", audience: "100k+", category: "dev", content: "medium", status: "draft", views: 0, date: "2025-11-08" },
+            { name: "Reactiflux Discord", url: "https://www.reactiflux.com", audience: "200k+", category: "discord", content: "short", status: "draft", views: 0, date: "2025-11-07" },
+            { name: "Python Discord", url: "https://pythondiscord.com", audience: "430k+", category: "discord", content: "short", status: "draft", views: 0, date: "2025-11-07" },
+        ];
+
+        // Load from localStorage or use defaults
+        let campaignData = JSON.parse(localStorage.getItem('outreachData')) || platforms;
+
+        function saveData() {
+            localStorage.setItem('outreachData', JSON.stringify(campaignData));
+            updateStats();
+            renderPlatforms();
+        }
+
+        function updateStats() {
+            const totalPlatforms = campaignData.length;
+            const posted = campaignData.filter(p => p.status === 'posted').length;
+            const scheduled = campaignData.filter(p => p.status === 'scheduled').length;
+            const draft = campaignData.filter(p => p.status === 'draft').length;
+            const totalViews = campaignData.reduce((sum, p) => sum + (p.views || 0), 0);
+            const progress = totalPlatforms > 0 ? (posted / totalPlatforms * 100) : 0;
+
+            document.getElementById('total-platforms').textContent = totalPlatforms;
+            document.getElementById('posted-count').textContent = posted;
+            document.getElementById('scheduled-count').textContent = scheduled;
+            document.getElementById('draft-count').textContent = draft;
+            document.getElementById('total-views').textContent = totalViews;
+            document.getElementById('progress-fill').style.width = progress + '%';
+        }
+
+        function renderPlatforms() {
+            const grid = document.getElementById('platforms-grid');
+            grid.innerHTML = '';
+
+            campaignData.forEach((platform, index) => {
+                const card = document.createElement('div');
+                card.className = 'platform-card';
+                card.innerHTML = `
+                    <div class="platform-header">
+                        <div class="platform-name">${platform.name}</div>
+                        <span class="status-badge status-${platform.status}">${platform.status.toUpperCase()}</span>
+                    </div>
+                    <div class="platform-info">
+                        👥 ${platform.audience} | 📅 ${platform.date}
+                        ${platform.note ? '<br>⚠️ ' + platform.note : ''}
+                    </div>
+                    ${platform.status === 'posted' ? `
+                        <div style="color: #10b981; font-weight: bold; margin: 10px 0;">
+                            👁️ ${platform.views || 0} views
+                            ${platform.url ? `<br><a href="${platform.postUrl}" target="_blank" style="color: #667eea;">View Post →</a>` : ''}
+                        </div>
+                    ` : ''}
+                    <div class="platform-actions">
+                        <button class="btn-primary" onclick="viewContent(${index})">📝 View Content</button>
+                        ${platform.status !== 'posted' ? `
+                            <button class="btn-success" onclick="markPosted(${index})">✅ Mark Posted</button>
+                        ` : `
+                            <button class="btn-secondary" onclick="updateViews(${index})">📊 Update Stats</button>
+                        `}
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function viewContent(index) {
+            const platform = campaignData[index];
+            const content = contentTemplates[platform.content];
+
+            document.getElementById('modal-title').textContent = platform.name;
+            document.getElementById('modal-body').innerHTML = `
+                <p style="color: #718096; margin-bottom: 15px;">
+                    Platform: <strong>${platform.name}</strong><br>
+                    Target URL: <a href="${platform.url}" target="_blank" style="color: #667eea;">${platform.url}</a><br>
+                    Scheduled Date: <strong>${platform.date}</strong>
+                </p>
+                <div class="content-box" id="content-to-copy">${content}</div>
+                <button class="btn-primary" onclick="copyContent()">📋 Copy to Clipboard</button>
+                <div class="copy-success" id="copy-success">✅ Copied to clipboard!</div>
+                <br><br>
+                <label>Post URL (after posting):</label>
+                <input type="text" id="post-url-input" placeholder="https://..." value="${platform.postUrl || ''}">
+                <button class="btn-success" onclick="savePostUrl(${index})">Save URL</button>
+            `;
+
+            document.getElementById('content-modal').classList.add('active');
+        }
+
+        function copyContent() {
+            const content = document.getElementById('content-to-copy').textContent;
+            navigator.clipboard.writeText(content).then(() => {
+                const successMsg = document.getElementById('copy-success');
+                successMsg.classList.add('show');
+                setTimeout(() => successMsg.classList.remove('show'), 3000);
+            });
+        }
+
+        function savePostUrl(index) {
+            const url = document.getElementById('post-url-input').value;
+            campaignData[index].postUrl = url;
+            saveData();
+            alert('✅ Post URL saved!');
+        }
+
+        function closeModal() {
+            document.getElementById('content-modal').classList.remove('active');
+        }
+
+        function markPosted(index) {
+            const url = prompt('Enter the URL of your post:');
+            if (url) {
+                campaignData[index].status = 'posted';
+                campaignData[index].postUrl = url;
+                campaignData[index].postedDate = new Date().toISOString().split('T')[0];
+                saveData();
+            }
+        }
+
+        function updateViews(index) {
+            const views = prompt('Enter number of views:', campaignData[index].views || 0);
+            if (views !== null) {
+                campaignData[index].views = parseInt(views) || 0;
+                saveData();
+            }
+        }
+
+        function switchTab(tab) {
+            // Update buttons
+            document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+
+            if (tab === 'content') {
+                renderContentTemplates();
+            } else if (tab === 'analytics') {
+                renderAnalytics();
+            }
+        }
+
+        function renderContentTemplates() {
+            const grid = document.getElementById('content-grid');
+            grid.innerHTML = '';
+
+            Object.entries(contentTemplates).forEach(([key, content]) => {
+                const card = document.createElement('div');
+                card.className = 'platform-card';
+                card.innerHTML = `
+                    <div class="platform-name">${key.toUpperCase()} Template</div>
+                    <div class="content-box" style="margin: 15px 0; max-height: 200px;">${content}</div>
+                    <button class="btn-primary" onclick="copyTemplate('${key}')">📋 Copy Template</button>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function copyTemplate(key) {
+            navigator.clipboard.writeText(contentTemplates[key]).then(() => {
+                alert('✅ Template copied to clipboard!');
+            });
+        }
+
+        function renderAnalytics() {
+            const posted = campaignData.filter(p => p.status === 'posted');
+            const totalViews = posted.reduce((sum, p) => sum + (p.views || 0), 0);
+            const avgViews = posted.length > 0 ? (totalViews / posted.length).toFixed(0) : 0;
+
+            let html = `
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="number">${posted.length}</div>
+                        <div class="label">Posts Published</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${totalViews}</div>
+                        <div class="label">Total Views</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="number">${avgViews}</div>
+                        <div class="label">Avg Views/Post</div>
+                    </div>
+                </div>
+                <h3 style="margin: 30px 0 15px 0;">Top Performing Posts</h3>
+                <div style="background: #f7fafc; padding: 20px; border-radius: 8px;">
+            `;
+
+            const sorted = [...posted].sort((a, b) => (b.views || 0) - (a.views || 0));
+            sorted.forEach(platform => {
+                html += `
+                    <div style="margin: 10px 0; padding: 15px; background: white; border-radius: 6px;">
+                        <strong>${platform.name}</strong> - ${platform.views || 0} views
+                        ${platform.postUrl ? `<br><a href="${platform.postUrl}" target="_blank" style="color: #667eea;">View Post →</a>` : ''}
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            document.getElementById('analytics-content').innerHTML = html;
+        }
+
+        // Initialize
+        updateStats();
+        renderPlatforms();
+    </script>
+</body>
+</html>
