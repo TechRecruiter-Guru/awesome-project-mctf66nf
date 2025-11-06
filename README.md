@@ -21,11 +21,11 @@ This ATS solves that problem by putting **research credentials first**.
 
 ## 🌐 Live Demo
 
-- **Frontend**: [Deploy to Vercel - Instructions below]
+- **Frontend**: https://awesome-project-mctf66nf-techrecruiter-gurus-projects.vercel.app/
 - **Backend API**: [Deploy to Render - Instructions below]
 - **API Health Check**: `GET /api/health`
 
-> **Note**: Backend may take 30-60 seconds to wake up on first request (free tier)
+> **Note**: Click the frontend link to see the live AI/ML ATS with stealth mode for confidential job postings!
 
 ## ✨ Key Features
 
