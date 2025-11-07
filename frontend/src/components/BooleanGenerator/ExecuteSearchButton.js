@@ -87,19 +87,88 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
 
               <div className="p-4 bg-gray-50 rounded-lg">
                 <h4 className="font-semibold text-gray-800 mb-2">Query Executed:</h4>
-                <pre className="text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 overflow-x-auto">
+                <pre className="text-sm text-gray-700 bg-white p-3 rounded border border-gray-200 overflow-x-auto whitespace-pre-wrap">
                   {booleanQuery}
                 </pre>
               </div>
 
-              {results && (
-                <div className="p-4 bg-blue-50 rounded-lg">
-                  <h4 className="font-semibold text-gray-800 mb-2">Summary:</h4>
-                  <ul className="text-sm text-gray-700 space-y-1">
-                    <li>• Query generated successfully</li>
-                    <li>• Ready for use in selected platforms</li>
-                    <li>• Results may vary by data source</li>
-                  </ul>
+              {results && results.results && (
+                <div className="space-y-4">
+                  {/* GitHub Results */}
+                  {results.results.GitHub && (
+                    <div className="p-4 bg-gray-800 rounded-lg">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        💻 GitHub Results
+                      </h4>
+                      {results.results.GitHub.error ? (
+                        <p className="text-gray-300 text-sm">{results.results.GitHub.message}</p>
+                      ) : (
+                        <>
+                          <p className="text-gray-300 text-sm mb-3">
+                            Found {results.results.GitHub.total_count} users
+                          </p>
+                          <div className="space-y-2 max-h-64 overflow-y-auto">
+                            {results.results.GitHub.results.map((user, idx) => (
+                              <div key={idx} className="bg-gray-700 p-3 rounded flex items-center gap-3">
+                                <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
+                                <div className="flex-1">
+                                  <a
+                                    href={user.profile_url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-blue-400 hover:text-blue-300 font-medium"
+                                  >
+                                    {user.name}
+                                  </a>
+                                  <p className="text-gray-400 text-xs">{user.type}</p>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {/* LinkedIn Results */}
+                  {results.results.LinkedIn && (
+                    <div className="p-4 bg-blue-50 rounded-lg">
+                      <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        💼 LinkedIn
+                      </h4>
+                      <p className="text-sm text-gray-700 mb-2">{results.results.LinkedIn.message}</p>
+                      {results.results.LinkedIn.query_url && (
+                        <a
+                          href={results.results.LinkedIn.query_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block mt-2 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm"
+                        >
+                          Open in LinkedIn →
+                        </a>
+                      )}
+                    </div>
+                  )}
+
+                  {/* Google Scholar Results */}
+                  {results.results['Google Scholar'] && (
+                    <div className="p-4 bg-red-50 rounded-lg">
+                      <h4 className="font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        🎓 Google Scholar
+                      </h4>
+                      <p className="text-sm text-gray-700 mb-2">{results.results['Google Scholar'].message}</p>
+                      {results.results['Google Scholar'].query_url && (
+                        <a
+                          href={results.results['Google Scholar'].query_url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="inline-block mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 text-sm"
+                        >
+                          Open in Google Scholar →
+                        </a>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 

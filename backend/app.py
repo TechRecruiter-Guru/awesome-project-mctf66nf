@@ -3,6 +3,8 @@ from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 import os
+import requests
+import re
 
 app = Flask(__name__)
 CORS(app)
@@ -613,6 +615,111 @@ def get_stats():
         "open_jobs": open_jobs,
         "top_expertise_areas": expertise_counts
     })
+
+
+# ==================== BOOLEAN SEARCH API ====================
+
+@app.route('/api/boolean-search', methods=['POST'])
+def execute_boolean_search():
+    """Execute Boolean search across multiple platforms"""
+    data = request.get_json()
+
+    if not data or 'query' not in data:
+        return jsonify({"error": "Query is required"}), 400
+
+    query = data['query']
+    data_sources = data.get('data_sources', ['GitHub'])
+    execution_mode = data.get('execution_mode', 'on-demand')
+
+    results = {
+        'query': query,
+        'sources': data_sources,
+        'timestamp': datetime.utcnow().isoformat(),
+        'results': {}
+    }
+
+    # GitHub Search
+    if 'GitHub' in data_sources:
+        try:
+            github_results = search_github(query)
+            results['results']['GitHub'] = github_results
+        except Exception as e:
+            results['results']['GitHub'] = {'error': str(e), 'results': []}
+
+    # LinkedIn Search (requires API credentials)
+    if 'LinkedIn' in data_sources:
+        results['results']['LinkedIn'] = {
+            'message': 'LinkedIn search requires API credentials. Use the Copy button to paste the query into LinkedIn manually.',
+            'query_url': f'https://www.linkedin.com/search/results/people/?keywords={query.replace(" ", "%20")}',
+            'results': []
+        }
+
+    # Google Scholar Search (no official API)
+    if 'Google Scholar' in data_sources:
+        results['results']['Google Scholar'] = {
+            'message': 'Google Scholar has no official API. Use the Copy button to paste the query into Google Scholar manually.',
+            'query_url': f'https://scholar.google.com/scholar?q={query.replace(" ", "+")}',
+            'results': []
+        }
+
+    return jsonify(results), 200
+
+
+def search_github(query):
+    """Search GitHub for users matching the Boolean query"""
+    # Extract keywords from Boolean query for GitHub API
+    # GitHub API doesn't support full Boolean syntax, so we extract key terms
+    keywords = extract_keywords_from_boolean(query)
+
+    # GitHub API endpoint
+    search_query = ' '.join(keywords[:5])  # Limit to 5 keywords
+    url = f'https://api.github.com/search/users?q={search_query}&per_page=10'
+
+    headers = {
+        'Accept': 'application/vnd.github.v3+json',
+        'User-Agent': 'AI-ML-ATS-BooleanSearch'
+    }
+
+    # Add GitHub token if available
+    github_token = os.environ.get('GITHUB_TOKEN')
+    if github_token:
+        headers['Authorization'] = f'token {github_token}'
+
+    response = requests.get(url, headers=headers, timeout=10)
+
+    if response.status_code == 200:
+        data = response.json()
+        users = data.get('items', [])
+
+        return {
+            'total_count': data.get('total_count', 0),
+            'results': [{
+                'name': user.get('login'),
+                'profile_url': user.get('html_url'),
+                'avatar': user.get('avatar_url'),
+                'type': user.get('type'),
+                'score': user.get('score')
+            } for user in users[:10]],
+            'search_query': search_query,
+            'message': f'Found {len(users)} GitHub users'
+        }
+    else:
+        return {
+            'error': f'GitHub API error: {response.status_code}',
+            'message': 'GitHub search failed. You may need to add a GITHUB_TOKEN.',
+            'results': []
+        }
+
+
+def extract_keywords_from_boolean(query):
+    """Extract searchable keywords from Boolean query"""
+    # Remove Boolean operators and special characters
+    cleaned = re.sub(r'\(|\)|AND|OR|NOT|"', ' ', query, flags=re.IGNORECASE)
+    # Remove comments
+    cleaned = re.sub(r'#.*', '', cleaned)
+    # Split into words and filter
+    keywords = [word.strip() for word in cleaned.split() if len(word.strip()) > 2]
+    return keywords
 
 
 if __name__ == '__main__':
