@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './App.css';
+import BooleanGenerator from './components/BooleanGenerator';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
@@ -121,6 +122,12 @@ function App() {
           💼 Jobs ({stats.total_jobs || 0})
         </button>
         <button
+          className={activeTab === 'boolean' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('boolean')}
+        >
+          🔍 Boolean Search
+        </button>
+        <button
           className={activeTab === 'about' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('about')}
         >
@@ -150,6 +157,7 @@ function App() {
             onRefresh={fetchJobs}
           />
         )}
+        {activeTab === 'boolean' && <BooleanGenerator />}
         {activeTab === 'about' && <AboutView />}
       </main>
 
