@@ -48,14 +48,21 @@ function BooleanGenerator() {
     // Add platform-specific formatting notes
     if (query) {
       const platformNote = dataSources.length > 0
-        ? `\n\n// Optimized for: ${dataSources.join(', ')}`
+        ? `\n\n# Optimized for: ${dataSources.join(', ')}`
         : '';
       query += platformNote;
     } else {
-      query = '// Add job titles, skills, or keywords to generate a Boolean query';
+      query = '# Add job titles, skills, or keywords to generate a Boolean query';
     }
 
     setBooleanQuery(query);
+  };
+
+  // Check if query has actual content (not just comments)
+  const hasValidQuery = () => {
+    if (!booleanQuery) return false;
+    const lines = booleanQuery.split('\n').filter(line => !line.trim().startsWith('#'));
+    return lines.some(line => line.trim().length > 0);
   };
 
   const handleExecuteSearch = async (query) => {
@@ -108,7 +115,7 @@ function BooleanGenerator() {
             <ExecuteSearchButton
               booleanQuery={booleanQuery}
               onExecute={handleExecuteSearch}
-              disabled={!booleanQuery || booleanQuery.includes('//')}
+              disabled={!hasValidQuery()}
             />
           </div>
         </div>
