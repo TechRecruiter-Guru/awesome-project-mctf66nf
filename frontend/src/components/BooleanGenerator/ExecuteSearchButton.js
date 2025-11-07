@@ -1,9 +1,14 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
 function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
   const [isExecuting, setIsExecuting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [results, setResults] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
   const handleExecute = async () => {
     // Validate inputs
@@ -24,6 +29,57 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
       alert('Search execution failed. Please try again.');
     } finally {
       setIsExecuting(false);
+    }
+  };
+
+  const handleSaveSearch = async () => {
+    if (!results) return;
+
+    setIsSaving(true);
+    try {
+      const searchName = prompt('Enter a name for this search (optional):');
+
+      const response = await axios.post(`${API_URL}/api/saved-searches`, {
+        query: booleanQuery,
+        data_sources: results.sources || [],
+        name: searchName || `Search ${new Date().toLocaleDateString()}`,
+        total_results: results.results?.GitHub?.total_count || 0,
+        github_results_count: results.results?.GitHub?.results?.length || 0
+      });
+
+      alert('Search saved successfully!');
+    } catch (error) {
+      console.error('Error saving search:', error);
+      alert('Failed to save search. Please try again.');
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
+  const handleExportCandidates = async () => {
+    if (!results || !results.results?.GitHub?.results) {
+      alert('No GitHub results to export!');
+      return;
+    }
+
+    setIsExporting(true);
+    try {
+      const candidates = results.results.GitHub.results.map(user => ({
+        name: user.name,
+        github_url: user.profile_url,
+        expertise: 'Software Engineering' // Default
+      }));
+
+      const response = await axios.post(`${API_URL}/api/export-candidates`, {
+        candidates: candidates
+      });
+
+      alert(`Successfully exported ${response.data.created} candidates! (${response.data.skipped} skipped as duplicates)`);
+    } catch (error) {
+      console.error('Error exporting candidates:', error);
+      alert('Failed to export candidates. Please try again.');
+    } finally {
+      setIsExporting(false);
     }
   };
 
@@ -171,6 +227,25 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
                   )}
                 </div>
               )}
+
+              {/* Action Buttons */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4">
+                <button
+                  onClick={handleSaveSearch}
+                  disabled={isSaving}
+                  className="py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  {isSaving ? '💾 Saving...' : '💾 Save Search'}
+                </button>
+
+                <button
+                  onClick={handleExportCandidates}
+                  disabled={isExporting || !results?.results?.GitHub?.results}
+                  className="py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
+                >
+                  {isExporting ? '📤 Exporting...' : '📤 Export to Candidates'}
+                </button>
+              </div>
 
               <button
                 onClick={closeModal}
