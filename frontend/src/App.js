@@ -294,9 +294,43 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                 <span className={`status-badge ${candidate.status}`}>{candidate.status}</span>
               </div>
               <p className="email">{candidate.email}</p>
+
+              {candidate.bio && (
+                <p className="bio" style={{ fontStyle: 'italic', color: '#666', marginTop: '8px', marginBottom: '8px' }}>
+                  "{candidate.bio}"
+                </p>
+              )}
+
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px', marginTop: '8px', marginBottom: '8px' }}>
+                {candidate.location && (
+                  <span style={{ fontSize: '0.85rem', padding: '4px 8px', background: '#f0f0f0', borderRadius: '4px' }}>
+                    📍 {candidate.location}
+                  </span>
+                )}
+                {candidate.company && (
+                  <span style={{ fontSize: '0.85rem', padding: '4px 8px', background: '#f0f0f0', borderRadius: '4px' }}>
+                    🏢 {candidate.company}
+                  </span>
+                )}
+              </div>
+
               {candidate.primary_expertise && (
                 <p className="expertise">🎯 {candidate.primary_expertise}</p>
               )}
+
+              {candidate.skills && (
+                <div style={{ marginTop: '8px', marginBottom: '8px' }}>
+                  <strong style={{ fontSize: '0.85rem', color: '#666' }}>Languages:</strong>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
+                    {candidate.skills.split(',').map((skill, i) => (
+                      <span key={i} style={{ fontSize: '0.8rem', padding: '3px 8px', background: '#2563eb', color: 'white', borderRadius: '4px' }}>
+                        💻 {skill.trim()}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="candidate-details">
                 {candidate.google_scholar_url && (
                   <a href={candidate.google_scholar_url} target="_blank" rel="noopener noreferrer">
@@ -309,7 +343,10 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                   </a>
                 )}
               </div>
+
               <div className="research-stats">
+                {candidate.github_followers > 0 && <span>👥 {candidate.github_followers} followers</span>}
+                {candidate.github_repos > 0 && <span>📦 {candidate.github_repos} repos</span>}
                 {candidate.h_index && <span>H-index: {candidate.h_index}</span>}
                 {candidate.citation_count && <span>Citations: {candidate.citation_count}</span>}
                 {candidate.publication_count > 0 && <span>Publications: {candidate.publication_count}</span>}
