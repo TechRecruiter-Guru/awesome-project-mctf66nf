@@ -264,7 +264,7 @@ class SavedSearch(db.Model):
     id = db.Column(db.Integer, primary_key=True)
 
     # Search Details
-    query = db.Column(db.Text, nullable=False)
+    search_query = db.Column(db.Text, nullable=False)  # Renamed from 'query' to avoid conflict
     data_sources = db.Column(db.String(500))  # Comma-separated list
 
     # Metadata
@@ -282,7 +282,7 @@ class SavedSearch(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'query': self.query,
+            'query': self.search_query,  # Return as 'query' for API
             'data_sources': self.data_sources.split(',') if self.data_sources else [],
             'name': self.name,
             'description': self.description,
@@ -765,7 +765,7 @@ def save_search():
         return jsonify({"error": "Query is required"}), 400
 
     saved_search = SavedSearch(
-        query=data['query'],
+        search_query=data['query'],
         data_sources=','.join(data.get('data_sources', [])),
         name=data.get('name'),
         description=data.get('description'),
