@@ -32,6 +32,12 @@ class Candidate(db.Model):
     github_url = db.Column(db.String(300))
     portfolio_url = db.Column(db.String(300))
     resume_url = db.Column(db.String(300))
+    company = db.Column(db.String(200))
+    bio = db.Column(db.Text)
+
+    # GitHub Metrics
+    github_followers = db.Column(db.Integer)
+    github_repos = db.Column(db.Integer)
 
     # Academic/Research Profile (THE UNIQUE PART!)
     google_scholar_url = db.Column(db.String(300))
@@ -72,6 +78,10 @@ class Candidate(db.Model):
             'github_url': self.github_url,
             'portfolio_url': self.portfolio_url,
             'resume_url': self.resume_url,
+            'company': self.company,
+            'bio': self.bio,
+            'github_followers': self.github_followers,
+            'github_repos': self.github_repos,
             'google_scholar_url': self.google_scholar_url,
             'research_gate_url': self.research_gate_url,
             'arxiv_author_id': self.arxiv_author_id,
@@ -699,8 +709,46 @@ def execute_boolean_search():
     return jsonify(results), 200
 
 
+def get_user_languages(username, headers):
+    """Fetch top programming languages from user's repositories"""
+    try:
+        repos_url = f'https://api.github.com/users/{username}/repos?sort=updated&per_page=10'
+        repos_response = requests.get(repos_url, headers=headers, timeout=5)
+
+        if repos_response.status_code == 200:
+            repos = repos_response.json()
+            languages = {}
+
+            # Collect languages from repos
+            for repo in repos:
+                if repo.get('language'):
+                    lang = repo['language']
+                    languages[lang] = languages.get(lang, 0) + 1
+
+            # Sort by frequency and return top 5
+            sorted_langs = sorted(languages.items(), key=lambda x: x[1], reverse=True)
+            return [lang[0] for lang in sorted_langs[:5]]
+
+        return []
+    except Exception as e:
+        print(f"Error fetching languages for {username}: {e}")
+        return []
+
+
+def get_user_details(user_url, headers):
+    """Fetch detailed user profile from GitHub API"""
+    try:
+        response = requests.get(user_url, headers=headers, timeout=5)
+        if response.status_code == 200:
+            return response.json()
+        return None
+    except Exception as e:
+        print(f"Error fetching user details: {e}")
+        return None
+
+
 def search_github(query):
-    """Search GitHub for users matching the Boolean query"""
+    """Search GitHub for users matching the Boolean query with detailed profiles"""
     # Extract keywords from Boolean query for GitHub API
     # GitHub API doesn't support full Boolean syntax, so we extract key terms
     keywords = extract_keywords_from_boolean(query)
@@ -725,17 +773,56 @@ def search_github(query):
         data = response.json()
         users = data.get('items', [])
 
+        # Fetch detailed info for each user
+        enriched_users = []
+        for user in users[:10]:
+            # Get detailed profile
+            user_details = get_user_details(user.get('url'), headers)
+
+            if user_details:
+                # Get top programming languages
+                languages = get_user_languages(user.get('login'), headers)
+
+                enriched_users.append({
+                    'username': user_details.get('login'),
+                    'name': user_details.get('name') or user_details.get('login'),
+                    'profile_url': user_details.get('html_url'),
+                    'avatar': user_details.get('avatar_url'),
+                    'bio': user_details.get('bio'),
+                    'location': user_details.get('location'),
+                    'company': user_details.get('company'),
+                    'email': user_details.get('email'),
+                    'followers': user_details.get('followers', 0),
+                    'following': user_details.get('following', 0),
+                    'public_repos': user_details.get('public_repos', 0),
+                    'languages': languages,
+                    'type': user_details.get('type'),
+                    'score': user.get('score')
+                })
+            else:
+                # Fallback to basic info if detailed fetch fails
+                enriched_users.append({
+                    'username': user.get('login'),
+                    'name': user.get('login'),
+                    'profile_url': user.get('html_url'),
+                    'avatar': user.get('avatar_url'),
+                    'bio': None,
+                    'location': None,
+                    'company': None,
+                    'email': None,
+                    'followers': 0,
+                    'following': 0,
+                    'public_repos': 0,
+                    'languages': [],
+                    'type': user.get('type'),
+                    'score': user.get('score')
+                })
+
         return {
             'total_count': data.get('total_count', 0),
-            'results': [{
-                'name': user.get('login'),
-                'profile_url': user.get('html_url'),
-                'avatar': user.get('avatar_url'),
-                'type': user.get('type'),
-                'score': user.get('score')
-            } for user in users[:10]],
+            'results': enriched_users,
             'search_query': search_query,
-            'message': f'Found {len(users)} GitHub users'
+            'message': f'Found {len(enriched_users)} GitHub users with detailed profiles'
         }
     else:
         return {
@@ -809,7 +896,7 @@ def export_candidates():
 
     for candidate_data in candidates_data:
         # Check if candidate already exists by GitHub URL
-        github_url = candidate_data.get('github_url')
+        github_url = candidate_data.get('profile_url')
         if github_url:
             existing = Candidate.query.filter_by(github_url=github_url).first()
             if existing:
@@ -819,24 +906,66 @@ def export_candidates():
                 })
                 continue
 
-        # Generate email from GitHub username (placeholder)
-        username = candidate_data.get('name', 'unknown')
-        email = f"{username}@github.user"
+        # Get data from enriched GitHub profile
+        username = candidate_data.get('username', 'unknown')
+        full_name = candidate_data.get('name', username)
+        github_email = candidate_data.get('email')
+
+        # Generate email - use GitHub email if available, otherwise placeholder
+        if github_email:
+            email = github_email
+        else:
+            email = f"{username}@github.user"
 
         # Check if email exists
         if Candidate.query.filter_by(email=email).first():
-            email = f"{username}_{datetime.utcnow().timestamp()}@github.user"
+            email = f"{username}_{int(datetime.utcnow().timestamp())}@github.user"
 
-        # Create new candidate
+        # Smart expertise detection based on languages
+        languages = candidate_data.get('languages', [])
+        expertise = candidate_data.get('expertise')
+        if not expertise and languages:
+            # Map languages to expertise areas
+            lang_map = {
+                'Python': 'Machine Learning / Data Science',
+                'JavaScript': 'Full Stack Development',
+                'TypeScript': 'Full Stack Development',
+                'Java': 'Backend Development',
+                'Go': 'Backend / Systems Programming',
+                'Rust': 'Systems Programming',
+                'C++': 'Systems / High Performance Computing',
+                'C': 'Systems Programming',
+                'Swift': 'iOS Development',
+                'Kotlin': 'Android Development',
+                'Ruby': 'Backend Development',
+                'PHP': 'Web Development'
+            }
+            expertise = lang_map.get(languages[0], 'Software Engineering')
+
+        # Build bio/notes with imported info
+        bio_parts = []
+        if candidate_data.get('bio'):
+            bio_parts.append(candidate_data['bio'])
+        bio_parts.append(f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}")
+        if languages:
+            bio_parts.append(f"Languages: {', '.join(languages)}")
+
+        # Create new candidate with enriched data
         try:
             candidate = Candidate(
-                first_name=username.split()[0] if ' ' in username else username,
-                last_name=username.split()[-1] if ' ' in username else 'User',
+                first_name=full_name.split()[0] if ' ' in full_name else full_name,
+                last_name=full_name.split()[-1] if ' ' in full_name and len(full_name.split()) > 1 else 'User',
                 email=email,
                 github_url=github_url,
-                primary_expertise=candidate_data.get('expertise', 'Software Engineering'),
+                location=candidate_data.get('location'),
+                company=candidate_data.get('company'),
+                bio=candidate_data.get('bio'),
+                github_followers=candidate_data.get('followers', 0),
+                github_repos=candidate_data.get('public_repos', 0),
+                primary_expertise=expertise or 'Software Engineering',
+                skills=','.join(languages) if languages else None,
                 status='new',
-                notes=f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}"
+                notes=' | '.join(bio_parts)
             )
 
             db.session.add(candidate)
@@ -844,7 +973,7 @@ def export_candidates():
             created_candidates.append(candidate.to_dict())
         except Exception as e:
             skipped_candidates.append({
-                'name': username,
+                'name': full_name,
                 'reason': str(e)
             })
 

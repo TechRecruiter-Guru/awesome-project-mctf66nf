@@ -69,10 +69,19 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved,
 
     setIsExporting(true);
     try {
+      // Send complete enriched profile data
       const candidates = results.results.GitHub.results.map(user => ({
+        username: user.username,
         name: user.name,
-        github_url: user.profile_url,
-        expertise: 'Software Engineering' // Default
+        profile_url: user.profile_url,
+        email: user.email,
+        bio: user.bio,
+        location: user.location,
+        company: user.company,
+        followers: user.followers,
+        following: user.following,
+        public_repos: user.public_repos,
+        languages: user.languages || []
       }));
 
       const response = await axios.post(`${API_URL}/api/export-candidates`, {
@@ -173,20 +182,52 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved,
                           <p className="text-gray-300 text-sm mb-3">
                             Found {results.results.GitHub.total_count} users
                           </p>
-                          <div className="space-y-2 max-h-64 overflow-y-auto">
+                          <div className="space-y-3 max-h-96 overflow-y-auto">
                             {results.results.GitHub.results.map((user, idx) => (
-                              <div key={idx} className="bg-gray-700 p-3 rounded flex items-center gap-3">
-                                <img src={user.avatar} alt={user.name} className="w-10 h-10 rounded-full" />
-                                <div className="flex-1">
-                                  <a
-                                    href={user.profile_url}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="text-blue-400 hover:text-blue-300 font-medium"
-                                  >
-                                    {user.name}
-                                  </a>
-                                  <p className="text-gray-400 text-xs">{user.type}</p>
+                              <div key={idx} className="bg-gray-700 p-4 rounded-lg">
+                                <div className="flex items-start gap-3 mb-2">
+                                  <img src={user.avatar} alt={user.name} className="w-12 h-12 rounded-full" />
+                                  <div className="flex-1">
+                                    <a
+                                      href={user.profile_url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-400 hover:text-blue-300 font-medium text-lg"
+                                    >
+                                      {user.name}
+                                    </a>
+                                    <p className="text-gray-400 text-sm">@{user.username}</p>
+                                  </div>
+                                  <div className="text-right text-xs text-gray-400">
+                                    <div>👥 {user.followers} followers</div>
+                                    <div>📦 {user.public_repos} repos</div>
+                                  </div>
+                                </div>
+
+                                {user.bio && (
+                                  <p className="text-gray-300 text-sm mb-2 italic">"{user.bio}"</p>
+                                )}
+
+                                <div className="flex flex-wrap gap-2 text-xs">
+                                  {user.location && (
+                                    <span className="bg-gray-600 px-2 py-1 rounded text-gray-200">
+                                      📍 {user.location}
+                                    </span>
+                                  )}
+                                  {user.company && (
+                                    <span className="bg-gray-600 px-2 py-1 rounded text-gray-200">
+                                      🏢 {user.company}
+                                    </span>
+                                  )}
+                                  {user.languages && user.languages.length > 0 && (
+                                    <>
+                                      {user.languages.map((lang, i) => (
+                                        <span key={i} className="bg-blue-600 px-2 py-1 rounded text-white">
+                                          💻 {lang}
+                                        </span>
+                                      ))}
+                                    </>
+                                  )}
                                 </div>
                               </div>
                             ))}
