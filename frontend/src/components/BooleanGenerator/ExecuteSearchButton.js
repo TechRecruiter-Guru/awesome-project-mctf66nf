@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
+function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved, onCandidatesExported }) {
   const [isExecuting, setIsExecuting] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [results, setResults] = useState(null);
@@ -48,6 +48,11 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
       });
 
       alert('Search saved successfully!');
+
+      // Trigger refresh of saved searches list
+      if (onSearchSaved) {
+        onSearchSaved();
+      }
     } catch (error) {
       console.error('Error saving search:', error);
       alert('Failed to save search. Please try again.');
@@ -75,6 +80,11 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled }) {
       });
 
       alert(`Successfully exported ${response.data.created} candidates! (${response.data.skipped} skipped as duplicates)`);
+
+      // Trigger stats refresh in parent component
+      if (onCandidatesExported) {
+        onCandidatesExported();
+      }
     } catch (error) {
       console.error('Error exporting candidates:', error);
       alert('Failed to export candidates. Please try again.');
