@@ -8,8 +8,9 @@ import TestBooleanFeature from './TestBooleanFeature';
 import SearchExecutionMode from './SearchExecutionMode';
 import CustomSchedulingPanel from './CustomSchedulingPanel';
 import ExecuteSearchButton from './ExecuteSearchButton';
+import SavedSearchesList from './SavedSearchesList';
 
-function BooleanGenerator() {
+function BooleanGenerator({ onStatsRefresh }) {
   const [jobTitles, setJobTitles] = useState([]);
   const [skills, setSkills] = useState([]);
   const [exclusions, setExclusions] = useState([]);
@@ -17,6 +18,7 @@ function BooleanGenerator() {
   const [executionMode, setExecutionMode] = useState('on-demand');
   const [schedule, setSchedule] = useState(null);
   const [booleanQuery, setBooleanQuery] = useState('');
+  const [savedSearchRefresh, setSavedSearchRefresh] = useState(0);
 
   // Generate Boolean query whenever inputs change
   useEffect(() => {
@@ -84,6 +86,26 @@ function BooleanGenerator() {
     }
   };
 
+  const handleSearchSaved = () => {
+    // Trigger refresh of saved searches list
+    setSavedSearchRefresh(prev => prev + 1);
+  };
+
+  const handleCandidatesExported = () => {
+    // Trigger stats refresh in parent App component
+    if (onStatsRefresh) {
+      onStatsRefresh();
+    }
+  };
+
+  const handleLoadSearch = (search) => {
+    // Load a saved search back into the form
+    setBooleanQuery(search.query);
+    if (search.data_sources && search.data_sources.length > 0) {
+      setDataSources(search.data_sources);
+    }
+  };
+
   return (
     <div className="boolean-generator-container">
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -122,8 +144,18 @@ function BooleanGenerator() {
               booleanQuery={booleanQuery}
               onExecute={handleExecuteSearch}
               disabled={!hasValidQuery()}
+              onSearchSaved={handleSearchSaved}
+              onCandidatesExported={handleCandidatesExported}
             />
           </div>
+        </div>
+
+        {/* Saved Searches Section */}
+        <div className="mt-6">
+          <SavedSearchesList
+            onLoadSearch={handleLoadSearch}
+            refreshTrigger={savedSearchRefresh}
+          />
         </div>
 
         {/* Info Section */}

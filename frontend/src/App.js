@@ -157,7 +157,7 @@ function App() {
             onRefresh={fetchJobs}
           />
         )}
-        {activeTab === 'boolean' && <BooleanGenerator />}
+        {activeTab === 'boolean' && <BooleanGenerator onStatsRefresh={fetchStats} />}
         {activeTab === 'about' && <AboutView />}
       </main>
 
