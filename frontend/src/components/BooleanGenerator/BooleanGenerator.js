@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import JobTitleInput from './JobTitleInput';
 import SkillsKeywordsInput from './SkillsKeywordsInput';
 import ExclusionsInput from './ExclusionsInput';
@@ -66,16 +67,21 @@ function BooleanGenerator() {
   };
 
   const handleExecuteSearch = async (query) => {
-    // Simulate API call
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve({
-          success: true,
-          query: query,
-          timestamp: new Date().toISOString(),
-        });
-      }, 1500);
-    });
+    // Call the real backend API
+    const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
+
+    try {
+      const response = await axios.post(`${API_URL}/api/boolean-search`, {
+        query: query,
+        data_sources: dataSources,
+        execution_mode: executionMode
+      });
+
+      return response.data;
+    } catch (error) {
+      console.error('Search API error:', error);
+      throw new Error(error.response?.data?.error || 'Failed to execute search');
+    }
   };
 
   return (
