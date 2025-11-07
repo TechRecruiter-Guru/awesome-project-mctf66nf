@@ -259,6 +259,40 @@ class Publication(db.Model):
         }
 
 
+class SavedSearch(db.Model):
+    """Saved Boolean Searches"""
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Search Details
+    query = db.Column(db.Text, nullable=False)
+    data_sources = db.Column(db.String(500))  # Comma-separated list
+
+    # Metadata
+    name = db.Column(db.String(200))  # Optional user-given name
+    description = db.Column(db.Text)
+
+    # Results summary
+    total_results = db.Column(db.Integer, default=0)
+    github_results_count = db.Column(db.Integer, default=0)
+
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    last_executed = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'query': self.query,
+            'data_sources': self.data_sources.split(',') if self.data_sources else [],
+            'name': self.name,
+            'description': self.description,
+            'total_results': self.total_results,
+            'github_results_count': self.github_results_count,
+            'created_at': self.created_at.isoformat(),
+            'last_executed': self.last_executed.isoformat()
+        }
+
+
 # Create tables
 with app.app_context():
     db.create_all()
@@ -720,6 +754,106 @@ def extract_keywords_from_boolean(query):
     # Split into words and filter
     keywords = [word.strip() for word in cleaned.split() if len(word.strip()) > 2]
     return keywords
+
+
+@app.route('/api/saved-searches', methods=['POST'])
+def save_search():
+    """Save a Boolean search"""
+    data = request.get_json()
+
+    if not data or 'query' not in data:
+        return jsonify({"error": "Query is required"}), 400
+
+    saved_search = SavedSearch(
+        query=data['query'],
+        data_sources=','.join(data.get('data_sources', [])),
+        name=data.get('name'),
+        description=data.get('description'),
+        total_results=data.get('total_results', 0),
+        github_results_count=data.get('github_results_count', 0)
+    )
+
+    db.session.add(saved_search)
+    db.session.commit()
+
+    return jsonify(saved_search.to_dict()), 201
+
+
+@app.route('/api/saved-searches', methods=['GET'])
+def get_saved_searches():
+    """Get all saved searches"""
+    searches = SavedSearch.query.order_by(SavedSearch.last_executed.desc()).all()
+    return jsonify([search.to_dict() for search in searches])
+
+
+@app.route('/api/saved-searches/<int:search_id>', methods=['DELETE'])
+def delete_saved_search(search_id):
+    """Delete a saved search"""
+    search = SavedSearch.query.get_or_404(search_id)
+    db.session.delete(search)
+    db.session.commit()
+    return jsonify({"message": "Search deleted successfully"})
+
+
+@app.route('/api/export-candidates', methods=['POST'])
+def export_candidates():
+    """Export GitHub users to candidates"""
+    data = request.get_json()
+
+    if not data or 'candidates' not in data:
+        return jsonify({"error": "Candidates list is required"}), 400
+
+    candidates_data = data['candidates']
+    created_candidates = []
+    skipped_candidates = []
+
+    for candidate_data in candidates_data:
+        # Check if candidate already exists by GitHub URL
+        github_url = candidate_data.get('github_url')
+        if github_url:
+            existing = Candidate.query.filter_by(github_url=github_url).first()
+            if existing:
+                skipped_candidates.append({
+                    'name': candidate_data.get('name'),
+                    'reason': 'Already exists'
+                })
+                continue
+
+        # Generate email from GitHub username (placeholder)
+        username = candidate_data.get('name', 'unknown')
+        email = f"{username}@github.user"
+
+        # Check if email exists
+        if Candidate.query.filter_by(email=email).first():
+            email = f"{username}_{datetime.utcnow().timestamp()}@github.user"
+
+        # Create new candidate
+        try:
+            candidate = Candidate(
+                first_name=username.split()[0] if ' ' in username else username,
+                last_name=username.split()[-1] if ' ' in username else 'User',
+                email=email,
+                github_url=github_url,
+                primary_expertise=candidate_data.get('expertise', 'Software Engineering'),
+                status='new',
+                notes=f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}"
+            )
+
+            db.session.add(candidate)
+            db.session.commit()
+            created_candidates.append(candidate.to_dict())
+        except Exception as e:
+            skipped_candidates.append({
+                'name': username,
+                'reason': str(e)
+            })
+
+    return jsonify({
+        'created': len(created_candidates),
+        'skipped': len(skipped_candidates),
+        'candidates': created_candidates,
+        'skipped_details': skipped_candidates
+    }), 201
 
 
 if __name__ == '__main__':
