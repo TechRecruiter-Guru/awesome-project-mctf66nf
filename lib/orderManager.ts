@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { Order, TemplateType, OrderStatus } from './types';
 
-const ORDERS_FILE = path.join(process.cwd(), 'data', 'orders.json');
+// Use /tmp directory on serverless environments like Vercel
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+const DATA_DIR = isServerless ? '/tmp' : path.join(process.cwd(), 'data');
+const ORDERS_FILE = path.join(DATA_DIR, 'orders.json');
 
 export function readOrders(): Record<string, Order> {
   try {

@@ -2,7 +2,10 @@ import fs from 'fs';
 import path from 'path';
 import { ConfirmationCode } from './types';
 
-const CODES_FILE = path.join(process.cwd(), 'data', 'confirmationCodes.json');
+// Use /tmp directory on serverless environments like Vercel
+const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
+const DATA_DIR = isServerless ? '/tmp' : path.join(process.cwd(), 'data');
+const CODES_FILE = path.join(DATA_DIR, 'confirmationCodes.json');
 
 export function readCodes(): Record<string, ConfirmationCode> {
   try {
