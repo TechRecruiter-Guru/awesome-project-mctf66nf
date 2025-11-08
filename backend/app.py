@@ -741,7 +741,16 @@ def get_user_details(user_url, headers):
         response = requests.get(user_url, headers=headers, timeout=5)
         if response.status_code == 200:
             return response.json()
-        return None
+        elif response.status_code == 403:
+            print(f"GitHub API rate limit exceeded! Status: {response.status_code}")
+            print(f"Rate limit info: {response.headers.get('X-RateLimit-Remaining', 'N/A')} remaining")
+            return None
+        elif response.status_code == 429:
+            print(f"GitHub API rate limit - too many requests: {response.status_code}")
+            return None
+        else:
+            print(f"GitHub API error fetching user details: Status {response.status_code}")
+            return None
     except Exception as e:
         print(f"Error fetching user details: {e}")
         return None
@@ -769,12 +778,18 @@ def search_github(query):
 
     response = requests.get(url, headers=headers, timeout=10)
 
+    # Check rate limit status
+    if response.status_code == 200:
+        rate_limit_remaining = response.headers.get('X-RateLimit-Remaining', 'Unknown')
+        print(f"GitHub API rate limit remaining: {rate_limit_remaining}")
+
     if response.status_code == 200:
         data = response.json()
         users = data.get('items', [])
 
         # Fetch detailed info for each user
         enriched_users = []
+        rate_limited = False
         for user in users[:10]:
             # Get detailed profile
             user_details = get_user_details(user.get('url'), headers)
@@ -801,6 +816,8 @@ def search_github(query):
                 })
             else:
                 # Fallback to basic info if detailed fetch fails
+                rate_limited = True
+                print(f"WARNING: Falling back to basic profile for {user.get('login')} - detailed fetch failed")
                 enriched_users.append({
                     'username': user.get('login'),
                     'name': user.get('login'),
@@ -818,11 +835,16 @@ def search_github(query):
                     'score': user.get('score')
                 })
 
+        message = f'Found {len(enriched_users)} GitHub users with detailed profiles'
+        if rate_limited:
+            message += ' (⚠️ Some profiles may have limited data due to GitHub API rate limits. Add a GITHUB_TOKEN environment variable for higher limits.)'
+
         return {
             'total_count': data.get('total_count', 0),
             'results': enriched_users,
             'search_query': search_query,
-            'message': f'Found {len(enriched_users)} GitHub users with detailed profiles'
+            'message': message,
+            'rate_limited': rate_limited
         }
     else:
         return {
