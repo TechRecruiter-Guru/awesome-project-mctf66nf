@@ -1,0 +1,36 @@
+SUBJECT: AMR safety compliance shortcut for [COMPANY]
+
+---
+
+Hi [FIRST_NAME],
+
+Saw your work on [SPECIFIC_AMR_PROJECT] at [COMPANY]—impressive autonomous navigation safety protocols.
+
+When [COMPANY]'s enterprise customers request safety case documentation for warehouse deployments, how fast can you turn that around today?
+
+We built SafetyCase.AI to solve this exact bottleneck for Series A/B AMR startups:
+
+Input: Your existing safety PDFs
+Output (48 hrs): Professional compliance website with:
+• Risk assessment matrices
+• Testing validation reports
+• Certification-ready formats (ISO 3691-4, ANSI B56.5)
+• Live safety dashboards
+
+The kicker: $2,000 vs. typical $40-60k consultant engagements.
+
+15-min demo to see an AMR safety case in action?
+
+https://safety-topaz.vercel.app
+
+Best,
+[YOUR_NAME]
+SafetyCase.AI
+
+---
+
+PERSONALIZATION VARIABLES:
+[FIRST_NAME] = First name
+[COMPANY] = Company name
+[SPECIFIC_AMR_PROJECT] = Their AMR work from "Why Selected"
+[YOUR_NAME] = Your name
