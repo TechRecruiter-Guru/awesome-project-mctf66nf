@@ -45,20 +45,33 @@ export default function HomePage() {
       {/* Hero Section */}
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="mb-3 text-sm font-semibold tracking-wide uppercase opacity-90">
+            Powered by Anthropic Claude AI
+          </div>
           <h1 className="text-5xl font-bold mb-6">
-            Professional Safety Case Websites
+            Professional Safety Case Websites in 48 Hours
           </h1>
           <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
-            Automate your safety case website creation with AI-powered data extraction
-            and industry-specific templates. Get a production-ready website in minutes,
-            not weeks.
+            Purpose-built AI extraction for Physical AI companies. Our proprietary Claude-powered
+            system transforms your safety documentation into investor-ready, compliance-certified
+            websites—without consultants or weeks of manual work.
           </p>
-          <div className="flex justify-center gap-4">
+          <div className="flex justify-center gap-4 mb-6">
             <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
               View Templates
             </a>
             <a href="/upload" className="bg-primary-700 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-primary-800 transition-colors border-2 border-white">
               Already Have Code?
+            </a>
+          </div>
+          <div className="mt-4">
+            <a
+              href="https://vanguardlab.physicalaipros.com/safetyaiV2.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-white opacity-75 hover:opacity-100 underline transition-opacity"
+            >
+              Need more information on why safety case documentation matters? →
             </a>
           </div>
         </div>
@@ -122,54 +135,59 @@ export default function HomePage() {
       {/* Benefits Section */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Why SafetyCase.AI?</h2>
+          <h2 className="text-3xl font-bold text-center mb-4">Why SafetyCase.AI?</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
+            Built by Physical AI safety experts. Powered by Anthropic's Claude AI.
+            Purpose-designed for robotics compliance—not generic website builders.
+          </p>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
+              <div className="text-4xl mb-4">🧠</div>
+              <h3 className="font-bold text-xl mb-2">Proprietary AI Extraction</h3>
+              <p className="text-gray-600">
+                Our Claude-powered system is specifically trained on Physical AI safety documentation—
+                understanding ISO 13482, IEC 61508, and robotics-specific compliance standards that
+                generic tools miss.
+              </p>
+            </div>
+            <div className="text-center p-6">
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="font-bold text-xl mb-2">Fast & Automated</h3>
+              <h3 className="font-bold text-xl mb-2">48-Hour Turnaround</h3>
               <p className="text-gray-600">
-                AI-powered extraction means your safety case website is ready in
-                minutes, not days or weeks.
+                What takes safety consultants 3-4 weeks ($40-60k), we deliver in 48 hours for $2,000.
+                Critical for Series B fundraising timelines and enterprise customer deployments.
               </p>
             </div>
             <div className="text-center p-6">
-              <div className="text-4xl mb-4">💰</div>
-              <h3 className="font-bold text-xl mb-2">Fixed Pricing</h3>
+              <div className="text-4xl mb-4">🎯</div>
+              <h3 className="font-bold text-xl mb-2">Robot-Specific Templates</h3>
               <p className="text-gray-600">
-                One-time payment of $2,000. No subscriptions, no hidden fees, no
-                ongoing costs.
-              </p>
-            </div>
-            <div className="text-center p-6">
-              <div className="text-4xl mb-4">🎨</div>
-              <h3 className="font-bold text-xl mb-2">Professional Design</h3>
-              <p className="text-gray-600">
-                Industry-specific templates designed by safety experts with modern,
-                responsive layouts.
-              </p>
-            </div>
-            <div className="text-center p-6">
-              <div className="text-4xl mb-4">✏️</div>
-              <h3 className="font-bold text-xl mb-2">Fully Editable</h3>
-              <p className="text-gray-600">
-                Review and edit all extracted data before downloading. Complete
-                control over your content.
-              </p>
-            </div>
-            <div className="text-center p-6">
-              <div className="text-4xl mb-4">📦</div>
-              <h3 className="font-bold text-xl mb-2">Self-Contained</h3>
-              <p className="text-gray-600">
-                Download a single HTML file with no dependencies. Upload anywhere or
-                share directly.
+                5 templates designed by robotics safety engineers for humanoids, AMRs, cobots, drones,
+                and inspection robots—not one-size-fits-all website builders.
               </p>
             </div>
             <div className="text-center p-6">
               <div className="text-4xl mb-4">🔒</div>
-              <h3 className="font-bold text-xl mb-2">No Lock-In</h3>
+              <h3 className="font-bold text-xl mb-2">Zero Vendor Lock-In</h3>
               <p className="text-gray-600">
-                Own your website outright. No hosting required, no vendor lock-in, no
-                recurring fees.
+                Download a completely self-contained HTML file. No monthly fees, no hosting dependencies,
+                no subscription trap. You own it forever.
+              </p>
+            </div>
+            <div className="text-center p-6">
+              <div className="text-4xl mb-4">📊</div>
+              <h3 className="font-bold text-xl mb-2">Investor & Compliance Ready</h3>
+              <p className="text-gray-600">
+                Pre-formatted for VC due diligence, customer safety audits, and regulatory submissions.
+                Includes risk matrices, test validation reports, and certification-ready formats.
+              </p>
+            </div>
+            <div className="text-center p-6">
+              <div className="text-4xl mb-4">💼</div>
+              <h3 className="font-bold text-xl mb-2">Built by Safety Engineers</h3>
+              <p className="text-gray-600">
+                Created by ex-NVIDIA, Boston Dynamics safety engineers who've shipped real robots.
+                We understand Physical AI compliance because we've lived it—not generic web developers.
               </p>
             </div>
           </div>
