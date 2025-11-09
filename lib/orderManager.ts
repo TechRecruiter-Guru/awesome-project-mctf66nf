@@ -36,11 +36,13 @@ export function generateOrderId(): string {
   return `${datePart}-${timePart}-${counterStr}`;
 }
 
-export function createOrder(templateType: TemplateType): Order {
+export function createOrder(templateType: TemplateType, email: string, companyName: string): Order {
   const orderId = generateOrderId();
   const order: Order = {
     orderId,
     templateType,
+    email,
+    companyName,
     createdAt: new Date().toISOString(),
     status: 'pending_payment',
     confirmationCode: null,

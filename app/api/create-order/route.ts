@@ -5,11 +5,18 @@ import { TemplateType } from '@/lib/types';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { templateType } = body;
+    const { templateType, email, companyName } = body;
 
     if (!templateType) {
       return NextResponse.json(
         { message: 'Template type is required' },
+        { status: 400 }
+      );
+    }
+
+    if (!email || !companyName) {
+      return NextResponse.json(
+        { message: 'Email and company name are required' },
         { status: 400 }
       );
     }
@@ -22,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const order = createOrder(templateType);
+    const order = createOrder(templateType, email, companyName);
 
     return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error) {

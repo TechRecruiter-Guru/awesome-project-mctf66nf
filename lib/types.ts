@@ -5,6 +5,8 @@ export type OrderStatus = 'pending_payment' | 'code_generated' | 'pdf_uploaded' 
 export interface Order {
   orderId: string;
   templateType: TemplateType;
+  email: string;
+  companyName: string;
   createdAt: string;
   status: OrderStatus;
   confirmationCode: string | null;

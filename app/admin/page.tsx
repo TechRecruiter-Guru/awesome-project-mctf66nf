@@ -236,6 +236,8 @@ export default function AdminPage() {
               <thead className="bg-gray-50 border-b">
                 <tr>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Order ID</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">Email</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Template</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Created</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
@@ -246,7 +248,7 @@ export default function AdminPage() {
               <tbody className="divide-y">
                 {filteredOrders.length === 0 ? (
                   <tr>
-                    <td colSpan={6} className="px-4 py-8 text-center text-gray-500">
+                    <td colSpan={8} className="px-4 py-8 text-center text-gray-500">
                       No orders found
                     </td>
                   </tr>
@@ -255,6 +257,12 @@ export default function AdminPage() {
                     <tr key={order.orderId} className="hover:bg-gray-50">
                       <td className="px-4 py-3">
                         <span className="font-mono text-sm">{order.orderId}</span>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="font-semibold">{order.companyName || '—'}</span>
+                      </td>
+                      <td className="px-4 py-3 text-sm text-gray-600">
+                        {order.email || '—'}
                       </td>
                       <td className="px-4 py-3 capitalize">{order.templateType}</td>
                       <td className="px-4 py-3 text-sm">
