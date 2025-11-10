@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const order = getOrder(orderId);
+    const order = await getOrder(orderId);
     if (!order) {
       return NextResponse.json(
         { message: 'Order not found' },
@@ -30,7 +30,7 @@ export async function POST(request: NextRequest) {
     populatedHtml = makeSelfContained(populatedHtml);
 
     // Update order status to completed
-    updateOrderStatus(orderId, 'completed');
+    await updateOrderStatus(orderId, 'completed');
 
     // Return the HTML as a blob
     return new NextResponse(populatedHtml, {

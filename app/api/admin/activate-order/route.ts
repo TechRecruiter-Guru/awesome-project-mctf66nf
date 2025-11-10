@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const order = getOrder(orderId);
+    const order = await getOrder(orderId);
     if (!order) {
       return NextResponse.json(
         { message: 'Order not found' },
@@ -33,10 +33,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Generate confirmation code
-    const confirmationCode = createConfirmationCode(orderId);
+    const confirmationCode = await createConfirmationCode(orderId);
 
     // Update order
-    updateOrder(orderId, {
+    await updateOrder(orderId, {
       confirmationCode: confirmationCode.code,
       status: 'code_generated',
     });

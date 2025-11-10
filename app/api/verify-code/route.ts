@@ -14,7 +14,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const verification = verifyCode(code);
+    const verification = await verifyCode(code);
 
     if (!verification.valid) {
       return NextResponse.json(
@@ -24,7 +24,7 @@ export async function POST(request: NextRequest) {
     }
 
     const orderId = verification.orderId!;
-    const order = getOrder(orderId);
+    const order = await getOrder(orderId);
 
     if (!order) {
       return NextResponse.json(
@@ -34,10 +34,10 @@ export async function POST(request: NextRequest) {
     }
 
     // Mark code as used
-    markCodeAsUsed(code);
+    await markCodeAsUsed(code);
 
     // Update order status
-    updateOrderStatus(orderId, 'pdf_uploaded');
+    await updateOrderStatus(orderId, 'pdf_uploaded');
 
     return NextResponse.json({
       valid: true,

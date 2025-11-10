@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const order = createOrder(templateType, email, companyName);
+    const order = await createOrder(templateType, email, companyName);
 
     return NextResponse.json({ success: true, order }, { status: 201 });
   } catch (error) {

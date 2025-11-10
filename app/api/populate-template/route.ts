@@ -15,7 +15,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const order = getOrder(orderId);
+    const order = await getOrder(orderId);
     if (!order) {
       return NextResponse.json(
         { message: 'Order not found' },

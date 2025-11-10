@@ -1,27 +1,29 @@
-import fs from 'fs';
-import path from 'path';
+import { kv } from '@vercel/kv';
 import { ConfirmationCode } from './types';
 
-// Use /tmp directory on serverless environments like Vercel
-const isServerless = process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME;
-const DATA_DIR = isServerless ? '/tmp' : path.join(process.cwd(), 'data');
-const CODES_FILE = path.join(DATA_DIR, 'confirmationCodes.json');
+const CODES_KEY = 'confirmationCodes';
 
-export function readCodes(): Record<string, ConfirmationCode> {
+export async function readCodes(): Promise<Record<string, ConfirmationCode>> {
   try {
-    const data = fs.readFileSync(CODES_FILE, 'utf-8');
-    return JSON.parse(data);
+    const codes = await kv.get<Record<string, ConfirmationCode>>(CODES_KEY);
+    return codes || {};
   } catch (error) {
+    console.error('Error reading codes from KV:', error);
     return {};
   }
 }
 
-export function writeCodes(codes: Record<string, ConfirmationCode>): void {
-  fs.writeFileSync(CODES_FILE, JSON.stringify(codes, null, 2), 'utf-8');
+export async function writeCodes(codes: Record<string, ConfirmationCode>): Promise<void> {
+  try {
+    await kv.set(CODES_KEY, codes);
+  } catch (error) {
+    console.error('Error writing codes to KV:', error);
+    throw error;
+  }
 }
 
-export function generateConfirmationCode(): string {
-  const codes = readCodes();
+export async function generateConfirmationCode(): Promise<string> {
+  const codes = await readCodes();
   const existingCodes = Object.keys(codes);
 
   // Extract numbers from existing codes
@@ -36,8 +38,8 @@ export function generateConfirmationCode(): string {
   return `UNLOCK-${nextNumber.toString().padStart(3, '0')}`;
 }
 
-export function createConfirmationCode(orderId: string): ConfirmationCode {
-  const code = generateConfirmationCode();
+export async function createConfirmationCode(orderId: string): Promise<ConfirmationCode> {
+  const code = await generateConfirmationCode();
   const confirmationCode: ConfirmationCode = {
     code,
     orderId,
@@ -46,20 +48,20 @@ export function createConfirmationCode(orderId: string): ConfirmationCode {
     usedAt: null,
   };
 
-  const codes = readCodes();
+  const codes = await readCodes();
   codes[code] = confirmationCode;
-  writeCodes(codes);
+  await writeCodes(codes);
 
   return confirmationCode;
 }
 
-export function getConfirmationCode(code: string): ConfirmationCode | null {
-  const codes = readCodes();
+export async function getConfirmationCode(code: string): Promise<ConfirmationCode | null> {
+  const codes = await readCodes();
   return codes[code] || null;
 }
 
-export function markCodeAsUsed(code: string): ConfirmationCode | null {
-  const codes = readCodes();
+export async function markCodeAsUsed(code: string): Promise<ConfirmationCode | null> {
+  const codes = await readCodes();
   const confirmationCode = codes[code];
 
   if (!confirmationCode) {
@@ -69,17 +71,17 @@ export function markCodeAsUsed(code: string): ConfirmationCode | null {
   confirmationCode.used = true;
   confirmationCode.usedAt = new Date().toISOString();
   codes[code] = confirmationCode;
-  writeCodes(codes);
+  await writeCodes(codes);
 
   return confirmationCode;
 }
 
-export function verifyCode(code: string): {
+export async function verifyCode(code: string): Promise<{
   valid: boolean;
   orderId?: string;
   message: string;
-} {
-  const confirmationCode = getConfirmationCode(code);
+}> {
+  const confirmationCode = await getConfirmationCode(code);
 
   if (!confirmationCode) {
     return {
