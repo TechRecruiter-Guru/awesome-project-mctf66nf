@@ -37,6 +37,27 @@ const templates: TemplateInfo[] = [
     icon: '🔍',
     price: 2000,
   },
+  {
+    id: 'construction',
+    name: 'Construction Robots',
+    description: 'Safety documentation for autonomous excavators, bulldozers, and heavy equipment.',
+    icon: '🏗️',
+    price: 2000,
+  },
+  {
+    id: 'healthcare',
+    name: 'Healthcare/Medical Robots',
+    description: 'IEC 60601-compliant safety cases for surgical robots and medical devices.',
+    icon: '🏥',
+    price: 2000,
+  },
+  {
+    id: 'forklift',
+    name: 'Autonomous Forklifts',
+    description: 'ANSI B56.5-compliant documentation for autonomous material handling systems.',
+    icon: '🏭',
+    price: 2000,
+  },
 ];
 
 export default function HomePage() {
@@ -86,7 +107,7 @@ export default function HomePage() {
               <div className="text-5xl mb-4">1️⃣</div>
               <h3 className="font-bold mb-2">Select Template</h3>
               <p className="text-gray-600">
-                Choose from 5 industry-specific safety case templates
+                Choose from 8 industry-specific safety case templates
               </p>
             </div>
             <div className="text-center">
@@ -162,8 +183,8 @@ export default function HomePage() {
               <div className="text-4xl mb-4">🎯</div>
               <h3 className="font-bold text-xl mb-2">Robot-Specific Templates</h3>
               <p className="text-gray-600">
-                5 templates designed by robotics safety engineers for humanoids, AMRs, cobots, drones,
-                and inspection robots—not one-size-fits-all website builders.
+                8 templates designed by robotics safety engineers covering humanoids, AMRs, cobots, drones,
+                inspection robots, construction equipment, medical devices, and forklifts—not one-size-fits-all builders.
               </p>
             </div>
             <div className="text-center p-6">
