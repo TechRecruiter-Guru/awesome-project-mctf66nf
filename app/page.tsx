@@ -1,3 +1,4 @@
+// SafetyCase.AI - 8 Robot Templates
 import TemplateCard from '@/components/TemplateCard';
 import { TemplateInfo } from '@/lib/types';
 
