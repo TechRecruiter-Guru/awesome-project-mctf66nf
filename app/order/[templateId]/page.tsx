@@ -11,6 +11,9 @@ const templateNames: Record<TemplateType, string> = {
   cobot: 'Collaborative Robot Arm Safety Case',
   drone: 'Delivery Drone Safety Case',
   inspection: 'Inspection Robot Safety Case',
+  construction: 'Construction Robot Safety Case',
+  healthcare: 'Healthcare/Medical Robot Safety Case',
+  forklift: 'Autonomous Forklift Safety Case',
 };
 
 export default function OrderPage() {
