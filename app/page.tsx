@@ -234,6 +234,15 @@ export default function HomePage() {
           </a>
         </div>
       </div>
+
+      {/* Footer */}
+      <footer className="bg-gray-900 text-gray-400 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm">
+            WCAG 2.2 AAA Compliant • Mobile Optimized • Veteran-Owned • Bootstrapped • Zero VC Money
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
