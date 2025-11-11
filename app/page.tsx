@@ -1,5 +1,5 @@
 // SafetyCase.AI - 8 Robot Templates
-// Deployment: 2025-11-11 - Conservative Approach with Flexible Extraction
+// Deployment: 2025-11-11 (Retry) - Conservative Approach with Flexible Extraction
 import TemplateCard from '@/components/TemplateCard';
 import { TemplateInfo } from '@/lib/types';
 
