@@ -31,17 +31,17 @@ export default function PreviewEditor({
       riskLevel: 'Low',
       status: 'Pending',
     };
-    handleChange('riskAssessments', [...data.riskAssessments, newAssessment]);
+    handleChange('riskAssessments', [...(data.riskAssessments ?? []), newAssessment]);
   };
 
   const updateRiskAssessment = (index: number, field: keyof RiskAssessment, value: string) => {
-    const updated = [...data.riskAssessments];
+    const updated = [...(data.riskAssessments ?? [])];
     updated[index] = { ...updated[index], [field]: value };
     handleChange('riskAssessments', updated);
   };
 
   const removeRiskAssessment = (index: number) => {
-    handleChange('riskAssessments', data.riskAssessments.filter((_, i) => i !== index));
+    handleChange('riskAssessments', (data.riskAssessments ?? []).filter((_, i) => i !== index));
   };
 
   const addTestingResult = () => {
@@ -51,31 +51,31 @@ export default function PreviewEditor({
       cycles: 0,
       passRate: 0,
     };
-    handleChange('testingResults', [...data.testingResults, newResult]);
+    handleChange('testingResults', [...(data.testingResults ?? []), newResult]);
   };
 
   const updateTestingResult = (index: number, field: keyof TestingResult, value: any) => {
-    const updated = [...data.testingResults];
+    const updated = [...(data.testingResults ?? [])];
     updated[index] = { ...updated[index], [field]: value };
     handleChange('testingResults', updated);
   };
 
   const removeTestingResult = (index: number) => {
-    handleChange('testingResults', data.testingResults.filter((_, i) => i !== index));
+    handleChange('testingResults', (data.testingResults ?? []).filter((_, i) => i !== index));
   };
 
   const addStandard = () => {
-    handleChange('complianceStandards', [...data.complianceStandards, 'New Standard']);
+    handleChange('complianceStandards', [...(data.complianceStandards ?? []), 'New Standard']);
   };
 
   const updateStandard = (index: number, value: string) => {
-    const updated = [...data.complianceStandards];
+    const updated = [...(data.complianceStandards ?? [])];
     updated[index] = value;
     handleChange('complianceStandards', updated);
   };
 
   const removeStandard = (index: number) => {
-    handleChange('complianceStandards', data.complianceStandards.filter((_, i) => i !== index));
+    handleChange('complianceStandards', (data.complianceStandards ?? []).filter((_, i) => i !== index));
   };
 
   return (
@@ -215,7 +215,7 @@ export default function PreviewEditor({
 
           <h3 className="text-xl font-bold mt-8">Compliance Standards</h3>
           <div className="space-y-2">
-            {data.complianceStandards.map((standard, index) => (
+            {(data.complianceStandards ?? []).map((standard, index) => (
               <div key={index} className="flex gap-2">
                 <input
                   type="text"
@@ -238,7 +238,7 @@ export default function PreviewEditor({
 
           <h3 className="text-xl font-bold mt-8">Risk Assessments</h3>
           <div className="space-y-4">
-            {data.riskAssessments.map((assessment, index) => (
+            {(data.riskAssessments ?? []).map((assessment, index) => (
               <div key={index} className="border p-4 rounded-lg">
                 <div className="grid grid-cols-2 gap-4 mb-2">
                   <div className="col-span-2">
@@ -316,7 +316,7 @@ export default function PreviewEditor({
 
           <h3 className="text-xl font-bold mt-8">Testing Results</h3>
           <div className="space-y-4">
-            {data.testingResults.map((result, index) => (
+            {(data.testingResults ?? []).map((result, index) => (
               <div key={index} className="border p-4 rounded-lg">
                 <div className="grid grid-cols-2 gap-4 mb-2">
                   <div className="col-span-2">
