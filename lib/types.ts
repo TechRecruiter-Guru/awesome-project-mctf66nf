@@ -1,4 +1,4 @@
-export type TemplateType = 'humanoid' | 'amr' | 'cobot' | 'drone' | 'inspection' | 'construction' | 'healthcare' | 'forklift';
+export type TemplateType = 'humanoid' | 'amr' | 'cobot' | 'drone' | 'inspection' | 'construction' | 'healthcare' | 'forklift' | 'service';
 
 export type OrderStatus = 'pending_payment' | 'code_generated' | 'pdf_uploaded' | 'completed';
 

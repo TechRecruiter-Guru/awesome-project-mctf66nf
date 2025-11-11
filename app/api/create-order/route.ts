@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const validTemplates: TemplateType[] = ['humanoid', 'amr', 'cobot', 'drone', 'inspection'];
+    const validTemplates: TemplateType[] = ['humanoid', 'amr', 'cobot', 'drone', 'inspection', 'construction', 'healthcare', 'forklift', 'service'];
     if (!validTemplates.includes(templateType)) {
       return NextResponse.json(
         { message: 'Invalid template type' },

@@ -60,6 +60,13 @@ const templates: TemplateInfo[] = [
     icon: '🏭',
     price: 2000,
   },
+  {
+    id: 'service',
+    name: 'Service Robots',
+    description: 'Safety cases for hospitality, cleaning, retail, and commercial service robots.',
+    icon: '🤵',
+    price: 2000,
+  },
 ];
 
 export default function HomePage() {
@@ -109,7 +116,7 @@ export default function HomePage() {
               <div className="text-5xl mb-4">1️⃣</div>
               <h3 className="font-bold mb-2">Select Template</h3>
               <p className="text-gray-600">
-                Choose from 8 industry-specific safety case templates
+                Choose from 9 industry-specific safety case templates
               </p>
             </div>
             <div className="text-center">
