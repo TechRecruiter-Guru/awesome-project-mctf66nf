@@ -37,21 +37,64 @@ export interface TestingResult {
   passRate: number;
 }
 
+// Optional section interfaces
+export interface CybersecuritySection {
+  authentication?: string;
+  encryption?: string;
+  firmwareSecurity?: string;
+  intrusionDetection?: string;
+  vulnerabilityManagement?: string;
+  [key: string]: any; // Allow any additional fields
+}
+
+export interface AIMachineLearningSection {
+  trainingData?: string;
+  modelArchitecture?: string;
+  validationPerformance?: string;
+  adversarialRobustness?: string;
+  fieldMonitoring?: string;
+  fallbackMechanisms?: string;
+  [key: string]: any;
+}
+
+export interface MaintenanceSafetySection {
+  technicianQualifications?: string;
+  lotoP rocedures?: string;
+  batteryHandling?: string;
+  postMaintenanceVerification?: string;
+  sparePartsManagement?: string;
+  incidentTracking?: string;
+  [key: string]: any;
+}
+
 export interface SafetyCaseData {
+  // Core required fields
   companyName: string;
   robotModel: string;
-  silRating: string;
-  operationalHours: number;
-  hazardsIdentified: number;
-  riskScore: number;
-  complianceRate: number;
-  testCoverage: number;
-  incidentRate: number;
-  certificationBody: string;
-  certificateNumber: string;
-  riskAssessments: RiskAssessment[];
-  complianceStandards: string[];
-  testingResults: TestingResult[];
+
+  // Optional dashboard metrics
+  silRating?: string;
+  operationalHours?: number;
+  hazardsIdentified?: number;
+  riskScore?: number;
+  complianceRate?: number;
+  testCoverage?: number;
+  incidentRate?: number;
+  certificationBody?: string;
+  certificateNumber?: string;
+
+  // Optional structured data
+  riskAssessments?: RiskAssessment[];
+  complianceStandards?: string[];
+  testingResults?: TestingResult[];
+
+  // Optional new sections (only included if present in PDF)
+  cybersecurity?: CybersecuritySection;
+  aiMachineLearning?: AIMachineLearningSection;
+  maintenanceSafety?: MaintenanceSafetySection;
+
+  // Catch-all for any other sections found in PDF
+  additionalSections?: Record<string, any>;
 }
 
 export interface TemplateInfo {
