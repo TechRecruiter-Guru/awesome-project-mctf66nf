@@ -1194,6 +1194,592 @@
             </div>
         </section>
 
+        <!-- Cybersecurity & Control Integrity Section -->
+        <section id="cybersecurity" class="section">
+            <div class="section-header">
+                <h2>Cybersecurity & Control System Integrity</h2>
+                <p class="section-subtitle">Protection against unauthorized access and cyber threats per ISO 10218:2025</p>
+            </div>
+
+            <p>As mandated by the 2025 revision of ISO 10218, this safety case addresses cybersecurity measures to protect against unauthorized control, malicious attacks, and control system compromise that could result in unsafe robot behavior.</p>
+
+            <div class="alert info" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">🔒</span>
+                <div class="alert-content">
+                    <p class="alert-title">Security-First Design</p>
+                    <p>All control communications are encrypted, firmware is cryptographically signed, and multi-factor authentication is required for all operator access. Security monitoring is continuous with automatic safe-stop on anomaly detection.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Authentication & Authorization</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Multi-Factor Authentication (MFA)</p>
+                        <p class="compliance-description">All operator accounts require MFA using hardware security keys (FIDO2/WebAuthn compliant) or time-based one-time passwords (TOTP). Role-based access control (RBAC) limits privileges: Operator (runtime control only), Technician (maintenance + operation), Administrator (full system access).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Session Management & Timeout</p>
+                        <p class="compliance-description">Operator sessions automatically timeout after 15 minutes of inactivity. Re-authentication required for safety-critical operations. All sessions logged with timestamp, user ID, and IP address for audit trail.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Certificate-Based Device Authentication</p>
+                        <p class="compliance-description">Control devices (tablets, workstations) must present valid X.509 certificates signed by company CA. Unauthorized devices are rejected at network layer. Certificates rotated every 90 days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Secure Communications</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">End-to-End Encryption (TLS 1.3)</p>
+                        <p class="compliance-description">All control commands and telemetry data encrypted using TLS 1.3 with perfect forward secrecy (PFS). Cipher suites limited to AES-256-GCM and ChaCha20-Poly1305. Legacy protocols (TLS 1.2 and below, SSLv3) disabled.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Network Segmentation</p>
+                        <p class="compliance-description">Safety-critical control network (emergency stop, collision avoidance) physically isolated from non-critical network (telemetry, diagnostics). No routing between segments. Safety network uses dedicated hardware with no internet connectivity.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Command Input Validation</p>
+                        <p class="compliance-description">All control inputs validated against safety constraints (velocity limits, workspace boundaries, joint limits) before execution. Malformed or out-of-range commands rejected with error logging. Input sanitization prevents injection attacks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Firmware & Software Integrity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Cryptographically Signed Firmware</p>
+                        <p class="compliance-description">All firmware images signed using RSA-4096 keys stored in hardware security module (HSM). Robot bootloader verifies signature before loading firmware. Unsigned or tampered firmware rejected with system lockdown.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Secure Boot & Measured Boot</p>
+                        <p class="compliance-description">UEFI Secure Boot enabled with trusted platform module (TPM 2.0). Each boot stage measures and verifies integrity of next stage. Boot attestation logged and monitored for anomalies.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Over-the-Air (OTA) Update Security</p>
+                        <p class="compliance-description">OTA updates require dual authorization (engineering + operations manager). Update packages encrypted in transit and at rest. Automatic rollback on update failure. Robot remains in safe-stop during update process.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Intrusion Detection & Response</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Anomaly Detection</p>
+                        <p class="compliance-description">Network traffic, command sequences, and system behavior continuously monitored for anomalies. Machine learning models detect deviations from normal operation patterns. Anomaly detection threshold tuned to minimize false positives while maintaining high sensitivity.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Automatic Safe-Stop on Intrusion</p>
+                        <p class="compliance-description">Suspected intrusion or control system compromise triggers immediate transition to safe-stop state. All motion commands ignored until manual reset by authorized administrator. Security incident logged with full diagnostic snapshot.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Security Incident Response Plan</p>
+                        <p class="compliance-description">Documented procedures for security incident investigation, containment, eradication, and recovery. Incident response team on-call 24/7. Post-incident review conducted within 72 hours with root cause analysis and corrective actions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Vulnerability Management</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Third-Party Dependency Monitoring</p>
+                        <p class="compliance-description">All software dependencies tracked in Software Bill of Materials (SBOM). CVE databases monitored daily for vulnerabilities. Critical vulnerabilities patched within 48 hours; high severity within 7 days; medium within 30 days.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Penetration Testing</p>
+                        <p class="compliance-description">Annual third-party penetration testing by certified ethical hackers (CEH, OSCP). Tests include network attacks, privilege escalation, firmware reverse engineering, and physical access scenarios. All findings remediated before next production release.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Security Disclosure Program</p>
+                        <p class="compliance-description">Public vulnerability disclosure program allows security researchers to report findings. Coordinated disclosure timeline (90 days). Recognition and rewards for valid security findings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Security Audit Date</span>
+                    <span class="metadata-value">October 2025</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Penetration Test Date</span>
+                    <span class="metadata-value">September 2025</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Security Review</span>
+                    <span class="metadata-value">January 2026</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Security Incidents (2025)</span>
+                    <span class="metadata-value">0 Confirmed</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI/ML Safety Validation Section -->
+        <section id="ai-ml-safety" class="section">
+            <div class="section-header">
+                <h2>AI/ML Safety Validation & Monitoring</h2>
+                <p class="section-subtitle">Artificial intelligence and machine learning system safety assurance</p>
+            </div>
+
+            <p>This humanoid robotics platform utilizes machine learning models for perception (human detection, object recognition, scene understanding) and motion planning. This section documents the safety validation approach for AI/ML components and continuous field monitoring procedures.</p>
+
+            <div class="alert warning" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">🤖</span>
+                <div class="alert-content">
+                    <p class="alert-title">AI Safety Philosophy</p>
+                    <p>All AI/ML predictions are treated as untrusted inputs and validated by deterministic safety monitors before execution. When AI confidence falls below safety thresholds, system degrades gracefully to rule-based fallback behaviors. Safety is never dependent on AI correctness alone.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Training Data Quality & Diversity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Dataset Composition & Size</p>
+                        <p class="compliance-description">Human detection model trained on 2.4M labeled images from 47 operational sites representing diverse demographics (age, gender, body type, clothing, PPE), environmental conditions (lighting 50-1000 lux, weather, occlusions), and human poses (standing, sitting, kneeling, reaching, carrying objects). Data collected across 18 months covering seasonal variations.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Bias Analysis & Mitigation</p>
+                        <p class="compliance-description">Detection performance evaluated across demographic groups: precision ≥99.8% and recall ≥99.9% for all groups (no statistically significant performance disparity, p < 0.01). Underrepresented scenarios augmented with synthetic data generation. Quarterly bias audits conducted.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Data Annotation Quality Control</p>
+                        <p class="compliance-description">All training images annotated by certified labeling teams with inter-annotator agreement ≥98%. Ambiguous cases reviewed by safety engineering team. 10% random sample re-annotated for quality verification.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Model Architecture & Validation</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Perception Model Architecture</p>
+                        <p class="compliance-description">Human detection: YOLOv8 (79M parameters) with custom safety-critical head. Object segmentation: Mask R-CNN with ResNet-101 backbone. Depth estimation: Stereo vision + monocular depth fusion. Inference latency: <30ms per frame (guaranteed on edge TPU). Model quantization (INT8) validated to maintain accuracy within 0.2% of FP32 baseline.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Test Set Validation Performance</p>
+                        <p class="compliance-description">Held-out test set (250K images, disjoint from training): Human detection precision 99.87%, recall 99.93%, F1 score 99.90%. False positive rate <0.02% (no false negatives tolerated - conservative detection preferred). Validated on edge cases: partial occlusions, extreme lighting, motion blur, non-standard poses.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Out-of-Distribution (OOD) Detection</p>
+                        <p class="compliance-description">Ensemble uncertainty estimation (dropout approximation + deep ensembles) detects inputs outside training distribution. OOD score threshold calibrated to 99.5% sensitivity on validation set. When OOD detected, system reduces speed to 25% and increases sensor fusion conservativeness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Adversarial Robustness & Edge Case Testing</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Adversarial Attack Testing</p>
+                        <p class="compliance-description">Models tested against adversarial perturbations (FGSM, PGD, C&W attacks) at various perturbation budgets (ε = 0.01 to 0.1). Adversarial training incorporated to improve robustness. Validated that physically-realizable attacks (lighting changes, sensor noise) do not degrade safety performance below thresholds.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Environmental Stress Testing</p>
+                        <p class="compliance-description">Perception validated under degraded conditions: Rain/water droplets on cameras (99.2% detection maintained), direct sunlight/lens flare (98.8%), darkness with auxiliary lighting only (99.4%), fog/haze 50m visibility (98.1%), dust/particulate from industrial processes (99.0%). All scenarios tested with 5,000+ images per condition.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Sensor Degradation Scenarios</p>
+                        <p class="compliance-description">Tested with: Camera lens occlusion (dirt, scratches), sensor misalignment (±5°), exposure/white balance miscalibration, dead pixels (up to 2% sensor area). Multi-sensor fusion ensures degradation of single sensor does not compromise safety. Minimum 2 of 4 cameras must detect human for positive classification.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Continuous Field Monitoring & Model Updates</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Inference Performance Monitoring</p>
+                        <p class="compliance-description">All deployed robots log inference metrics (latency, confidence scores, OOD detection frequency, disagreement between sensors) to cloud analytics. Anomalies trigger automatic alerts. Performance degradation trends identified via statistical process control (SPC) before safety impact occurs.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Model Version Management & Rollback</p>
+                        <p class="compliance-description">All models versioned with semantic versioning (major.minor.patch). Each version tagged with training data checksum, validation metrics, and approval signatures. A/B testing on 5% of fleet before full rollout. Automatic rollback if field safety metrics degrade by >1% relative to previous version.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Retraining & Recertification Process</p>
+                        <p class="compliance-description">Models retrained quarterly incorporating new field data (edge cases, near-misses, environmental conditions not in original dataset). Each retrained model undergoes full validation test suite before deployment. Safety regression testing ensures new model does not introduce failures on previously-passing scenarios. Recertification by safety team required for major version updates.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Explainability & Incident Investigation</p>
+                        <p class="compliance-description">Gradient-weighted Class Activation Mapping (Grad-CAM) visualizations stored for sampled inferences to understand model decision-making. All safety-relevant events (near-misses, emergency stops) trigger full diagnostic capture including raw sensor data and model activations for offline analysis. Incident investigations identify root causes (data quality, model limitations, deployment environment differences).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Fallback & Graceful Degradation</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Confidence-Based Mode Switching</p>
+                        <p class="compliance-description">When AI model confidence falls below 95% threshold (calibrated on validation set), robot automatically reduces speed by 50% and engages rule-based safety monitors. Below 80% confidence, robot transitions to safe-stop until uncertainty resolved. Conservative false-positive bias intentional.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Rule-Based Safety Backstop</p>
+                        <p class="compliance-description">Deterministic safety layer monitors all AI outputs. Geometry-based collision checking using LiDAR point clouds provides AI-independent validation. Infrared time-of-flight sensors (non-ML) provide redundant human detection at close range (<1m). Any sensor disagreement triggers safe-stop.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Operator Notification & Manual Override</p>
+                        <p class="compliance-description">Frequent AI uncertainty events (>5 per hour) alert human supervisor. Operator can view real-time confidence scores and sensor visualizations. Manual override available to teleoperate robot out of degraded AI scenarios. Teleoperation limited to 0.5 m/s with direct video feed and <200ms latency requirement.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Current Model Version</span>
+                    <span class="metadata-value">v4.2.1 (Oct 2025)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Training Dataset Size</span>
+                    <span class="metadata-value">2.4M Images</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Field Detection Accuracy</span>
+                    <span class="metadata-value">99.91% (30-day avg)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">AI-Related Incidents</span>
+                    <span class="metadata-value">0 Safety Events</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance Safety Section -->
+        <section id="maintenance-safety" class="section">
+            <div class="section-header">
+                <h2>Maintenance Safety & Technician Qualification</h2>
+                <p class="section-subtitle">Safe service procedures and personnel competency requirements</p>
+            </div>
+
+            <p>Maintenance activities present unique hazards due to close human proximity to energized systems, disabled safety interlocks, and potential for inadvertent motion. This section documents procedures to ensure maintenance is performed safely by qualified personnel.</p>
+
+            <div class="alert danger" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Critical Safety Notice</p>
+                    <p>Maintenance must ONLY be performed by personnel certified through the [COMPANY_NAME] Technical Training Program. Unqualified maintenance attempts void all warranties and certifications. Robot contains high voltage (400V DC), stored energy (springs, pneumatics), and heavy moving components (joint torque up to 500 Nm). Improper service can result in serious injury or death.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Technician Qualification & Certification</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 1: Operator Maintenance Technician (OMT)</p>
+                        <p class="compliance-description">40-hour course covering: routine inspections, cleaning procedures, consumable replacement (grease, filters), basic troubleshooting, and emergency stop testing. Prerequisites: High school diploma, basic hand tool proficiency. Authorized tasks: Visual inspections, exterior cleaning, emergency stop verification, battery swap (with guard in place). NOT authorized for panel removal or high-voltage work. Recertification: Annual (8-hour refresher).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 2: Field Service Technician (FST)</p>
+                        <p class="compliance-description">120-hour course covering: mechanical disassembly, electrical safety (NFPA 70E), sensor calibration, actuator replacement, firmware updates, and diagnostics. Prerequisites: OMT certification + 2 years mechatronics experience OR associate degree in robotics/electrical engineering. Authorized tasks: All OMT tasks plus sensor replacement, actuator service, brake adjustment, minor electrical repairs (≤48V). NOT authorized for safety system modifications. Recertification: Annual (16-hour refresher + practical exam).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 3: Certified Robotics Engineer (CRE)</p>
+                        <p class="compliance-description">200-hour course covering: high-voltage systems (400V DC), safety system architecture, controller programming, advanced diagnostics, and failure analysis. Prerequisites: FST certification + bachelor's degree in engineering OR 5 years field robotics experience. Authorized tasks: All maintenance including high-voltage work, safety system calibration, controller replacement, and certification testing. Only CREs may re-enable safety interlocks after maintenance. Recertification: Annual (24-hour refresher + written/practical exam).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety Training for All Levels</p>
+                        <p class="compliance-description">All technicians receive: Lockout/Tagout (LOTO) per OSHA 1910.147, Arc Flash safety per NFPA 70E, Confined Space Entry per OSHA 1910.146 (if applicable), Hazardous Energy Control, First Aid/CPR/AED, and Incident Reporting. Training documented in Learning Management System (LMS) with digital certificates and expiration tracking.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Lockout/Tagout (LOTO) Procedures</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Energy Isolation Points</p>
+                        <p class="compliance-description">Robot has 5 energy sources requiring isolation: (1) Main 400V DC battery disconnect, (2) Emergency stop circuit (redundant contactors), (3) Pneumatic accumulator (0.8 MPa, 3L volume), (4) Joint spring energy storage (6 joints, 250J total), (5) Hydraulic reservoir (if equipped, 21 MPa). Each isolation point clearly labeled with energy type, voltage/pressure, and lockout procedure.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">LOTO Sequence (per OSHA 1910.147)</p>
+                        <p class="compliance-description">
+                            1. Notify all affected personnel of impending maintenance.<br>
+                            2. Shut down robot using normal stop procedure (save state, controlled deceleration).<br>
+                            3. Activate E-stop button to de-energize safety circuits.<br>
+                            4. Disconnect main battery (tool-required disconnect switch).<br>
+                            5. Apply personal lock and tag to battery disconnect (minimum: technician name, date, phone).<br>
+                            6. Bleed stored pneumatic energy (valve at accumulator, verify 0 pressure).<br>
+                            7. Engage mechanical joint locks to prevent gravity drop.<br>
+                            8. Verify zero energy state using voltage/pressure test equipment (multimeter at test points, pressure gauge).<br>
+                            9. Attempt to start robot (should fail) - verification step.<br>
+                            10. Proceed with maintenance only after zero energy verified.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Group LOTO for Multi-Technician Work</p>
+                        <p class="compliance-description">When multiple technicians work on same robot, group lockout box used. Each technician applies personal lock to box (hasps accommodate up to 6 locks). No technician may remove another's lock. Last technician to finish removes lockout box and completes re-energization checklist. Documented in maintenance log with all technician signatures.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">High-Voltage & Battery Safety</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Electrical Safety PPE Requirements</p>
+                        <p class="compliance-description">Work on energized circuits (>50V) requires: Class 00 insulated gloves (500V rated) with leather protectors, safety glasses with side shields, arc-rated face shield (when risk of arc flash), arc-rated coveralls (8 cal/cm² minimum), insulated tools, and non-conductive footwear. Arc flash boundary calculated at 0.6m for 400V DC system. PPE inspected before each use (air test for gloves, visual inspection for damage).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Lithium-Ion Battery Handling</p>
+                        <p class="compliance-description">Robot uses 115Ah lithium iron phosphate (LiFePO4) battery, 400V nominal (350-440V range). Hazards: Electric shock, thermal runaway fire, explosive gas venting if damaged. Safety procedures: Verify battery temperature <35°C before handling, inspect for swelling/damage/leaks, use insulated lifting equipment (40kg mass), charge only with approved charger in ventilated area, store at 50% SOC in fireproof cabinet. Class D fire extinguisher available during all battery work.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Capacitor Discharge Procedure</p>
+                        <p class="compliance-description">Motor drive capacitors store lethal energy (12,000μF at 400V = 960J). After battery disconnect, wait 5 minutes for bleed resistors to discharge capacitors below 50V. Verify voltage at designated test points before touching any high-voltage component. Short-circuit procedure using insulated shorting probe if immediate access required (CRE only).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Post-Maintenance Verification Testing</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Functional Verification Checklist</p>
+                        <p class="compliance-description">Before returning robot to service, technician must complete 27-point verification checklist including: Emergency stop function test (all 4 E-stop buttons), force/torque sensor calibration check, collision detection response time (<50ms), joint position accuracy (±0.5°), workspace boundary enforcement, communication link integrity, and software version verification. Checklist signed by performing technician and verified by supervisor.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety System Re-Certification</p>
+                        <p class="compliance-description">Any maintenance involving safety systems (E-stop, collision detection, force limiting) requires full safety recertification. Automated test suite runs 200+ safety scenarios. Human-in-loop verification: technician deliberately triggers each safety condition (using test fixtures, not actual human contact) and verifies response. Only CRE-level technicians may certify safety system functionality.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Break-In Period After Major Service</p>
+                        <p class="compliance-description">After actuator replacement, controller swap, or structural repairs, robot operates in reduced-performance mode for 8 hours: 50% speed limit, 60% force limit, enhanced monitoring (all sensor data logged). Automatic transition to full performance after 8 hours if no anomalies detected. Supervisor review required for early release from break-in period.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Spare Parts & Supply Chain Integrity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Approved Spare Parts List</p>
+                        <p class="compliance-description">Only parts from approved vendor list may be installed. Critical safety components (force sensors, E-stop contactors, motor controllers) must be OEM parts with batch traceability. Technicians verify part number, revision, and serial number against maintenance database before installation. Non-approved parts void safety certification.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Counterfeit Prevention</p>
+                        <p class="compliance-description">All critical electronic components have unique serialization (QR code + 128-bit UUID). Upon installation, technician scans component and system validates against manufacturer's database. Suspected counterfeit triggers alert to supply chain team. Batteries include NFC tag with encrypted authentication. Failed authentication prevents robot operation.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Component Lifecycle Tracking</p>
+                        <p class="compliance-description">Each safety-critical component has recommended service life: Force/torque sensors (20,000 hours or 4 years), E-stop contactors (50,000 cycles or 5 years), Collision detection sensors (30,000 hours or 5 years), Batteries (2,000 cycles or 3 years), Motor bearings (40,000 hours or 7 years). System tracks runtime/cycles and alerts when approaching limits. Components can be extended beyond limits only with engineering approval and enhanced inspection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Maintenance Safety Incidents & Learning</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Active">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Incident Reporting & Investigation</p>
+                        <p class="compliance-description">All maintenance incidents (injuries, near-misses, equipment damage) reported within 24 hours via online portal. Severity classification: Level 1 (injury requiring medical attention - immediate investigation), Level 2 (near-miss with injury potential - investigation within 72 hours), Level 3 (procedure violation or equipment damage - investigation within 1 week). Root cause analysis using 5-Whys and Fishbone diagrams. Corrective actions tracked to closure.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Active">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety Bulletins & Procedure Updates</p>
+                        <p class="compliance-description">Findings from incident investigations disseminated via Technical Service Bulletins (TSB). All technicians must acknowledge receipt and understanding within 7 days. High-severity findings require immediate procedure updates and refresher training. Maintenance procedures reviewed and updated quarterly based on field feedback and incident trends.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Active">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">2025 Maintenance Safety Record</p>
+                        <p class="compliance-description">Year-to-date (through October): 2,847 maintenance interventions across deployed fleet. 0 lost-time injuries, 2 first-aid incidents (minor cuts during panel removal - corrective action: improved edge guards installed), 7 near-misses reported and investigated. Injury rate: 0.7 per 1,000 maintenance hours (industry benchmark: 2.1). Target: Zero harm.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Certified Technicians</span>
+                    <span class="metadata-value">89 Active</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">CRE-Level Engineers</span>
+                    <span class="metadata-value">12 Qualified</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Maintenance Incidents (2025)</span>
+                    <span class="metadata-value">0 Lost-Time Injuries</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Safety Audit</span>
+                    <span class="metadata-value">January 2026</span>
+                </div>
+            </div>
+        </section>
+
         <!-- Testing Results Section -->
         <section id="testing" class="section">
             <div class="section-header">

@@ -1228,6 +1228,429 @@
             </div>
         </section>
 
+        <!-- Cybersecurity & Control Integrity Section -->
+        <section id="cybersecurity" class="section">
+            <div class="section-header">
+                <h2>Cybersecurity & Control System Integrity</h2>
+                <p class="section-subtitle">Protection against unauthorized access and cyber threats per ISO 10218:2025</p>
+            </div>
+
+            <p>As mandated by the 2025 revision of ISO 10218, this safety case addresses cybersecurity measures to protect against unauthorized control, malicious attacks, and control system compromise that could result in unsafe robot behavior.</p>
+
+            <div class="alert info" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">🔒</span>
+                <div class="alert-content">
+                    <p class="alert-title">Security-First Design</p>
+                    <p>All control communications are encrypted, firmware is cryptographically signed, and multi-factor authentication is required for all operator access. Security monitoring is continuous with automatic safe-stop on anomaly detection.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Authentication & Authorization</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Multi-Factor Authentication (MFA)</p>
+                        <p class="compliance-description">All operator accounts require MFA using hardware security keys (FIDO2/WebAuthn compliant) or time-based one-time passwords (TOTP). Role-based access control (RBAC) limits privileges: Operator (runtime control only), Technician (maintenance + operation), Administrator (full system access).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Session Management & Timeout</p>
+                        <p class="compliance-description">Operator sessions automatically timeout after 15 minutes of inactivity. Re-authentication required for safety-critical operations. All sessions logged with timestamp, user ID, and IP address for audit trail.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Certificate-Based Device Authentication</p>
+                        <p class="compliance-description">Control devices (tablets, workstations) must present valid X.509 certificates signed by company CA. Unauthorized devices are rejected at network layer. Certificates rotated every 90 days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Secure Communications</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">End-to-End Encryption (TLS 1.3)</p>
+                        <p class="compliance-description">All control commands and telemetry data encrypted using TLS 1.3 with perfect forward secrecy (PFS). Cipher suites limited to AES-256-GCM and ChaCha20-Poly1305. Legacy protocols (TLS 1.2 and below, SSLv3) disabled.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Network Segmentation</p>
+                        <p class="compliance-description">Safety-critical control network (emergency stop, collision avoidance) physically isolated from non-critical network (telemetry, diagnostics). No routing between segments. Safety network uses dedicated hardware with no internet connectivity.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Command Input Validation</p>
+                        <p class="compliance-description">All control inputs validated against safety constraints (velocity limits, workspace boundaries, operational design domain) before execution. Malformed or out-of-range commands rejected with error logging. Input sanitization prevents injection attacks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Firmware & Software Integrity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Cryptographically Signed Firmware</p>
+                        <p class="compliance-description">All firmware images signed using RSA-4096 keys stored in hardware security module (HSM). Robot bootloader verifies signature before loading firmware. Unsigned or tampered firmware rejected with system lockdown.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Secure Boot & Measured Boot</p>
+                        <p class="compliance-description">UEFI Secure Boot enabled with trusted platform module (TPM 2.0). Each boot stage measures and verifies integrity of next stage. Boot attestation logged and monitored for anomalies.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Over-the-Air (OTA) Update Security</p>
+                        <p class="compliance-description">OTA updates require dual authorization (engineering + operations manager). Update packages encrypted in transit and at rest. Automatic rollback on update failure. Robot remains in safe-stop during update process.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Intrusion Detection & Response</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Anomaly Detection</p>
+                        <p class="compliance-description">Network traffic, command sequences, and system behavior continuously monitored for anomalies. Machine learning models detect deviations from normal operation patterns. Anomaly detection threshold tuned to minimize false positives while maintaining high sensitivity.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Automatic Safe-Stop on Intrusion</p>
+                        <p class="compliance-description">Suspected intrusion or control system compromise triggers immediate transition to safe-stop state. All motion commands ignored until manual reset by authorized administrator. Security incident logged with full diagnostic snapshot.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Security Incident Response Plan</p>
+                        <p class="compliance-description">Documented procedures for security incident investigation, containment, eradication, and recovery. Incident response team on-call 24/7. Post-incident review conducted within 72 hours with root cause analysis and corrective actions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Vulnerability Management</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Third-Party Dependency Monitoring</p>
+                        <p class="compliance-description">All software dependencies tracked in Software Bill of Materials (SBOM). CVE databases monitored daily for vulnerabilities. Critical vulnerabilities patched within 48 hours; high severity within 7 days; medium within 30 days.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Penetration Testing</p>
+                        <p class="compliance-description">Annual third-party penetration testing by certified ethical hackers (CEH, OSCP). Tests include network attacks, privilege escalation, firmware reverse engineering, and physical access scenarios. All findings remediated before next production release.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Security Disclosure Program</p>
+                        <p class="compliance-description">Public vulnerability disclosure program allows security researchers to report findings. Coordinated disclosure timeline (90 days). Recognition and rewards for valid security findings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Security Audit Date</span>
+                    <span class="metadata-value">October 2025</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Penetration Test Date</span>
+                    <span class="metadata-value">September 2025</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Security Review</span>
+                    <span class="metadata-value">January 2026</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Security Incidents (2025)</span>
+                    <span class="metadata-value">0 Confirmed</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI/ML Safety Validation Section -->
+        <section id="ai-ml-safety" class="section">
+            <div class="section-header">
+                <h2>AI/ML Safety Validation & Monitoring</h2>
+                <p class="section-subtitle">Artificial intelligence and machine learning system safety assurance</p>
+            </div>
+
+            <p>This autonomous mobile robot platform utilizes machine learning models for perception (pedestrian detection, obstacle recognition, dynamic object tracking) and path planning. This section documents the safety validation approach for AI/ML components and continuous field monitoring procedures.</p>
+
+            <div class="alert warning" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">🤖</span>
+                <div class="alert-content">
+                    <p class="alert-title">AI Safety Philosophy</p>
+                    <p>All AI/ML predictions are treated as untrusted inputs and validated by deterministic safety monitors before execution. When AI confidence falls below safety thresholds, system degrades gracefully to rule-based fallback behaviors. Safety is never dependent on AI correctness alone.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Training Data Quality & Diversity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Dataset Composition & Size</p>
+                        <p class="compliance-description">Pedestrian detection model trained on 1.8M labeled images from 62 warehouse and industrial facilities representing diverse demographics, environmental conditions (lighting 50-1000 lux, reflective floors, shadows), and pedestrian states (walking, standing, pushing carts, carrying loads). Data collected across 15 months covering seasonal lighting variations.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Bias Analysis & Mitigation</p>
+                        <p class="compliance-description">Detection performance evaluated across demographic groups: precision ≥99.9% and recall ≥99.95% for all groups (no statistically significant performance disparity, p < 0.01). Underrepresented scenarios augmented with synthetic data generation. Quarterly bias audits conducted.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Data Annotation Quality Control</p>
+                        <p class="compliance-description">All training images annotated by certified labeling teams with inter-annotator agreement ≥98%. Ambiguous cases reviewed by safety engineering team. 10% random sample re-annotated for quality verification.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Model Architecture & Validation</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Perception Model Architecture</p>
+                        <p class="compliance-description">Pedestrian detection: EfficientDet-D3 (12M parameters). Obstacle segmentation: DeepLabv3+ with MobileNetV3 backbone. Dynamic object tracking: SORT (Simple Online and Realtime Tracking) with Kalman filtering. Inference latency: <25ms per frame (guaranteed on edge GPU). Model quantization (INT8) validated to maintain accuracy within 0.3% of FP32 baseline.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Test Set Validation Performance</p>
+                        <p class="compliance-description">Held-out test set (180K images, disjoint from training): Pedestrian detection precision 99.91%, recall 99.96%, F1 score 99.94%. False positive rate <0.01% (no false negatives tolerated - conservative detection preferred). Validated on edge cases: partial occlusions, high-traffic scenarios, reflective surfaces, moving shadows.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Out-of-Distribution (OOD) Detection</p>
+                        <p class="compliance-description">Ensemble uncertainty estimation (Monte Carlo dropout + temperature scaling) detects inputs outside training distribution. OOD score threshold calibrated to 99.7% sensitivity on validation set. When OOD detected, system reduces speed to 30% and increases protective field margins by 50%.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Continuous Field Monitoring & Model Updates</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Inference Performance Monitoring</p>
+                        <p class="compliance-description">All deployed robots log inference metrics (latency, confidence scores, OOD detection frequency, LiDAR-vision disagreement rate) to cloud analytics. Anomalies trigger automatic alerts. Performance degradation trends identified via statistical process control (SPC) before safety impact occurs.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Model Version Management & Rollback</p>
+                        <p class="compliance-description">All models versioned with semantic versioning (major.minor.patch). Each version tagged with training data checksum, validation metrics, and approval signatures. A/B testing on 10% of fleet before full rollout. Automatic rollback if field safety metrics degrade by >0.5% relative to previous version.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Fallback & Graceful Degradation</p>
+                        <p class="compliance-description">When AI confidence falls below 95% threshold, robot reduces speed by 40% and relies more heavily on LiDAR-only obstacle detection. Below 85% confidence, robot transitions to LiDAR-only mode (no vision). Below 75%, robot executes safe-stop. Multi-sensor fusion ensures no single AI failure compromises safety.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Current Model Version</span>
+                    <span class="metadata-value">v3.1.4 (Oct 2025)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Training Dataset Size</span>
+                    <span class="metadata-value">1.8M Images</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Field Detection Accuracy</span>
+                    <span class="metadata-value">99.93% (30-day avg)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">AI-Related Incidents</span>
+                    <span class="metadata-value">0 Safety Events</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance Safety Section -->
+        <section id="maintenance-safety" class="section">
+            <div class="section-header">
+                <h2>Maintenance Safety & Technician Qualification</h2>
+                <p class="section-subtitle">Safe service procedures and personnel competency requirements</p>
+            </div>
+
+            <p>Maintenance activities present unique hazards due to close human proximity to energized systems, disabled safety interlocks, and potential for inadvertent motion. This section documents procedures to ensure maintenance is performed safely by qualified personnel.</p>
+
+            <div class="alert danger" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-label="Warning">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Critical Safety Notice</p>
+                    <p>Maintenance must ONLY be performed by personnel certified through the [COMPANY_NAME] Technical Training Program. Unqualified maintenance attempts void all warranties and certifications. Robot contains high voltage (48V DC drive motors, 400V charging system), stored energy (ultracapacitors), and heavy moving components (500kg platform mass). Improper service can result in serious injury or death.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Technician Qualification & Certification</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 1: AMR Operator Technician (AOT)</p>
+                        <p class="compliance-description">24-hour course covering: routine inspections, cleaning procedures, battery charging, basic troubleshooting, and emergency stop testing. Prerequisites: High school diploma. Authorized tasks: Visual inspections, cleaning, battery charging/swapping, emergency stop verification, software restart. NOT authorized for mechanical or electrical repairs. Recertification: Annual (4-hour refresher).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 2: Field Service Technician (FST)</p>
+                        <p class="compliance-description">80-hour course covering: wheel/motor replacement, sensor cleaning/calibration, battery system service, firmware updates, and diagnostics. Prerequisites: AOT certification + 1 year robotics/automotive experience OR technical school diploma. Authorized tasks: All AOT tasks plus wheel/caster replacement, sensor calibration, drive motor service, minor wiring repairs. NOT authorized for safety system modifications or high-voltage work. Recertification: Annual (12-hour refresher + practical exam).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 3: Certified AMR Engineer (CAE)</p>
+                        <p class="compliance-description">160-hour course covering: electrical safety (NFPA 70E), safety system architecture, LiDAR/navigation system repair, controller programming, and failure analysis. Prerequisites: FST certification + bachelor's degree OR 4 years field robotics experience. Authorized tasks: All maintenance including electrical repairs, safety system calibration, controller replacement, navigation system service. Only CAEs may re-enable safety interlocks after maintenance. Recertification: Annual (20-hour refresher + written/practical exam).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Lockout/Tagout (LOTO) & Energy Isolation</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Energy Sources Requiring Isolation</p>
+                        <p class="compliance-description">AMR has 3 primary energy sources: (1) Main battery pack (48V DC lithium-ion, 80Ah), (2) Ultracapacitor bank (15V, 500F - stores energy for peak power), (3) Mechanical energy in wheels/motors. Each isolation point clearly labeled. Technicians must isolate ALL energy sources before mechanical disassembly.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">LOTO Procedure</p>
+                        <p class="compliance-description">1. Park AMR in designated maintenance area. 2. Activate E-stop. 3. Power off via software shutdown. 4. Disconnect main battery using keyed disconnect. 5. Apply personal lock to battery disconnect. 6. Wait 2 minutes for ultracapacitor discharge. 7. Verify zero voltage at test points. 8. Apply wheel chocks to prevent unintended motion. 9. Proceed with maintenance.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Battery Safety & Charging</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Lithium-Ion Battery Handling</p>
+                        <p class="compliance-description">AMR uses 48V/80Ah lithium-ion battery (25kg mass). Hazards: Electric shock (48V DC nominal, 54V max), fire risk if damaged/punctured, thermal runaway if overcharged. Safety procedures: Handle only when temperature <40°C, inspect for damage/swelling before handling, use insulated gloves for electrical connections, charge only with approved chargers in ventilated area, store damaged batteries in fireproof containers away from flammable materials. Class D fire extinguisher accessible during all battery work.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Charging Station Safety</p>
+                        <p class="compliance-description">Automated charging stations use 400V AC input (converted to 54V DC for charging). Only CAE-level technicians may service charging stations. Charging area must have: adequate ventilation (hydrogen gas risk during charging), ground fault circuit interrupter (GFCI), thermal monitoring, and automatic charge termination on fault. Charging stations inspected quarterly.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Post-Maintenance Verification</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Functional Verification Checklist</p>
+                        <p class="compliance-description">Before returning AMR to service: E-stop function test, wheel/motor operation check, sensor verification (LiDAR scan test, camera image quality, ultrasonic response), navigation accuracy test (localization within ±50mm), emergency braking test (<200mm stopping distance at 1.5 m/s), obstacle detection test (response to test obstacle at 1.5m), communication link test. Checklist signed by technician and supervisor.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Test Run Protocol</p>
+                        <p class="compliance-description">After significant repairs, AMR must complete supervised test run: (1) Controlled environment test (empty area, 15 minutes), (2) Obstacle avoidance validation (technician approaches AMR to verify detection), (3) Emergency stop test, (4) Low-traffic operational area test (30 minutes with monitoring), (5) Full operational clearance after supervisor review.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Certified Technicians</span>
+                    <span class="metadata-value">127 Active</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">CAE-Level Engineers</span>
+                    <span class="metadata-value">18 Qualified</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Maintenance Incidents (2025)</span>
+                    <span class="metadata-value">0 Lost-Time Injuries</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Fleet MTBF</span>
+                    <span class="metadata-value">2,400 hours</span>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <footer class="footer" role="contentinfo">
