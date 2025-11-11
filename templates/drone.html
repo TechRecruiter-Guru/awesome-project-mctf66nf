@@ -3,268 +3,1300 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>[COMPANY_NAME] - [ROBOT_MODEL] Safety Case</title>
+    <meta name="description" content="Comprehensive safety case documentation for autonomous delivery drone systems - FAA Part 107 and ASTM F3411 compliant">
+    <title>Delivery Drone Safety Case | [COMPANY_NAME]</title>
     <style>
+        /* CSS Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
+        :root {
+            /* Primary Brand Colors - Easily Customizable */
+            --primary-color: #01579b;
+            --secondary-color: #0277bd;
+            --accent-color: #0288d1;
+            --success-color: #2e7d32;
+            --warning-color: #f57c00;
+            --danger-color: #c62828;
+            --neutral-color: #546e7a;
+            
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #eceff1;
+            --bg-dark: #263238;
+            
+            /* Text Colors */
+            --text-primary: #212121;
+            --text-secondary: #424242;
+            --text-light: #757575;
+            --text-inverse: #ffffff;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            font-family: var(--font-primary);
             line-height: 1.6;
-            color: #333;
-            background: #f5f5f5;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
         }
+
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            padding: var(--spacing-sm);
+            text-decoration: none;
+            z-index: 100;
+            border-radius: 0 0 var(--radius-md) 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
         .header {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 60px 20px;
-            text-align: center;
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-inverse);
+            padding: var(--spacing-lg) 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
-        .header h1 {
-            font-size: 3rem;
-            margin-bottom: 10px;
-        }
-        .header p {
-            font-size: 1.5rem;
-            opacity: 0.9;
-        }
-        .container {
+
+        .header-container {
             max-width: 1200px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 0 var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
         }
-        .section {
-            background: white;
-            border-radius: 10px;
-            padding: 40px;
-            margin: 30px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
         }
-        .section-title {
-            font-size: 2rem;
-            color: #f59e0b;
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 3px solid #f59e0b;
-        }
-        .metrics-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-            margin: 30px 0;
-        }
-        .metric-card {
-            background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
-            color: white;
-            padding: 30px;
-            border-radius: 10px;
-            text-align: center;
-        }
-        .metric-value {
-            font-size: 3rem;
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            margin: 10px 0;
+            color: var(--primary-color);
+            font-size: 1.5rem;
         }
-        .metric-label {
-            font-size: 1rem;
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-subtitle {
+            font-size: 0.95rem;
             opacity: 0.9;
         }
-        table {
+
+        .header-meta {
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .header-meta p {
+            margin-bottom: 0.25rem;
+        }
+
+        .nav-container {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 120px;
+            z-index: 40;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            background: var(--bg-secondary);
+            border-bottom-color: var(--accent-color);
+            outline: 2px solid var(--accent-color);
+            outline-offset: -2px;
+        }
+
+        .nav-link.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: var(--spacing-xl) auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .dashboard-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            border-left: 4px solid var(--neutral-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-card.success {
+            border-left-color: var(--success-color);
+        }
+
+        .dashboard-card.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .dashboard-card-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+
+        .dashboard-card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .dashboard-card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .risk-matrix-container {
+            overflow-x: auto;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .risk-matrix {
             width: 100%;
             border-collapse: collapse;
-            margin: 20px 0;
+            min-width: 600px;
         }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
+
+        .risk-matrix th,
+        .risk-matrix td {
+            padding: var(--spacing-sm);
+            text-align: center;
+            border: 2px solid var(--bg-secondary);
         }
-        th {
-            background: #f59e0b;
-            color: white;
+
+        .risk-matrix th {
+            background: var(--primary-color);
+            color: var(--text-inverse);
             font-weight: 600;
         }
-        tr:hover {
-            background: #f5f5f5;
+
+        .risk-matrix td {
+            font-weight: 500;
         }
-        .risk-level-low {
-            color: #10b981;
-            font-weight: bold;
-        }
-        .risk-level-medium {
-            color: #f59e0b;
-            font-weight: bold;
-        }
+
         .risk-level-high {
-            color: #ef4444;
-            font-weight: bold;
+            background: #ffebee;
+            color: var(--danger-color);
         }
-        .status-badge {
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.9rem;
-            font-weight: 600;
+
+        .risk-level-medium {
+            background: #fff3e0;
+            color: var(--warning-color);
         }
-        .status-approved {
-            background: #d1fae5;
-            color: #065f46;
+
+        .risk-level-low {
+            background: #f1f8e9;
+            color: var(--success-color);
         }
-        .status-pending {
-            background: #fed7aa;
-            color: #92400e;
-        }
-        .status-mitigated {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-        .certification-box {
-            background: #f0fdf4;
-            border: 2px solid #10b981;
-            border-radius: 10px;
-            padding: 30px;
-            margin: 20px 0;
-        }
-        .certification-box h3 {
-            color: #065f46;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-        }
-        .standards-list {
+
+        .compliance-list {
             list-style: none;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .compliance-item {
+            background: var(--bg-secondary);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            transition: background 0.2s ease;
+        }
+
+        .compliance-item:hover {
+            background: #e1f5fe;
+        }
+
+        .compliance-status {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .compliance-status.complete {
+            background: var(--success-color);
+            color: var(--text-inverse);
+        }
+
+        .compliance-status.in-progress {
+            background: var(--warning-color);
+            color: var(--text-inverse);
+        }
+
+        .compliance-content {
+            flex: 1;
+        }
+
+        .compliance-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .compliance-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        .data-table thead {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+        }
+
+        .data-table th {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .data-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--bg-secondary);
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .data-table tbody tr:hover {
+            background: #e1f5fe;
+        }
+
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+            border-left: 4px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .alert.info {
+            background: #e1f5fe;
+            border-left-color: var(--accent-color);
+            color: #01579b;
+        }
+
+        .alert.success {
+            background: #f1f8e9;
+            border-left-color: var(--success-color);
+            color: #1b5e20;
+        }
+
+        .alert.warning {
+            background: #fff3e0;
+            border-left-color: var(--warning-color);
+            color: #e65100;
+        }
+
+        .metadata-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 10px;
-            margin: 20px 0;
+            gap: var(--spacing-md);
+            background: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
         }
-        .standards-list li {
-            background: #ede9fe;
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: #5b21b6;
+
+        .metadata-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .metadata-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
             font-weight: 600;
         }
-        .footer {
-            background: #1f2937;
-            color: white;
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 50px;
+
+        .metadata-value {
+            font-weight: 500;
+            color: var(--text-primary);
         }
+
+        .footer {
+            background: var(--bg-dark);
+            color: var(--text-inverse);
+            padding: var(--spacing-xl) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            text-align: center;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-links a {
+            color: var(--text-inverse);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
         @media print {
+            .header,
+            .nav-container,
+            .footer {
+                display: none;
+            }
+
             .section {
+                box-shadow: none;
                 page-break-inside: avoid;
             }
+
+            body {
+                background: white;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-meta {
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-list {
+                flex-direction: column;
+            }
+
+            .nav-item {
+                min-width: 100%;
+            }
+
+            .nav-container {
+                top: 180px;
+            }
+
+            .section {
+                padding: var(--spacing-md);
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-card-value {
+                font-size: 2rem;
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+        }
+
+        *:focus {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-badge.approved {
+            background: #f1f8e9;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .status-badge.in-review {
+            background: #fff3e0;
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        /* Drone-Specific: Flight Envelope Visualization */
+        .flight-envelope {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-lg);
+            margin: var(--spacing-lg) 0;
+            text-align: center;
+        }
+
+        .flight-parameter {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--spacing-sm);
+            margin-bottom: var(--spacing-sm);
+            background: white;
+            border-radius: var(--radius-sm);
+            border-left: 3px solid var(--accent-color);
+        }
+
+        .flight-parameter-label {
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .flight-parameter-value {
+            color: var(--accent-color);
+            font-weight: 700;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>[COMPANY_NAME]</h1>
-        <p>[ROBOT_MODEL] - Delivery Drone Safety Case</p>
-    </div>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
 
-    <div class="container">
-        <div class="section">
-            <h2 class="section-title">Safety Overview</h2>
-            <div class="metrics-grid">
-                <div class="metric-card">
-                    <div class="metric-label">SIL Rating</div>
-                    <div class="metric-value">[SIL_RATING]</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Operational Hours</div>
-                    <div class="metric-value">[OPERATIONAL_HOURS]</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Hazards Identified</div>
-                    <div class="metric-value">[HAZARDS_IDENTIFIED]</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Risk Score</div>
-                    <div class="metric-value">[RISK_SCORE]</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Compliance Rate</div>
-                    <div class="metric-value">[COMPLIANCE_RATE]%</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Test Coverage</div>
-                    <div class="metric-value">[TEST_COVERAGE]%</div>
-                </div>
-                <div class="metric-card">
-                    <div class="metric-label">Incident Rate</div>
-                    <div class="metric-value">[INCIDENT_RATE]</div>
+    <header class="header" role="banner">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-placeholder" aria-hidden="true">UAV</div>
+                <div class="header-title">
+                    <h1>[COMPANY_NAME] Autonomous Delivery Drones</h1>
+                    <p class="header-subtitle">Safety Case Documentation v1.0</p>
                 </div>
             </div>
-        </div>
-
-        <div class="section">
-            <h2 class="section-title">Certification</h2>
-            <div class="certification-box">
-                <h3>✓ Certified by [CERTIFICATION_BODY]</h3>
-                <p><strong>Certificate Number:</strong> [CERTIFICATE_NUMBER]</p>
+            <div class="header-meta">
+                <p><strong>Document Status:</strong> <span class="status-badge approved">Approved</span></p>
+                <p><strong>Last Updated:</strong> November 7, 2025</p>
+                <p><strong>Document ID:</strong> SC-DRONE-001</p>
             </div>
         </div>
+    </header>
 
-        <div class="section">
-            <h2 class="section-title">Compliance Standards</h2>
-            <ul class="standards-list">
-                <li data-template="standard-item">[STANDARD]</li>
+    <nav class="nav-container" role="navigation" aria-label="Safety case sections">
+        <div class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#executive-summary" class="nav-link active">Executive Summary</a></li>
+                <li class="nav-item"><a href="#flight-envelope" class="nav-link">Flight Envelope</a></li>
+                <li class="nav-item"><a href="#risk-assessment" class="nav-link">Risk Assessment</a></li>
+                <li class="nav-item"><a href="#detect-avoid" class="nav-link">Detect & Avoid</a></li>
+                <li class="nav-item"><a href="#compliance" class="nav-link">Compliance</a></li>
+                <li class="nav-item"><a href="#testing" class="nav-link">Testing Results</a></li>
             </ul>
         </div>
+    </nav>
 
-        <div class="section">
-            <h2 class="section-title">Risk Assessments</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Scenario</th>
-                        <th>Severity</th>
-                        <th>Likelihood</th>
-                        <th>Risk Level</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-template="risk-row">
-                        <td>[SCENARIO]</td>
-                        <td>[SEVERITY]</td>
-                        <td>[LIKELIHOOD]</td>
-                        <td class="risk-level-[RISK_LEVEL]">[RISK_LEVEL]</td>
-                        <td><span class="status-badge status-[STATUS]">[STATUS]</span></td>
-                    </tr>
-                </tbody>
-            </table>
+    <main id="main-content" class="main-container" role="main">
+        
+        <section id="executive-summary" class="section">
+            <div class="section-header">
+                <h2>Executive Summary</h2>
+                <p class="section-subtitle">Autonomous urban delivery drone safety validation</p>
+            </div>
+
+            <div class="alert info">
+                <span class="alert-icon" aria-hidden="true">ℹ️</span>
+                <div class="alert-content">
+                    <p class="alert-title">About This Safety Case</p>
+                    <p>This safety case documents the comprehensive safety analysis for [COMPANY_NAME]'s autonomous delivery drone platform operating in urban environments. Documentation demonstrates compliance with FAA Part 107 waivers, ASTM F3411 Remote ID, and ASTM F3548-21 UAS Traffic Management standards.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">FAA Type Certification</p>
+                    <p class="dashboard-card-value">✓</p>
+                    <p class="dashboard-card-description">Part 135 waiver approved</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Maximum Payload</p>
+                    <p class="dashboard-card-value">2.5kg</p>
+                    <p class="dashboard-card-description">Package delivery capacity</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Flight Range</p>
+                    <p class="dashboard-card-value">15km</p>
+                    <p class="dashboard-card-description">Round-trip delivery radius</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Total Flights</p>
+                    <p class="dashboard-card-value">25,000+</p>
+                    <p class="dashboard-card-description">Autonomous deliveries completed</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Safety Rate</p>
+                    <p class="dashboard-card-value">99.98%</p>
+                    <p class="dashboard-card-description">Successful mission completion</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Ground Incidents</p>
+                    <p class="dashboard-card-value">0</p>
+                    <p class="dashboard-card-description">Injuries or property damage</p>
+                </div>
+            </div>
+
+            <div class="metadata-grid">
+                <div class="metadata-item">
+                    <span class="metadata-label">System Name</span>
+                    <span class="metadata-value">[Model] Delivery Drone Platform</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Aircraft Configuration</span>
+                    <span class="metadata-value">Quadcopter, fully redundant</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Maximum Takeoff Weight</span>
+                    <span class="metadata-value">7.5 kg (16.5 lbs)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Operating Environment</span>
+                    <span class="metadata-value">Urban/suburban Class G airspace</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Safety Assessment Lead</span>
+                    <span class="metadata-value">[Name], Chief Safety Officer</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Regulatory Authority</span>
+                    <span class="metadata-value">FAA / Local Aviation Authority</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="flight-envelope" class="section">
+            <div class="section-header">
+                <h2>Operational Flight Envelope</h2>
+                <p class="section-subtitle">Certified operational parameters and limitations</p>
+            </div>
+
+            <p>The operational flight envelope defines the boundaries within which the drone is certified to operate safely. All flight operations are continuously monitored and restricted to remain within these validated parameters.</p>
+
+            <div class="flight-envelope">
+                <h3 style="margin-bottom: 1rem; color: var(--primary-color);">Certified Flight Parameters</h3>
+                
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Maximum Altitude (AGL)</span>
+                    <span class="flight-parameter-value">120 meters (400 feet)</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Maximum Horizontal Speed</span>
+                    <span class="flight-parameter-value">15 m/s (33 mph)</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Maximum Descent Rate</span>
+                    <span class="flight-parameter-value">3 m/s (controlled flight)</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Maximum Wind Speed</span>
+                    <span class="flight-parameter-value">12 m/s (27 mph) sustained</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Operating Temperature Range</span>
+                    <span class="flight-parameter-value">-10°C to 45°C (14°F to 113°F)</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Maximum Flight Duration</span>
+                    <span class="flight-parameter-value">30 minutes (with 20% reserve)</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Visual Line of Sight</span>
+                    <span class="flight-parameter-value">BVLOS approved with detect & avoid</span>
+                </div>
+
+                <div class="flight-parameter">
+                    <span class="flight-parameter-label">Night Operations</span>
+                    <span class="flight-parameter-value">Approved with anti-collision lighting</span>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Weather Limitations</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Enforced">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Precipitation Restrictions</p>
+                        <p class="compliance-description">No operations in moderate to heavy rain (&gt;2.5mm/hr), snow, or hail. Light rain operations permitted with enhanced monitoring and reduced speed (10 m/s max).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Enforced">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Visibility Requirements</p>
+                        <p class="compliance-description">Minimum 3 statute miles visibility required. Automated pre-flight weather check with real-time updates from AWOS/ASOS stations.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Enforced">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Lightning & Thunderstorm Avoidance</p>
+                        <p class="compliance-description">No operations within 10 miles of active thunderstorms or lightning activity. Real-time integration with NOAA weather radar and lightning detection systems.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Enforced">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Icing Conditions</p>
+                        <p class="compliance-description">No operations when icing conditions are forecast or observed. Temperature and humidity monitoring with automated mission abort if icing risk detected.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert warning">
+                <span class="alert-icon" aria-hidden="true">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Automatic Flight Envelope Protection</p>
+                    <p>The flight control system continuously monitors all operational parameters and automatically restricts flight to remain within certified envelope. If conditions exceed safe limits, the system initiates return-to-home or controlled landing sequence.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="risk-assessment" class="section">
+            <div class="section-header">
+                <h2>Risk Assessment</h2>
+                <p class="section-subtitle">Ground risk and air risk analysis per SORA methodology</p>
+            </div>
+
+            <p>Risk assessment conducted using JARUS SORA (Specific Operations Risk Assessment) methodology, evaluating ground risk and air risk independently to determine overall safety requirements.</p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Ground Risk Classification</h3>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="visually-hidden">Ground risk assessment scenarios</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Risk Scenario</th>
+                            <th scope="col">Population Density</th>
+                            <th scope="col">GRC Level</th>
+                            <th scope="col">Mitigations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Uncontrolled descent in urban area</td>
+                            <td>High (&gt;1,000/km²)</td>
+                            <td class="risk-level-medium">GRC-4</td>
+                            <td>Parachute system, geo-awareness</td>
+                        </tr>
+                        <tr>
+                            <td>Controlled emergency landing</td>
+                            <td>Medium (100-1,000/km²)</td>
+                            <td class="risk-level-low">GRC-3</td>
+                            <td>Landing site selection algorithm</td>
+                        </tr>
+                        <tr>
+                            <td>Normal operations over people</td>
+                            <td>Variable</td>
+                            <td class="risk-level-low">GRC-2</td>
+                            <td>Protected rotor design, low altitude</td>
+                        </tr>
+                        <tr>
+                            <td>Package delivery to residence</td>
+                            <td>Low (&lt;100/km²)</td>
+                            <td class="risk-level-low">GRC-2</td>
+                            <td>Designated landing zones</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Air Risk Classification</h3>
+
+            <div class="risk-matrix-container">
+                <table class="risk-matrix">
+                    <caption class="visually-hidden">Air risk assessment matrix</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Conflict Scenario</th>
+                            <th scope="col">Airspace Class</th>
+                            <th scope="col">ARC Level</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Mid-air collision with manned aircraft</td>
+                            <td>Class G (uncontrolled)</td>
+                            <td class="risk-level-medium">ARC-b</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Conflict with other UAS</td>
+                            <td>Class G</td>
+                            <td class="risk-level-low">ARC-a</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Airspace boundary violation</td>
+                            <td>Controlled airspace boundary</td>
+                            <td class="risk-level-medium">ARC-b</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>TFR (Temporary Flight Restriction) violation</td>
+                            <td>Variable</td>
+                            <td class="risk-level-medium">ARC-b</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="detect-avoid" class="section">
+            <div class="section-header">
+                <h2>Detect and Avoid Systems</h2>
+                <p class="section-subtitle">Multi-layered airspace awareness and collision avoidance</p>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Strategic Deconfliction (Cooperative)</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">UTM (UAS Traffic Management) Integration</p>
+                        <p class="compliance-description">Real-time flight intent sharing with FAA-approved UTM Service Supplier (USS). Automatic 4D trajectory coordination with other UTM participants. Conflict resolution 5 minutes in advance.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Remote ID (ASTM F3411 Compliant)</p>
+                        <p class="compliance-description">Broadcast Remote ID transmitting position, altitude, velocity, and operator location. Standard Remote ID module with both broadcast and network transmission.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">ADS-B In Receiver</p>
+                        <p class="compliance-description">1090MHz ADS-B receiver for detection of transponder-equipped aircraft. Real-time tracking of cooperative manned aircraft within 20+ mile radius. Automatic avoidance maneuvers triggered at 1-mile separation.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">NOTAMs & TFR Awareness</p>
+                        <p class="compliance-description">Automated pre-flight and in-flight NOTAM checking. Real-time TFR database updates with geofencing to prevent entry into restricted airspace. Stadium and emergency TFR auto-detection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Tactical Deconfliction (Non-Cooperative)</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Electro-Optical/Infrared (EO/IR) Cameras</p>
+                        <p class="compliance-description">Multi-spectral camera system with AI-based aircraft detection. 360° coverage through 6 wide-angle cameras. Detection range: 1.5km for small aircraft, 3km for large aircraft. Automatic tracking and avoidance.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Acoustic Aircraft Detection</p>
+                        <p class="compliance-description">Microphone array for detection of non-cooperative aircraft by engine/rotor noise. Effective for helicopters and small aircraft within 500m. Provides directional cues for camera system targeting.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Ground-Based Radar Surveillance</p>
+                        <p class="compliance-description">Supplementary ground radar network provides airspace surveillance along delivery routes. 5km range per station. Data shared via LTE link to provide extended awareness beyond onboard sensor range.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Collision Avoidance Logic</p>
+                        <p class="compliance-description">Automated maneuver selection prioritizing vertical avoidance (descent). Minimum horizontal separation: 500 feet. Minimum vertical separation: 100 feet. Right-of-way rules programmed per 14 CFR Part 107.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert success">
+                <span class="alert-icon" aria-label="Success">✓</span>
+                <div class="alert-content">
+                    <p class="alert-title">Detect and Avoid Performance</p>
+                    <p>Over 25,000 autonomous flights with zero near-mid-air collisions (NMAC). Detect and avoid system has executed 47 avoidance maneuvers for aircraft conflicts, all resolved at &gt;1,000 feet horizontal separation.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="compliance" class="section">
+            <div class="section-header">
+                <h2>Regulatory Compliance</h2>
+                <p class="section-subtitle">FAA and international UAS standards</p>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">FAA Certification & Waivers</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Part 107 Type Certification</p>
+                        <p class="compliance-description">Aircraft certified under 14 CFR Part 107 with approved waivers for operations over people (§107.39), BVLOS (§107.31), and operations from moving vehicle (§107.25).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Part 135 Waiver (Package Delivery)</p>
+                        <p class="compliance-description">FAA Part 135 waiver approved for commercial package delivery operations. Includes operations manual, training program, and maintenance procedures approval.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Operations Over People (Category 3)</p>
+                        <p class="compliance-description">Meets Category 3 requirements: no exposed rotating parts causing laceration, &lt;25 lb weight limit, injury severity &lt;11 on AIS scale per FAA testing.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">ASTM Standards Compliance</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">ASTM F3411 - Remote Identification</p>
+                        <p class="compliance-description">Standard Remote ID compliance with both broadcast (Bluetooth, Wi-Fi) and network-based (LTE) position reporting. Serial number registered in FAA drone registry.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">ASTM F3548-21 - UAS Traffic Management</p>
+                        <p class="compliance-description">Full UTM integration per ASTM F3548 including operational intent submission, constraint awareness, conformance monitoring, and strategic deconfliction.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">ASTM F3322-18 - Parachute Systems</p>
+                        <p class="compliance-description">Ballistic parachute system meets ASTM F3322 requirements for UAS emergency recovery. Tested deployment at all airspeeds within flight envelope.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">FAA Certificate Number</span>
+                    <span class="metadata-value">FAA-UAS-2025-[XXX]</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Part 135 Waiver Number</span>
+                    <span class="metadata-value">135W-2025-[XXX]</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Remote ID Serial</span>
+                    <span class="metadata-value">RID-[Company]-[Serial]</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Compliance Audit</span>
+                    <span class="metadata-value">March 2026</span>
+                </div>
+            </div>
+        </section>
+
+        <section id="testing" class="section">
+            <div class="section-header">
+                <h2>Safety Validation Testing</h2>
+                <p class="section-subtitle">Flight test program results and operational data</p>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Test Flight Hours</p>
+                    <p class="dashboard-card-value">2,500+</p>
+                    <p class="dashboard-card-description">Pre-certification testing</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Operational Flights</p>
+                    <p class="dashboard-card-value">25,000+</p>
+                    <p class="dashboard-card-description">Revenue deliveries completed</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Parachute Deployments</p>
+                    <p class="dashboard-card-value">3</p>
+                    <p class="dashboard-card-description">All successful landings</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">System Reliability</p>
+                    <p class="dashboard-card-value">99.98%</p>
+                    <p class="dashboard-card-description">Mission completion rate</p>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="visually-hidden">Safety validation test results</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Test Category</th>
+                            <th scope="col">Test Scenarios</th>
+                            <th scope="col">Cycles</th>
+                            <th scope="col">Pass Rate</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Detect and Avoid (Manned Aircraft)</td>
+                            <td>48</td>
+                            <td>500+</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>Emergency Parachute Deployment</td>
+                            <td>32</td>
+                            <td>150+</td>
+                            <td>98.7%</td>
+                        </tr>
+                        <tr>
+                            <td>Motor Failure Recovery</td>
+                            <td>16</td>
+                            <td>200+</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>GPS Degradation/Loss</td>
+                            <td>24</td>
+                            <td>300+</td>
+                            <td>99.3%</td>
+                        </tr>
+                        <tr>
+                            <td>Communication Link Loss</td>
+                            <td>12</td>
+                            <td>400+</td>
+                            <td>100%</td>
+                        </tr>
+                        <tr>
+                            <td>Adverse Weather Operations</td>
+                            <td>36</td>
+                            <td>250+</td>
+                            <td>98.0%</td>
+                        </tr>
+                        <tr>
+                            <td>Landing Site Selection Algorithm</td>
+                            <td>28</td>
+                            <td>350+</td>
+                            <td>99.7%</td>
+                        </tr>
+                        <tr>
+                            <td>Battery Failure Modes</td>
+                            <td>18</td>
+                            <td>180+</td>
+                            <td>100%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert success">
+                <span class="alert-icon" aria-hidden="true">✓</span>
+                <div class="alert-content">
+                    <p class="alert-title">Operational Safety Record</p>
+                    <p>Over 25,000 commercial delivery flights with zero ground injuries, zero manned aircraft conflicts, and zero property damage incidents. Three emergency parachute deployments (motor failures) all resulted in controlled landings with no damage.</p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <ul class="footer-links">
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                <li><a href="#flight-envelope">Flight Envelope</a></li>
+                <li><a href="#risk-assessment">Risk Assessment</a></li>
+                <li><a href="#detect-avoid">Detect & Avoid</a></li>
+                <li><a href="#compliance">Compliance</a></li>
+                <li><a href="#testing">Testing Results</a></li>
+            </ul>
+            <p style="margin-top: 1rem; opacity: 0.8;">© 2025 [COMPANY_NAME]. All rights reserved.</p>
         </div>
+    </footer>
 
-        <div class="section">
-            <h2 class="section-title">Testing Results</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Test Category</th>
-                        <th>Scenarios</th>
-                        <th>Test Cycles</th>
-                        <th>Pass Rate</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr data-template="test-row">
-                        <td>[TEST_CATEGORY]</td>
-                        <td>[SCENARIOS]</td>
-                        <td>[CYCLES]</td>
-                        <td><strong>[PASS_RATE]%</strong></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </div>
+    <script>
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    updateActiveNav(this.getAttribute('href'));
+                }
+            });
+        });
 
-    <div class="footer">
-        <p>&copy; 2025 [COMPANY_NAME]. All rights reserved.</p>
-        <p>Safety Case Document - [ROBOT_MODEL]</p>
-    </div>
+        function updateActiveNav(href) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`.nav-link[href="${href}"]`);
+            if (activeLink) activeLink.classList.add('active');
+        }
+
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            if (section.id) observer.observe(section);
+        });
+    </script>
 </body>
 </html>
