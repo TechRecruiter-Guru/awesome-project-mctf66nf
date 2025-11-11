@@ -59,7 +59,7 @@ export interface AIMachineLearningSection {
 
 export interface MaintenanceSafetySection {
   technicianQualifications?: string;
-  lotoP rocedures?: string;
+  lotoProcedures?: string;
   batteryHandling?: string;
   postMaintenanceVerification?: string;
   sparePartsManagement?: string;
