@@ -277,6 +277,147 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Bundle Offer Section */}
+      <div className="py-20 bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <div className="inline-block bg-yellow-400 text-purple-900 px-4 py-2 rounded-full font-bold text-sm mb-4">
+              ⭐ EXCLUSIVE BUNDLE FOR FUNDED STARTUPS
+            </div>
+            <h2 className="text-4xl font-bold mb-4">
+              Series B Ready Package: $15,000
+            </h2>
+            <p className="text-2xl mb-2 opacity-90">
+              Safety Documentation + Senior Robotics Recruiting
+            </p>
+            <p className="text-lg opacity-75 max-w-3xl mx-auto">
+              Most Physical AI companies spend 6 months and $75K+ getting safety docs done AND hiring senior robotics talent. We deliver both in 60 days for $15K.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {/* What's Included */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-xl p-8 border-2 border-white/20">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span className="text-3xl">📦</span> What's Included
+              </h3>
+              <ul className="space-y-4">
+                <li className="flex items-start gap-3">
+                  <span className="text-2xl">✅</span>
+                  <div>
+                    <p className="font-bold">Complete Safety Case Website</p>
+                    <p className="text-sm opacity-90">Professional HTML site with AI-powered PDF extraction ($2,000 value)</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-2xl">✅</span>
+                  <div>
+                    <p className="font-bold">60-Day Priority Recruiting Engagement</p>
+                    <p className="text-sm opacity-90">Dedicated search for 1 senior robotics engineer role ($25,000+ value)</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-2xl">✅</span>
+                  <div>
+                    <p className="font-bold">Access to Exclusive Physical AI Talent Network</p>
+                    <p className="text-sm opacity-90">Engineers from Boston Dynamics, NVIDIA, Tesla, Aurora, Waymo</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-2xl">✅</span>
+                  <div>
+                    <p className="font-bold">Investor-Ready Compliance Package</p>
+                    <p className="text-sm opacity-90">Safety docs formatted for Series B due diligence</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-2xl">✅</span>
+                  <div>
+                    <p className="font-bold">Strategic Hiring Consultation</p>
+                    <p className="text-sm opacity-90">Comp benchmarking, org design, and role scoping</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            {/* Why This Works */}
+            <div>
+              <div className="bg-green-500 text-white rounded-xl p-8 mb-6">
+                <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
+                  <span className="text-3xl">💰</span> Total Value: $27,000+
+                </h3>
+                <p className="text-5xl font-bold mb-2">You Pay: $15,000</p>
+                <p className="text-xl font-semibold">Save $12,000+ (44% savings)</p>
+              </div>
+
+              <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border-2 border-white/20">
+                <h3 className="text-xl font-bold mb-4">Perfect For:</h3>
+                <ul className="space-y-3">
+                  <li className="flex items-start gap-2">
+                    <span>🎯</span>
+                    <span>Series A/B Physical AI companies preparing for next fundraise</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span>🎯</span>
+                    <span>Robotics startups needing both compliance docs and senior talent</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span>🎯</span>
+                    <span>Teams pursuing enterprise customers requiring safety certification</span>
+                  </li>
+                  <li className="flex items-start gap-2">
+                    <span>🎯</span>
+                    <span>Founders who need a strategic partner, not just vendors</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          {/* Social Proof */}
+          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 mb-8">
+            <p className="text-center text-xl mb-6 font-semibold">
+              Trusted by Leading Physical AI Companies
+            </p>
+            <div className="grid md:grid-cols-4 gap-6 text-center">
+              <div>
+                <div className="text-4xl mb-2">🏢</div>
+                <p className="font-bold">Microsoft</p>
+                <p className="text-sm opacity-75">Robotics recruiting partner</p>
+              </div>
+              <div>
+                <div className="text-4xl mb-2">🏢</div>
+                <p className="font-bold">Intel</p>
+                <p className="text-sm opacity-75">AI talent placement</p>
+              </div>
+              <div>
+                <div className="text-4xl mb-2">🚀</div>
+                <p className="font-bold">12+ Series A/B</p>
+                <p className="text-sm opacity-75">Physical AI companies served</p>
+              </div>
+              <div>
+                <div className="text-4xl mb-2">⭐</div>
+                <p className="font-bold">100% Success Rate</p>
+                <p className="text-sm opacity-75">Placements at top robotics firms</p>
+              </div>
+            </div>
+          </div>
+
+          {/* CTA */}
+          <div className="text-center">
+            <a
+              href="mailto:john@physicalaipros.com?subject=Series%20B%20Ready%20Package%20Inquiry"
+              className="inline-block bg-yellow-400 text-purple-900 px-12 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-2xl"
+            >
+              Schedule Strategy Call →
+            </a>
+            <p className="mt-4 text-sm opacity-75">
+              Limited to 3 clients per quarter · Email john@physicalaipros.com
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Benefits Section */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -345,7 +486,7 @@ export default function HomePage() {
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Built by Veterans, for Innovators</h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Hi, I'm [Your Name] - U.S. Army veteran and robotics safety engineer. After 10+ years building autonomous systems and navigating compliance nightmares, I built SafetyCase.AI to help fellow robotics founders move fast without compromising safety.
+              Hi, I'm <strong>John Polhill</strong> - U.S. Air Force veteran and founder of Physical AI Pros. After working with Microsoft, Intel, and dozens of Series A/B robotics companies, I saw the same pattern: founders spending months and $50K+ on safety documentation that delays fundraising and enterprise deals. I built SafetyCase.AI to solve this bottleneck for the Physical AI community.
             </p>
           </div>
 
@@ -360,10 +501,10 @@ export default function HomePage() {
                 </div>
               </div>
               <div className="flex justify-center gap-4">
-                <a href="https://linkedin.com/in/YOUR_PROFILE" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-semibold">
+                <a href="https://linkedin.com/in/physicalai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-semibold">
                   🔗 Connect on LinkedIn
                 </a>
-                <a href="mailto:YOUR_EMAIL@physicalaipros.com" className="text-green-600 hover:text-green-800 font-semibold">
+                <a href="mailto:john@physicalaipros.com" className="text-green-600 hover:text-green-800 font-semibold">
                   ✉️ Email Me Directly
                 </a>
               </div>
@@ -387,18 +528,18 @@ export default function HomePage() {
           <div className="mt-12 grid md:grid-cols-3 gap-6 text-center">
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="text-3xl mb-3">🇺🇸</div>
-              <h3 className="font-bold mb-2">U.S. Army Veteran</h3>
-              <p className="text-gray-600">Thank you for your service! Honored to serve fellow veterans in robotics.</p>
+              <h3 className="font-bold mb-2">U.S. Air Force Veteran</h3>
+              <p className="text-gray-600">Proudly served. Now helping fellow veterans and innovators in Physical AI.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
-              <div className="text-3xl mb-3">🤖</div>
-              <h3 className="font-bold mb-2">10+ Years Robotics</h3>
-              <p className="text-gray-600">Built autonomous systems at [Company]. Understand the compliance struggle.</p>
+              <div className="text-3xl mb-3">🏢</div>
+              <h3 className="font-bold mb-2">Microsoft & Intel Partner</h3>
+              <p className="text-gray-600">Trusted by Fortune 500 and 12+ Series A/B robotics companies for recruiting.</p>
             </div>
             <div className="bg-white p-6 rounded-lg shadow-sm">
               <div className="text-3xl mb-3">📞</div>
-              <h3 className="font-bold mb-2">Available for Questions</h3>
-              <p className="text-gray-600">Email me directly with questions. I personally review every order.</p>
+              <h3 className="font-bold mb-2">Personal Support</h3>
+              <p className="text-gray-600">Email john@physicalaipros.com - I personally review every order.</p>
             </div>
           </div>
         </div>
