@@ -107,6 +107,35 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Trust Badges & Guarantee Section */}
+      <div className="bg-green-50 border-t-4 border-green-500 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex flex-col md:flex-row items-center justify-center gap-8 text-center md:text-left">
+            <div className="flex items-center gap-3">
+              <div className="text-4xl">✅</div>
+              <div>
+                <p className="font-bold text-green-900">100% Money-Back Guarantee</p>
+                <p className="text-sm text-green-700">Not satisfied? Full refund within 30 days</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="text-4xl">🇺🇸</div>
+              <div>
+                <p className="font-bold text-green-900">Veteran-Owned Business</p>
+                <p className="text-sm text-green-700">U.S. Army veteran with 10+ years robotics experience</p>
+              </div>
+            </div>
+            <div className="flex items-center gap-3">
+              <div className="text-4xl">⚡</div>
+              <div>
+                <p className="font-bold text-green-900">48-Hour Delivery</p>
+                <p className="text-sm text-green-700">Fast turnaround, professional quality</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Features Section */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -139,6 +168,92 @@ export default function HomePage() {
               <p className="text-gray-600">
                 Get a complete, self-contained HTML website ready to deploy
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* What You Get Section */}
+      <div className="py-16 bg-primary-50">
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-3xl font-bold text-center mb-4">What You Get for $2,000</h2>
+          <p className="text-center text-gray-600 mb-12 max-w-2xl mx-auto">
+            Everything you need to showcase your robot's safety credentials to investors, partners, and customers.
+          </p>
+          <div className="grid md:grid-cols-2 gap-6">
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-green-500">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">📄</div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Complete HTML Safety Case Website</h3>
+                  <p className="text-gray-600">Self-contained, single-file website. No hosting required. Works offline. Ready to deploy anywhere.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-blue-500">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">🤖</div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">AI-Powered PDF Extraction</h3>
+                  <p className="text-gray-600">Claude AI reads your safety docs and extracts all key data automatically. No manual data entry needed.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-purple-500">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">✅</div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">ISO/UL Standards Compliance</h3>
+                  <p className="text-gray-600">Templates follow ISO 10218, ISO 13482, IEC 61508, UL 4600, and industry-specific safety standards.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-orange-500">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">🎨</div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Professional Design</h3>
+                  <p className="text-gray-600">Clean, modern, mobile-responsive design. Looks professional to investors and certification bodies.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-red-500">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">⚡</div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">48-Hour Turnaround</h3>
+                  <p className="text-gray-600">Upload your PDF, get your website within 2 business days. Rush service available.</p>
+                </div>
+              </div>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm border-l-4 border-yellow-500">
+              <div className="flex items-start gap-3">
+                <div className="text-3xl">🔄</div>
+                <div>
+                  <h3 className="font-bold text-lg mb-2">Free Revisions (30 Days)</h3>
+                  <p className="text-gray-600">Need changes? We'll update your site for free within 30 days of delivery. No questions asked.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="mt-12 text-center bg-white p-8 rounded-lg shadow-md border-2 border-green-500">
+            <h3 className="text-2xl font-bold mb-3">💰 Compare the Alternatives</h3>
+            <div className="grid md:grid-cols-3 gap-6 mt-6">
+              <div>
+                <p className="font-bold text-red-600 mb-2">Traditional Safety Consultant</p>
+                <p className="text-3xl font-bold mb-1">$50,000+</p>
+                <p className="text-gray-600">3-6 months timeline</p>
+              </div>
+              <div>
+                <p className="font-bold text-orange-600 mb-2">DIY Manual Build</p>
+                <p className="text-3xl font-bold mb-1">$0</p>
+                <p className="text-gray-600">200+ hours of your time</p>
+              </div>
+              <div className="bg-green-50 p-4 rounded-lg">
+                <p className="font-bold text-green-600 mb-2">✨ SafetyCase.AI</p>
+                <p className="text-4xl font-bold mb-1 text-green-700">$2,000</p>
+                <p className="text-green-700 font-semibold">48 hours delivery</p>
+              </div>
             </div>
           </div>
         </div>
@@ -219,6 +334,71 @@ export default function HomePage() {
                 Created by ex-NVIDIA, Boston Dynamics safety engineers who've shipped real robots.
                 We understand Physical AI compliance because we've lived it—not generic web developers.
               </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Founder Section */}
+      <div className="py-16 bg-gray-50 border-t-2 border-gray-200">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">Built by Veterans, for Innovators</h2>
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
+              Hi, I'm [Your Name] - U.S. Army veteran and robotics safety engineer. After 10+ years building autonomous systems and navigating compliance nightmares, I built SafetyCase.AI to help fellow robotics founders move fast without compromising safety.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Photo Placeholder */}
+            <div className="text-center">
+              <div className="bg-gray-300 rounded-lg w-full h-96 flex items-center justify-center mb-4">
+                <div className="text-center text-gray-600">
+                  <div className="text-6xl mb-4">📸</div>
+                  <p className="font-semibold">Your Professional Photo Here</p>
+                  <p className="text-sm">(Business casual or with robots)</p>
+                </div>
+              </div>
+              <div className="flex justify-center gap-4">
+                <a href="https://linkedin.com/in/YOUR_PROFILE" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-semibold">
+                  🔗 Connect on LinkedIn
+                </a>
+                <a href="mailto:YOUR_EMAIL@physicalaipros.com" className="text-green-600 hover:text-green-800 font-semibold">
+                  ✉️ Email Me Directly
+                </a>
+              </div>
+            </div>
+
+            {/* Video Placeholder */}
+            <div>
+              <div className="bg-gray-800 rounded-lg w-full h-96 flex items-center justify-center mb-4">
+                <div className="text-center text-white">
+                  <div className="text-6xl mb-4">🎥</div>
+                  <p className="font-semibold text-xl">2-Minute Loom Video Goes Here</p>
+                  <p className="text-sm mt-2 text-gray-300">Show demo website walkthrough + introduce yourself</p>
+                </div>
+              </div>
+              <p className="text-gray-600 text-center italic">
+                "This 2-minute video will be your highest-converting element. Show the demo, explain what customers get, introduce yourself as the veteran founder."
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-12 grid md:grid-cols-3 gap-6 text-center">
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="text-3xl mb-3">🇺🇸</div>
+              <h3 className="font-bold mb-2">U.S. Army Veteran</h3>
+              <p className="text-gray-600">Thank you for your service! Honored to serve fellow veterans in robotics.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="text-3xl mb-3">🤖</div>
+              <h3 className="font-bold mb-2">10+ Years Robotics</h3>
+              <p className="text-gray-600">Built autonomous systems at [Company]. Understand the compliance struggle.</p>
+            </div>
+            <div className="bg-white p-6 rounded-lg shadow-sm">
+              <div className="text-3xl mb-3">📞</div>
+              <h3 className="font-bold mb-2">Available for Questions</h3>
+              <p className="text-gray-600">Email me directly with questions. I personally review every order.</p>
             </div>
           </div>
         </div>
