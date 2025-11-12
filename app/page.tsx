@@ -76,15 +76,15 @@ export default function HomePage() {
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-3 text-sm font-semibold tracking-wide uppercase opacity-90">
-            Powered by Anthropic Claude AI
+            Powered by Proprietary AI Extraction System
           </div>
           <h1 className="text-5xl font-bold mb-6">
             Professional Safety Case Websites in 48 Hours
           </h1>
           <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
-            Purpose-built AI extraction for Physical AI companies. Our proprietary Claude-powered
-            system transforms your safety documentation into investor-ready, compliance-certified
-            websites—without consultants or weeks of manual work.
+            Purpose-built AI extraction for Physical AI companies. Our proprietary AI system
+            transforms your safety documentation into investor-ready, compliance-certified
+            websites - without consultants or weeks of manual work.
           </p>
           <div className="flex justify-center gap-4 mb-6">
             <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
@@ -117,7 +117,7 @@ export default function HomePage() {
             View a Live Demo Safety Case Website
           </h2>
           <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
-            See exactly what you'll get. This is a real example generated from a Healthcare Robot PDF —
+            See exactly what you'll get. This is a real example generated from a Healthcare Robot PDF -
             complete with AI/ML safety validation, cybersecurity compliance, and risk assessments.
           </p>
           <div className="flex justify-center gap-4 mb-8">
@@ -241,7 +241,7 @@ export default function HomePage() {
                 <div className="text-3xl">🤖</div>
                 <div>
                   <h3 className="font-bold text-lg mb-2">AI-Powered PDF Extraction</h3>
-                  <p className="text-gray-600">Claude AI reads your safety docs and extracts all key data automatically. No manual data entry needed.</p>
+                  <p className="text-gray-600">Advanced AI reads your safety docs and extracts all key data automatically. No manual data entry needed.</p>
                 </div>
               </div>
             </div>
@@ -469,15 +469,15 @@ export default function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-center mb-4">Why SafetyCase.AI?</h2>
           <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
-            Built by Physical AI safety experts. Powered by Anthropic's Claude AI.
-            Purpose-designed for robotics compliance—not generic website builders.
+            Built by Physical AI safety experts. Powered by proprietary AI extraction technology.
+            Purpose-designed for robotics compliance - not generic website builders.
           </p>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="text-4xl mb-4">🧠</div>
               <h3 className="font-bold text-xl mb-2">Proprietary AI Extraction</h3>
               <p className="text-gray-600">
-                Our Claude-powered system is specifically trained on Physical AI safety documentation—
+                Our proprietary AI system is specifically trained on Physical AI safety documentation -
                 understanding ISO 13482, IEC 61508, and robotics-specific compliance standards that
                 generic tools miss.
               </p>
@@ -495,7 +495,7 @@ export default function HomePage() {
               <h3 className="font-bold text-xl mb-2">Robot-Specific Templates</h3>
               <p className="text-gray-600">
                 8 templates designed by robotics safety engineers covering humanoids, AMRs, cobots, drones,
-                inspection robots, construction equipment, medical devices, and forklifts—not one-size-fits-all builders.
+                inspection robots, construction equipment, medical devices, and forklifts - not one-size-fits-all builders.
               </p>
             </div>
             <div className="text-center p-6">
@@ -519,7 +519,7 @@ export default function HomePage() {
               <h3 className="font-bold text-xl mb-2">Built by Safety Engineers</h3>
               <p className="text-gray-600">
                 Created by ex-NVIDIA, Boston Dynamics safety engineers who've shipped real robots.
-                We understand Physical AI compliance because we've lived it—not generic web developers.
+                We understand Physical AI compliance because we've lived it - not generic web developers.
               </p>
             </div>
           </div>
@@ -535,7 +535,7 @@ export default function HomePage() {
               Hi, I'm <strong>John Polhill III</strong> - U.S. Air Force veteran (Information Systems, 1982-1997) and founder of Physical AI Pros. After 27+ years placing 1,000+ elite engineers at Microsoft (130+ hires), Intel (entire datacenter teams), Priceline, GoodRx, and Databricks, I saw the same bottleneck killing Physical AI deals: <strong>founders spending 6 months and $50K+ on safety documentation</strong> that delays fundraising and enterprise contracts.
             </p>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
-              I built SafetyCase.AI to eliminate this friction—delivering investor-ready compliance docs in 48 hours, the same way I deliver elite talent in 7-14 days. <strong>Military precision. AGI-powered execution.</strong>
+              I built SafetyCase.AI to eliminate this friction - delivering investor-ready compliance docs in 48 hours, the same way I deliver elite talent in 7-14 days. <strong>Military precision. AGI-powered execution.</strong>
             </p>
             <div className="flex justify-center">
               <div className="inline-flex items-center gap-6 bg-green-50 px-8 py-4 rounded-lg border-2 border-green-200">

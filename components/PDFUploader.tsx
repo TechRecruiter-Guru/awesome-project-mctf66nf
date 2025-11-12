@@ -62,7 +62,22 @@ export default function PDFUploader({ orderId }: { orderId: string }) {
       reader.onload = async () => {
         const base64 = reader.result as string;
 
-        setProgress('Extracting data with Claude AI... This takes 30-60 seconds');
+        // Rotate through messages every 10 seconds during extraction
+        const messages = [
+          'Analyzing your safety documentation... (30-60 seconds)',
+          'Extracting risk assessments and compliance standards...',
+          '💼 Need senior robotics talent? We place engineers at Microsoft, Intel, and top Physical AI companies.',
+          'Processing AI/ML safety validation sections...',
+          '🚀 Hiring for your team? Physical AI Pros has placed 1,000+ elite engineers.',
+          'Building your investor-ready safety case website...',
+        ];
+        let messageIndex = 0;
+        setProgress(messages[0]);
+
+        const messageInterval = setInterval(() => {
+          messageIndex = (messageIndex + 1) % messages.length;
+          setProgress(messages[messageIndex]);
+        }, 10000);
 
         const response = await fetch('/api/extract-pdf', {
           method: 'POST',
@@ -74,6 +89,9 @@ export default function PDFUploader({ orderId }: { orderId: string }) {
         });
 
         const data = await response.json();
+
+        // Clear the message rotation interval
+        clearInterval(messageInterval);
 
         if (response.ok) {
           // Store extracted data in session storage

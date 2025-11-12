@@ -67,7 +67,7 @@ export default function TestExtractionPage() {
         <div className="card mb-8">
           <h1 className="text-3xl font-bold mb-4">🧪 Test PDF Extraction</h1>
           <p className="text-gray-600 mb-6">
-            Upload a safety case PDF to test Claude AI extraction (no order required)
+            Upload a safety case PDF to test AI extraction (no order required)
           </p>
 
           <div className="space-y-4">
@@ -102,7 +102,7 @@ export default function TestExtractionPage() {
               {loading ? (
                 <>
                   <span className="inline-block animate-spin mr-2">⏳</span>
-                  Extracting with Claude AI...
+                  Extracting safety data...
                 </>
               ) : (
                 'Extract Safety Case Data'
