@@ -485,9 +485,30 @@ export default function HomePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold mb-4">Built by Veterans, for Innovators</h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Hi, I'm <strong>John Polhill</strong> - U.S. Air Force veteran and founder of Physical AI Pros. After working with Microsoft, Intel, and dozens of Series A/B robotics companies, I saw the same pattern: founders spending months and $50K+ on safety documentation that delays fundraising and enterprise deals. I built SafetyCase.AI to solve this bottleneck for the Physical AI community.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
+              Hi, I'm <strong>John Polhill III</strong> - U.S. Air Force veteran (Information Systems, 1982-1997) and founder of Physical AI Pros. After 27+ years placing 1,000+ elite engineers at Microsoft (130+ hires), Intel (entire datacenter teams), Priceline, GoodRx, and Databricks, I saw the same bottleneck killing Physical AI deals: <strong>founders spending 6 months and $50K+ on safety documentation</strong> that delays fundraising and enterprise contracts.
             </p>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
+              I built SafetyCase.AI to eliminate this friction—delivering investor-ready compliance docs in 48 hours, the same way I deliver elite talent in 7-14 days. <strong>Military precision. AGI-powered execution.</strong>
+            </p>
+            <div className="flex justify-center">
+              <div className="inline-flex items-center gap-6 bg-green-50 px-8 py-4 rounded-lg border-2 border-green-200">
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-700">98%</div>
+                  <div className="text-sm text-gray-600">Success Rate</div>
+                </div>
+                <div className="h-12 w-px bg-gray-300"></div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-700">1,000+</div>
+                  <div className="text-sm text-gray-600">Placements</div>
+                </div>
+                <div className="h-12 w-px bg-gray-300"></div>
+                <div className="text-center">
+                  <div className="text-3xl font-bold text-green-700">27+</div>
+                  <div className="text-sm text-gray-600">Years Experience</div>
+                </div>
+              </div>
+            </div>
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
