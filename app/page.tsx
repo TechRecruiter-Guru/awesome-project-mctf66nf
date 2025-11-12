@@ -558,14 +558,15 @@ export default function HomePage() {
           </div>
 
           <div className="grid md:grid-cols-2 gap-12 items-center">
-            {/* Photo Placeholder */}
+            {/* John Polhill Photo with Robots/Drones Background */}
             <div className="text-center">
-              <div className="bg-gray-300 rounded-lg w-full h-96 flex items-center justify-center mb-4">
-                <div className="text-center text-gray-600">
-                  <div className="text-6xl mb-4">📸</div>
-                  <p className="font-semibold">Your Professional Photo Here</p>
-                  <p className="text-sm">(Business casual or with robots)</p>
-                </div>
+              <div className="rounded-lg overflow-hidden shadow-2xl mb-4">
+                <img
+                  src="/john-polhill.png"
+                  alt="John Polhill III - U.S. Air Force Veteran surrounded by drones, robots, and humanoids"
+                  className="w-full h-auto object-cover"
+                  style={{ maxHeight: '500px' }}
+                />
               </div>
               <div className="flex justify-center gap-4">
                 <a href="https://linkedin.com/in/physicalai/" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 font-semibold">
