@@ -107,6 +107,52 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Live Demo Section */}
+      <div className="py-16 bg-gradient-to-r from-blue-600 to-purple-600 text-white">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <div className="inline-block bg-yellow-400 text-blue-900 px-4 py-2 rounded-full font-bold text-sm mb-6">
+            👁️ SEE IT BEFORE YOU BUY IT
+          </div>
+          <h2 className="text-4xl font-bold mb-4">
+            View a Live Demo Safety Case Website
+          </h2>
+          <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
+            See exactly what you'll get. This is a real example generated from a Healthcare Robot PDF —
+            complete with AI/ML safety validation, cybersecurity compliance, and risk assessments.
+          </p>
+          <div className="flex justify-center gap-4 mb-8">
+            <a
+              href="/demo.html"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block bg-white text-blue-600 px-10 py-5 rounded-lg font-bold text-xl hover:bg-gray-100 transition-all transform hover:scale-105 shadow-2xl"
+            >
+              🚀 View Full Demo Website →
+            </a>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+              <div className="text-4xl mb-3">📊</div>
+              <p className="font-bold text-lg mb-2">Complete Safety Dashboard</p>
+              <p className="text-sm opacity-90">SIL ratings, compliance metrics, test coverage</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+              <div className="text-4xl mb-3">🤖</div>
+              <p className="font-bold text-lg mb-2">AI/ML Safety Validation</p>
+              <p className="text-sm opacity-90">Training data, model architecture, fallback mechanisms</p>
+            </div>
+            <div className="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+              <div className="text-4xl mb-3">🔒</div>
+              <p className="font-bold text-lg mb-2">Cybersecurity Documentation</p>
+              <p className="text-sm opacity-90">HIPAA compliance, encryption, intrusion detection</p>
+            </div>
+          </div>
+          <p className="mt-8 text-sm opacity-75 italic">
+            This demo uses realistic data from our Healthcare Robot template. Your actual website will be populated with YOUR safety documentation data.
+          </p>
+        </div>
+      </div>
+
       {/* Trust Badges & Guarantee Section */}
       <div className="bg-green-50 border-t-4 border-green-500 py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -122,7 +168,7 @@ export default function HomePage() {
               <div className="text-4xl">🇺🇸</div>
               <div>
                 <p className="font-bold text-green-900">Veteran-Owned Business</p>
-                <p className="text-sm text-green-700">U.S. Army veteran with 10+ years robotics experience</p>
+                <p className="text-sm text-green-700">U.S. Air Force veteran (1982-1997) | 27+ years expertise</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
