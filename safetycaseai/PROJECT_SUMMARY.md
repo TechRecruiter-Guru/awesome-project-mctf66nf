@@ -1,4 +1,4 @@
-# SafetyCase.AI - Project Summary
+# SafetyCaseAI - Project Summary
 
 ## Overview
 

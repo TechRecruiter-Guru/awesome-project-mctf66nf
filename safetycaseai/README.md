@@ -1,4 +1,4 @@
-# SafetyCase.AI
+# SafetyCaseAI
 
 Automated safety case website creation for Physical AI companies. Generate professional, self-contained safety case websites in minutes using AI-powered data extraction.
 

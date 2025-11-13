@@ -1,6 +1,6 @@
-# Quick Start Guide - SafetyCase.AI
+# Quick Start Guide - SafetyCaseAI
 
-Get your SafetyCase.AI application running in 5 minutes!
+Get your SafetyCaseAI application running in 5 minutes!
 
 ## Prerequisites
 

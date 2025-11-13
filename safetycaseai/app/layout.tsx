@@ -20,7 +20,7 @@ export default function RootLayout({
             <div className="flex justify-between items-center h-16">
               <div className="flex items-center">
                 <a href="/" className="text-2xl font-bold text-primary-600">
-                  SafetyCase.AI
+                  SafetyCaseAI
                 </a>
               </div>
               <div className="flex items-center space-x-4">
@@ -42,7 +42,7 @@ export default function RootLayout({
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <div className="text-center">
               <p className="text-sm">
-                &copy; {new Date().getFullYear()} SafetyCase.AI. All rights reserved.
+                &copy; {new Date().getFullYear()} SafetyCaseAI. All rights reserved.
               </p>
               <p className="text-sm mt-2">
                 Contact: <a href="mailto:SafetyCaseAI@physicalAIPros.com" className="text-primary-400 hover:text-primary-300">SafetyCaseAI@physicalAIPros.com</a>
