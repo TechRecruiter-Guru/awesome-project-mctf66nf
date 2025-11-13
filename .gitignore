@@ -11,6 +11,8 @@ env/
 # Build outputs
 dist/
 build/
+.next/
+out/
 
 # IDE
 .vscode/

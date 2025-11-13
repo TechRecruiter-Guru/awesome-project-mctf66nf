@@ -1,0 +1,2119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Comprehensive safety case documentation for humanoid robotics systems - ISO 61508 and UL 4600 compliant">
+    <title>Humanoid Robotics Safety Case | [COMPANY_NAME]</title>
+    <style>
+        /* CSS Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Primary Brand Colors - Easily Customizable */
+            --primary-color: #1a365d;
+            --secondary-color: #2c5282;
+            --accent-color: #3182ce;
+            --success-color: #38a169;
+            --warning-color: #d69e2e;
+            --danger-color: #e53e3e;
+            --neutral-color: #718096;
+            
+            /* Background Colors */
+            --bg-primary: #ffffff;
+            --bg-secondary: #f7fafc;
+            --bg-dark: #2d3748;
+            
+            /* Text Colors */
+            --text-primary: #1a202c;
+            --text-secondary: #4a5568;
+            --text-light: #718096;
+            --text-inverse: #ffffff;
+            
+            /* Spacing */
+            --spacing-xs: 0.5rem;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            
+            /* Typography */
+            --font-primary: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            --font-mono: "Courier New", Courier, monospace;
+            
+            /* Border Radius */
+            --radius-sm: 0.25rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 1rem;
+            
+            /* Shadows */
+            --shadow-sm: 0 1px 3px 0 rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+        }
+
+        body {
+            font-family: var(--font-primary);
+            line-height: 1.6;
+            color: var(--text-primary);
+            background-color: var(--bg-secondary);
+        }
+
+        /* Skip to Main Content - WCAG 2.2 AAA */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            padding: var(--spacing-sm);
+            text-decoration: none;
+            z-index: 100;
+            border-radius: 0 0 var(--radius-md) 0;
+        }
+
+        .skip-link:focus {
+            top: 0;
+        }
+
+        /* Header Styles */
+        .header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: var(--text-inverse);
+            padding: var(--spacing-lg) 0;
+            box-shadow: var(--shadow-md);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: var(--spacing-md);
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: var(--spacing-md);
+        }
+
+        .logo-placeholder {
+            width: 60px;
+            height: 60px;
+            background: var(--bg-primary);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--primary-color);
+            font-size: 1.5rem;
+        }
+
+        .header-title h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .header-subtitle {
+            font-size: 0.95rem;
+            opacity: 0.9;
+        }
+
+        .header-meta {
+            text-align: right;
+            font-size: 0.9rem;
+        }
+
+        .header-meta p {
+            margin-bottom: 0.25rem;
+        }
+
+        /* Navigation */
+        .nav-container {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 120px;
+            z-index: 40;
+        }
+
+        .nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .nav-list {
+            list-style: none;
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--spacing-xs);
+        }
+
+        .nav-item {
+            flex: 1;
+            min-width: 150px;
+        }
+
+        .nav-link {
+            display: block;
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-decoration: none;
+            color: var(--text-primary);
+            font-weight: 500;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .nav-link:hover,
+        .nav-link:focus {
+            background: var(--bg-secondary);
+            border-bottom-color: var(--accent-color);
+            outline: 2px solid var(--accent-color);
+            outline-offset: -2px;
+        }
+
+        .nav-link.active {
+            color: var(--accent-color);
+            border-bottom-color: var(--accent-color);
+        }
+
+        /* Main Content */
+        .main-container {
+            max-width: 1200px;
+            margin: var(--spacing-xl) auto;
+            padding: 0 var(--spacing-md);
+        }
+
+        .section {
+            background: var(--bg-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-xl);
+            margin-bottom: var(--spacing-xl);
+            box-shadow: var(--shadow-md);
+        }
+
+        .section-header {
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section-header h2 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .section-subtitle {
+            color: var(--text-secondary);
+            font-size: 1rem;
+        }
+
+        /* Executive Summary Dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .dashboard-card {
+            background: var(--bg-secondary);
+            border-radius: var(--radius-md);
+            padding: var(--spacing-md);
+            border-left: 4px solid var(--neutral-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .dashboard-card.success {
+            border-left-color: var(--success-color);
+        }
+
+        .dashboard-card.warning {
+            border-left-color: var(--warning-color);
+        }
+
+        .dashboard-card.danger {
+            border-left-color: var(--danger-color);
+        }
+
+        .dashboard-card-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            margin-bottom: var(--spacing-xs);
+            font-weight: 600;
+        }
+
+        .dashboard-card-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary-color);
+            line-height: 1;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .dashboard-card-description {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Risk Matrix */
+        .risk-matrix-container {
+            overflow-x: auto;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .risk-matrix {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 600px;
+        }
+
+        .risk-matrix th,
+        .risk-matrix td {
+            padding: var(--spacing-sm);
+            text-align: center;
+            border: 2px solid var(--bg-secondary);
+        }
+
+        .risk-matrix th {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+            font-weight: 600;
+        }
+
+        .risk-matrix td {
+            font-weight: 500;
+        }
+
+        .risk-level-critical {
+            background: #fee;
+            color: var(--danger-color);
+        }
+
+        .risk-level-high {
+            background: #fef5e7;
+            color: var(--warning-color);
+        }
+
+        .risk-level-medium {
+            background: #fff9e6;
+            color: #b7791f;
+        }
+
+        .risk-level-low {
+            background: #f0fdf4;
+            color: var(--success-color);
+        }
+
+        /* Compliance Checklist */
+        .compliance-list {
+            list-style: none;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .compliance-item {
+            background: var(--bg-secondary);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-sm);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-md);
+            transition: background 0.2s ease;
+        }
+
+        .compliance-item:hover {
+            background: #e6f7ff;
+        }
+
+        .compliance-status {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+
+        .compliance-status.complete {
+            background: var(--success-color);
+            color: var(--text-inverse);
+        }
+
+        .compliance-status.in-progress {
+            background: var(--warning-color);
+            color: var(--text-inverse);
+        }
+
+        .compliance-status.pending {
+            background: var(--neutral-color);
+            color: var(--text-inverse);
+        }
+
+        .compliance-content {
+            flex: 1;
+        }
+
+        .compliance-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .compliance-description {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+        }
+
+        /* Hazard Table */
+        .table-responsive {
+            overflow-x: auto;
+            margin: var(--spacing-lg) 0;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 700px;
+        }
+
+        .data-table thead {
+            background: var(--primary-color);
+            color: var(--text-inverse);
+        }
+
+        .data-table th {
+            padding: var(--spacing-sm) var(--spacing-md);
+            text-align: left;
+            font-weight: 600;
+            border: 1px solid var(--secondary-color);
+        }
+
+        .data-table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border: 1px solid var(--bg-secondary);
+        }
+
+        .data-table tbody tr:nth-child(even) {
+            background: var(--bg-secondary);
+        }
+
+        .data-table tbody tr:hover {
+            background: #e6f7ff;
+        }
+
+        /* Alert Boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+            border-left: 4px solid;
+            display: flex;
+            align-items: flex-start;
+            gap: var(--spacing-sm);
+        }
+
+        .alert-icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .alert-content {
+            flex: 1;
+        }
+
+        .alert-title {
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .alert.info {
+            background: #e6f7ff;
+            border-left-color: var(--accent-color);
+            color: #0c5460;
+        }
+
+        .alert.success {
+            background: #f0fdf4;
+            border-left-color: var(--success-color);
+            color: #155724;
+        }
+
+        .alert.warning {
+            background: #fffbeb;
+            border-left-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .alert.danger {
+            background: #fef2f2;
+            border-left-color: var(--danger-color);
+            color: #721c24;
+        }
+
+        /* Document Metadata */
+        .metadata-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            background: var(--bg-secondary);
+            padding: var(--spacing-md);
+            border-radius: var(--radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .metadata-item {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-xs);
+        }
+
+        .metadata-label {
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-light);
+            font-weight: 600;
+        }
+
+        .metadata-value {
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--bg-dark);
+            color: var(--text-inverse);
+            padding: var(--spacing-xl) 0;
+            margin-top: var(--spacing-xl);
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--spacing-md);
+            text-align: center;
+        }
+
+        .footer-links {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: var(--spacing-lg);
+            flex-wrap: wrap;
+            margin-bottom: var(--spacing-md);
+        }
+
+        .footer-links a {
+            color: var(--text-inverse);
+            text-decoration: none;
+            opacity: 0.8;
+            transition: opacity 0.2s ease;
+        }
+
+        .footer-links a:hover,
+        .footer-links a:focus {
+            opacity: 1;
+            text-decoration: underline;
+        }
+
+        /* Print Styles */
+        @media print {
+            .header,
+            .nav-container,
+            .footer {
+                display: none;
+            }
+
+            .section {
+                box-shadow: none;
+                page-break-inside: avoid;
+            }
+
+            body {
+                background: white;
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-container {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .header-meta {
+                text-align: center;
+            }
+
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .nav-list {
+                flex-direction: column;
+            }
+
+            .nav-item {
+                min-width: 100%;
+            }
+
+            .nav-container {
+                top: 180px;
+            }
+
+            .section {
+                padding: var(--spacing-md);
+            }
+
+            .section-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .dashboard-card-value {
+                font-size: 2rem;
+            }
+
+            .metadata-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-links {
+                flex-direction: column;
+                gap: var(--spacing-sm);
+            }
+        }
+
+        /* Accessibility Enhancements */
+        *:focus {
+            outline: 3px solid var(--accent-color);
+            outline-offset: 2px;
+        }
+
+        .visually-hidden {
+            position: absolute;
+            width: 1px;
+            height: 1px;
+            padding: 0;
+            margin: -1px;
+            overflow: hidden;
+            clip: rect(0, 0, 0, 0);
+            white-space: nowrap;
+            border: 0;
+        }
+
+        /* Smooth Scrolling */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Status Badge */
+        .status-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .status-badge.approved {
+            background: #f0fdf4;
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .status-badge.in-review {
+            background: #fffbeb;
+            color: var(--warning-color);
+            border: 1px solid var(--warning-color);
+        }
+
+        .status-badge.draft {
+            background: var(--bg-secondary);
+            color: var(--neutral-color);
+            border: 1px solid var(--neutral-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Main Content Link -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+
+    <!-- Header -->
+    <header class="header" role="banner">
+        <div class="header-container">
+            <div class="logo-section">
+                <div class="logo-placeholder" aria-hidden="true">HR</div>
+                <div class="header-title">
+                    <h1>[COMPANY_NAME] Humanoid Robotics</h1>
+                    <p class="header-subtitle">Safety Case Documentation v1.0</p>
+                </div>
+            </div>
+            <div class="header-meta">
+                <p><strong>Document Status:</strong> <span class="status-badge approved">Approved</span></p>
+                <p><strong>Last Updated:</strong> November 7, 2025</p>
+                <p><strong>Document ID:</strong> SC-HR-001</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-container" role="navigation" aria-label="Safety case sections">
+        <div class="nav">
+            <ul class="nav-list">
+                <li class="nav-item"><a href="#executive-summary" class="nav-link active">Executive Summary</a></li>
+                <li class="nav-item"><a href="#risk-assessment" class="nav-link">Risk Assessment</a></li>
+                <li class="nav-item"><a href="#hazard-analysis" class="nav-link">Hazard Analysis</a></li>
+                <li class="nav-item"><a href="#mitigation" class="nav-link">Mitigation Strategies</a></li>
+                <li class="nav-item"><a href="#compliance" class="nav-link">Compliance</a></li>
+                <li class="nav-item"><a href="#testing" class="nav-link">Testing Results</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main id="main-content" class="main-container" role="main">
+        
+        <!-- Executive Summary Section -->
+        <section id="executive-summary" class="section">
+            <div class="section-header">
+                <h2>Executive Summary</h2>
+                <p class="section-subtitle">Comprehensive overview of safety posture and key metrics</p>
+            </div>
+
+            <div class="alert info">
+                <span class="alert-icon" aria-hidden="true">ℹ️</span>
+                <div class="alert-content">
+                    <p class="alert-title">About This Safety Case</p>
+                    <p>This safety case documents the comprehensive risk assessment, hazard analysis, mitigation strategies, and compliance validation for [COMPANY_NAME]'s humanoid robotics platform. The documentation follows ISO 61508 and UL 4600 standards for autonomous systems safety assurance.</p>
+                </div>
+            </div>
+
+            <div class="dashboard-grid">
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Safety Integrity Level</p>
+                    <p class="dashboard-card-value">[SIL_RATING]</p>
+                    <p class="dashboard-card-description">Certified to ISO 61508 standards</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Hazards Identified</p>
+                    <p class="dashboard-card-value">[HAZARDS_IDENTIFIED]</p>
+                    <p class="dashboard-card-description">All mitigated to acceptable levels</p>
+                </div>
+
+                <div class="dashboard-card warning">
+                    <p class="dashboard-card-label">Risk Score</p>
+                    <p class="dashboard-card-value">[RISK_SCORE]</p>
+                    <p class="dashboard-card-description">Medium risk - continuous monitoring</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Compliance Rate</p>
+                    <p class="dashboard-card-value">[COMPLIANCE_RATE]%</p>
+                    <p class="dashboard-card-description">Across all regulatory frameworks</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Test Coverage</p>
+                    <p class="dashboard-card-value">[TEST_COVERAGE]</p>
+                    <p class="dashboard-card-description">Hours of safety validation testing</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Incident Rate</p>
+                    <p class="dashboard-card-value">[INCIDENT_RATE]%</p>
+                    <p class="dashboard-card-description">Per 1,000 operational hours</p>
+                </div>
+            </div>
+
+            <div class="metadata-grid">
+                <div class="metadata-item">
+                    <span class="metadata-label">System Name</span>
+                    <span class="metadata-value">[ROBOT_MODEL] Humanoid Platform</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Intended Use</span>
+                    <span class="metadata-value">Warehouse automation, collaborative tasks</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Operating Environment</span>
+                    <span class="metadata-value">Indoor industrial facilities</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Safety Assessment Lead</span>
+                    <span class="metadata-value">[Name], Chief Safety Officer</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Review Date</span>
+                    <span class="metadata-value">Quarterly (Next: February 2026)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Certification Body</span>
+                    <span class="metadata-value">TÜV SÜD / UL Solutions</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Risk Assessment Section -->
+        <section id="risk-assessment" class="section">
+            <div class="section-header">
+                <h2>Risk Assessment Matrix</h2>
+                <p class="section-subtitle">Comprehensive risk evaluation across operational scenarios</p>
+            </div>
+
+            <p>The following risk matrix evaluates potential hazards based on severity and likelihood, enabling prioritized mitigation strategies aligned with ISO 61508 risk reduction requirements.</p>
+
+            <div class="risk-matrix-container">
+                <table class="risk-matrix">
+                    <caption class="visually-hidden">Risk assessment matrix showing severity versus likelihood for identified hazards</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Hazard Category</th>
+                            <th scope="col">Severity</th>
+                            <th scope="col">Likelihood</th>
+                            <th scope="col">Risk Level</th>
+                            <th scope="col">Mitigation Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Physical collision with humans</td>
+                            <td>High</td>
+                            <td>Low</td>
+                            <td class="risk-level-medium">Medium</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Unintended autonomous movement</td>
+                            <td>High</td>
+                            <td>Very Low</td>
+                            <td class="risk-level-low">Low</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Sensor failure during operation</td>
+                            <td>Medium</td>
+                            <td>Low</td>
+                            <td class="risk-level-low">Low</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Communication loss with control system</td>
+                            <td>Medium</td>
+                            <td>Medium</td>
+                            <td class="risk-level-medium">Medium</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Power system malfunction</td>
+                            <td>High</td>
+                            <td>Very Low</td>
+                            <td class="risk-level-low">Low</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Emergency stop system failure</td>
+                            <td>Critical</td>
+                            <td>Very Low</td>
+                            <td class="risk-level-medium">Medium</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Environmental obstacle detection failure</td>
+                            <td>High</td>
+                            <td>Low</td>
+                            <td class="risk-level-medium">Medium</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                        <tr>
+                            <td>Software anomaly causing erratic behavior</td>
+                            <td>High</td>
+                            <td>Very Low</td>
+                            <td class="risk-level-low">Low</td>
+                            <td><span class="status-badge approved">Mitigated</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert success">
+                <span class="alert-icon" aria-hidden="true">✓</span>
+                <div class="alert-content">
+                    <p class="alert-title">Risk Mitigation Summary</p>
+                    <p>All identified risks have been reduced to acceptable levels through engineering controls, administrative procedures, and safety-certified redundant systems. No critical-level risks remain unmitigated.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hazard Analysis Section -->
+        <section id="hazard-analysis" class="section">
+            <div class="section-header">
+                <h2>Detailed Hazard Analysis</h2>
+                <p class="section-subtitle">Systematic identification and characterization of potential safety hazards</p>
+            </div>
+
+            <p>This section provides detailed analysis of identified hazards, their potential consequences, and the systematic approach used to eliminate or control each risk factor.</p>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="visually-hidden">Detailed hazard analysis with descriptions and consequences</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Hazard ID</th>
+                            <th scope="col">Description</th>
+                            <th scope="col">Potential Consequence</th>
+                            <th scope="col">Detection Method</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>H-001</strong></td>
+                            <td>Collision with stationary human operator</td>
+                            <td>Minor to moderate physical injury</td>
+                            <td>Multi-modal sensor fusion (LiDAR, vision, proximity)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-002</strong></td>
+                            <td>Collision with moving human in workspace</td>
+                            <td>Minor to moderate physical injury</td>
+                            <td>Real-time motion tracking and predictive path planning</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-003</strong></td>
+                            <td>Unexpected loss of balance leading to fall</td>
+                            <td>Equipment damage, potential human injury</td>
+                            <td>IMU monitoring with fall detection algorithms</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-004</strong></td>
+                            <td>Gripper malfunction during object manipulation</td>
+                            <td>Object drop causing injury or damage</td>
+                            <td>Force feedback sensors and grip strength monitoring</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-005</strong></td>
+                            <td>Navigation system failure in dynamic environment</td>
+                            <td>Collision with obstacles or personnel</td>
+                            <td>Redundant SLAM systems with watchdog monitoring</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-006</strong></td>
+                            <td>Thermal runaway in battery system</td>
+                            <td>Fire risk, system shutdown</td>
+                            <td>Battery management system with thermal sensors</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-007</strong></td>
+                            <td>Loss of wireless communication</td>
+                            <td>Loss of supervisory control</td>
+                            <td>Communication heartbeat monitoring</td>
+                        </tr>
+                        <tr>
+                            <td><strong>H-008</strong></td>
+                            <td>Software deadlock or race condition</td>
+                            <td>System freeze or unpredictable behavior</td>
+                            <td>Watchdog timers and system health monitoring</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="alert info">
+                <span class="alert-icon" aria-hidden="true">ℹ️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Hazard Analysis Methodology</p>
+                    <p>This hazard analysis was conducted using HAZOP (Hazard and Operability Study) methodology combined with FMEA (Failure Mode and Effects Analysis), ensuring comprehensive coverage of both systematic and random failure modes.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Mitigation Strategies Section -->
+        <section id="mitigation" class="section">
+            <div class="section-header">
+                <h2>Mitigation Strategies & Safety Controls</h2>
+                <p class="section-subtitle">Engineered safeguards and operational procedures</p>
+            </div>
+
+            <p>The following multi-layered safety approach ensures hazards are eliminated at the source where possible, or controlled through redundant protective measures aligned with the hierarchy of controls.</p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Primary Safety Systems</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Redundant Emergency Stop System (SIL 3 Rated)</p>
+                        <p class="compliance-description">Triple-redundant e-stop mechanism with hardware interlocks, accessible from multiple physical locations and wireless emergency stop capability with 50ms response time.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Multi-Modal Collision Avoidance</p>
+                        <p class="compliance-description">Sensor fusion architecture combining LiDAR (360° coverage), stereo vision cameras, ultrasonic proximity sensors, and pressure-sensitive skin for comprehensive human detection within 2-meter safety zone.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safe Speed and Force Limiting</p>
+                        <p class="compliance-description">Dynamic speed reduction in human proximity zones (max 250mm/s within 1.5m of humans) and force-limiting actuators with configurable thresholds aligned with ISO/TS 15066 collaborative robotics standards.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Fail-Safe Power Management</p>
+                        <p class="compliance-description">Redundant power supply with automatic failover, controlled shutdown protocol for battery depletion, and emergency power reserve sufficient for safe park maneuver.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Safety Monitoring & Diagnostics</p>
+                        <p class="compliance-description">Continuous self-diagnostics with automatic fault detection, safe-state transition protocols, and comprehensive system health logging for post-incident analysis.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Workspace Geofencing & Virtual Boundaries</p>
+                        <p class="compliance-description">Software-enforced operational boundaries with hard limits preventing entry into restricted zones, configurable per deployment environment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Administrative Controls</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Operator Training & Certification Program</p>
+                        <p class="compliance-description">Mandatory 40-hour training program covering safe operation procedures, emergency response, and system limitations. Operators must pass competency assessment and maintain annual recertification.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Workplace Safety Protocols & Signage</p>
+                        <p class="compliance-description">Clearly marked robot operational zones, mandatory PPE requirements, and documented safe work procedures including lockout/tagout protocols for maintenance.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Preventive Maintenance Schedule</p>
+                        <p class="compliance-description">Weekly safety system verification, monthly comprehensive inspection, and annual third-party safety audit to ensure continued compliance and system reliability.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="alert warning">
+                <span class="alert-icon" aria-hidden="true">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Continuous Improvement</p>
+                    <p>Safety mitigation strategies are reviewed quarterly and updated based on operational data, near-miss analysis, and emerging best practices in the humanoid robotics industry.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance Section -->
+        <section id="compliance" class="section">
+            <div class="section-header">
+                <h2>Regulatory Compliance Documentation</h2>
+                <p class="section-subtitle">Adherence to international safety and quality standards</p>
+            </div>
+
+            <p>This safety case demonstrates compliance with applicable international standards for autonomous systems, industrial robotics, and functional safety.</p>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">ISO 61508 - Functional Safety of Electrical/Electronic Systems</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Part 1: General Requirements</p>
+                        <p class="compliance-description">Safety lifecycle documentation, management of functional safety, and competency requirements verified through third-party assessment.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Part 2: Requirements for E/E/PE Safety-Related Systems</p>
+                        <p class="compliance-description">Safety requirements specification, SIL 3 certification achieved for emergency stop and collision avoidance systems.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Part 3: Software Requirements</p>
+                        <p class="compliance-description">Software safety lifecycle, verification and validation activities, and coding standards compliance (MISRA C++, SEI CERT).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">UL 4600 - Standard for Safety for the Evaluation of Autonomous Products</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety Case Development</p>
+                        <p class="compliance-description">Comprehensive argument-based safety case structure demonstrating acceptably safe operation across operational design domain.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Autonomy Safety Assessment</p>
+                        <p class="compliance-description">Risk assessment specific to autonomous decision-making, including AI/ML component validation and edge case handling.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status in-progress" aria-label="In Progress">◐</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Field Performance Monitoring</p>
+                        <p class="compliance-description">Ongoing data collection and analysis program to validate safety performance assumptions. Target completion: Q1 2026.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">ISO/TS 15066 - Collaborative Robots</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Biomechanical Limits Compliance</p>
+                        <p class="compliance-description">Force and pressure limits validated against ISO/TS 15066 specifications for all body regions with 20% safety margin.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety-Rated Monitored Stop</p>
+                        <p class="compliance-description">Certified implementation of safety-rated monitored stop function for human-robot collaboration scenarios.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Additional Regulatory Compliance</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">ANSI/RIA R15.08 - Industrial Mobile Robots</p>
+                        <p class="compliance-description">Safety requirements for industrial mobile robot systems, including navigation safety and workspace monitoring.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">IEC 62061 - Machinery Safety</p>
+                        <p class="compliance-description">Safety of machinery - functional safety of safety-related electrical, electronic, and programmable electronic control systems.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Complete">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">CE Marking (EU Machinery Directive 2006/42/EC)</p>
+                        <p class="compliance-description">Full conformity assessment completed and CE marking authorized for European market deployment.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Certification Body</span>
+                    <span class="metadata-value">TÜV SÜD America Inc.</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Certificate Number</span>
+                    <span class="metadata-value">TUV-HR-2025-001</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Validity Period</span>
+                    <span class="metadata-value">January 2025 - January 2028</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Audit</span>
+                    <span class="metadata-value">January 2026 (Annual Surveillance)</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cybersecurity & Control Integrity Section -->
+        <section id="cybersecurity" class="section">
+            <div class="section-header">
+                <h2>Cybersecurity & Control System Integrity</h2>
+                <p class="section-subtitle">Protection against unauthorized access and cyber threats per ISO 10218:2025</p>
+            </div>
+
+            <p>As mandated by the 2025 revision of ISO 10218, this safety case addresses cybersecurity measures to protect against unauthorized control, malicious attacks, and control system compromise that could result in unsafe robot behavior.</p>
+
+            <div class="alert info" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">🔒</span>
+                <div class="alert-content">
+                    <p class="alert-title">Security-First Design</p>
+                    <p>All control communications are encrypted, firmware is cryptographically signed, and multi-factor authentication is required for all operator access. Security monitoring is continuous with automatic safe-stop on anomaly detection.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Authentication & Authorization</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Multi-Factor Authentication (MFA)</p>
+                        <p class="compliance-description">All operator accounts require MFA using hardware security keys (FIDO2/WebAuthn compliant) or time-based one-time passwords (TOTP). Role-based access control (RBAC) limits privileges: Operator (runtime control only), Technician (maintenance + operation), Administrator (full system access).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Session Management & Timeout</p>
+                        <p class="compliance-description">Operator sessions automatically timeout after 15 minutes of inactivity. Re-authentication required for safety-critical operations. All sessions logged with timestamp, user ID, and IP address for audit trail.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Certificate-Based Device Authentication</p>
+                        <p class="compliance-description">Control devices (tablets, workstations) must present valid X.509 certificates signed by company CA. Unauthorized devices are rejected at network layer. Certificates rotated every 90 days.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Secure Communications</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">End-to-End Encryption (TLS 1.3)</p>
+                        <p class="compliance-description">All control commands and telemetry data encrypted using TLS 1.3 with perfect forward secrecy (PFS). Cipher suites limited to AES-256-GCM and ChaCha20-Poly1305. Legacy protocols (TLS 1.2 and below, SSLv3) disabled.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Network Segmentation</p>
+                        <p class="compliance-description">Safety-critical control network (emergency stop, collision avoidance) physically isolated from non-critical network (telemetry, diagnostics). No routing between segments. Safety network uses dedicated hardware with no internet connectivity.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Command Input Validation</p>
+                        <p class="compliance-description">All control inputs validated against safety constraints (velocity limits, workspace boundaries, joint limits) before execution. Malformed or out-of-range commands rejected with error logging. Input sanitization prevents injection attacks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Firmware & Software Integrity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Cryptographically Signed Firmware</p>
+                        <p class="compliance-description">All firmware images signed using RSA-4096 keys stored in hardware security module (HSM). Robot bootloader verifies signature before loading firmware. Unsigned or tampered firmware rejected with system lockdown.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Secure Boot & Measured Boot</p>
+                        <p class="compliance-description">UEFI Secure Boot enabled with trusted platform module (TPM 2.0). Each boot stage measures and verifies integrity of next stage. Boot attestation logged and monitored for anomalies.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Over-the-Air (OTA) Update Security</p>
+                        <p class="compliance-description">OTA updates require dual authorization (engineering + operations manager). Update packages encrypted in transit and at rest. Automatic rollback on update failure. Robot remains in safe-stop during update process.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Intrusion Detection & Response</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Anomaly Detection</p>
+                        <p class="compliance-description">Network traffic, command sequences, and system behavior continuously monitored for anomalies. Machine learning models detect deviations from normal operation patterns. Anomaly detection threshold tuned to minimize false positives while maintaining high sensitivity.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Automatic Safe-Stop on Intrusion</p>
+                        <p class="compliance-description">Suspected intrusion or control system compromise triggers immediate transition to safe-stop state. All motion commands ignored until manual reset by authorized administrator. Security incident logged with full diagnostic snapshot.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Security Incident Response Plan</p>
+                        <p class="compliance-description">Documented procedures for security incident investigation, containment, eradication, and recovery. Incident response team on-call 24/7. Post-incident review conducted within 72 hours with root cause analysis and corrective actions.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Vulnerability Management</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Third-Party Dependency Monitoring</p>
+                        <p class="compliance-description">All software dependencies tracked in Software Bill of Materials (SBOM). CVE databases monitored daily for vulnerabilities. Critical vulnerabilities patched within 48 hours; high severity within 7 days; medium within 30 days.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Penetration Testing</p>
+                        <p class="compliance-description">Annual third-party penetration testing by certified ethical hackers (CEH, OSCP). Tests include network attacks, privilege escalation, firmware reverse engineering, and physical access scenarios. All findings remediated before next production release.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Security Disclosure Program</p>
+                        <p class="compliance-description">Public vulnerability disclosure program allows security researchers to report findings. Coordinated disclosure timeline (90 days). Recognition and rewards for valid security findings.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Security Audit Date</span>
+                    <span class="metadata-value">October 2025</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Penetration Test Date</span>
+                    <span class="metadata-value">September 2025</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Security Review</span>
+                    <span class="metadata-value">January 2026</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Security Incidents (2025)</span>
+                    <span class="metadata-value">0 Confirmed</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI/ML Safety Validation Section -->
+        <section id="ai-ml-safety" class="section">
+            <div class="section-header">
+                <h2>AI/ML Safety Validation & Monitoring</h2>
+                <p class="section-subtitle">Artificial intelligence and machine learning system safety assurance</p>
+            </div>
+
+            <p>This humanoid robotics platform utilizes machine learning models for perception (human detection, object recognition, scene understanding) and motion planning. This section documents the safety validation approach for AI/ML components and continuous field monitoring procedures.</p>
+
+            <div class="alert warning" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">🤖</span>
+                <div class="alert-content">
+                    <p class="alert-title">AI Safety Philosophy</p>
+                    <p>All AI/ML predictions are treated as untrusted inputs and validated by deterministic safety monitors before execution. When AI confidence falls below safety thresholds, system degrades gracefully to rule-based fallback behaviors. Safety is never dependent on AI correctness alone.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Training Data Quality & Diversity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Dataset Composition & Size</p>
+                        <p class="compliance-description">Human detection model trained on 2.4M labeled images from 47 operational sites representing diverse demographics (age, gender, body type, clothing, PPE), environmental conditions (lighting 50-1000 lux, weather, occlusions), and human poses (standing, sitting, kneeling, reaching, carrying objects). Data collected across 18 months covering seasonal variations.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Bias Analysis & Mitigation</p>
+                        <p class="compliance-description">Detection performance evaluated across demographic groups: precision ≥99.8% and recall ≥99.9% for all groups (no statistically significant performance disparity, p < 0.01). Underrepresented scenarios augmented with synthetic data generation. Quarterly bias audits conducted.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Data Annotation Quality Control</p>
+                        <p class="compliance-description">All training images annotated by certified labeling teams with inter-annotator agreement ≥98%. Ambiguous cases reviewed by safety engineering team. 10% random sample re-annotated for quality verification.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Model Architecture & Validation</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Perception Model Architecture</p>
+                        <p class="compliance-description">Human detection: YOLOv8 (79M parameters) with custom safety-critical head. Object segmentation: Mask R-CNN with ResNet-101 backbone. Depth estimation: Stereo vision + monocular depth fusion. Inference latency: <30ms per frame (guaranteed on edge TPU). Model quantization (INT8) validated to maintain accuracy within 0.2% of FP32 baseline.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Test Set Validation Performance</p>
+                        <p class="compliance-description">Held-out test set (250K images, disjoint from training): Human detection precision 99.87%, recall 99.93%, F1 score 99.90%. False positive rate <0.02% (no false negatives tolerated - conservative detection preferred). Validated on edge cases: partial occlusions, extreme lighting, motion blur, non-standard poses.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Out-of-Distribution (OOD) Detection</p>
+                        <p class="compliance-description">Ensemble uncertainty estimation (dropout approximation + deep ensembles) detects inputs outside training distribution. OOD score threshold calibrated to 99.5% sensitivity on validation set. When OOD detected, system reduces speed to 25% and increases sensor fusion conservativeness.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Adversarial Robustness & Edge Case Testing</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Adversarial Attack Testing</p>
+                        <p class="compliance-description">Models tested against adversarial perturbations (FGSM, PGD, C&W attacks) at various perturbation budgets (ε = 0.01 to 0.1). Adversarial training incorporated to improve robustness. Validated that physically-realizable attacks (lighting changes, sensor noise) do not degrade safety performance below thresholds.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Environmental Stress Testing</p>
+                        <p class="compliance-description">Perception validated under degraded conditions: Rain/water droplets on cameras (99.2% detection maintained), direct sunlight/lens flare (98.8%), darkness with auxiliary lighting only (99.4%), fog/haze 50m visibility (98.1%), dust/particulate from industrial processes (99.0%). All scenarios tested with 5,000+ images per condition.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Validated">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Sensor Degradation Scenarios</p>
+                        <p class="compliance-description">Tested with: Camera lens occlusion (dirt, scratches), sensor misalignment (±5°), exposure/white balance miscalibration, dead pixels (up to 2% sensor area). Multi-sensor fusion ensures degradation of single sensor does not compromise safety. Minimum 2 of 4 cameras must detect human for positive classification.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Continuous Field Monitoring & Model Updates</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Real-Time Inference Performance Monitoring</p>
+                        <p class="compliance-description">All deployed robots log inference metrics (latency, confidence scores, OOD detection frequency, disagreement between sensors) to cloud analytics. Anomalies trigger automatic alerts. Performance degradation trends identified via statistical process control (SPC) before safety impact occurs.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Model Version Management & Rollback</p>
+                        <p class="compliance-description">All models versioned with semantic versioning (major.minor.patch). Each version tagged with training data checksum, validation metrics, and approval signatures. A/B testing on 5% of fleet before full rollout. Automatic rollback if field safety metrics degrade by >1% relative to previous version.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Retraining & Recertification Process</p>
+                        <p class="compliance-description">Models retrained quarterly incorporating new field data (edge cases, near-misses, environmental conditions not in original dataset). Each retrained model undergoes full validation test suite before deployment. Safety regression testing ensures new model does not introduce failures on previously-passing scenarios. Recertification by safety team required for major version updates.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Explainability & Incident Investigation</p>
+                        <p class="compliance-description">Gradient-weighted Class Activation Mapping (Grad-CAM) visualizations stored for sampled inferences to understand model decision-making. All safety-relevant events (near-misses, emergency stops) trigger full diagnostic capture including raw sensor data and model activations for offline analysis. Incident investigations identify root causes (data quality, model limitations, deployment environment differences).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Fallback & Graceful Degradation</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Confidence-Based Mode Switching</p>
+                        <p class="compliance-description">When AI model confidence falls below 95% threshold (calibrated on validation set), robot automatically reduces speed by 50% and engages rule-based safety monitors. Below 80% confidence, robot transitions to safe-stop until uncertainty resolved. Conservative false-positive bias intentional.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Rule-Based Safety Backstop</p>
+                        <p class="compliance-description">Deterministic safety layer monitors all AI outputs. Geometry-based collision checking using LiDAR point clouds provides AI-independent validation. Infrared time-of-flight sensors (non-ML) provide redundant human detection at close range (<1m). Any sensor disagreement triggers safe-stop.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Implemented">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Operator Notification & Manual Override</p>
+                        <p class="compliance-description">Frequent AI uncertainty events (>5 per hour) alert human supervisor. Operator can view real-time confidence scores and sensor visualizations. Manual override available to teleoperate robot out of degraded AI scenarios. Teleoperation limited to 0.5 m/s with direct video feed and <200ms latency requirement.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Current Model Version</span>
+                    <span class="metadata-value">v4.2.1 (Oct 2025)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Training Dataset Size</span>
+                    <span class="metadata-value">2.4M Images</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Field Detection Accuracy</span>
+                    <span class="metadata-value">99.91% (30-day avg)</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">AI-Related Incidents</span>
+                    <span class="metadata-value">0 Safety Events</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Maintenance Safety Section -->
+        <section id="maintenance-safety" class="section">
+            <div class="section-header">
+                <h2>Maintenance Safety & Technician Qualification</h2>
+                <p class="section-subtitle">Safe service procedures and personnel competency requirements</p>
+            </div>
+
+            <p>Maintenance activities present unique hazards due to close human proximity to energized systems, disabled safety interlocks, and potential for inadvertent motion. This section documents procedures to ensure maintenance is performed safely by qualified personnel.</p>
+
+            <div class="alert danger" style="margin: 2rem 0;">
+                <span class="alert-icon" aria-hidden="true">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Critical Safety Notice</p>
+                    <p>Maintenance must ONLY be performed by personnel certified through the [COMPANY_NAME] Technical Training Program. Unqualified maintenance attempts void all warranties and certifications. Robot contains high voltage (400V DC), stored energy (springs, pneumatics), and heavy moving components (joint torque up to 500 Nm). Improper service can result in serious injury or death.</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Technician Qualification & Certification</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 1: Operator Maintenance Technician (OMT)</p>
+                        <p class="compliance-description">40-hour course covering: routine inspections, cleaning procedures, consumable replacement (grease, filters), basic troubleshooting, and emergency stop testing. Prerequisites: High school diploma, basic hand tool proficiency. Authorized tasks: Visual inspections, exterior cleaning, emergency stop verification, battery swap (with guard in place). NOT authorized for panel removal or high-voltage work. Recertification: Annual (8-hour refresher).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 2: Field Service Technician (FST)</p>
+                        <p class="compliance-description">120-hour course covering: mechanical disassembly, electrical safety (NFPA 70E), sensor calibration, actuator replacement, firmware updates, and diagnostics. Prerequisites: OMT certification + 2 years mechatronics experience OR associate degree in robotics/electrical engineering. Authorized tasks: All OMT tasks plus sensor replacement, actuator service, brake adjustment, minor electrical repairs (≤48V). NOT authorized for safety system modifications. Recertification: Annual (16-hour refresher + practical exam).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Level 3: Certified Robotics Engineer (CRE)</p>
+                        <p class="compliance-description">200-hour course covering: high-voltage systems (400V DC), safety system architecture, controller programming, advanced diagnostics, and failure analysis. Prerequisites: FST certification + bachelor's degree in engineering OR 5 years field robotics experience. Authorized tasks: All maintenance including high-voltage work, safety system calibration, controller replacement, and certification testing. Only CREs may re-enable safety interlocks after maintenance. Recertification: Annual (24-hour refresher + written/practical exam).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety Training for All Levels</p>
+                        <p class="compliance-description">All technicians receive: Lockout/Tagout (LOTO) per OSHA 1910.147, Arc Flash safety per NFPA 70E, Confined Space Entry per OSHA 1910.146 (if applicable), Hazardous Energy Control, First Aid/CPR/AED, and Incident Reporting. Training documented in Learning Management System (LMS) with digital certificates and expiration tracking.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Lockout/Tagout (LOTO) Procedures</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Energy Isolation Points</p>
+                        <p class="compliance-description">Robot has 5 energy sources requiring isolation: (1) Main 400V DC battery disconnect, (2) Emergency stop circuit (redundant contactors), (3) Pneumatic accumulator (0.8 MPa, 3L volume), (4) Joint spring energy storage (6 joints, 250J total), (5) Hydraulic reservoir (if equipped, 21 MPa). Each isolation point clearly labeled with energy type, voltage/pressure, and lockout procedure.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">LOTO Sequence (per OSHA 1910.147)</p>
+                        <p class="compliance-description">
+                            1. Notify all affected personnel of impending maintenance.<br>
+                            2. Shut down robot using normal stop procedure (save state, controlled deceleration).<br>
+                            3. Activate E-stop button to de-energize safety circuits.<br>
+                            4. Disconnect main battery (tool-required disconnect switch).<br>
+                            5. Apply personal lock and tag to battery disconnect (minimum: technician name, date, phone).<br>
+                            6. Bleed stored pneumatic energy (valve at accumulator, verify 0 pressure).<br>
+                            7. Engage mechanical joint locks to prevent gravity drop.<br>
+                            8. Verify zero energy state using voltage/pressure test equipment (multimeter at test points, pressure gauge).<br>
+                            9. Attempt to start robot (should fail) - verification step.<br>
+                            10. Proceed with maintenance only after zero energy verified.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Group LOTO for Multi-Technician Work</p>
+                        <p class="compliance-description">When multiple technicians work on same robot, group lockout box used. Each technician applies personal lock to box (hasps accommodate up to 6 locks). No technician may remove another's lock. Last technician to finish removes lockout box and completes re-energization checklist. Documented in maintenance log with all technician signatures.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">High-Voltage & Battery Safety</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Electrical Safety PPE Requirements</p>
+                        <p class="compliance-description">Work on energized circuits (>50V) requires: Class 00 insulated gloves (500V rated) with leather protectors, safety glasses with side shields, arc-rated face shield (when risk of arc flash), arc-rated coveralls (8 cal/cm² minimum), insulated tools, and non-conductive footwear. Arc flash boundary calculated at 0.6m for 400V DC system. PPE inspected before each use (air test for gloves, visual inspection for damage).</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Lithium-Ion Battery Handling</p>
+                        <p class="compliance-description">Robot uses 115Ah lithium iron phosphate (LiFePO4) battery, 400V nominal (350-440V range). Hazards: Electric shock, thermal runaway fire, explosive gas venting if damaged. Safety procedures: Verify battery temperature <35°C before handling, inspect for swelling/damage/leaks, use insulated lifting equipment (40kg mass), charge only with approved charger in ventilated area, store at 50% SOC in fireproof cabinet. Class D fire extinguisher available during all battery work.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Critical">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Capacitor Discharge Procedure</p>
+                        <p class="compliance-description">Motor drive capacitors store lethal energy (12,000μF at 400V = 960J). After battery disconnect, wait 5 minutes for bleed resistors to discharge capacitors below 50V. Verify voltage at designated test points before touching any high-voltage component. Short-circuit procedure using insulated shorting probe if immediate access required (CRE only).</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Post-Maintenance Verification Testing</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Functional Verification Checklist</p>
+                        <p class="compliance-description">Before returning robot to service, technician must complete 27-point verification checklist including: Emergency stop function test (all 4 E-stop buttons), force/torque sensor calibration check, collision detection response time (<50ms), joint position accuracy (±0.5°), workspace boundary enforcement, communication link integrity, and software version verification. Checklist signed by performing technician and verified by supervisor.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety System Re-Certification</p>
+                        <p class="compliance-description">Any maintenance involving safety systems (E-stop, collision detection, force limiting) requires full safety recertification. Automated test suite runs 200+ safety scenarios. Human-in-loop verification: technician deliberately triggers each safety condition (using test fixtures, not actual human contact) and verifies response. Only CRE-level technicians may certify safety system functionality.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Mandatory">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Break-In Period After Major Service</p>
+                        <p class="compliance-description">After actuator replacement, controller swap, or structural repairs, robot operates in reduced-performance mode for 8 hours: 50% speed limit, 60% force limit, enhanced monitoring (all sensor data logged). Automatic transition to full performance after 8 hours if no anomalies detected. Supervisor review required for early release from break-in period.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Spare Parts & Supply Chain Integrity</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Approved Spare Parts List</p>
+                        <p class="compliance-description">Only parts from approved vendor list may be installed. Critical safety components (force sensors, E-stop contactors, motor controllers) must be OEM parts with batch traceability. Technicians verify part number, revision, and serial number against maintenance database before installation. Non-approved parts void safety certification.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Counterfeit Prevention</p>
+                        <p class="compliance-description">All critical electronic components have unique serialization (QR code + 128-bit UUID). Upon installation, technician scans component and system validates against manufacturer's database. Suspected counterfeit triggers alert to supply chain team. Batteries include NFC tag with encrypted authentication. Failed authentication prevents robot operation.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Required">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Component Lifecycle Tracking</p>
+                        <p class="compliance-description">Each safety-critical component has recommended service life: Force/torque sensors (20,000 hours or 4 years), E-stop contactors (50,000 cycles or 5 years), Collision detection sensors (30,000 hours or 5 years), Batteries (2,000 cycles or 3 years), Motor bearings (40,000 hours or 7 years). System tracks runtime/cycles and alerts when approaching limits. Components can be extended beyond limits only with engineering approval and enhanced inspection.</p>
+                    </div>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Maintenance Safety Incidents & Learning</h3>
+
+            <div class="compliance-list">
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Active">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Incident Reporting & Investigation</p>
+                        <p class="compliance-description">All maintenance incidents (injuries, near-misses, equipment damage) reported within 24 hours via online portal. Severity classification: Level 1 (injury requiring medical attention - immediate investigation), Level 2 (near-miss with injury potential - investigation within 72 hours), Level 3 (procedure violation or equipment damage - investigation within 1 week). Root cause analysis using 5-Whys and Fishbone diagrams. Corrective actions tracked to closure.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Active">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">Safety Bulletins & Procedure Updates</p>
+                        <p class="compliance-description">Findings from incident investigations disseminated via Technical Service Bulletins (TSB). All technicians must acknowledge receipt and understanding within 7 days. High-severity findings require immediate procedure updates and refresher training. Maintenance procedures reviewed and updated quarterly based on field feedback and incident trends.</p>
+                    </div>
+                </div>
+
+                <div class="compliance-item">
+                    <span class="compliance-status complete" aria-label="Active">✓</span>
+                    <div class="compliance-content">
+                        <p class="compliance-title">2025 Maintenance Safety Record</p>
+                        <p class="compliance-description">Year-to-date (through October): 2,847 maintenance interventions across deployed fleet. 0 lost-time injuries, 2 first-aid incidents (minor cuts during panel removal - corrective action: improved edge guards installed), 7 near-misses reported and investigated. Injury rate: 0.7 per 1,000 maintenance hours (industry benchmark: 2.1). Target: Zero harm.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Certified Technicians</span>
+                    <span class="metadata-value">89 Active</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">CRE-Level Engineers</span>
+                    <span class="metadata-value">12 Qualified</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Maintenance Incidents (2025)</span>
+                    <span class="metadata-value">0 Lost-Time Injuries</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Safety Audit</span>
+                    <span class="metadata-value">January 2026</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testing Results Section -->
+        <section id="testing" class="section">
+            <div class="section-header">
+                <h2>Safety Validation Testing Results</h2>
+                <p class="section-subtitle">Comprehensive testing program outcomes and performance metrics</p>
+            </div>
+
+            <p>The humanoid robotics platform has undergone extensive safety validation testing across simulated and real-world operational scenarios. All tests were conducted by independent third-party laboratories and internal safety engineering teams.</p>
+
+            <div class="dashboard-grid" style="margin: 2rem 0;">
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Total Test Hours</p>
+                    <p class="dashboard-card-value">10,247</p>
+                    <p class="dashboard-card-description">Across all test scenarios</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Collision Avoidance Success</p>
+                    <p class="dashboard-card-value">99.97%</p>
+                    <p class="dashboard-card-description">15,000+ human interaction tests</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">Emergency Stop Response</p>
+                    <p class="dashboard-card-value">42ms</p>
+                    <p class="dashboard-card-description">Average response time</p>
+                </div>
+
+                <div class="dashboard-card success">
+                    <p class="dashboard-card-label">System Uptime</p>
+                    <p class="dashboard-card-value">99.8%</p>
+                    <p class="dashboard-card-description">Operational reliability metric</p>
+                </div>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Test Categories & Results</h3>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="visually-hidden">Safety validation test results by category</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Test Category</th>
+                            <th scope="col">Test Scenarios</th>
+                            <th scope="col">Test Cycles</th>
+                            <th scope="col">Pass Rate</th>
+                            <th scope="col">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Human Detection & Avoidance</td>
+                            <td>32 unique scenarios</td>
+                            <td>15,000+</td>
+                            <td>99.97%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Emergency Stop Functionality</td>
+                            <td>8 failure modes</td>
+                            <td>5,000+</td>
+                            <td>100%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Power System Fault Handling</td>
+                            <td>12 fault conditions</td>
+                            <td>2,500+</td>
+                            <td>100%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Navigation Safety (SLAM)</td>
+                            <td>48 environment types</td>
+                            <td>8,000+</td>
+                            <td>99.92%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Force Limiting Compliance</td>
+                            <td>24 contact scenarios</td>
+                            <td>3,000+</td>
+                            <td>100%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Communication Loss Handling</td>
+                            <td>6 network failure modes</td>
+                            <td>1,200+</td>
+                            <td>100%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Environmental Edge Cases</td>
+                            <td>64 challenging scenarios</td>
+                            <td>4,500+</td>
+                            <td>98.7%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                        <tr>
+                            <td>Long-Duration Reliability</td>
+                            <td>Continuous operation</td>
+                            <td>1,000 hrs</td>
+                            <td>99.8%</td>
+                            <td><span class="status-badge approved">Passed</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <h3 style="margin-top: 2rem; margin-bottom: 1rem; color: var(--primary-color);">Notable Test Findings</h3>
+
+            <div class="alert success">
+                <span class="alert-icon" aria-hidden="true">✓</span>
+                <div class="alert-content">
+                    <p class="alert-title">Zero Serious Injury Events</p>
+                    <p>Across 10,000+ hours of testing including human-robot interaction scenarios, zero serious injury events occurred. Minor contact incidents (3 total) resulted in forces below ISO/TS 15066 thresholds with automatic system response within specified limits.</p>
+                </div>
+            </div>
+
+            <div class="alert info">
+                <span class="alert-icon" aria-hidden="true">ℹ️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Edge Case Performance</p>
+                    <p>The system demonstrated robust performance in challenging edge cases including sudden human movements, environmental occlusions, and sensor degradation scenarios. Identified failure modes have been documented and addressed through software updates and operational guidelines.</p>
+                </div>
+            </div>
+
+            <div class="alert warning">
+                <span class="alert-icon" aria-hidden="true">⚠️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Continuous Testing Program</p>
+                    <p>Safety validation testing continues throughout the product lifecycle. Monthly regression testing and quarterly scenario expansion ensure ongoing safety performance as software and operational conditions evolve.</p>
+                </div>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Primary Test Facility</span>
+                    <span class="metadata-value">[Company] Safety Lab, [City, State]</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Third-Party Test Lab</span>
+                    <span class="metadata-value">UL Solutions - Northbrook, IL</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Test Standard Adherence</span>
+                    <span class="metadata-value">ISO 61508, UL 4600, ISO/TS 15066</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Test Period</span>
+                    <span class="metadata-value">March 2024 - October 2025</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Document Control Section -->
+        <section class="section">
+            <div class="section-header">
+                <h2>Document Control & Revision History</h2>
+                <p class="section-subtitle">Version tracking and approval record</p>
+            </div>
+
+            <div class="table-responsive">
+                <table class="data-table">
+                    <caption class="visually-hidden">Document revision history</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Version</th>
+                            <th scope="col">Date</th>
+                            <th scope="col">Author</th>
+                            <th scope="col">Changes</th>
+                            <th scope="col">Approval</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1.0</td>
+                            <td>November 7, 2025</td>
+                            <td>[Name], Chief Safety Officer</td>
+                            <td>Initial release - comprehensive safety case documentation</td>
+                            <td><span class="status-badge approved">Approved</span></td>
+                        </tr>
+                        <tr>
+                            <td>0.9</td>
+                            <td>October 15, 2025</td>
+                            <td>[Name], Safety Engineering Team</td>
+                            <td>Draft for third-party review and certification</td>
+                            <td><span class="status-badge in-review">Review</span></td>
+                        </tr>
+                        <tr>
+                            <td>0.5</td>
+                            <td>August 1, 2025</td>
+                            <td>[Name], Safety Engineering Team</td>
+                            <td>Internal draft - test results incorporation</td>
+                            <td><span class="status-badge draft">Draft</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="metadata-grid" style="margin-top: 2rem;">
+                <div class="metadata-item">
+                    <span class="metadata-label">Document Owner</span>
+                    <span class="metadata-value">[Name], Chief Safety Officer</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Review Frequency</span>
+                    <span class="metadata-value">Quarterly</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Next Review Date</span>
+                    <span class="metadata-value">February 7, 2026</span>
+                </div>
+                <div class="metadata-item">
+                    <span class="metadata-label">Document Classification</span>
+                    <span class="metadata-value">Internal / Customer Facing</span>
+                </div>
+            </div>
+
+            <div class="alert info" style="margin-top: 2rem;">
+                <span class="alert-icon" aria-hidden="true">ℹ️</span>
+                <div class="alert-content">
+                    <p class="alert-title">Questions or Feedback?</p>
+                    <p>For inquiries regarding this safety case documentation or to report safety concerns, please contact: <strong>safety@[COMPANY_NAME].com</strong> or call our Safety Hotline at <strong>1-800-XXX-XXXX</strong></p>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer" role="contentinfo">
+        <div class="footer-container">
+            <ul class="footer-links">
+                <li><a href="#executive-summary">Executive Summary</a></li>
+                <li><a href="#risk-assessment">Risk Assessment</a></li>
+                <li><a href="#hazard-analysis">Hazard Analysis</a></li>
+                <li><a href="#mitigation">Mitigation Strategies</a></li>
+                <li><a href="#compliance">Compliance</a></li>
+                <li><a href="#testing">Testing Results</a></li>
+            </ul>
+            <p style="margin-top: 1rem; opacity: 0.8;">© 2025 [COMPANY_NAME]. All rights reserved.</p>
+            <p style="font-size: 0.9rem; margin-top: 0.5rem; opacity: 0.7;">This safety case is a living document and is updated quarterly to reflect operational learnings and regulatory changes.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scrolling for navigation links (with fallback for older browsers)
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                    // Update active navigation state
+                    updateActiveNav(this.getAttribute('href'));
+                }
+            });
+        });
+
+        // Update active navigation state
+        function updateActiveNav(href) {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            const activeLink = document.querySelector(`.nav-link[href="${href}"]`);
+            if (activeLink) {
+                activeLink.classList.add('active');
+            }
+        }
+
+        // Intersection Observer for automatic active nav updates on scroll
+        const sections = document.querySelectorAll('.section');
+        const navLinks = document.querySelectorAll('.nav-link');
+
+        const observerOptions = {
+            root: null,
+            rootMargin: '-20% 0px -70% 0px',
+            threshold: 0
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.getAttribute('id');
+                    navLinks.forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${id}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => {
+            if (section.id) {
+                observer.observe(section);
+            }
+        });
+
+        // Print functionality
+        function printDocument() {
+            window.print();
+        }
+
+        // Keyboard navigation enhancement
+        document.addEventListener('keydown', (e) => {
+            // Press 'P' to print
+            if (e.key === 'p' && e.ctrlKey) {
+                e.preventDefault();
+                printDocument();
+            }
+        });
+
+        // Accessibility: Announce page changes for screen readers
+        const announcement = document.createElement('div');
+        announcement.setAttribute('role', 'status');
+        announcement.setAttribute('aria-live', 'polite');
+        announcement.setAttribute('aria-atomic', 'true');
+        announcement.className = 'visually-hidden';
+        document.body.appendChild(announcement);
+
+        // Announce navigation changes
+        navLinks.forEach(link => {
+            link.addEventListener('click', function() {
+                const sectionName = this.textContent.trim();
+                announcement.textContent = `Navigating to ${sectionName} section`;
+            });
+        });
+    </script>
+</body>
+</html>
