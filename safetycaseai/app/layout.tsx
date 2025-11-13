@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SafetyCase.AI - Automated Safety Case Websites for Physical AI",
+  title: "SafetyCaseAI - Automated Safety Case Websites for Physical AI",
   description: "Professional safety case website generation for robotics and physical AI companies. Choose from 5 industry-specific templates.",
   keywords: ["safety case", "robotics", "AI", "compliance", "automation"],
 };
@@ -45,7 +45,7 @@ export default function RootLayout({
                 &copy; {new Date().getFullYear()} SafetyCase.AI. All rights reserved.
               </p>
               <p className="text-sm mt-2">
-                Contact: <a href="mailto:contact@safetycaseai.com" className="text-primary-400 hover:text-primary-300">contact@safetycaseai.com</a>
+                Contact: <a href="mailto:SafetyCaseAI@physicalAIPros.com" className="text-primary-400 hover:text-primary-300">SafetyCaseAI@physicalAIPros.com</a>
               </p>
             </div>
           </div>
