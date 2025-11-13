@@ -1,4 +1,4 @@
-# 🚀 Vercel Deployment Guide for SafetyCase.AI
+# 🚀 Vercel Deployment Guide for SafetyCaseAI
 
 ## Quick Deploy Steps
 
@@ -143,7 +143,7 @@ After deployment, you'll have:
 
 ## 🎉 You're Ready!
 
-Your SafetyCase.AI app will be live and accessible to customers worldwide!
+Your SafetyCaseAI app will be live and accessible to customers worldwide!
 
 **GitHub Repository:** https://github.com/TechRecruiter-Guru/awesome-project-mctf66nf
 **Branch:** claude/code-session-setup-011CUvaPTZHjAztWizeDSpUV

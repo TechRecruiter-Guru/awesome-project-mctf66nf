@@ -1,6 +1,6 @@
 # 🚀 Vercel Web Dashboard Deployment Guide
 
-## Step-by-Step Instructions for SafetyCase.AI
+## Step-by-Step Instructions for SafetyCaseAI
 
 ### Step 1: Go to Vercel New Project Page
 
@@ -110,7 +110,7 @@ https://safetycaseai.vercel.app
 
 ### Test 1: Landing Page
 Go to your Vercel URL - you should see:
-- SafetyCase.AI header
+- SafetyCaseAI header
 - 5 robot template cards
 - Beautiful gradient hero section
 
@@ -226,7 +226,7 @@ To update your live site:
 ```bash
 # Make changes locally
 git add .
-git commit -m "Update SafetyCase.AI"
+git commit -m "Update SafetyCaseAI"
 git push
 
 # Vercel automatically deploys! ✨
@@ -273,4 +273,4 @@ https://console.anthropic.com/settings/keys
 
 Go to https://vercel.com/new and follow the steps above!
 
-Your SafetyCase.AI app will be live in 2-3 minutes! 🚀
+Your SafetyCaseAI app will be live in 2-3 minutes! 🚀
