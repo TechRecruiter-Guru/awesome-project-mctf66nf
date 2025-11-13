@@ -122,7 +122,7 @@ export default function HomePage() {
       {/* Benefits Section */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">Why SafetyCase.AI?</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Why SafetyCaseAI?</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="text-4xl mb-4">⚡</div>
@@ -183,7 +183,7 @@ export default function HomePage() {
             Ready to Create Your Safety Case Website?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join leading Physical AI companies using SafetyCase.AI for their
+            Join leading Physical AI companies using SafetyCaseAI for their
             compliance documentation.
           </p>
           <a
