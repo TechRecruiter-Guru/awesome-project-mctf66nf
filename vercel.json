@@ -1,0 +1,7 @@
+{
+  "buildCommand": "cd safetycaseai && npm install && npm run build",
+  "devCommand": "cd safetycaseai && npm run dev",
+  "installCommand": "cd safetycaseai && npm install",
+  "framework": "nextjs",
+  "outputDirectory": "safetycaseai/.next"
+}
