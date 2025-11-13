@@ -102,10 +102,10 @@ export default function ConfirmationCodeInput() {
             <span>
               Email{' '}
               <a
-                href="mailto:contact@safetycaseai.com"
+                href="mailto:SafetyCaseAI@physicalAIPros.com"
                 className="text-primary-600 hover:underline"
               >
-                contact@safetycaseai.com
+                SafetyCaseAI@physicalAIPros.com
               </a>{' '}
               if delayed
             </span>
