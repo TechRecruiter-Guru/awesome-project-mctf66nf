@@ -146,7 +146,7 @@ When a customer creates an order, they receive:
 - Amount: $2,000 USD
 - Note: Order #[ORDER_ID]
 
-Customers must email receipts to `contact@safetycaseai.com` with their Order ID.
+Customers must email receipts to `SafetyCaseAI@physicalAIPros.com` with their Order ID.
 
 ## Data Storage
 
@@ -265,7 +265,7 @@ MIT License - See LICENSE file for details
 ## Support
 
 For questions or issues:
-- Email: contact@safetycaseai.com
+- Email: SafetyCaseAI@physicalAIPros.com
 - GitHub Issues: [Create an issue](https://github.com/yourusername/safetycaseai/issues)
 
 ## Roadmap
