@@ -187,7 +187,7 @@ export default function AdminPage() {
               </button>
             </div>
             <p className="mt-4 text-green-800">
-              Send this code to the customer via email to contact@safetycaseai.com
+              Send this code to the customer via email to SafetyCaseAI@physicalAIPros.com
             </p>
           </div>
         )}

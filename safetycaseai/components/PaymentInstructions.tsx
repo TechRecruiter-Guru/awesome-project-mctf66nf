@@ -102,10 +102,10 @@ export default function PaymentInstructions({
             <li>
               Email your payment receipt to{' '}
               <a
-                href="mailto:contact@safetycaseai.com"
+                href="mailto:SafetyCaseAI@physicalAIPros.com"
                 className="text-primary-600 font-semibold hover:underline"
               >
-                contact@safetycaseai.com
+                SafetyCaseAI@physicalAIPros.com
               </a>
             </li>
             <li>
