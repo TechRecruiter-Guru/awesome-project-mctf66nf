@@ -427,6 +427,96 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Why Our Recruiting Network Works - 6 Card Grid */}
+      <div className="py-20 bg-gradient-to-br from-indigo-950 via-slate-900 to-purple-950 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              🛡️ Why Our Recruiting Network Actually Works
+            </h2>
+            <p className="text-xl opacity-90 max-w-3xl mx-auto">
+              Your strategic advantage stays YOUR advantage
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Card 1: Specialization Gap */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:border-purple-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">🎯</div>
+              <div className="text-xl font-bold mb-4">Deep Robotics Specialization</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Generic tech recruiters send you full-stack web devs. You need perception engineers who've shipped autonomous systems. We've placed the people who built Tesla Optimus, Waymo's stack, Boston Dynamics Atlas. We speak your language.
+              </div>
+            </div>
+
+            {/* Card 2: Time-Based Moat */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:border-blue-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">⏳</div>
+              <div className="text-xl font-bold mb-4">10-Year Head Start</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                We started placing robotics engineers in 2012. Before Boston Dynamics went viral. Before Tesla hired for Optimus. Before "physical AI" was even a category. This network didn't happen overnight—competitors can't replicate a decade of trust.
+              </div>
+            </div>
+
+            {/* Card 3: Network Effects Flywheel */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:border-green-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">🔄</div>
+              <div className="text-xl font-bold mb-4">Compounding Referral Network</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Every engineer we place becomes a referral source. 1,000 placements = 1,000 people who send us their talented friends. The more we place, the stronger our pipeline gets. This is a compounding advantage that accelerates over time.
+              </div>
+            </div>
+
+            {/* Card 4: De-Risked Hiring */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:border-yellow-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">✅</div>
+              <div className="text-xl font-bold mb-4">Pre-Vetted Technical Screening</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                A bad robotics hire costs $150K+ (6 months salary + lost productivity + replacement time). Our candidates are pre-screened by people who've actually shipped robots—not generic HR. Technical + culture fit validated before you see them.
+              </div>
+            </div>
+
+            {/* Card 5: Trust-Based Relationships */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:border-red-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">🤝</div>
+              <div className="text-xl font-bold mb-4">Relationships, Not Cold Outreach</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                When we call a Senior Perception Engineer at Waymo, they pick up. When a random recruiter calls, they block the number. Trust takes years to build. We have it. Your competitors are still sending LinkedIn InMails.
+              </div>
+            </div>
+
+            {/* Card 6: Always-On Pipeline */}
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/20 hover:border-orange-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">⚡</div>
+              <div className="text-xl font-bold mb-4">Warm Pipeline Always Active</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                We maintain a live pipeline of 200+ robotics engineers (perception, motion planning, safety, controls) who are passively exploring opportunities. When you say "I need someone," we're not starting from zero. We're making warm intros same week.
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Stats Bar */}
+          <div className="mt-16 grid md:grid-cols-4 gap-6 text-center">
+            <div className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 backdrop-blur-sm rounded-lg p-6 border border-blue-500/30">
+              <div className="text-4xl font-bold text-blue-300 mb-2">10+</div>
+              <div className="text-sm opacity-90">Years Building Network</div>
+            </div>
+            <div className="bg-gradient-to-br from-purple-500/20 to-purple-700/20 backdrop-blur-sm rounded-lg p-6 border border-purple-500/30">
+              <div className="text-4xl font-bold text-purple-300 mb-2">1,000+</div>
+              <div className="text-sm opacity-90">Elite Placements Made</div>
+            </div>
+            <div className="bg-gradient-to-br from-green-500/20 to-green-700/20 backdrop-blur-sm rounded-lg p-6 border border-green-500/30">
+              <div className="text-4xl font-bold text-green-300 mb-2">200+</div>
+              <div className="text-sm opacity-90">Warm Pipeline Candidates</div>
+            </div>
+            <div className="bg-gradient-to-br from-yellow-500/20 to-yellow-700/20 backdrop-blur-sm rounded-lg p-6 border border-yellow-500/30">
+              <div className="text-4xl font-bold text-yellow-300 mb-2">14</div>
+              <div className="text-sm opacity-90">Days Average Time-to-Offer</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Templates Section */}
       <div id="templates" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
