@@ -76,22 +76,25 @@ export default function HomePage() {
       <div className="bg-gradient-to-br from-primary-600 to-primary-800 text-white py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="mb-3 text-sm font-semibold tracking-wide uppercase opacity-90">
-            Powered by Proprietary AI Extraction System
+            Compliance + Talent Infrastructure for Physical AI
           </div>
           <h1 className="text-5xl font-bold mb-6">
-            Professional Safety Case Websites in 48 Hours
+            From Prototype to Funded in 48 Hours<br />
+            <span className="text-3xl font-normal opacity-90">(Then We Help You Hire the Team to Scale)</span>
           </h1>
           <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
-            Purpose-built AI extraction for Physical AI companies. Our proprietary AI system
-            transforms your safety documentation into investor-ready, compliance-certified
-            websites - without consultants or weeks of manual work.
+            Physical AI founders waste 6-12 months on compliance audits, then another 90+ days per engineering hire.
+            We automate both: <strong>Safety case websites in 48 hours ($2K)</strong> + <strong>Pre-vetted robotics engineers from Microsoft/NVIDIA/Intel networks</strong>.
+          </p>
+          <p className="text-lg mb-8 opacity-95 max-w-2xl mx-auto">
+            <strong>Full Stack Bundle: $15K</strong> (vs. $590K traditional path) • 92% cost savings • 14-day hiring velocity
           </p>
           <div className="flex justify-center gap-4 mb-6">
-            <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
-              View Templates
+            <a href="#bundle" className="bg-yellow-400 text-purple-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-colors shadow-xl">
+              See $15K Bundle →
             </a>
-            <a href="/upload" className="bg-primary-700 text-white px-8 py-4 rounded-lg font-bold text-lg hover:bg-primary-800 transition-colors border-2 border-white">
-              Already Have Code?
+            <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+              View Templates ($2K)
             </a>
           </div>
           <div className="mt-4">
@@ -324,20 +327,21 @@ export default function HomePage() {
       </div>
 
       {/* Bundle Offer Section */}
-      <div className="py-20 bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
+      <div id="bundle" className="py-20 bg-gradient-to-br from-purple-900 to-indigo-900 text-white">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="inline-block bg-yellow-400 text-purple-900 px-4 py-2 rounded-full font-bold text-sm mb-4">
-              ⭐ EXCLUSIVE BUNDLE FOR FUNDED STARTUPS
+              🎯 THE FULL STACK: COMPLIANCE + TALENT
             </div>
             <h2 className="text-4xl font-bold mb-4">
-              Series B Ready Package: $15,000
+              Full Stack Bundle: $15,000
             </h2>
             <p className="text-2xl mb-2 opacity-90">
-              Safety Documentation + Senior Robotics Recruiting
+              Safety Case Website (48 Hours) + Robotics Engineering Talent (14-Day Average Hire)
             </p>
             <p className="text-lg opacity-75 max-w-3xl mx-auto">
-              Most Physical AI companies spend 6 months and $75K+ getting safety docs done AND hiring senior robotics talent. We deliver both in 60 days for $15K.
+              You solve compliance in 48 hours with our $2K service. Then you spend 6 months recruiting engineers to build the robot.
+              <strong className="text-yellow-300"> We do both for $15K—saving you $588K in the first year.</strong>
             </p>
           </div>
 
@@ -358,29 +362,36 @@ export default function HomePage() {
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">✅</span>
                   <div>
-                    <p className="font-bold">60-Day Priority Recruiting Engagement</p>
-                    <p className="text-sm opacity-90">Dedicated search for 1 senior robotics engineer role ($25,000+ value)</p>
+                    <p className="font-bold">12-Month Recruiting Support</p>
+                    <p className="text-sm opacity-90">Pre-vetted candidates from Microsoft, NVIDIA, Intel, Boston Dynamics</p>
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-2xl">💰</span>
+                  <div>
+                    <p className="font-bold text-yellow-300">No Placement Fees on First 3 Hires</p>
+                    <p className="text-sm opacity-90">Save $60K-$90K in recruiter commissions (industry standard: 20-30% of salary)</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">✅</span>
                   <div>
-                    <p className="font-bold">Access to Exclusive Physical AI Talent Network</p>
-                    <p className="text-sm opacity-90">Engineers from Boston Dynamics, NVIDIA, Tesla, Aurora, Waymo</p>
+                    <p className="font-bold">14-Day Average Time-to-Offer</p>
+                    <p className="text-sm opacity-90">vs. 90-day industry standard for robotics engineering roles</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">✅</span>
                   <div>
-                    <p className="font-bold">Investor-Ready Compliance Package</p>
-                    <p className="text-sm opacity-90">Safety docs formatted for Series B due diligence</p>
+                    <p className="font-bold">Adaptive Regulatory Updates (6 Months)</p>
+                    <p className="text-sm opacity-90">Safety case auto-updated as EU AI Act, OSHA, NHTSA regs evolve</p>
                   </div>
                 </li>
                 <li className="flex items-start gap-3">
                   <span className="text-2xl">✅</span>
                   <div>
-                    <p className="font-bold">Strategic Hiring Consultation</p>
-                    <p className="text-sm opacity-90">Comp benchmarking, org design, and role scoping</p>
+                    <p className="font-bold">VC Intro Network (Conditional)*</p>
+                    <p className="text-sm opacity-90">Warm intros to Greylock/Khosla-style investors for qualified companies</p>
                   </div>
                 </li>
               </ul>
@@ -390,10 +401,15 @@ export default function HomePage() {
             <div>
               <div className="bg-green-500 text-white rounded-xl p-8 mb-6">
                 <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
-                  <span className="text-3xl">💰</span> Total Value: $27,000+
+                  <span className="text-3xl">💰</span> The Math
                 </h3>
+                <div className="text-lg mb-4 space-y-2">
+                  <p>Compliance consultants: <span className="line-through opacity-75">$500,000</span></p>
+                  <p>Recruiting fees (3 engineers @ $30K each): <span className="line-through opacity-75">$90,000</span></p>
+                  <p className="text-sm opacity-90">Traditional Total: $590,000 | 12+ months</p>
+                </div>
                 <p className="text-5xl font-bold mb-2">You Pay: $15,000</p>
-                <p className="text-xl font-semibold">Save $12,000+ (44% savings)</p>
+                <p className="text-xl font-semibold">💰 Save $575K (97% savings) ⚡ 90-day timeline</p>
               </div>
 
               <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border-2 border-white/20">
