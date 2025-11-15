@@ -1,0 +1,42 @@
+SUBJECT: Safety case bottleneck for [COMPANY] Series B?
+
+---
+
+Hi [FIRST_NAME],
+
+I'm reaching out because [SPECIFIC_DETAIL_FROM_WHY_SELECTED] caught my attention.
+
+Quick question: How long does it typically take [COMPANY] to compile safety case documentation for investor due diligence or customer deployments?
+
+We just launched SafetyCase.AI—it turns your safety case PDFs into professional, compliant websites in 48 hours using Claude AI. We've seen Series B humanoid startups cut this from 3-4 weeks (and $50k+ in consultant fees) down to 2 days for $2,000.
+
+5 templates tailored for:
+• Humanoid robots (your [ROBOT_NAME] use case)
+• AMRs, Cobots, Drones, Inspection robots
+
+Outputs:
+✓ ISO 13482 / IEC 61508 formatted
+✓ Investor-ready compliance dashboards
+✓ Self-hosted HTML (no vendor lock-in)
+✓ AI-extracted from your existing PDFs
+
+Would a 15-min demo this week make sense? I can show you a live humanoid robot safety case we generated.
+
+https://safety-topaz.vercel.app
+
+Best,
+[YOUR_NAME]
+[YOUR_TITLE]
+SafetyCase.AI
+
+P.S. If Series B is on your roadmap for 2025, this could save you weeks in due diligence prep.
+
+---
+
+PERSONALIZATION VARIABLES TO FILL:
+[FIRST_NAME] = First name only
+[COMPANY] = Company name
+[SPECIFIC_DETAIL_FROM_WHY_SELECTED] = Copy from "Why Selected" column
+[ROBOT_NAME] = Their specific robot (Apollo, Digit, Phoenix, etc.)
+[YOUR_NAME] = Your name
+[YOUR_TITLE] = Your title (Founder, CEO, etc.)

@@ -1,0 +1,33 @@
+SUBJECT: EASA/FAA drone compliance acceleration for [COMPANY]
+
+---
+
+Hi [FIRST_NAME],
+
+Your [SPECIFIC_DRONE_PROJECT] at [COMPANY] aligns perfectly with SafetyCase.AI's mission.
+
+With EU drone regulations tightening (U-Space, EASA Easy Access), how much time does [COMPANY] spend on safety documentation for certification?
+
+We automate this:
+• Upload VTOL/delivery drone safety case PDFs
+• AI extracts airworthiness data, risk mitigations, test results
+• 48-hour turnaround → certification-ready compliance site
+• FAA Part 135, EASA STS-01/02 formatted
+
+Price: $2,000 (vs. $50k+ aviation consultants)
+
+Demo this week? I'll show you a delivery drone safety case.
+
+https://safety-topaz.vercel.app
+
+Best,
+[YOUR_NAME]
+SafetyCase.AI
+
+---
+
+PERSONALIZATION VARIABLES:
+[FIRST_NAME] = First name
+[COMPANY] = Company name
+[SPECIFIC_DRONE_PROJECT] = Their drone work
+[YOUR_NAME] = Your name
