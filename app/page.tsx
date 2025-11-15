@@ -517,6 +517,101 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Stealth Recruiting Protection */}
+      <div className="py-16 bg-gradient-to-r from-slate-950 via-red-950 to-slate-950 text-white border-t-4 border-red-500">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-10">
+            <div className="inline-block bg-red-500 text-white px-4 py-2 rounded-full font-bold text-sm mb-4 animate-pulse">
+              🥷 STRATEGIC ADVANTAGE PROTECTION
+            </div>
+            <h2 className="text-4xl font-bold mb-4">
+              We Do Stealth Recruiting to Protect Your Talent Moat
+            </h2>
+            <p className="text-xl opacity-90 max-w-3xl mx-auto">
+              Your competitors are watching who you hire. We make sure they learn nothing.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-10">
+            <div className="bg-gradient-to-br from-red-900/40 to-black/60 backdrop-blur-sm rounded-xl p-8 border-2 border-red-500/50">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span className="text-4xl">🎭</span> The Problem
+              </h3>
+              <ul className="space-y-4 text-base">
+                <li className="flex items-start gap-3">
+                  <span className="text-red-400 text-xl">⚠️</span>
+                  <div>
+                    <strong>Hiring reveals your roadmap:</strong> Post "computer vision engineer for humanoid robots" → competitors know you're building humanoids
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-400 text-xl">⚠️</span>
+                  <div>
+                    <strong>LinkedIn gives away strategy:</strong> "We're hiring 5 perception engineers" → competitors see you're scaling fast, start their own hiring war
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-400 text-xl">⚠️</span>
+                  <div>
+                    <strong>Poaching pipeline exposed:</strong> Competitors scrape your job posts, target the same candidates, offer more money
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-red-400 text-xl">⚠️</span>
+                  <div>
+                    <strong>Trained talent gets stolen:</strong> You spend 6 months training an engineer, competitor poaches them for 20% more
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-900/40 to-black/60 backdrop-blur-sm rounded-xl p-8 border-2 border-green-500/50">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-3">
+                <span className="text-4xl">🛡️</span> Our Stealth Protocol
+              </h3>
+              <ul className="space-y-4 text-base">
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 text-xl">✅</span>
+                  <div>
+                    <strong>Anonymous skill matching:</strong> We post "robotics systems engineer" not "humanoid perception lead for Product X"
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 text-xl">✅</span>
+                  <div>
+                    <strong>Hidden company pools:</strong> Candidates see "Series A Physical AI Startup" not your company name until mutual interest + NDA
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 text-xl">✅</span>
+                  <div>
+                    <strong>Private pipeline sourcing:</strong> We reach out directly to our network—zero public job posts, zero competitor visibility
+                  </div>
+                </li>
+                <li className="flex items-start gap-3">
+                  <span className="text-green-400 text-xl">✅</span>
+                  <div>
+                    <strong>90-day poaching shield:</strong> Competitors pay 3x placement fees to hire your talent within 90 days of placement
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="bg-gradient-to-r from-yellow-500/20 to-orange-500/20 backdrop-blur-sm rounded-xl p-8 border-2 border-yellow-500/50 text-center">
+            <p className="text-2xl font-bold mb-4">
+              <span className="text-yellow-300">Your hiring strategy is intellectual property.</span>
+            </p>
+            <p className="text-lg mb-6 opacity-90">
+              When competitors see you're hiring 5 perception engineers + 3 motion planning engineers + 2 safety specialists, they know EXACTLY what you're building and how fast you're scaling. We keep that intelligence hidden.
+            </p>
+            <p className="text-base opacity-75 italic">
+              "Tesla didn't announce Optimus until they had the team in place. You shouldn't either." — Our recruiting philosophy
+            </p>
+          </div>
+        </div>
+      </div>
+
       {/* Templates Section */}
       <div id="templates" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
