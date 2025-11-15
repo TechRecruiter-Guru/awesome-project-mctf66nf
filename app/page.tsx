@@ -308,6 +308,125 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Your Unfair Recruiting Advantage */}
+      <div className="py-20 bg-gradient-to-br from-slate-900 via-purple-900 to-indigo-900 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              🎯 Your Unfair Recruiting Advantage
+            </h2>
+            <p className="text-xl opacity-90 max-w-3xl mx-auto">
+              The 10-year network nobody else has. Competitors can copy our compliance tech—they can't copy our relationships.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 mb-12">
+            {/* Card 1: Network Moat */}
+            <div className="bg-gradient-to-br from-blue-500/20 to-blue-700/20 backdrop-blur-sm rounded-xl p-8 border-2 border-blue-500/50 hover:border-blue-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">🏢</div>
+              <div className="text-2xl font-bold mb-4">1,000+ Elite Placements Built Over 10 Years</div>
+              <div className="text-sm opacity-90 mb-6 space-y-1">
+                <p className="font-semibold">Microsoft • Intel • NVIDIA</p>
+                <p className="font-semibold">Boston Dynamics • Tesla • Waymo • Anduril</p>
+              </div>
+              <p className="mb-6 text-base leading-relaxed">
+                We don't "search" for robotics engineers. We already know 200+ who are ready to move.
+              </p>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>10-year head start competitors can't replicate</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>Trust-based relationships (not cold LinkedIn spam)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>Candidates respond to US, not random recruiters</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Card 2: Speed Moat */}
+            <div className="bg-gradient-to-br from-purple-500/20 to-purple-700/20 backdrop-blur-sm rounded-xl p-8 border-2 border-purple-500/50 hover:border-purple-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">⚡</div>
+              <div className="text-2xl font-bold mb-4">14-Day Average Time-to-Offer</div>
+              <p className="text-lg mb-6 text-purple-300 font-semibold">vs. 90-Day Industry Standard</p>
+              <p className="mb-4 text-base leading-relaxed">
+                When you say: <em className="text-purple-300">"I need a senior perception engineer"</em>
+              </p>
+              <p className="mb-6 text-base leading-relaxed">
+                We say: <em className="text-yellow-300">"Here are 5 who fit, available next week"</em>
+              </p>
+              <p className="mb-6 text-sm opacity-90 italic">No job posts. No screening calls. No wasted time.</p>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>Pre-vetted candidates (technical + culture fit)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>Warm introductions (not cold applications)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>Competing offers managed (we coach negotiations)</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Card 3: Economics Moat */}
+            <div className="bg-gradient-to-br from-green-500/20 to-green-700/20 backdrop-blur-sm rounded-xl p-8 border-2 border-green-500/50 hover:border-green-400 transition-all hover:transform hover:scale-105">
+              <div className="text-6xl mb-4">💰</div>
+              <div className="text-2xl font-bold mb-4">No Placement Fees on First 3 Hires</div>
+              <p className="text-lg mb-6 text-green-300 font-semibold">Save $60K-$90K vs. Traditional Recruiters</p>
+              <p className="mb-4 text-sm opacity-90">
+                Standard recruiting fees: 20-30% of salary<br/>
+                <span className="text-red-300 line-through">$30K per engineer × 3 = $90K</span>
+              </p>
+              <p className="mb-6 font-bold text-xl text-yellow-300">
+                Our bundle: $15K total<br/>
+                <span className="text-base font-normal text-white">Compliance + 3 hires included</span>
+              </p>
+              <p className="mb-6 text-sm opacity-90">Then: 20% placement fees (still better than 25-30%)</p>
+              <ul className="space-y-3 text-sm">
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>67% savings on recruiting costs</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>Predictable budgeting (no surprise fees)</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <span className="text-yellow-400 font-bold">→</span>
+                  <span>More runway for R&D (not recruiter commissions)</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          {/* Bottom CTA */}
+          <div className="bg-gradient-to-r from-yellow-400/20 to-orange-500/20 backdrop-blur-sm rounded-xl p-10 border-2 border-yellow-400/50 text-center">
+            <p className="text-2xl font-bold mb-4">
+              <span className="text-yellow-300">This network took 10+ years to build.</span>
+            </p>
+            <p className="text-lg mb-8 opacity-90">
+              Competitors can copy our compliance tech. They can't copy our relationships.
+            </p>
+            <div className="flex justify-center gap-4">
+              <a href="#bundle" className="bg-yellow-400 text-purple-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105 shadow-xl">
+                See Full Stack Bundle →
+              </a>
+              <a href="mailto:SafetyCaseAI@physicalAIPros.com?subject=Recruiting Network Inquiry" className="bg-white/10 backdrop-blur-sm text-white px-10 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors border-2 border-white/30">
+                Talk to Our Network
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Templates Section */}
       <div id="templates" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
