@@ -612,6 +612,68 @@ export default function HomePage() {
         </div>
       </div>
 
+      {/* Your Unfair Recruiting Advantage - Protection Suite Style */}
+      <div className="py-20 bg-gradient-to-br from-slate-950 via-indigo-950 to-purple-950 text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">🛡️ Your Unfair Recruiting Advantage</h2>
+            <p className="text-xl opacity-90">
+              Your strategic advantage stays YOUR advantage
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-purple-400 transition-all">
+              <div className="text-6xl mb-4">🥷</div>
+              <div className="text-xl font-bold mb-4">Stealth Mode™ Hiring</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Post skill requirements without revealing projects. "Pattern recognition expert" instead of "facial recognition for Product X." Competitors see nothing actionable.
+              </div>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-blue-400 transition-all">
+              <div className="text-6xl mb-4">🎭</div>
+              <div className="text-xl font-bold mb-4">Anonymous Company Pools</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Hide among similar startups. Candidates see "Series A Robotics Startup" not "Your Company." Your hiring patterns remain invisible to competitors.
+              </div>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-green-400 transition-all">
+              <div className="text-6xl mb-4">📜</div>
+              <div className="text-xl font-bold mb-4">NDA Gateway System</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Project details revealed only after mutual interest and signed NDA. Your innovation roadmap stays confidential until the right moment.
+              </div>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-yellow-400 transition-all">
+              <div className="text-6xl mb-4">🔒</div>
+              <div className="text-xl font-bold mb-4">90-Day Poaching Shield</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Competitors pay 3x placement fees to hire your trained talent within 90 days. Finally, real protection for your training investment.
+              </div>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-red-400 transition-all">
+              <div className="text-6xl mb-4">🎯</div>
+              <div className="text-xl font-bold mb-4">Blind Skill Matching</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                AI matches candidates to needs without revealing company identity. No more "I only want to work for Google" bias. Pure capability alignment.
+              </div>
+            </div>
+
+            <div className="bg-white/5 backdrop-blur-sm rounded-xl p-8 border border-white/10 hover:border-orange-400 transition-all">
+              <div className="text-6xl mb-4">🚨</div>
+              <div className="text-xl font-bold mb-4">Competitor Alert System</div>
+              <div className="text-sm opacity-90 leading-relaxed">
+                Real-time notifications if competitors attempt to view your postings or poach your pipeline. Stay one step ahead always.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Templates Section */}
       <div id="templates" className="py-16 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
