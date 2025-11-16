@@ -162,12 +162,20 @@ export default function AdminPage() {
             <h1 className="text-4xl font-bold mb-2">Admin Dashboard</h1>
             <p className="text-gray-600">Manage orders and generate confirmation codes</p>
           </div>
-          <button
-            onClick={handleLogout}
-            className="btn-secondary"
-          >
-            Logout
-          </button>
+          <div className="flex gap-3">
+            <a
+              href="/admin/crm"
+              className="btn-primary"
+            >
+              📊 CRM (197 Leads)
+            </a>
+            <button
+              onClick={handleLogout}
+              className="btn-secondary"
+            >
+              Logout
+            </button>
+          </div>
         </div>
 
         {generatedCode && (

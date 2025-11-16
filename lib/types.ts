@@ -104,3 +104,62 @@ export interface TemplateInfo {
   icon: string;
   price: number;
 }
+
+// CRM Types
+export type LeadStatus = 'new' | 'contacted' | 'qualified' | 'nurturing' | 'customer' | 'lost';
+export type LeadSource = 'csv_import' | 'manual' | 'website' | 'referral';
+export type ActivityType = 'email' | 'call' | 'meeting' | 'demo' | 'note';
+
+export interface Lead {
+  id: string;
+  name: string;
+  company: string;
+  email: string;
+  website?: string;
+  selectionReason?: string;
+  status: LeadStatus;
+  source: LeadSource;
+  tags?: string[];
+  assignedTo?: string;
+  estimatedValue?: number;
+  createdAt: string;
+  updatedAt: string;
+  lastContactedAt?: string;
+  importedFrom?: string; // CSV filename or source identifier
+  linkedOrderId?: string; // Link to Order if they became a customer
+}
+
+export interface Activity {
+  id: string;
+  leadId: string;
+  type: ActivityType;
+  subject: string;
+  notes?: string;
+  outcome?: string;
+  followUpDate?: string;
+  emailSent?: boolean;
+  emailSubject?: string;
+  emailBody?: string;
+  createdAt: string;
+  createdBy: string;
+}
+
+export interface EmailTemplate {
+  id: string;
+  name: string;
+  subject: string;
+  body: string;
+  variables?: string[]; // e.g., ['name', 'company', 'robotModel']
+  createdAt: string;
+}
+
+export interface CRMStats {
+  totalLeads: number;
+  newLeads: number;
+  contactedLeads: number;
+  qualifiedLeads: number;
+  customers: number;
+  lostLeads: number;
+  conversionRate: number;
+  averageDealValue: number;
+}
