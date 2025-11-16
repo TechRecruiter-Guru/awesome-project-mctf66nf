@@ -97,7 +97,7 @@ export default function BundlePage() {
               <h3 className="text-2xl font-bold mb-4 flex items-center gap-3">
                 <span className="text-4xl">📄</span> Compliance Infrastructure
               </h3>
-              <p className="mb-6 text-lg opacity-90">48-hour GSN-validated safety case website</p>
+              <p className="mb-6 text-lg opacity-90">Instant GSN-validated safety case website</p>
               <ul className="space-y-3">
                 <li className="flex items-start gap-2">
                   <span>✅</span>
@@ -181,7 +181,7 @@ export default function BundlePage() {
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-bold text-center mb-4">Choose Your Package</h2>
           <p className="text-center text-xl opacity-90 mb-12 max-w-3xl mx-auto">
-            All packages include 48-hour delivery, 30-day money-back guarantee, and veteran-owned business credibility
+            All packages include Instant delivery, 30-day money-back guarantee, and veteran-owned business credibility
           </p>
 
           <div className="grid md:grid-cols-3 gap-8">
@@ -205,7 +205,7 @@ export default function BundlePage() {
                 </li>
                 <li className="flex items-start gap-2">
                   <span>✅</span>
-                  <span>48-hour delivery</span>
+                  <span>Instant delivery</span>
                 </li>
                 <li className="flex items-start gap-2">
                   <span>✅</span>
@@ -329,7 +329,7 @@ export default function BundlePage() {
 
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
               <h3 className="text-xl font-bold mb-3">How does the compliance part work?</h3>
-              <p className="opacity-90">You upload your design docs, test logs, FMEA, risk assessments—whatever you have. Our proprietary AI extracts safety-critical data and generates a GSN-validated safety case website in 48 hours. Not templates—actual regulatory rigor (ISO 13482/61508, FAA/NHTSA/EU AI Act compliant).</p>
+              <p className="opacity-90">You upload your design docs, test logs, FMEA, risk assessments—whatever you have. Our proprietary AI extracts safety-critical data and generates a GSN-validated safety case website Instantly. Not templates—actual regulatory rigor (ISO 13482/61508, FAA/NHTSA/EU AI Act compliant).</p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">

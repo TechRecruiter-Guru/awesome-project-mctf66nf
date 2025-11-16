@@ -12,7 +12,7 @@ Most robotics CTOs hit two bottlenecks after funding:
 We built the only bundle that solves both:
 
 **$15K Full Stack Package:**
-→ Safety case website in 48 hours (GSN-validated, investor-ready)
+→ Safety case website Instantly (GSN-validated, investor-ready)
 → 12 months recruiting support (pre-vetted candidates from Microsoft, NVIDIA, Boston Dynamics)
 → No placement fees on first 3 hires (save $60K-$90K)
 → 14-day average time-to-offer (vs. 90-day industry standard)
@@ -23,7 +23,7 @@ We built the only bundle that solves both:
 
 **Our bundle:**
 - $15K total
-- Compliance done in 48 hours, first engineer hired in 14 days
+- Compliance done Instantly, first engineer hired in 14 days
 
 [Live Demo] → https://safetycaseai-platformv2.vercel.app/demo.html
 [See Bundle Details] → https://safetycaseai-platformv2.vercel.app/#bundle

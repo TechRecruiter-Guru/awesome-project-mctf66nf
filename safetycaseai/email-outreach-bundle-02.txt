@@ -11,7 +11,7 @@ Then, after they closed funding, they spent another 6 months trying to hire 3-5 
 That's the exact double-bottleneck we solve:
 
 ✅ **Automated extraction:** Our proprietary AI reads your existing docs (PDFs, spreadsheets, CAD files) and generates GSN-compliant safety cases
-✅ **48-hour delivery:** Upload Monday, pitch VCs Friday with a live website
+✅ **Instant delivery:** Upload and pitch VCs the same day with a live website
 ✅ **Investor-ready format:** Hazard analysis, probabilistic risk models, validation sims—what due diligence teams actually ask for
 
 **PLUS:**

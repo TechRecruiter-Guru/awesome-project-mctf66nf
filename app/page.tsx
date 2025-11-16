@@ -1,4 +1,4 @@
-// SafetyCase.AI - 8 Robot Templates
+// SafetyCaseAI - 8 Robot Templates
 // Deployment: 2025-11-11 (Final) - All TypeScript Errors Fixed
 import TemplateCard from '@/components/TemplateCard';
 import { TemplateInfo } from '@/lib/types';
@@ -79,12 +79,12 @@ export default function HomePage() {
             Compliance + Talent Infrastructure for Physical AI
           </div>
           <h1 className="text-5xl font-bold mb-6">
-            From Prototype to Funded in 48 Hours<br />
+            From Prototype to Funded Instantly<br />
             <span className="text-3xl font-normal opacity-90">(Then We Help You Hire the Team to Scale)</span>
           </h1>
           <p className="text-xl mb-8 opacity-90 max-w-3xl mx-auto">
             Physical AI founders waste 6-12 months on compliance audits, then another 90+ days per engineering hire.
-            We automate both: <strong>Safety case websites in 48 hours ($2K)</strong> + <strong>Pre-vetted robotics engineers from Microsoft/NVIDIA/Intel networks</strong>.
+            We automate both: <strong>Safety case websites Instantly</strong> + <strong>Pre-vetted robotics engineers from Microsoft/NVIDIA/Intel networks</strong>.
           </p>
           <p className="text-lg mb-8 opacity-95 max-w-2xl mx-auto">
             <strong>Full Stack Bundle: $15K</strong> (vs. $590K traditional path) • 92% cost savings • 14-day hiring velocity
@@ -95,16 +95,6 @@ export default function HomePage() {
             </a>
             <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
               View Templates ($2K)
-            </a>
-          </div>
-          <div className="mt-4">
-            <a
-              href="https://vanguardlab.physicalaipros.com/safetyaiV2.html"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-sm text-white opacity-75 hover:opacity-100 underline transition-opacity"
-            >
-              Need more information on why safety case documentation matters? →
             </a>
           </div>
         </div>
@@ -177,7 +167,7 @@ export default function HomePage() {
             <div className="flex items-center gap-3">
               <div className="text-4xl">⚡</div>
               <div>
-                <p className="font-bold text-green-900">48-Hour Delivery</p>
+                <p className="font-bold text-green-900">Instant Delivery</p>
                 <p className="text-sm text-green-700">Fast turnaround, professional quality</p>
               </div>
             </div>
@@ -270,8 +260,8 @@ export default function HomePage() {
               <div className="flex items-start gap-3">
                 <div className="text-3xl">⚡</div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">48-Hour Turnaround</h3>
-                  <p className="text-gray-600">Upload your PDF, get your website within 2 business days. Rush service available.</p>
+                  <h3 className="font-bold text-lg mb-2">Instant Turnaround</h3>
+                  <p className="text-gray-600">Upload your PDF, get your website instantly. Rush service available.</p>
                 </div>
               </div>
             </div>
@@ -299,9 +289,9 @@ export default function HomePage() {
                 <p className="text-gray-600">200+ hours of your time</p>
               </div>
               <div className="bg-green-50 p-4 rounded-lg">
-                <p className="font-bold text-green-600 mb-2">✨ SafetyCase.AI</p>
+                <p className="font-bold text-green-600 mb-2">✨ SafetyCaseAI</p>
                 <p className="text-4xl font-bold mb-1 text-green-700">$2,000</p>
-                <p className="text-green-700 font-semibold">48 hours delivery</p>
+                <p className="text-green-700 font-semibold">Instant delivery</p>
               </div>
             </div>
           </div>
@@ -703,10 +693,10 @@ export default function HomePage() {
               Full Stack Bundle: $15,000
             </h2>
             <p className="text-2xl mb-2 opacity-90">
-              Safety Case Website (48 Hours) + Robotics Engineering Talent (14-Day Average Hire)
+              Safety Case Website (Instant Delivery) + Robotics Engineering Talent (14-Day Average Hire)
             </p>
             <p className="text-lg opacity-75 max-w-3xl mx-auto">
-              You solve compliance in 48 hours with our $2K service. Then you spend 6 months recruiting engineers to build the robot.
+              You solve compliance Instantly with our $2K service. Then you spend 6 months recruiting engineers to build the robot.
               <strong className="text-yellow-300"> We do both for $15K—saving you $588K in the first year.</strong>
             </p>
           </div>
@@ -849,7 +839,7 @@ export default function HomePage() {
       {/* Benefits Section */}
       <div className="py-16 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-4">Why SafetyCase.AI?</h2>
+          <h2 className="text-3xl font-bold text-center mb-4">Why SafetyCaseAI?</h2>
           <p className="text-center text-gray-600 mb-12 max-w-3xl mx-auto">
             Built by Physical AI safety experts. Powered by proprietary AI extraction technology.
             Purpose-designed for robotics compliance - not generic website builders.
@@ -866,9 +856,9 @@ export default function HomePage() {
             </div>
             <div className="text-center p-6">
               <div className="text-4xl mb-4">⚡</div>
-              <h3 className="font-bold text-xl mb-2">48-Hour Turnaround</h3>
+              <h3 className="font-bold text-xl mb-2">Instant Turnaround</h3>
               <p className="text-gray-600">
-                What takes safety consultants 3-4 weeks ($40-60k), we deliver in 48 hours for $2,000.
+                What takes safety consultants 3-4 weeks ($40-60k), we deliver Instantly for $2,000.
                 Critical for Series B fundraising timelines and enterprise customer deployments.
               </p>
             </div>
@@ -917,7 +907,7 @@ export default function HomePage() {
               Hi, I'm <strong>John Polhill III</strong> - U.S. Air Force veteran (Information Systems, 1982-1997) and founder of Physical AI Pros. After 27+ years placing 1,000+ elite engineers at Microsoft (130+ hires), Intel (entire datacenter teams), Priceline, GoodRx, and Databricks, I saw the same bottleneck killing Physical AI deals: <strong>founders spending 6 months and $50K+ on safety documentation</strong> that delays fundraising and enterprise contracts.
             </p>
             <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-6">
-              I built SafetyCase.AI to eliminate this friction - delivering investor-ready compliance docs in 48 hours, the same way I deliver elite talent in 7-14 days. <strong>Military precision. AGI-powered execution.</strong>
+              I built SafetyCaseAI to eliminate this friction - delivering investor-ready compliance docs Instantly, the same way I deliver elite talent in 7-14 days. <strong>Military precision. AGI-powered execution.</strong>
             </p>
             <div className="flex justify-center">
               <div className="inline-flex items-center gap-6 bg-green-50 px-8 py-4 rounded-lg border-2 border-green-200">
@@ -1002,7 +992,7 @@ export default function HomePage() {
             Ready to Create Your Safety Case Website?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join leading Physical AI companies using SafetyCase.AI for their
+            Join leading Physical AI companies using SafetyCaseAI for their
             compliance documentation.
           </p>
           <a

@@ -13,7 +13,7 @@ Before I do, one last data point:
 The average physical AI startup spends **$590K** on compliance consultants ($500K) and recruiting fees ($90K for 3 engineers). Timeline: **12+ months**.
 
 We've brought that down to **$15K** and **90 days** for the Full Stack Bundle:
-- Safety case website (48 hours)
+- Safety case website (Instant delivery)
 - 3 engineering hires with no placement fees
 - 12-month recruiting support for additional roles
 
