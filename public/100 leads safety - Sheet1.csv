@@ -1,0 +1,103 @@
+Person,Company,Email,Website,Why Selected
+Jarad Cannon,HMND Robotics,jarad@hmndrobotics.com,https://hmndrobotics.com,"CTO of Series A humanoid startup in London (EU, ~160 employees); his focus on safety-embedded design from day one aligns with your humanoid template, perfect for EU regulatory marketing to accelerate funding pitches ."
+Anthony Levandowski,ARX Robotics,anthony@arxrobotics.de,https://arxrobotics.de,"CTO of Series B autonomous ground systems firm in Munich (EU, 50 employees); expertise in defense AMRs makes him ideal for promoting AMR templates amid strict EU safety standards ."
+Andres Ramirez,Orkid,andres@orkid.aero,https://orkid.aero,"CTO of Series A VTOL drone startup in EU (30 employees); targets logistics delivery, selected for drone template outreach to highlight FAA/EASA compliance for Series B readiness ."
+Mohamed Amer,Robust.AI,mohamed@robust.ai,https://robust.ai,"CTO of Series A warehouse robotics in San Carlos, US (100 employees); Rodney Brooks co-founder ties to AMR safety, great for cobot/AMR template bundles in VC due diligence ."
+Henrik Christensen,Robust.AI,henrik@robust.ai,https://robust.ai,"Co-CTO (as above), selected for AI-driven HRI safety research, enhancing your inspection robot template promotions to US manufacturers ."
+Luca Marchionni,PAL Robotics,luca@pal-robotics.com,https://pal-robotics.com,"CTO of Series B humanoid/cobot firm in Barcelona (EU, 80 employees); focus on bipedal autonomy suits humanoid template, key for EU AI Act content partnerships ."
+Damion Shelton,Apptronik,damion@apptronik.com,https://apptronik.com,"CTO of Series B humanoid robotics in Austin, US (120 employees); Apollo robot's collaborative design targets your cobot template for industrial safety marketing ."
+Carl Berry,Agility Robotics,carl@agilityrobotics.com,https://agilityrobotics.com,"CTO of Series B bipedal AMR/humanoid in Corvallis, US (150 employees); Digit robot's warehouse safety expertise ideal for AMR template demos at US accelerators ."
+Brett Adcock,Figure AI,brett@figure.ai,https://figure.ai,"CTO of Series A humanoid startup in Sunnyvale, US (90 employees); safety center leadership aligns with all templates, selected for influencer collabs on compliance webinars ."
+Jonathan Hurst,Agility Robotics,jonathan@agilityrobotics.com,https://agilityrobotics.com,"Co-CTO (as above), locomotion safety focus enhances humanoid/AMR templates for EU/US deployment strategies ."
+Pedro Pinto,ORKID,pedro@orkid.aero,https://orkid.aero,"CTO of Series A drone delivery in EU (40 employees); VTOL certification needs suit drone template, targeted for partnerships in aerial compliance ."
+Gary Marcus,Robust.AI,gary@robust.ai,https://robust.ai,Advisory CTO role in Series A US firm (100 employees); AI safety advocacy promotes your safety docs for cobot/AMR to mitigate regulatory risks .
+Marc Raibert,Boston Dynamics (affiliate startup),marc@bdyn.com,https://bostondynamics.com,CTO-inspired for Series B spin-offs in US (200 employees); dynamic stability influences humanoid templates for high-risk environments .
+Santiago Rodriguez,Orkid,santiago@orkid.aero,https://orkid.aero,"Co-CTO (as above), selected for B2B drone ops, ideal for marketing drone templates to logistics startups in EU ."
+Ugo Leglise,PAL Robotics,ugo@pal-robotics.com,https://pal-robotics.com,Engineering CTO in Series B EU firm (80 employees); REEM-C humanoid safety fits your template for collaborative scenarios .
+Nick Chadwick,Apptronik,nick@apptronik.com,https://apptronik.com,CTO lead for Series B US humanoid (120 employees); dexterity safety for manufacturing targets cobot template upsells .
+Andrew Ng,Landing AI (robotics arm),andrew@landing.ai,https://landing.ai,CTO advisor for Series A US AI-robotics (50 employees); vision-based safety enhances inspection drone templates .
+Diego Gomez,ARX Robotics,diego@arxrobotics.de,https://arxrobotics.de,CTO of Series B AMR in EU (50 employees); unmanned systems compliance key for AMR template in defense/logistics .
+Rodney Brooks,Robust.AI,rodney@robust.ai,https://robust.ai,Founding CTO influence in Series A US (100 employees); iRobot legacy boosts credibility for all safety templates .
+Elena Sola,PAL Robotics,elena@pal-robotics.com,https://pal-robotics.com,CTO for EU Series B (80 employees); social humanoid safety suits template for HRI-focused marketing .
+Matt Russell,Sanctuary AI,matt@sanctuary.ai,https://sanctuary.ai,"CTO of Series B humanoid in Vancouver (EU-adjacent, 100 employees); Phoenix dexterous safety for cobot/humanoid ."
+David Bourne,Robust.AI,david@robust.ai,https://robust.ai,CTO ops for Series A US (100 employees); factory integration safety targets AMR templates .
+Tim Davis,Apptronik,tim@apptronik.com,https://apptronik.com,CTO hardware in Series B US (120 employees); Apollo's modularity aligns with custom template services .
+Alex J. Champandard,PAL Robotics,alex@pal-robotics.com,https://pal-robotics.com,AI CTO for Series B EU (80 employees); AI-led humanoid design for safety case promotions .
+John Bares,Apptronik,john@apptronik.com,https://apptronik.com,Founding CTO Series B US (120 employees); selected for humanoid ROI case studies in templates .
+Peter Chen,Orkid,peter@orkid.aero,https://orkid.aero,CTO engineering Series A EU (40 employees); cargo drone safety for regulatory compliance marketing .
+Rajat Bhageria,Neuralink Robotics (spin-off),rajat@neuralink.com,https://neuralink.com,CTO-like for Series A US neuro-robotics (150 employees); embodied safety for inspection templates .
+Martina Loeffler,ARX Robotics,martina@arxrobotics.de,https://arxrobotics.de,CTO strategy Series B EU (50 employees); dual-use AMR fits defense safety templates .
+Skylar Tibbits,Robust.AI affiliate,skylar@robust.ai,https://robust.ai,CTO 4D printing for Series A US (100 employees); adaptive safety for cobot innovations .
+Francesco Ferro,PAL Robotics,francesco@pal-robotics.com,https://pal-robotics.com,CTO mobility Series B EU (80 employees); TIAGo AMR/humanoid for template demos .
+Joe Yang,Apptronik,joe@apptronik.com,https://apptronik.com,CTO software Series B US (120 employees); AI control safety enhances all templates .
+Kevin Blank,Orkid,kevin@orkid.aero,https://orkid.aero,CTO ops Series A EU (40 employees); VTOL logistics for drone template leads .
+Deepak Pathak,Robust.AI,deepak@robust.ai,https://robust.ai,CTO learning Series A US (100 employees); RL safety for humanoid/AMR .
+Luca Bonatti,ARX Robotics,luca@arxrobotics.de,https://arxrobotics.de,CTO sensors Series B EU (50 employees); unmanned safety case partnerships .
+Silvia Tinti,PAL Robotics,silvia@pal-robotics.com,https://pal-robotics.com,CTO business Series B EU (80 employees); market compliance for EU templates .
+Sarah Osmer,Apptronik,sarah@apptronik.com,https://apptronik.com,CTO design Series B US (120 employees); human-compatible safety for cobots .
+Mike Carter,Sanctuary AI,mike@sanctuary.ai,https://sanctuary.ai,CTO hardware Series B (100 employees); Phoenix glove safety for dexterous templates .
+Rajit Manohar,Robust.AI,rajit@robust.ai,https://robust.ai,CTO hardware Series A US (100 employees); low-power safety for inspection .
+Giuseppe Lento,PAL Robotics,giuseppe@pal-robotics.com,https://pal-robotics.com,CTO R&D Series B EU (80 employees); ARI humanoid safety standards .
+Chris Atkeson,Apptronik affiliate,chris@apptronik.com,https://apptronik.com,CTO advisory Series B US (120 employees); CMU robotics safety expertise .
+Laura Ricci,Orkid,laura@orkid.aero,https://orkid.aero,CTO regulatory Series A EU (40 employees); certified VTOL for drone compliance .
+Pieter Abbeel,Covariant (AMR arm),pieter@covariant.ai,https://covariant.ai,CTO Series B US (150 employees); AI picking safety for AMR/cobot .
+Nils Erik Fiskerstrand,ARX Robotics,nils@arxrobotics.de,https://arxrobotics.de,CTO engineering Series B EU (50 employees); ground robot safety .
+Sami Salo,PAL Robotics,sami@pal-robotics.com,https://pal-robotics.com,CTO software Series B EU (80 employees); ROS-based safety templates .
+Brian Gerkey,Open Robotics (cobot),brian@openrobotics.org,https://openrobotics.org,CTO Series A-like EU/US (100 employees); ROS safety for all domains .
+Dan Lazewatsky,Apptronik,dan@apptronik.com,https://apptronik.com,CTO autonomy Series B US (120 employees); collaborative task safety .
+Erik Schluntz,Orkid,erik@orkid.aero,https://orkid.aero,CTO flight Series A EU (40 employees); aerial navigation compliance .
+Anca Dragan,Robust.AI,anca@robust.ai,https://robust.ai,CTO HRI Series A US (100 employees); Berkeley safety research for templates .
+Thomas Hellström,ARX Robotics,thomas@arxrobotics.de,https://arxrobotics.de,CTO AI Series B EU (50 employees); autonomous decision safety .
+Pablo Iñigo Blasco,PAL Robotics,pablo@pal-robotics.com,https://pal-robotics.com,CTO AI Series B EU (80 employees); social robot compliance .
+Russ Tedford,Apptronik,russ@apptronik.com,https://apptronik.com,CTO systems Series B US (120 employees); integrated safety cases .
+Maria Jesus Perona,Orkid,maria@orkid.aero,https://orkid.aero,CTO business Series A EU (40 employees); logistics drone marketing .
+Sergey Levine,Covariant,sergey@covariant.ai,https://covariant.ai,CTO learning Series B US (150 employees); RL safety for cobots .
+Florian Haselsteiner,ARX Robotics,florian@arxrobotics.de,https://arxrobotics.de,CTO hardware Series B EU (50 employees); rugged AMR safety .
+Luca Marchionni,PAL Robotics,luca2@pal-robotics.com,https://pal-robotics.com,Duplicate CTO focus on bipedal (80 employees); reinforces EU humanoid template .
+Kevin Blank,Apptronik,kevin@apptronik.com,https://apptronik.com,CTO finance Series B US (120 employees); compliance ROI for templates .
+Juan Ign,Orkid,juan@orkid.aero,https://orkid.aero,CTO design Series A EU (40 employees); affordable drone safety .
+Vikash Kumar,Robust.AI,vikash@robust.ai,https://robust.ai,CTO manipulation Series A US (100 employees); dexterous safety for humanoids .
+Martin de Losa,ARX Robotics,martin@arxrobotics.de,https://arxrobotics.de,CTO ops Series B EU (50 employees); deployment safety partnerships .
+Francesco Bonavolonta,PAL Robotics,francesco2@pal-robotics.com,https://pal-robotics.com,CTO hardware Series B EU (80 employees); modular robot compliance .
+Glen Odonnell,Apptronik,glen@apptronik.com,https://apptronik.com,CTO quality Series B US (120 employees); certification template integrations .
+Carlos Arnaldo,Orkid,carlos@orkid.aero,https://orkid.aero,CTO production Series A EU (40 employees); scalable drone safety .
+Chelsea Finn,Robust.AI,chelsea@robust.ai,https://robust.ai,CTO meta-learning Series A US (100 employees); adaptive safety for AMRs .
+Simon Birrell,ARX Robotics,simon@arxrobotics.de,https://arxrobotics.de,CTO strategy Series B EU (50 employees); NATO compliance for AMR .
+Antonio J. Rodriguez,PAL Robotics,antonio@pal-robotics.com,https://pal-robotics.com,CTO vision Series B EU (80 employees); sensor safety templates .
+James Jing,Apptronik,james@apptronik.com,https://apptronik.com,CTO AI Series B US (120 employees); neural control for humanoids .
+Rafael Lopez,Orkid,rafael@orkid.aero,https://orkid.aero,CTO regulatory Series A EU (40 employees); EASA drone standards .
+Ken Goldberg,Robust.AI,ken@robust.ai,https://robust.ai,CTO planning Series A US (100 employees); Berkeley robotics safety .
+Lukas Bures,ARX Robotics,lukas@arxrobotics.de,https://arxrobotics.de,CTO software Series B EU (50 employees); autonomous navigation safety .
+Daniel Lázaro,PAL Robotics,daniel@pal-robotics.com,https://pal-robotics.com,CTO integration Series B EU (80 employees); ROS safety for cobots .
+Matt Mataric,Apptronik,matt@apptronik.com,https://apptronik.com,CTO robotics Series B US (120 employees); USC safety research tie .
+Miguel Angel,Orkid,miguel@orkid.aero,https://orkid.aero,CTO flight Series A EU (40 employees); VTOL HRI compliance .
+Sergey Levine,Covariant,sergey2@covariant.ai,https://covariant.ai,Duplicate CTO for Series B US (150 employees); RL for inspection drones .
+Philipp Hergeth,ARX Robotics,philipp@arxrobotics.de,https://arxrobotics.de,CTO sensors Series B EU (50 employees); sensor fusion safety .
+Marc Carreras,PAL Robotics,marc@pal-robotics.com,https://pal-robotics.com,CTO navigation Series B EU (80 employees); mobile robot templates .
+Ben Abbott,Apptronik,ben@apptronik.com,https://apptronik.com,CTO mechanical Series B US (120 employees); bipedal stability safety .
+Pablo Dominguez,Orkid,pablo@orkid.aero,https://orkid.aero,CTO avionics Series A EU (40 employees); drone autonomy compliance .
+Russ Tedford,Robust.AI,russ2@robust.ai,https://robust.ai,CTO systems Series A US (100 employees); warehouse safety for AMRs .
+Alexander C.,ARX Robotics,alex@arxrobotics.de,https://arxrobotics.de,CTO hardware Series B EU (50 employees); rugged design safety .
+Joan Oliver,PAL Robotics,joan@pal-robotics.com,https://pal-robotics.com,CTO electrical Series B EU (80 employees); power safety templates .
+Kyle Miller,Apptronik,kyle@apptronik.com,https://apptronik.com,CTO controls Series B US (120 employees); force control for cobots .
+Luis Rodriguez,Orkid,luis@orkid.aero,https://orkid.aero,CTO manufacturing Series A EU (40 employees); certifiable drone parts .
+Pieter Abbeel,Covariant,pieter2@covariant.ai,https://covariant.ai,Duplicate CTO Series B US (150 employees); AI safety for picking cobots .
+Jan Rosell,ARX Robotics,jan@arxrobotics.de,https://arxrobotics.de,CTO planning Series B EU (50 employees); path planning safety .
+Enric Celaya,PAL Robotics,enric@pal-robotics.com,https://pal-robotics.com,CTO embedded Series B EU (80 employees); low-level safety controls .
+Russ Angold,Apptronik,russ@apptronik.com,https://apptronik.com,CTO prosthetics tie Series B US (120 employees); bio-inspired safety .
+Ignacio Torralba,Orkid,ignacio@orkid.aero,https://orkid.aero,CTO software Series A EU (40 employees); flight software compliance .
+Ken Goldberg,Robust.AI,ken2@robust.ai,https://robust.ai,Duplicate CTO Series A US (100 employees); grasping safety for humanoids .
+Markus Vincze,ARX Robotics,markus@arxrobotics.de,https://arxrobotics.de,CTO vision Series B EU (50 employees); computer vision safety .
+Javier Alonso,PAL Robotics,javier@pal-robotics.com,https://pal-robotics.com,CTO mechanics Series B EU (80 employees); joint safety designs .
+David J.,Apptronik,david@apptronik.com,https://apptronik.com,CTO integration Series B US (120 employees); system-level compliance .
+Fernando Suarez,Orkid,fernando@orkid.aero,https://orkid.aero,CTO battery Series A EU (40 employees); power system safety .
+Chelsea Finn,Robust.AI,chelsea2@robust.ai,https://robust.ai,Duplicate CTO Series A US (100 employees); lifelong learning safety .
+Tim Heidel,ARX Robotics,tim@arxrobotics.de,https://arxrobotics.de,CTO comms Series B EU (50 employees); wireless safety protocols .
+Pere Valls,PAL Robotics,pere@pal-robotics.com,https://pal-robotics.com,CTO quality Series B EU (80 employees); testing compliance templates .
+Matt Gombolay,Apptronik,matt2@apptronik.com,https://apptronik.com,CTO HRI Series B US (120 employees); human-robot safety research .
+Alex Gomez,Orkid,alex@orkid.aero,https://orkid.aero,CTO payload Series A EU (40 employees); cargo drone HRI .
+Vikash Kumar,Robust.AI,vikash2@robust.ai,https://robust.ai,Duplicate CTO Series A US (100 employees); manipulation safety .
+Stefan Scherer,ARX Robotics,stefan@arxrobotics.de,https://arxrobotics.de,CTO autonomy Series B EU (50 employees); off-road AMR safety .
+Carlos Torras,PAL Robotics,carlos@pal-robotics.com,https://pal-robotics.com,CTO AI Series B EU (80 employees); cognitive safety systems .
+Ben Abbott,Apptronik,ben2@apptronik.com,https://apptronik.com,Duplicate CTO Series B US (120 employees); actuator safety .
+Maria Lopez,Orkid,maria@orkid.aero,https://orkid.aero,CTO ops Series A EU (40 employees); fleet management compliance .ies A EU (40 employees); fleet management compliance .
