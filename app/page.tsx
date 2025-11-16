@@ -379,7 +379,7 @@ export default function HomePage() {
                 Our bundle: $15K total<br/>
                 <span className="text-base font-normal text-white">Compliance + 3 hires included</span>
               </p>
-              <p className="mb-6 text-sm opacity-90">Then: 20% placement fees (still better than 25-30%)</p>
+              <p className="mb-6 text-sm opacity-90">Then: 18K flat fee placement fees - YES, this is no typo! Our overhead is low, so we pass the savings to clients</p>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-start gap-2">
                   <span className="text-yellow-400 font-bold">→</span>
@@ -405,12 +405,9 @@ export default function HomePage() {
             <p className="text-lg mb-8 opacity-90">
               Competitors can copy our compliance tech. They can't copy our relationships.
             </p>
-            <div className="flex justify-center gap-4">
+            <div className="flex justify-center">
               <a href="#bundle" className="bg-yellow-400 text-purple-900 px-10 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-all transform hover:scale-105 shadow-xl">
-                See Full Stack Bundle →
-              </a>
-              <a href="mailto:SafetyCaseAI@physicalAIPros.com?subject=Recruiting Network Inquiry" className="bg-white/10 backdrop-blur-sm text-white px-10 py-4 rounded-lg font-bold text-lg hover:bg-white/20 transition-colors border-2 border-white/30">
-                Talk to Our Network
+                See Full Stack Bundle - Our Model - You're either our client OR a source company →
               </a>
             </div>
           </div>

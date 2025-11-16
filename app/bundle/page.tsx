@@ -314,7 +314,7 @@ export default function BundlePage() {
           <div className="space-y-6">
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
               <h3 className="text-xl font-bold mb-3">What's the catch with "no placement fees"?</h3>
-              <p className="opacity-90">No catch. First 3 hires are included in the $15K bundle. After that, standard 20% placement fees apply (still better than most recruiters' 25-30%).</p>
+              <p className="opacity-90">No catch. First 3 hires are included in the $15K bundle. After that, 18K flat fee placement fees - YES, this is no typo! Our overhead is low, so we pass the savings to clients.</p>
             </div>
 
             <div className="bg-white/10 backdrop-blur-sm rounded-xl p-6 border border-white/20">
