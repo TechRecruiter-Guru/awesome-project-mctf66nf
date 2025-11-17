@@ -96,7 +96,10 @@ export default function SchedulePage() {
     setError('');
 
     try {
-      const response = await fetch('/api/schedule', {
+      // Use PHP endpoint if configured, otherwise use Next.js API
+      const endpoint = process.env.NEXT_PUBLIC_FORM_ENDPOINT || '/api/schedule';
+
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),

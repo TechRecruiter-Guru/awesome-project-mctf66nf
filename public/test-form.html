@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SafetyCaseAI Form Test</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .alert {
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+        }
+        .alert.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+            font-size: 14px;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        button:active {
+            transform: translateY(0);
+        }
+        button:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+        .note {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #856404;
+        }
+        .note strong {
+            color: #721c24;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📧 SafetyCaseAI Form Test</h1>
+        <p class="subtitle">Test the PHP email handler on your Namecheap hosting</p>
+
+        <div class="note">
+            <strong>⚠️ Before Testing:</strong><br>
+            1. Upload <code>schedule-handler.php</code> to your Namecheap public_html folder<br>
+            2. Make sure this test file is also in public_html<br>
+            3. Update the PHP endpoint URL below if needed
+        </div>
+
+        <div id="successAlert" class="alert success">
+            ✅ Form submitted successfully! Check jp@physicalaipros.com for the email.
+        </div>
+
+        <div id="errorAlert" class="alert error">
+            ❌ <span id="errorMessage"></span>
+        </div>
+
+        <form id="testForm">
+            <div class="form-group">
+                <label>PHP Handler URL*</label>
+                <input type="url" id="phpEndpoint" value="https://yourdomain.com/schedule-handler.php" required>
+                <small style="color: #666; font-size: 12px;">Change "yourdomain.com" to your actual domain</small>
+            </div>
+
+            <div class="form-group">
+                <label>Full Name*</label>
+                <input type="text" id="fullName" value="Test User" required>
+            </div>
+
+            <div class="form-group">
+                <label>Email*</label>
+                <input type="email" id="email" value="test@example.com" required>
+            </div>
+
+            <div class="form-group">
+                <label>Phone*</label>
+                <input type="tel" id="phone" value="+1 555-123-4567" required>
+            </div>
+
+            <div class="form-group">
+                <label>Role*</label>
+                <input type="text" id="role" value="CTO" required>
+            </div>
+
+            <div class="form-group">
+                <label>Company Name*</label>
+                <input type="text" id="companyName" value="Test Robotics Inc" required>
+            </div>
+
+            <div class="form-group">
+                <label>Number of Hires*</label>
+                <select id="numberOfHires" required>
+                    <option value="1-3">1-3 hires</option>
+                    <option value="4-6">4-6 hires</option>
+                    <option value="7-10">7-10 hires</option>
+                    <option value="10+">10+ hires</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Hiring Urgency*</label>
+                <select id="hiringUrgency" required>
+                    <option value="immediate">Immediate (hiring now)</option>
+                    <option value="30-days">Within 30 days</option>
+                    <option value="60-days">Within 60 days</option>
+                    <option value="90-days">Within 90 days</option>
+                    <option value="planning">Just planning ahead</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Compliance Status*</label>
+                <select id="complianceStatus" required>
+                    <option value="no-docs">No documentation yet</option>
+                    <option value="internal-docs">Have internal docs</option>
+                    <option value="consultant">Working with consultant</option>
+                    <option value="compliant">Already compliant</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Funding Stage*</label>
+                <select id="fundingStage" required>
+                    <option value="seed">Seed</option>
+                    <option value="series-a">Series A</option>
+                    <option value="series-b">Series B</option>
+                    <option value="series-c+">Series C+</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Timeline*</label>
+                <select id="timeline" required>
+                    <option value="this-week">This week</option>
+                    <option value="this-month">This month</option>
+                    <option value="next-month">Next month</option>
+                    <option value="this-quarter">This quarter</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Additional Notes</label>
+                <textarea id="additionalNotes" rows="3">This is a test submission from the test form.</textarea>
+            </div>
+
+            <button type="submit" id="submitBtn">🚀 Send Test Email</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById('testForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const submitBtn = document.getElementById('submitBtn');
+            const successAlert = document.getElementById('successAlert');
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+
+            // Hide alerts
+            successAlert.style.display = 'none';
+            errorAlert.style.display = 'none';
+
+            // Disable button
+            submitBtn.disabled = true;
+            submitBtn.textContent = '📤 Sending...';
+
+            // Get endpoint
+            const endpoint = document.getElementById('phpEndpoint').value;
+
+            // Build form data
+            const formData = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                role: document.getElementById('role').value,
+                companyName: document.getElementById('companyName').value,
+                companyWebsite: '',
+                hiringRoles: ['robotics-engineer', 'ml-engineer'],
+                numberOfHires: document.getElementById('numberOfHires').value,
+                hiringUrgency: document.getElementById('hiringUrgency').value,
+                complianceStatus: document.getElementById('complianceStatus').value,
+                regulatoryFrameworks: ['iso-13482', 'eu-ai-act'],
+                fundingStage: document.getElementById('fundingStage').value,
+                currentChallenges: ['slow-hiring', 'compliance-stuck'],
+                timeline: document.getElementById('timeline').value,
+                additionalNotes: document.getElementById('additionalNotes').value
+            };
+
+            try {
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.success) {
+                    successAlert.style.display = 'block';
+                    document.getElementById('testForm').reset();
+                    // Scroll to top
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                } else {
+                    errorMessage.textContent = data.message || 'Unknown error occurred';
+                    errorAlert.style.display = 'block';
+                }
+            } catch (err) {
+                errorMessage.textContent = 'Network error: ' + err.message + '. Make sure the PHP file is uploaded and the URL is correct.';
+                errorAlert.style.display = 'block';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = '🚀 Send Test Email';
+            }
+        });
+    </script>
+</body>
+</html>
