@@ -11,7 +11,11 @@ interface Lead {
   whySelected: string;
   status?: string;
   notes?: string;
+  lastContacted?: string;
+  nextFollowUp?: string;
 }
+
+type EmailTemplate = 'moat-first' | 'stealth-recruiting' | 'source-company' | 'linkedin' | 'vc-intro';
 
 export default function AdminPage() {
   const [authenticated, setAuthenticated] = useState(false);
@@ -26,6 +30,10 @@ export default function AdminPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [leadStatusFilter, setLeadStatusFilter] = useState<string>('all');
+  const [selectedLeads, setSelectedLeads] = useState<Set<string>>(new Set());
+  const [selectedTemplate, setSelectedTemplate] = useState<EmailTemplate>('moat-first');
+  const [showEmailPreview, setShowEmailPreview] = useState<Lead | null>(null);
+  const [bulkAction, setBulkAction] = useState<string>('');
 
   useEffect(() => {
     const auth = sessionStorage.getItem('adminAuthenticated');
@@ -170,8 +178,236 @@ export default function AdminPage() {
 
   const updateLeadStatus = (email: string, newStatus: string) => {
     setLeads(prev => prev.map(lead =>
-      lead.email === email ? { ...lead, status: newStatus } : lead
+      lead.email === email ? {
+        ...lead,
+        status: newStatus,
+        lastContacted: newStatus === 'Contacted' ? new Date().toISOString() : lead.lastContacted
+      } : lead
     ));
+  };
+
+  const getEmailTemplate = (template: EmailTemplate, lead: Lead): string => {
+    const firstName = lead.person.split(' ')[0];
+
+    const templates: Record<EmailTemplate, string> = {
+      'moat-first': `Subject: Your competitors can't copy this
+
+Hi ${firstName},
+
+Most Physical AI CTOs think compliance is the hard part.
+
+It's not. **Hiring the team to build the product is.**
+
+You can outsource safety documentation (we do it Instantly for $2K). But finding senior robotics engineers who've actually shipped autonomous systems? That takes a 10-year network.
+
+Which is why we built the only bundle that gives you both:
+
+**SafetyCaseAI Full Stack Bundle ($15K):**
+→ Safety case website (Instant delivery, GSN-validated)
+→ 12-month recruiting access to our Microsoft/NVIDIA/Intel/Boston Dynamics network
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer (vs. 90-day industry standard)
+→ Then: $18K flat fee per hire (not 20-30% like everyone else)
+
+**Here's what makes this unforkable:**
+
+Our compliance tech? Anyone can replicate that in 6 months.
+
+Our recruiting network? We've been placing robotics engineers since 2012. 1,000+ placements = 1,000 referral sources.
+
+**Two ways this works:**
+1. You're our client → We solve compliance + talent for $15K
+2. You're a source company → Your engineers become our referral sources
+
+Which makes sense for ${lead.company}?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com`,
+
+      'stealth-recruiting': `Subject: Your hiring reveals your roadmap (fix this)
+
+Hi ${firstName},
+
+When you post "Hiring: Senior Perception Engineer for Humanoid Robots," your competitors learn:
+1. You're building humanoids (not AMRs/drones)
+2. You're scaling fast (urgency = funding)
+3. Exactly which skills you need (they can poach your targets)
+
+**Tesla didn't announce Optimus until the team was in place. You shouldn't either.**
+
+We do Stealth Mode™ Hiring for Physical AI companies:
+
+→ We post anonymously: "Series A Robotics Startup" (not ${lead.company})
+→ We describe skills, not projects
+→ Candidates see your name ONLY after NDA + mutual interest
+→ 90-day poaching shield: Competitors pay 3x fees to hire your placed talent
+
+**$15K Full Stack Bundle:**
+→ Safety case website (Instant, GSN-validated)
+→ 12-month stealth recruiting support
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer
+→ Then: $18K flat fee per hire
+
+Worth 15 minutes to see how stealth recruiting protects ${lead.company}'s moat?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com`,
+
+      'source-company': `Subject: Referral partnership for ${lead.company} engineers?
+
+Hi ${firstName},
+
+Different ask than most recruiters.
+
+I'm not trying to poach your team. I'm asking if ${lead.company} wants to be a **source company** in our recruiting network.
+
+**The model:**
+
+When your engineers are ready to move (2-3 years from now), they come to us first. We place them. They refer their talented friends. The network compounds.
+
+**What you get:**
+→ $5K per placement referral fee
+→ Talent intelligence (when competitors are hiring)
+→ Priority recruiting access (if YOU need to hire)
+→ Free compliance bundle: Safety case website ($2K value)
+
+**What we get:**
+Access to your team when they're ready to move (not now, but eventually).
+
+This is how Microsoft, Intel, and 12+ Series A/B robotics companies work with us.
+
+Interested in a 15-minute walkthrough?
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com`,
+
+      'linkedin': `Hi ${firstName},
+
+Congrats on ${lead.company} - impressive work!
+
+I've placed 1,000+ robotics engineers at Microsoft, Intel, NVIDIA, Boston Dynamics over 27 years. I keep seeing the same pattern: Founders raise → 6 months on compliance → 6 months hiring → market window closes.
+
+We compress both into 90 days for $15K:
+
+→ Safety case website (Instant delivery)
+→ Pre-vetted robotics talent (14-day average hire)
+→ No fees on first 3 hires (save $60K-$90K)
+
+Our compliance tech is replicable. Our 10-year recruiting network isn't.
+
+Worth 15 min?
+
+Live demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+- John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com`,
+
+      'vc-intro': `Subject: Portfolio company intros - SafetyCaseAI
+
+Hi ${firstName},
+
+I'm John Polhill III - placed 1,000+ robotics engineers at Microsoft, Intel, NVIDIA, Boston Dynamics over 27 years.
+
+I built SafetyCaseAI to solve the two bottlenecks killing Physical AI portfolio companies:
+
+1. Compliance: 6-12 months, $500K → We do it Instantly for $2K
+2. Talent: 90+ days per hire, $30K fees → We do 14 days, no fees on first 3
+
+**Full Stack Bundle: $15K**
+→ Safety case website + 12-month recruiting support
+→ Compresses 12 months of non-product work into 90 days
+→ Saves $575K vs. traditional path
+
+**Portfolio offer:**
+Introduce us to 3+ Physical AI companies, get:
+→ 20% discount ($12K instead of $15K)
+→ Priority recruiting (24-hour candidate intros)
+→ Free compliance audits
+
+Worth 20 min to discuss portfolio fit?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com`
+    };
+
+    return templates[template];
+  };
+
+  const toggleLeadSelection = (email: string) => {
+    const newSelected = new Set(selectedLeads);
+    if (newSelected.has(email)) {
+      newSelected.delete(email);
+    } else {
+      newSelected.add(email);
+    }
+    setSelectedLeads(newSelected);
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedLeads.size === filteredLeads.length) {
+      setSelectedLeads(new Set());
+    } else {
+      setSelectedLeads(new Set(filteredLeads.map(l => l.email)));
+    }
+  };
+
+  const handleBulkAction = () => {
+    if (!bulkAction) return;
+
+    setLeads(prev => prev.map(lead =>
+      selectedLeads.has(lead.email) ? { ...lead, status: bulkAction } : lead
+    ));
+    setSelectedLeads(new Set());
+    setBulkAction('');
+  };
+
+  const copyEmailToClipboard = (lead: Lead) => {
+    const emailContent = getEmailTemplate(selectedTemplate, lead);
+    navigator.clipboard.writeText(emailContent);
+    alert(`Email template copied! Ready to paste into your email client.`);
+
+    // Auto-update status to Contacted
+    updateLeadStatus(lead.email, 'Contacted');
+  };
+
+  const exportToCSV = () => {
+    const headers = ['Person', 'Company', 'Email', 'Website', 'Status', 'Why Selected', 'Last Contacted'];
+    const rows = filteredLeads.map(lead => [
+      lead.person,
+      lead.company,
+      lead.email,
+      lead.website,
+      lead.status || 'Not Contacted',
+      lead.whySelected,
+      lead.lastContacted || ''
+    ]);
+
+    const csvContent = [headers, ...rows]
+      .map(row => row.map(cell => `"${cell}"`).join(','))
+      .join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv' });
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `leads-export-${new Date().toISOString().split('T')[0]}.csv`;
+    a.click();
   };
 
   const getStatusBadge = (status: OrderStatus) => {
@@ -433,21 +669,21 @@ export default function AdminPage() {
           <>
         <div className="card mb-8">
           <div className="mb-6">
-            <h2 className="text-2xl font-bold mb-4">Lead Management CRM</h2>
+            <h2 className="text-2xl font-bold mb-4">Lead Management CRM - Automated Outreach</h2>
 
             {/* Search and Filters */}
-            <div className="flex gap-4 mb-6">
+            <div className="grid grid-cols-12 gap-4 mb-6">
               <input
                 type="text"
                 placeholder="🔍 Search by name, company, or email..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="flex-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="col-span-4 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
               />
               <select
                 value={leadStatusFilter}
                 onChange={(e) => setLeadStatusFilter(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                className="col-span-2 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
               >
                 <option value="all">All Status</option>
                 <option value="Not Contacted">Not Contacted</option>
@@ -456,7 +692,61 @@ export default function AdminPage() {
                 <option value="Qualified">Qualified</option>
                 <option value="Closed">Closed</option>
               </select>
+              <select
+                value={selectedTemplate}
+                onChange={(e) => setSelectedTemplate(e.target.value as EmailTemplate)}
+                className="col-span-3 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+              >
+                <option value="moat-first">📧 Moat-First Email</option>
+                <option value="stealth-recruiting">🥷 Stealth Recruiting</option>
+                <option value="source-company">🤝 Source Company Pitch</option>
+                <option value="linkedin">💼 LinkedIn Message</option>
+                <option value="vc-intro">📊 VC Introduction</option>
+              </select>
+              <button
+                onClick={exportToCSV}
+                className="col-span-2 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-semibold"
+              >
+                📥 Export CSV
+              </button>
+              <button
+                onClick={() => setSearchTerm('')}
+                className="col-span-1 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300"
+              >
+                Clear
+              </button>
             </div>
+
+            {/* Bulk Actions Bar */}
+            {selectedLeads.size > 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4 flex items-center gap-4">
+                <span className="font-semibold">{selectedLeads.size} leads selected</span>
+                <select
+                  value={bulkAction}
+                  onChange={(e) => setBulkAction(e.target.value)}
+                  className="px-4 py-2 border border-gray-300 rounded-lg"
+                >
+                  <option value="">Bulk Action...</option>
+                  <option value="Contacted">Mark as Contacted</option>
+                  <option value="Follow Up">Mark for Follow Up</option>
+                  <option value="Qualified">Mark as Qualified</option>
+                  <option value="Closed">Mark as Closed</option>
+                </select>
+                <button
+                  onClick={handleBulkAction}
+                  disabled={!bulkAction}
+                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50"
+                >
+                  Apply
+                </button>
+                <button
+                  onClick={() => setSelectedLeads(new Set())}
+                  className="px-4 py-2 text-blue-600 hover:text-blue-800"
+                >
+                  Clear Selection
+                </button>
+              </div>
+            )}
           </div>
 
           {/* Leads Table */}
@@ -464,13 +754,20 @@ export default function AdminPage() {
             <table className="w-full">
               <thead className="bg-gray-50 border-b">
                 <tr>
+                  <th className="px-4 py-3 text-left">
+                    <input
+                      type="checkbox"
+                      checked={selectedLeads.size === filteredLeads.length && filteredLeads.length > 0}
+                      onChange={toggleSelectAll}
+                      className="w-4 h-4 cursor-pointer"
+                    />
+                  </th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Person</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Company</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Email</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Website</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Why Selected</th>
                   <th className="px-4 py-3 text-left text-sm font-semibold">Status</th>
-                  <th className="px-4 py-3 text-left text-sm font-semibold">Actions</th>
+                  <th className="px-4 py-3 text-left text-sm font-semibold">Quick Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
@@ -482,46 +779,59 @@ export default function AdminPage() {
                   </tr>
                 ) : (
                   filteredLeads.map((lead, idx) => (
-                    <tr key={idx} className="hover:bg-gray-50">
+                    <tr key={idx} className={`hover:bg-blue-50 ${selectedLeads.has(lead.email) ? 'bg-blue-50' : ''}`}>
                       <td className="px-4 py-3">
-                        <span className="font-semibold">{lead.person}</span>
+                        <input
+                          type="checkbox"
+                          checked={selectedLeads.has(lead.email)}
+                          onChange={() => toggleLeadSelection(lead.email)}
+                          className="w-4 h-4 cursor-pointer"
+                        />
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-sm">{lead.company}</span>
+                        <div>
+                          <span className="font-semibold block">{lead.person}</span>
+                          <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-xs text-primary-600 hover:underline">
+                            {lead.website.replace('https://', '')}
+                          </a>
+                        </div>
+                      </td>
+                      <td className="px-4 py-3">
+                        <span className="text-sm font-medium">{lead.company}</span>
                       </td>
                       <td className="px-4 py-3">
                         <a href={`mailto:${lead.email}`} className="text-primary-600 hover:underline text-sm">
                           {lead.email}
                         </a>
                       </td>
-                      <td className="px-4 py-3">
-                        <a href={lead.website} target="_blank" rel="noopener noreferrer" className="text-primary-600 hover:underline text-sm">
-                          {lead.website.replace('https://', '')}
-                        </a>
-                      </td>
-                      <td className="px-4 py-3 max-w-md">
-                        <p className="text-sm text-gray-600 line-clamp-2">{lead.whySelected}</p>
+                      <td className="px-4 py-3 max-w-xs">
+                        <p className="text-sm text-gray-600 line-clamp-2" title={lead.whySelected}>{lead.whySelected}</p>
                       </td>
                       <td className="px-4 py-3">
                         <select
                           value={lead.status}
                           onChange={(e) => updateLeadStatus(lead.email, e.target.value)}
-                          className="text-sm px-3 py-1 rounded-full border border-gray-300 focus:ring-2 focus:ring-primary-500"
+                          className="text-xs px-2 py-1 rounded-full border border-gray-300 focus:ring-2 focus:ring-primary-500"
                         >
-                          <option value="Not Contacted">Not Contacted</option>
-                          <option value="Contacted">Contacted</option>
-                          <option value="Follow Up">Follow Up</option>
-                          <option value="Qualified">Qualified</option>
-                          <option value="Closed">Closed</option>
+                          <option value="Not Contacted">🔴 Not Contacted</option>
+                          <option value="Contacted">🟡 Contacted</option>
+                          <option value="Follow Up">🔵 Follow Up</option>
+                          <option value="Qualified">🟢 Qualified</option>
+                          <option value="Closed">⚫ Closed</option>
                         </select>
+                        {lead.lastContacted && (
+                          <div className="text-xs text-gray-500 mt-1">
+                            {new Date(lead.lastContacted).toLocaleDateString()}
+                          </div>
+                        )}
                       </td>
                       <td className="px-4 py-3">
-                        <a
-                          href={`mailto:${lead.email}?subject=Compliance%20%2B%20recruiting%20bundle%20for%20${lead.company}?&body=Hi%20${lead.person.split(' ')[0]},%0A%0ASaw%20${lead.company}%20...`}
-                          className="bg-primary-600 text-white px-4 py-2 rounded text-sm hover:bg-primary-700"
+                        <button
+                          onClick={() => copyEmailToClipboard(lead)}
+                          className="bg-gradient-to-r from-purple-600 to-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:from-purple-700 hover:to-blue-700 shadow-md hover:shadow-lg transition-all"
                         >
-                          📧 Email
-                        </a>
+                          📋 Copy {selectedTemplate === 'linkedin' ? 'LinkedIn' : 'Email'}
+                        </button>
                       </td>
                     </tr>
                   ))
