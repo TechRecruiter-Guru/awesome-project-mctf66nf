@@ -1,0 +1,43 @@
+Subject: ${REFERRER_NAME} suggested I reach out
+
+Hi ${FIRST_NAME},
+
+${REFERRER_NAME} (${REFERRER_TITLE} at ${REFERRER_COMPANY}) suggested I reach out to you.
+
+I placed ${REFERRER_NAME} at ${REFERRER_COMPANY} ${MONTHS_AGO} months ago, and they mentioned ${COMPANY} might be hitting the same compliance + hiring bottlenecks they faced.
+
+**What ${REFERRER_NAME} told me:**
+
+"${REFERRER_COMPANY} wasted 8 months on safety documentation and another 4 months trying to hire robotics engineers. John's network got us 3 senior hires in 6 weeks, and the compliance bundle saved us $400K in consultant fees."
+
+**For ${COMPANY}, this would look like:**
+
+**$15K Full Stack Bundle:**
+→ Safety case website (Instant delivery, GSN-validated)
+→ 12-month recruiting access (Microsoft/NVIDIA/Intel networks)
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer
+
+**Why warm referrals convert:**
+
+${REFERRER_NAME} isn't getting paid to recommend us. They're just tired of watching fellow Physical AI founders waste runway on the same problems they solved.
+
+Worth 15 minutes to see if this accelerates ${COMPANY}'s hiring + compliance timeline?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com
+
+P.S. - ${REFERRER_NAME} is happy to chat if you want to verify this (I can intro you). But figured I'd reach out directly first.
+
+---
+
+**WARM REFERRAL PLAYBOOK:**
+- Ask every placement: "Who else in your network is hiring robotics engineers?"
+- Ideal referrers: Recently placed candidates (3-6 months in, happy with role)
+- Get permission FIRST: "Can I mention your name when I reach out to ${COMPANY}?"
+- Follow up with referrer after: "I reached out to ${FIRST_NAME}, here's what I said"
+- Conversion rate: 40-60% (vs. 2-5% for cold outreach)

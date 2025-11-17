@@ -1,0 +1,55 @@
+Subject: ${ACQUIRER} due diligence - compliance docs ready?
+
+Hi ${FIRST_NAME},
+
+Saw the news about ${ACQUIRER}'s interest in ${COMPANY} (or similar companies in your space). Congrats if that's in the works!
+
+I'm reaching out because I've helped 8 Physical AI companies prepare for M&A due diligence, and compliance documentation is ALWAYS on the checklist.
+
+**What acquirers ask for:**
+
+1. **Structured safety case** (not scattered PDFs)
+2. **GSN-validated documentation** (Goal Structuring Notation)
+3. **Risk assessment matrices** (probabilistic, not qualitative)
+4. **AI/ML transparency** (training data, model architecture, validation)
+5. **Regulatory compliance proof** (ISO 13482, IEC 61508, industry-specific)
+
+**The problem:**
+
+Acquirers give you 2-4 weeks to produce these docs. If you don't have them ready, the deal stalls or valuation drops.
+
+**We compress this to 48 hours:**
+
+→ Upload your existing docs (design specs, test logs, FMEA, risk assessments)
+→ AI extracts safety-critical data
+→ Generates GSN-validated safety case website
+→ Instant delivery (not 6-12 months)
+
+**$2K Compliance Package:**
+→ Professional safety case website
+→ Due diligence-ready format
+→ Investor/acquirer-facing (not internal docs)
+
+**Why M&A targets care:**
+
+Every day of due diligence delay = risk of deal falling through. $2K to compress 6 months into 48 hours = 300x ROI if it saves the acquisition.
+
+Worth 15 minutes to review ${COMPANY}'s current compliance documentation vs. M&A checklist requirements?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com
+
+P.S. - Even if ${COMPANY} isn't actively in M&A talks, having this ready shows strategic readiness (which itself increases valuation).
+
+---
+
+**ACQUISITION TARGET PLAYBOOK:**
+- Monitor: TechCrunch M&A rumors, Crunchbase acquisition activity in robotics
+- Target: Companies in categories with recent acquisitions (if Waymo bought someone, reach out to competitors)
+- Timing: Send 1-2 weeks after acquisition announcement in their space (creates urgency)
+- Value prop: Speed (48 hours vs. 6 months) + deal protection (don't lose acquisition because docs aren't ready)
+- Conversion rate: 25-35% (high urgency, high ROI)

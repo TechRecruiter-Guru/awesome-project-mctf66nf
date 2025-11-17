@@ -1,0 +1,51 @@
+Subject: ${CTO_NAME} might forward this to you
+
+Hi ${CEO_NAME},
+
+I normally reach out to CTOs, but I'm betting ${CTO_NAME} is too busy to prioritize this (even though it could save ${COMPANY} $575K and 12 months).
+
+**The bottleneck:**
+
+Most Physical AI founders hit the same pattern:
+- Raise Series A → 6 months stuck on compliance → 6 months stuck on hiring → market window closes
+
+**The math:**
+
+Traditional path:
+- $500K compliance consultants (6-12 months)
+- $90K recruiting fees (3 engineers @ $30K each, 90+ days per hire)
+- **Total: $590K, 12-18 months timeline**
+
+Our bundle:
+- Safety case website (Instant delivery, $2K standalone)
+- 12-month recruiting support (no fees on first 3 hires)
+- **Total: $15K, 90-day timeline**
+
+**Why CEOs care (not just CTOs):**
+
+1. **Runway preservation:** $575K savings = 3-4 extra months of runway
+2. **Investor optics:** Live compliance website + senior hires = milestone credibility
+3. **Competitive velocity:** Ship while competitors are stuck in consultant hell
+
+**Why this works:**
+
+Compliance is commoditized (we automate it with AI). Recruiting is our moat (10-year network at Microsoft/NVIDIA/Intel that competitors can't replicate).
+
+Worth 20 minutes to see if this accelerates ${COMPANY}'s Series A roadmap?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com
+
+P.S. - If ${CTO_NAME} already has compliance + hiring locked down, ignore this. But if they're swamped and these are backburner issues, that's exactly when $15K to compress 12 months into 90 days makes sense.
+
+---
+
+**MULTI-THREADING STRATEGY:**
+- Send to CEO 3-5 days AFTER sending to CTO (if no response)
+- CC the CTO on the CEO email (shows you're not going around them)
+- Use CEO language: runway, milestones, investor optics (not technical details)
+- Best for: Series A/B stage (CEO still involved in hiring decisions)

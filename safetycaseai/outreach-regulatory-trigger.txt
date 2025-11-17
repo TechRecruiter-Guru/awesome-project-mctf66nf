@@ -1,0 +1,53 @@
+Subject: EU AI Act update - ${COMPANY} compliance status?
+
+Hi ${FIRST_NAME},
+
+The EU AI Act Article 43 (safety documentation for high-risk AI) just got updated with new requirements for autonomous systems.
+
+I'm reaching out because ${COMPANY} operates in ${REGION}, and I've helped 12+ Physical AI companies update their compliance docs to match the new regs.
+
+**What changed (for robotics/autonomous systems):**
+
+1. **Stricter safety case requirements** (Goal Structuring Notation now expected)
+2. **AI/ML transparency mandates** (training data, model architecture, fallback mechanisms)
+3. **Cyber-physical risk assessments** (not just software, but hardware + environment)
+4. **6-month compliance window** (effective ${EFFECTIVE_DATE})
+
+**The scramble:**
+
+Companies with old PDF-based safety docs can't update them fast enough. Consultants are quoting $300K+ and 8-12 months.
+
+We automate this: Upload your existing docs → AI extracts safety data → Generates updated GSN-compliant website → Instant delivery.
+
+**$2K Compliance-Only Package:**
+→ Safety case website (EU AI Act compliant, ISO 13482/61508)
+→ GSN-validated structure (what auditors require)
+→ Adaptive updates for 6 months (as regs evolve)
+
+**Or bundle with recruiting ($15K):**
+→ Compliance + 12-month recruiting support
+→ No fees on first 3 hires
+
+**Why this matters for ${COMPANY}:**
+
+${EU_CUSTOMERS} will ask for updated compliance docs in due diligence. If you don't have them ready, deals stall.
+
+Worth 15 minutes to review ${COMPANY}'s current compliance status vs. new requirements?
+
+Live Demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Best,
+John Polhill III
+SafetyCaseAI | Physical AI Pros
+john@physicalaipros.com
+
+P.S. - If ${COMPANY} already has EU AI Act-compliant docs, ignore this. But most companies don't even know Article 43 changed until customers ask for it.
+
+---
+
+**REGULATORY TRIGGER PLAYBOOK:**
+- Monitor: EU AI Act updates, ISO 13482 changes, NHTSA autonomous vehicle regs, FAA drone rules
+- Target: Companies in affected regions (EU operations, US autonomous vehicles, etc.)
+- Timing: Send within 2-4 weeks of regulation announcement (before panic sets in)
+- Personalize: Mention their specific region/customer base
+- Conversion rate: 15-25% (urgency-driven)
