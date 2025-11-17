@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: ats-backend
+    env: python
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT --workers 2 app:app
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: GITHUB_TOKEN
+        sync: false
+        # Optional: Add GitHub token for higher API rate limits
+    healthCheckPath: /api/health
