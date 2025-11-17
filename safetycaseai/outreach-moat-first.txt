@@ -1,0 +1,46 @@
+Subject: Your competitors can't copy this
+
+Hi [First Name],
+
+Most Physical AI CTOs think compliance is the hard part.
+
+It's not. **Hiring the team to build the product is.**
+
+You can outsource safety documentation (we do it Instantly for $2K). But finding senior robotics engineers who've actually shipped autonomous systems? That takes a 10-year network.
+
+Which is why we built the only bundle that gives you both:
+
+**SafetyCaseAI Full Stack Bundle ($15K):**
+→ Safety case website (Instant delivery, GSN-validated)
+→ 12-month recruiting access to our Microsoft/NVIDIA/Intel/Boston Dynamics network
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer (vs. 90-day industry standard)
+→ Then: $18K flat fee per hire (not 20-30% like everyone else)
+
+**Here's what makes this unforkable:**
+
+Our compliance tech? Anyone can replicate that in 6 months.
+
+Our recruiting network? We've been placing robotics engineers since 2012. Before Boston Dynamics went viral. Before Tesla announced Optimus. Before "physical AI" was a category.
+
+1,000+ placements at Microsoft (130+ hires), Intel, Waymo, Tesla, Anduril = 1,000 referral sources who pick up when we call.
+
+Your competitors can't buy that. They can't build it in time for your Series A.
+
+**Two ways this works:**
+
+1. **You're our client** → We solve compliance + talent for $15K, you focus on product
+2. **You're a source company** → Your engineers become our referral sources (when they're ready to move)
+
+There's no middle ground. Which makes sense for [Company]?
+
+[Live Demo] → https://safetycaseai-platformv2.vercel.app/demo.html
+[See Full Bundle] → https://safetycaseai-platformv2.vercel.app/#bundle
+
+Best,
+John Polhill III
+U.S. Air Force Veteran (1982-1997)
+Physical AI Pros | SafetyCaseAI
+john@physicalaipros.com
+
+P.S. - We do stealth recruiting to protect your roadmap. When you post "hiring perception engineer," competitors know you're building vision systems. We post anonymously. Tesla didn't announce Optimus until the team was in place. You shouldn't either.

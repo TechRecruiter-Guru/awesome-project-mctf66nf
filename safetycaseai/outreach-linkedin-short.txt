@@ -1,0 +1,61 @@
+LinkedIn Message Template (under 300 characters for InMail)
+
+---
+
+[First Name] - saw [Company] raised [Round]. Congrats!
+
+Most robotics CTOs hit 2 bottlenecks post-funding:
+1. Compliance (6-12 months, $500K)
+2. Hiring (90+ days per engineer, $30K fees)
+
+We solve both for $15K: Instant safety case + 12-month recruiting access to Microsoft/NVIDIA/Intel networks.
+
+Worth 15 min to see if this accelerates your timeline?
+
+- John Polhill III
+SafetyCaseAI | Physical AI Pros
+[Calendar Link]
+
+---
+
+LinkedIn Message Template (expanded version)
+
+---
+
+Hi [First Name],
+
+Congrats on [Company] raising [Round] for [specific use case]. Impressive traction.
+
+I'm reaching out because I've placed 1,000+ robotics engineers at Microsoft, Intel, NVIDIA, Boston Dynamics over 27 years - and I keep seeing the same pattern:
+
+Founders raise → spend 6 months on compliance → spend another 6 months hiring → market window closes.
+
+We built SafetyCaseAI to compress both bottlenecks into 90 days:
+
+**$15K Full Stack Bundle:**
+→ Safety case website (Instant delivery, not 6-12 months)
+→ Pre-vetted robotics talent from our 10-year network
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer (vs. 90 days)
+
+**The unfair advantage:**
+Our compliance tech is replicable. Our recruiting network isn't. We've been placing robotics engineers since 2012 - before physical AI was a category.
+
+When we call senior perception engineers at Waymo, they pick up. When recruiters cold-message on LinkedIn, they get blocked.
+
+**Two options:**
+1. You're our client (we solve compliance + talent)
+2. You're a source company (your team becomes our network)
+
+Either way works. Which makes sense for [Company]?
+
+Live demo: https://safetycaseai-platformv2.vercel.app/demo.html
+
+Happy to show you the backend in 15 minutes.
+
+- John Polhill III
+U.S. Air Force Veteran | SafetyCaseAI
+john@physicalaipros.com
+[Calendar Link]
+
+P.S. - We do stealth recruiting. Your competitors won't know you're hiring until offers are signed.

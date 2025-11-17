@@ -1,0 +1,56 @@
+Subject: Your hiring reveals your roadmap (fix this)
+
+Hi [First Name],
+
+When you post "Hiring: Senior Perception Engineer for Humanoid Robots," your competitors learn:
+1. You're building humanoids (not AMRs/drones)
+2. You're scaling fast (urgency = funding)
+3. Exactly which skills you need (they can poach your targets)
+
+**Tesla didn't announce Optimus until the team was in place. You shouldn't either.**
+
+We do **Stealth Mode™ Hiring** for Physical AI companies:
+
+**How it works:**
+→ We post anonymously: "Series A Robotics Startup" (not [Company])
+→ We describe skills, not projects: "Pattern recognition expert" (not "facial recognition for Product X")
+→ Candidates see your name ONLY after NDA + mutual interest
+→ Zero public job posts = zero competitor intelligence
+
+**Bonus protection:**
+→ 90-day poaching shield: Competitors pay 3x fees to hire your placed talent
+→ Competitor alerts: We notify you if rivals try to view your hiring patterns
+→ Blind skill matching: No "I only want to work for Google" bias
+
+**The bundle:**
+
+Most founders come to us for compliance ($2K safety case website, Instant delivery).
+
+Then they realize the REAL moat is our recruiting network (10 years, 1,000+ placements, Microsoft/NVIDIA/Intel pipelines).
+
+**$15K Full Stack Bundle:**
+→ Safety case website (Instant, GSN-validated)
+→ 12-month stealth recruiting support
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer
+→ Then: $18K flat fee per hire (not 20-30%)
+
+**vs. Traditional Path:**
+- $500K compliance consultants
+- $90K recruiting fees (3 engineers @ $30K each)
+- 12+ months timeline
+- Your roadmap exposed to competitors
+
+You pay $15K. Save $575K. Keep strategy hidden.
+
+Worth 15 minutes to see how stealth recruiting protects [Company]'s moat?
+
+[Live Demo] → https://safetycaseai-platformv2.vercel.app/demo.html
+[Schedule Call] → [Calendar Link]
+
+Best,
+John Polhill III
+U.S. Air Force Veteran | SafetyCaseAI
+john@physicalaipros.com
+
+P.S. - We already know 200+ robotics engineers (perception, motion planning, safety, controls) who are passively exploring. When you say "I need someone," we make warm intros same week. No public posts. No competitor signals.

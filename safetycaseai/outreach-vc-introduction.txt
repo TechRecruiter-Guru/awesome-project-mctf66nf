@@ -1,0 +1,62 @@
+Subject: Portfolio company intros - SafetyCaseAI
+
+Hi [VC Name],
+
+I'm John Polhill III - U.S. Air Force veteran and founder of Physical AI Pros. Over 27 years, I've placed 1,000+ robotics engineers at Microsoft (130+ hires), Intel, NVIDIA, Boston Dynamics, Tesla, Waymo.
+
+I built SafetyCaseAI to solve the two bottlenecks killing Physical AI portfolio companies:
+
+**Bottleneck #1: Compliance**
+Founders waste 6-12 months and $500K on safety documentation. We automate it: Instant delivery, $2K.
+
+**Bottleneck #2: Talent**
+90+ days to hire each robotics engineer. $30K placement fees. We compress to 14 days, no fees on first 3 hires.
+
+**Full Stack Bundle: $15K**
+→ Safety case website (Instant, GSN-validated, ISO 13482/61508 compliant)
+→ 12-month recruiting support (Microsoft/NVIDIA/Intel networks)
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer
+→ Stealth recruiting to protect roadmap
+→ Then: $18K flat fee per hire (not 20-30%)
+
+**Why this matters for your portfolio:**
+
+Your Physical AI companies hit the same pattern:
+- Raise Series A → 6 months stuck on compliance → 6 months stuck on hiring → burn 50% runway on non-product work
+
+We compress both into 90 days for $15K (vs. $590K traditional path).
+
+**The unfair advantage:**
+
+Compliance tech is replicable. Our recruiting network isn't.
+
+We've been placing robotics engineers since 2012 - before "physical AI" was a category. 1,000 placements = 1,000 referral sources = compounding network effects competitors can't replicate.
+
+**Portfolio company offer:**
+
+Introduce us to 3+ Physical AI portfolio companies. We'll give your entire portfolio:
+→ 20% bundle discount ($12K instead of $15K)
+→ Priority recruiting access (24-hour candidate intros)
+→ Free compliance audits (we review their existing safety docs)
+
+**Relevant for these portfolio companies:**
+
+- Humanoid robotics (we have ISO 13482 templates)
+- Autonomous mobile robots (warehouse, delivery, defense)
+- Drones (FAA/EASA compliance)
+- Collaborative robots (ISO 10218)
+- Inspection/construction robots
+
+Worth 20 minutes to show you the platform + discuss portfolio fit?
+
+[Live Demo] → https://safetycaseai-platformv2.vercel.app/demo.html
+[Schedule Call] → [Calendar Link]
+
+Best,
+John Polhill III
+U.S. Air Force Veteran (1982-1997)
+Physical AI Pros | SafetyCaseAI
+john@physicalaipros.com
+
+P.S. - We also do warm VC intros for qualified companies (Greylock/Khosla-style investors). If your portfolio companies need Series A/B intros, happy to facilitate.
