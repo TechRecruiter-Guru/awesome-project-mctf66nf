@@ -13,6 +13,8 @@ interface Lead {
   notes?: string;
   lastContacted?: string;
   nextFollowUp?: string;
+  source?: string; // Track which CSV file this lead came from
+  campaign?: string; // Track which campaign this lead is in
 }
 
 type EmailTemplate =
@@ -63,7 +65,7 @@ export default function AdminPage() {
   const [filterStatus, setFilterStatus] = useState<OrderStatus | 'all'>('all');
   const [generatingCode, setGeneratingCode] = useState<string | null>(null);
   const [generatedCode, setGeneratedCode] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'orders' | 'leads'>('orders');
+  const [activeTab, setActiveTab] = useState<'orders' | 'leads' | 'revenue'>('orders');
   const [leads, setLeads] = useState<Lead[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [leadStatusFilter, setLeadStatusFilter] = useState<string>('all');
@@ -101,7 +103,7 @@ export default function AdminPage() {
         response2.text()
       ]);
 
-      const parseCSV = (csvText: string): Lead[] => {
+      const parseCSV = (csvText: string, source: string): Lead[] => {
         const lines = csvText.split('\n').filter(line => line.trim());
         const headers = lines[0].split(',');
 
@@ -116,12 +118,17 @@ export default function AdminPage() {
             website: cleanedValues[3] || '',
             whySelected: cleanedValues[4] || '',
             status: 'Not Contacted',
-            notes: ''
+            notes: '',
+            source: source,
+            campaign: undefined
           };
         });
       };
 
-      const allLeads = [...parseCSV(csv1), ...parseCSV(csv2)];
+      const allLeads = [
+        ...parseCSV(csv1, 'Safety Batch 1'),
+        ...parseCSV(csv2, 'Safety Batch 2')
+      ];
       setLeads(allLeads);
     } catch (error) {
       console.error('Error fetching leads:', error);
@@ -814,6 +821,21 @@ P.S. - Even if ${lead.company} isn't actively in M&A talks, having this ready sh
                 <span className="bg-blue-600 text-white text-xs px-2 py-1 rounded-full">{leads.length}</span>
               </span>
             </button>
+            <button
+              onClick={() => setActiveTab('revenue')}
+              className={`px-8 py-4 font-semibold transition-all relative ${
+                activeTab === 'revenue'
+                  ? 'text-purple-700 border-b-4 border-purple-600 bg-purple-50'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              }`}
+            >
+              <span className="flex items-center gap-2">
+                💰 Revenue Pipeline
+                <span className="bg-green-600 text-white text-xs px-2 py-1 rounded-full">
+                  ${((leads.filter(l => l.status === 'Qualified' || l.status === 'Follow Up').length) * 2000).toLocaleString()}
+                </span>
+              </span>
+            </button>
           </div>
         </div>
       </div>
@@ -1370,6 +1392,292 @@ P.S. - Even if ${lead.company} isn't actively in M&A talks, having this ready sh
                 <p className="text-5xl font-bold text-green-700">
                   {leads.filter(l => l.status === 'Closed').length}
                 </p>
+              </div>
+            </div>
+          </>
+        )}
+
+        {/* REVENUE PIPELINE TAB */}
+        {activeTab === 'revenue' && (
+          <>
+            {/* Revenue Overview Cards */}
+            <div className="grid md:grid-cols-3 gap-6 mb-8">
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-8 border-2 border-green-300 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-green-900 flex items-center gap-2">
+                  <span className="text-3xl">💰</span>
+                  Total Pipeline Value
+                </h3>
+                <p className="text-5xl font-bold text-green-700 mb-2">
+                  ${(leads.length * 2000).toLocaleString()}
+                </p>
+                <p className="text-sm text-green-600">
+                  {leads.length} leads × $2,000 per conversion
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-yellow-50 to-orange-50 rounded-2xl p-8 border-2 border-yellow-300 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-yellow-900 flex items-center gap-2">
+                  <span className="text-3xl">🔥</span>
+                  Hot Leads (Qualified + Follow Up)
+                </h3>
+                <p className="text-5xl font-bold text-yellow-700 mb-2">
+                  ${((leads.filter(l => l.status === 'Qualified' || l.status === 'Follow Up').length) * 2000).toLocaleString()}
+                </p>
+                <p className="text-sm text-yellow-600">
+                  {leads.filter(l => l.status === 'Qualified' || l.status === 'Follow Up').length} hot leads × $2,000
+                </p>
+              </div>
+
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-8 border-2 border-blue-300 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-blue-900 flex items-center gap-2">
+                  <span className="text-3xl">📊</span>
+                  Average Deal Size
+                </h3>
+                <p className="text-5xl font-bold text-blue-700 mb-2">
+                  $2,000
+                </p>
+                <p className="text-sm text-blue-600">
+                  Per safety case website
+                </p>
+              </div>
+            </div>
+
+            {/* Campaign Management */}
+            <div className="bg-white rounded-2xl shadow-lg border border-gray-200 mb-8 overflow-hidden">
+              <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-6">
+                <h3 className="text-2xl font-bold mb-2 flex items-center gap-2">
+                  <span>📧</span>
+                  Campaign Management & Lead Grouping
+                </h3>
+                <p className="text-purple-100">Organize leads by source and assign email campaigns</p>
+              </div>
+
+              <div className="p-6">
+                {/* Lead Source Groups */}
+                <div className="grid md:grid-cols-2 gap-6">
+                  {/* Safety Batch 1 */}
+                  <div className="bg-gradient-to-br from-purple-50 to-blue-50 rounded-xl p-6 border-2 border-purple-200">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h4 className="text-xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+                          <span className="text-2xl">📁</span>
+                          Safety Batch 1
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {leads.filter(l => l.source === 'Safety Batch 1').length} leads •
+                          Potential: ${(leads.filter(l => l.source === 'Safety Batch 1').length * 2000).toLocaleString()}
+                        </p>
+                      </div>
+                      <span className="bg-purple-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        Batch 1
+                      </span>
+                    </div>
+
+                    {/* Status Breakdown */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700">Not Contacted:</span>
+                        <span className="font-bold text-gray-900">
+                          {leads.filter(l => l.source === 'Safety Batch 1' && l.status === 'Not Contacted').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700">Contacted:</span>
+                        <span className="font-bold text-gray-900">
+                          {leads.filter(l => l.source === 'Safety Batch 1' && l.status === 'Contacted').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700">Qualified:</span>
+                        <span className="font-bold text-green-700">
+                          {leads.filter(l => l.source === 'Safety Batch 1' && l.status === 'Qualified').length}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Campaign Template Selector */}
+                    <div className="bg-white rounded-lg p-4 border border-purple-200">
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Assign Campaign:</label>
+                      <select className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-purple-500 text-sm">
+                        <option value="">Select template...</option>
+                        <optgroup label="Positioning Templates">
+                          <option value="moat-first">🏰 Moat-First (8-12%)</option>
+                          <option value="stealth-recruiting">🥷 Stealth Recruiting (10-15%)</option>
+                          <option value="source-company">🤝 Source Company (12-18%)</option>
+                          <option value="linkedin">💼 LinkedIn (5-10%)</option>
+                          <option value="vc-intro">📊 VC Intro (15-20%)</option>
+                        </optgroup>
+                        <optgroup label="Trigger-Based Templates">
+                          <option value="funding-announcement">💰 Funding Announcement (20-30%)</option>
+                          <option value="job-posting-monitor">📝 Job Posting Monitor (25-35%)</option>
+                          <option value="warm-referral">🌟 Warm Referral (40-60%)</option>
+                          <option value="multi-thread-ceo">👔 Multi-Thread CEO (15-25%)</option>
+                          <option value="regulatory-trigger">⚖️ Regulatory Trigger (15-25%)</option>
+                          <option value="acquisition-target">🎯 Acquisition Target (25-35%)</option>
+                        </optgroup>
+                      </select>
+                      <button className="w-full mt-3 bg-purple-600 text-white py-2 rounded-lg font-semibold hover:bg-purple-700 transition-colors">
+                        Apply to Batch 1
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Safety Batch 2 */}
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6 border-2 border-blue-200">
+                    <div className="flex justify-between items-start mb-4">
+                      <div>
+                        <h4 className="text-xl font-bold text-gray-900 mb-1 flex items-center gap-2">
+                          <span className="text-2xl">📁</span>
+                          Safety Batch 2
+                        </h4>
+                        <p className="text-sm text-gray-600">
+                          {leads.filter(l => l.source === 'Safety Batch 2').length} leads •
+                          Potential: ${(leads.filter(l => l.source === 'Safety Batch 2').length * 2000).toLocaleString()}
+                        </p>
+                      </div>
+                      <span className="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-bold">
+                        Batch 2
+                      </span>
+                    </div>
+
+                    {/* Status Breakdown */}
+                    <div className="space-y-2 mb-4">
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700">Not Contacted:</span>
+                        <span className="font-bold text-gray-900">
+                          {leads.filter(l => l.source === 'Safety Batch 2' && l.status === 'Not Contacted').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700">Contacted:</span>
+                        <span className="font-bold text-gray-900">
+                          {leads.filter(l => l.source === 'Safety Batch 2' && l.status === 'Contacted').length}
+                        </span>
+                      </div>
+                      <div className="flex justify-between text-sm">
+                        <span className="text-gray-700">Qualified:</span>
+                        <span className="font-bold text-green-700">
+                          {leads.filter(l => l.source === 'Safety Batch 2' && l.status === 'Qualified').length}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Campaign Template Selector */}
+                    <div className="bg-white rounded-lg p-4 border border-blue-200">
+                      <label className="block text-sm font-bold text-gray-700 mb-2">Assign Campaign:</label>
+                      <select className="w-full px-3 py-2 border-2 border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 text-sm">
+                        <option value="">Select template...</option>
+                        <optgroup label="Positioning Templates">
+                          <option value="moat-first">🏰 Moat-First (8-12%)</option>
+                          <option value="stealth-recruiting">🥷 Stealth Recruiting (10-15%)</option>
+                          <option value="source-company">🤝 Source Company (12-18%)</option>
+                          <option value="linkedin">💼 LinkedIn (5-10%)</option>
+                          <option value="vc-intro">📊 VC Intro (15-20%)</option>
+                        </optgroup>
+                        <optgroup label="Trigger-Based Templates">
+                          <option value="funding-announcement">💰 Funding Announcement (20-30%)</option>
+                          <option value="job-posting-monitor">📝 Job Posting Monitor (25-35%)</option>
+                          <option value="warm-referral">🌟 Warm Referral (40-60%)</option>
+                          <option value="multi-thread-ceo">👔 Multi-Thread CEO (15-25%)</option>
+                          <option value="regulatory-trigger">⚖️ Regulatory Trigger (15-25%)</option>
+                          <option value="acquisition-target">🎯 Acquisition Target (25-35%)</option>
+                        </optgroup>
+                      </select>
+                      <button className="w-full mt-3 bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                        Apply to Batch 2
+                      </button>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Revenue Projection by Template */}
+                <div className="mt-8 bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6 border-2 border-green-200">
+                  <h4 className="text-xl font-bold text-gray-900 mb-4 flex items-center gap-2">
+                    <span className="text-2xl">📈</span>
+                    Projected Revenue by Template
+                  </h4>
+                  <div className="grid md:grid-cols-3 gap-4">
+                    <div className="bg-white rounded-lg p-4 border border-green-200">
+                      <p className="text-sm text-gray-600 mb-1">If using Positioning Templates (avg 10%)</p>
+                      <p className="text-3xl font-bold text-gray-900">
+                        ${Math.round(leads.length * 2000 * 0.10).toLocaleString()}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {Math.round(leads.length * 0.10)} expected conversions
+                      </p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 border border-green-200">
+                      <p className="text-sm text-gray-600 mb-1">If using Trigger Templates (avg 25%)</p>
+                      <p className="text-3xl font-bold text-green-700">
+                        ${Math.round(leads.length * 2000 * 0.25).toLocaleString()}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {Math.round(leads.length * 0.25)} expected conversions
+                      </p>
+                    </div>
+                    <div className="bg-white rounded-lg p-4 border border-yellow-200">
+                      <p className="text-sm text-gray-600 mb-1">With Warm Referrals (50%)</p>
+                      <p className="text-3xl font-bold text-yellow-700">
+                        ${Math.round(leads.length * 2000 * 0.50).toLocaleString()}
+                      </p>
+                      <p className="text-xs text-gray-500 mt-1">
+                        {Math.round(leads.length * 0.50)} expected conversions
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Pipeline Stats by Status */}
+            <div className="grid md:grid-cols-5 gap-6">
+              <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 border-2 border-gray-200 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-gray-900 flex items-center gap-2">
+                  <span className="text-2xl">📊</span>
+                  Total Leads
+                </h3>
+                <p className="text-5xl font-bold text-gray-700">{leads.length}</p>
+                <p className="text-sm text-gray-600 mt-1">${(leads.length * 2000).toLocaleString()} potential</p>
+              </div>
+              <div className="bg-gradient-to-br from-red-50 to-orange-50 rounded-2xl p-6 border-2 border-red-200 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-red-900 flex items-center gap-2">
+                  <span className="text-2xl">🔴</span>
+                  Not Contacted
+                </h3>
+                <p className="text-5xl font-bold text-red-700">
+                  {leads.filter(l => l.status === 'Not Contacted').length}
+                </p>
+                <p className="text-sm text-red-600 mt-1">${(leads.filter(l => l.status === 'Not Contacted').length * 2000).toLocaleString()} potential</p>
+              </div>
+              <div className="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-2xl p-6 border-2 border-blue-200 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-blue-900 flex items-center gap-2">
+                  <span className="text-2xl">🟡</span>
+                  Contacted
+                </h3>
+                <p className="text-5xl font-bold text-blue-700">
+                  {leads.filter(l => l.status === 'Contacted').length}
+                </p>
+                <p className="text-sm text-blue-600 mt-1">${(leads.filter(l => l.status === 'Contacted').length * 2000).toLocaleString()} potential</p>
+              </div>
+              <div className="bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl p-6 border-2 border-purple-200 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-purple-900 flex items-center gap-2">
+                  <span className="text-2xl">🟢</span>
+                  Qualified
+                </h3>
+                <p className="text-5xl font-bold text-purple-700">
+                  {leads.filter(l => l.status === 'Qualified').length}
+                </p>
+                <p className="text-sm text-purple-600 mt-1">${(leads.filter(l => l.status === 'Qualified').length * 2000).toLocaleString()} potential</p>
+              </div>
+              <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-2xl p-6 border-2 border-green-200 shadow-lg">
+                <h3 className="font-bold text-lg mb-2 text-green-900 flex items-center gap-2">
+                  <span className="text-2xl">✅</span>
+                  Closed
+                </h3>
+                <p className="text-5xl font-bold text-green-700">
+                  {leads.filter(l => l.status === 'Closed').length}
+                </p>
+                <p className="text-sm text-green-600 mt-1">${(leads.filter(l => l.status === 'Closed').length * 2000).toLocaleString()} revenue</p>
               </div>
             </div>
           </>
