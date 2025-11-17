@@ -89,11 +89,14 @@ export default function HomePage() {
           <p className="text-lg mb-8 opacity-95 max-w-2xl mx-auto">
             <strong>Full Stack Bundle: $15K</strong> (vs. $590K traditional path) • 92% cost savings • 14-day hiring velocity
           </p>
-          <div className="flex justify-center gap-4 mb-6">
-            <a href="#bundle" className="bg-yellow-400 text-purple-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-colors shadow-xl">
+          <div className="flex justify-center gap-4 mb-6 flex-wrap">
+            <a href="/schedule" className="bg-yellow-400 text-purple-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-colors shadow-xl">
+              📞 Schedule Strategy Call
+            </a>
+            <a href="#bundle" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl">
               See $15K Bundle →
             </a>
-            <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
+            <a href="#templates" className="bg-white/90 text-primary-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors">
               View Templates ($2K)
             </a>
           </div>
@@ -986,18 +989,26 @@ export default function HomePage() {
       <div className="py-16 bg-primary-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Create Your Safety Case Website?
+            Ready to Compress 12 Months into 90 Days?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join leading Physical AI companies using SafetyCaseAI for their
-            compliance documentation.
+            Schedule a strategy call to discuss your compliance + hiring needs. No pitch, just insights.
           </p>
-          <a
-            href="#templates"
-            className="inline-block bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors"
-          >
-            Get Started Now
-          </a>
+          <div className="flex justify-center gap-4 flex-wrap">
+            <a
+              href="/schedule"
+              className="inline-block bg-yellow-400 text-purple-900 px-10 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-xl"
+            >
+              📞 Schedule Free Strategy Call
+            </a>
+            <a
+              href="#templates"
+              className="inline-block bg-white text-primary-600 px-10 py-5 rounded-lg font-bold text-xl hover:bg-gray-100 transition-colors shadow-xl"
+            >
+              View Templates ($2K)
+            </a>
+          </div>
+          <p className="mt-6 text-sm opacity-75">30-minute call • No sales pitch • Custom roadmap</p>
         </div>
       </div>
 
