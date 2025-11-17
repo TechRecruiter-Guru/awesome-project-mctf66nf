@@ -824,13 +824,13 @@ export default function HomePage() {
           {/* CTA */}
           <div className="text-center">
             <a
-              href="mailto:john@physicalaipros.com?subject=Series%20B%20Ready%20Package%20Inquiry"
-              className="inline-block bg-yellow-400 text-purple-900 px-12 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-2xl"
+              href="/schedule"
+              className="inline-block bg-yellow-400 text-purple-900 px-12 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-2xl hover:scale-105 transform transition-all"
             >
-              Schedule Strategy Call →
+              📞 Schedule Strategy Call →
             </a>
             <p className="mt-4 text-sm opacity-75">
-              Limited to 3 clients per quarter · Email john@physicalaipros.com
+              30-minute call · No sales pitch · Custom roadmap for your company
             </p>
           </div>
         </div>
