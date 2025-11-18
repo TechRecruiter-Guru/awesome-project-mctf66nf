@@ -2186,6 +2186,111 @@ def get_source_effectiveness():
     })
 
 
+# ==================== PUBLIC CANDIDATE ENDPOINTS ====================
+
+@app.route('/api/public/jobs/<int:job_id>', methods=['GET'])
+def get_public_job(job_id):
+    """Get job details for public candidate landing page (respects stealth mode)"""
+    job = Job.query.get_or_404(job_id)
+
+    # Only show open jobs publicly
+    if job.status != 'open':
+        return jsonify({"error": "This position is no longer accepting applications"}), 404
+
+    # Return job with stealth mode respected (company hidden if confidential)
+    return jsonify(job.to_dict(show_company=False))
+
+
+@app.route('/api/public/apply', methods=['POST'])
+def submit_public_application():
+    """Submit an application from the public landing page"""
+    data = request.json
+
+    # Validate required fields
+    required_fields = ['job_id', 'first_name', 'last_name', 'email']
+    for field in required_fields:
+        if not data.get(field):
+            return jsonify({"error": f"Missing required field: {field}"}), 400
+
+    job_id = data.get('job_id')
+
+    # Verify job exists and is open
+    job = Job.query.get(job_id)
+    if not job:
+        return jsonify({"error": "Job not found"}), 404
+    if job.status != 'open':
+        return jsonify({"error": "This position is no longer accepting applications"}), 400
+
+    # Check if candidate already exists
+    existing_candidate = Candidate.query.filter_by(email=data.get('email')).first()
+
+    if existing_candidate:
+        # Check if already applied to this job
+        existing_application = Application.query.filter_by(
+            candidate_id=existing_candidate.id,
+            job_id=job_id
+        ).first()
+
+        if existing_application:
+            return jsonify({"error": "You have already applied for this position"}), 400
+
+        candidate = existing_candidate
+        # Update candidate info if provided
+        if data.get('phone'):
+            candidate.phone = data.get('phone')
+        if data.get('linkedin_url'):
+            candidate.linkedin_url = data.get('linkedin_url')
+        if data.get('github_url'):
+            candidate.github_url = data.get('github_url')
+        if data.get('portfolio_url'):
+            candidate.portfolio_url = data.get('portfolio_url')
+        if data.get('location'):
+            candidate.location = data.get('location')
+        if data.get('years_experience'):
+            candidate.years_experience = data.get('years_experience')
+        if data.get('primary_expertise'):
+            candidate.primary_expertise = data.get('primary_expertise')
+    else:
+        # Create new candidate
+        candidate = Candidate(
+            first_name=data.get('first_name'),
+            last_name=data.get('last_name'),
+            email=data.get('email'),
+            phone=data.get('phone'),
+            location=data.get('location'),
+            linkedin_url=data.get('linkedin_url'),
+            github_url=data.get('github_url'),
+            portfolio_url=data.get('portfolio_url'),
+            resume_url=data.get('resume_url'),
+            years_experience=data.get('years_experience'),
+            primary_expertise=data.get('primary_expertise'),
+            status='new'
+        )
+        db.session.add(candidate)
+        db.session.flush()  # Get candidate ID
+
+    # Create application
+    application = Application(
+        candidate_id=candidate.id,
+        job_id=job_id,
+        status='applied',
+        source='landing_page',
+        notes=data.get('cover_letter', '')
+    )
+    db.session.add(application)
+
+    try:
+        db.session.commit()
+        return jsonify({
+            "message": "Application submitted successfully!",
+            "application_id": application.id,
+            "candidate_id": candidate.id
+        }), 201
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"error": str(e)}), 500
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     app.run(debug=True, host='0.0.0.0', port=port)
