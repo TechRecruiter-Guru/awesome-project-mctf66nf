@@ -1,11 +1,327 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, useParams } from 'react-router-dom';
 import axios from 'axios';
 import './App.css';
 import BooleanGenerator from './components/BooleanGenerator';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-function App() {
+// ==================== CANDIDATE LANDING PAGE ====================
+
+function CandidateLandingPage() {
+  const { jobId } = useParams();
+  const [job, setJob] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    location: '',
+    linkedin_url: '',
+    github_url: '',
+    portfolio_url: '',
+    years_experience: '',
+    primary_expertise: '',
+    cover_letter: ''
+  });
+
+  useEffect(() => {
+    fetchJob();
+  }, [jobId]);
+
+  const fetchJob = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/public/jobs/${jobId}`);
+      setJob(response.data);
+    } catch (err) {
+      setError(err.response?.data?.error || 'Failed to load job posting');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      await axios.post(`${API_URL}/api/public/apply`, {
+        ...formData,
+        job_id: parseInt(jobId),
+        years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
+      });
+      setSubmitted(true);
+    } catch (err) {
+      alert(err.response?.data?.error || 'Failed to submit application');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="landing-page">
+        <div className="landing-container">
+          <div className="loading-spinner">Loading...</div>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="landing-page">
+        <div className="landing-container">
+          <div className="error-message">
+            <h2>Position Not Available</h2>
+            <p>{error}</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <div className="landing-page">
+        <div className="landing-container">
+          <div className="success-message">
+            <div className="success-icon">✓</div>
+            <h2>Application Submitted!</h2>
+            <p>Thank you for applying for the <strong>{job.title}</strong> position.</p>
+            <p>We'll review your application and get back to you soon.</p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="landing-page">
+      <div className="landing-container">
+        <div className="job-header">
+          <div className="company-badge">
+            {job.confidential ? '🔒 Stealth Mode' : job.company}
+          </div>
+          <h1>{job.title}</h1>
+          <div className="job-meta">
+            {job.location && <span>📍 {job.location}</span>}
+            {job.job_type && <span>💼 {job.job_type}</span>}
+            {job.salary_min && job.salary_max && (
+              <span>💰 ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}</span>
+            )}
+          </div>
+        </div>
+
+        <div className="job-details">
+          {job.description && (
+            <div className="detail-section">
+              <h3>About the Role</h3>
+              <p>{job.description}</p>
+            </div>
+          )}
+
+          {job.required_expertise && (
+            <div className="detail-section">
+              <h3>Required Expertise</h3>
+              <p>{job.required_expertise}</p>
+            </div>
+          )}
+
+          {job.requirements && (
+            <div className="detail-section">
+              <h3>Requirements</h3>
+              <p>{job.requirements}</p>
+            </div>
+          )}
+
+          {job.responsibilities && (
+            <div className="detail-section">
+              <h3>Responsibilities</h3>
+              <p>{job.responsibilities}</p>
+            </div>
+          )}
+
+          {job.research_focus && (
+            <div className="detail-section">
+              <h3>Research Focus</h3>
+              <p>{job.research_focus}</p>
+            </div>
+          )}
+
+          {job.education_required && (
+            <div className="detail-section">
+              <h3>Education</h3>
+              <p>{job.education_required}</p>
+            </div>
+          )}
+        </div>
+
+        <div className="application-form">
+          <h2>Apply Now</h2>
+          <form onSubmit={handleSubmit}>
+            <div className="form-row">
+              <div className="form-group">
+                <label>First Name *</label>
+                <input
+                  type="text"
+                  name="first_name"
+                  value={formData.first_name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Last Name *</label>
+                <input
+                  type="text"
+                  name="last_name"
+                  value={formData.last_name}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Email *</label>
+                <input
+                  type="email"
+                  name="email"
+                  value={formData.email}
+                  onChange={handleInputChange}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Phone</label>
+                <input
+                  type="tel"
+                  name="phone"
+                  value={formData.phone}
+                  onChange={handleInputChange}
+                />
+              </div>
+            </div>
+
+            <div className="form-row">
+              <div className="form-group">
+                <label>Location</label>
+                <input
+                  type="text"
+                  name="location"
+                  value={formData.location}
+                  onChange={handleInputChange}
+                  placeholder="City, Country"
+                />
+              </div>
+              <div className="form-group">
+                <label>Years of Experience</label>
+                <input
+                  type="number"
+                  name="years_experience"
+                  value={formData.years_experience}
+                  onChange={handleInputChange}
+                  min="0"
+                  max="50"
+                />
+              </div>
+            </div>
+
+            <div className="form-group">
+              <label>Primary Expertise</label>
+              <select
+                name="primary_expertise"
+                value={formData.primary_expertise}
+                onChange={handleInputChange}
+              >
+                <option value="">Select your expertise</option>
+                <option value="Deep Learning">Deep Learning</option>
+                <option value="Computer Vision">Computer Vision</option>
+                <option value="NLP">Natural Language Processing</option>
+                <option value="Reinforcement Learning">Reinforcement Learning</option>
+                <option value="Robotics">Robotics</option>
+                <option value="MLOps">MLOps</option>
+                <option value="Data Science">Data Science</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+
+            <div className="form-group">
+              <label>LinkedIn URL</label>
+              <input
+                type="url"
+                name="linkedin_url"
+                value={formData.linkedin_url}
+                onChange={handleInputChange}
+                placeholder="https://linkedin.com/in/yourprofile"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>GitHub URL</label>
+              <input
+                type="url"
+                name="github_url"
+                value={formData.github_url}
+                onChange={handleInputChange}
+                placeholder="https://github.com/yourusername"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Portfolio URL</label>
+              <input
+                type="url"
+                name="portfolio_url"
+                value={formData.portfolio_url}
+                onChange={handleInputChange}
+                placeholder="https://yourportfolio.com"
+              />
+            </div>
+
+            <div className="form-group">
+              <label>Cover Letter / Why This Role?</label>
+              <textarea
+                name="cover_letter"
+                value={formData.cover_letter}
+                onChange={handleInputChange}
+                rows="5"
+                placeholder="Tell us why you're interested in this position and what makes you a great fit..."
+              />
+            </div>
+
+            <button
+              type="submit"
+              className="submit-btn"
+              disabled={submitting}
+            >
+              {submitting ? 'Submitting...' : 'Submit Application'}
+            </button>
+          </form>
+        </div>
+
+        <div className="landing-footer">
+          <p>Powered by AI/ML ATS</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==================== MAIN ATS APP ====================
+
+function ATSApp() {
   const [activeTab, setActiveTab] = useState('dashboard');
   const [candidates, setCandidates] = useState([]);
   const [jobs, setJobs] = useState([]);
@@ -1266,6 +1582,19 @@ function OffersView() {
         </div>
       )}
     </div>
+  );
+}
+
+// ==================== APP WITH ROUTING ====================
+
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/apply/:jobId" element={<CandidateLandingPage />} />
+        <Route path="/*" element={<ATSApp />} />
+      </Routes>
+    </Router>
   );
 }
 
