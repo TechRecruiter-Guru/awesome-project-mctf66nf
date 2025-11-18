@@ -564,6 +564,13 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     github_url: '',
     orcid_id: ''
   });
+  const [schedulingInterviewFor, setSchedulingInterviewFor] = useState(null);
+  const [interviewForm, setInterviewForm] = useState({
+    interview_stage: 'phone_screen',
+    scheduled_date: '',
+    interviewer_name: '',
+    notes: ''
+  });
   const [enriching, setEnriching] = useState({});
   const [impactScores, setImpactScores] = useState({});
 
@@ -614,6 +621,23 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
       onRefresh();
     } catch (err) {
       alert('Error creating candidate: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const scheduleInterview = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_URL}/api/interviews`, {
+        candidate_id: schedulingInterviewFor,
+        ...interviewForm,
+        status: 'scheduled'
+      });
+      alert('✅ Interview scheduled!');
+      setSchedulingInterviewFor(null);
+      setInterviewForm({ interview_stage: 'phone_screen', scheduled_date: '', interviewer_name: '', notes: '' });
+      onRefresh();
+    } catch (err) {
+      alert('Error scheduling interview: ' + (err.response?.data?.error || err.message));
     }
   };
 
@@ -821,11 +845,50 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
               </div>
 
               <div className="card-actions">
+                <button className="btn-primary" onClick={() => setSchedulingInterviewFor(candidate.id)}>🗓️ Schedule Interview</button>
                 <button className="btn-delete" onClick={() => onDelete(candidate.id)}>Delete</button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {schedulingInterviewFor && (
+        <form className="candidate-form" onSubmit={scheduleInterview}>
+          <h3>Schedule Interview</h3>
+          <select
+            value={interviewForm.interview_stage}
+            onChange={(e) => setInterviewForm({ ...interviewForm, interview_stage: e.target.value })}
+          >
+            <option value="phone_screen">Phone Screen</option>
+            <option value="technical_interview">Technical Interview</option>
+            <option value="final_interview">Final Interview</option>
+            <option value="offer">Offer Discussion</option>
+          </select>
+          <input
+            type="datetime-local"
+            required
+            value={interviewForm.scheduled_date}
+            onChange={(e) => setInterviewForm({ ...interviewForm, scheduled_date: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Interviewer Name"
+            required
+            value={interviewForm.interviewer_name}
+            onChange={(e) => setInterviewForm({ ...interviewForm, interviewer_name: e.target.value })}
+          />
+          <textarea
+            placeholder="Interview Notes / Questions"
+            value={interviewForm.notes}
+            onChange={(e) => setInterviewForm({ ...interviewForm, notes: e.target.value })}
+            rows="4"
+          />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" className="btn-primary">Schedule Interview</button>
+            <button type="button" className="btn-delete" onClick={() => setSchedulingInterviewFor(null)}>Cancel</button>
+          </div>
+        </form>
       )}
     </div>
   );
