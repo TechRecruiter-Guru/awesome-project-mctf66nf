@@ -122,16 +122,34 @@ function App() {
           💼 Jobs ({stats.total_jobs || 0})
         </button>
         <button
+          className={activeTab === 'analytics' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('analytics')}
+        >
+          📈 Analytics
+        </button>
+        <button
+          className={activeTab === 'campaigns' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('campaigns')}
+        >
+          📧 Campaigns
+        </button>
+        <button
+          className={activeTab === 'interviews' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('interviews')}
+        >
+          🗓️ Interviews
+        </button>
+        <button
+          className={activeTab === 'offers' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('offers')}
+        >
+          💰 Offers
+        </button>
+        <button
           className={activeTab === 'boolean' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('boolean')}
         >
-          🔍 Boolean Search
-        </button>
-        <button
-          className={activeTab === 'about' ? 'tab active' : 'tab'}
-          onClick={() => setActiveTab('about')}
-        >
-          ℹ️ About
+          🔍 Search
         </button>
       </nav>
 
@@ -157,8 +175,11 @@ function App() {
             onRefresh={fetchJobs}
           />
         )}
+        {activeTab === 'analytics' && <AnalyticsView />}
+        {activeTab === 'campaigns' && <CampaignsView />}
+        {activeTab === 'interviews' && <InterviewsView />}
+        {activeTab === 'offers' && <OffersView />}
         {activeTab === 'boolean' && <BooleanGenerator onStatsRefresh={fetchStats} />}
-        {activeTab === 'about' && <AboutView />}
       </main>
 
       <footer className="app-footer">
@@ -743,6 +764,507 @@ function AboutView() {
           to contribute features, integrations, or improvements.
         </p>
       </div>
+    </div>
+  );
+}
+
+// Analytics View
+function AnalyticsView() {
+  const [analytics, setAnalytics] = useState(null);
+  const [funnel, setFunnel] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      const [overviewRes, funnelRes] = await Promise.all([
+        axios.get(`${API_URL}/api/analytics/overview`),
+        axios.get(`${API_URL}/api/analytics/pipeline-funnel`)
+      ]);
+      setAnalytics(overviewRes.data);
+      setFunnel(funnelRes.data);
+    } catch (err) {
+      console.error('Error fetching analytics:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div className="loading">Loading analytics...</div>;
+  if (!analytics) return <div className="error">Failed to load analytics</div>;
+
+  return (
+    <div className="analytics-view">
+      <h2>📈 Analytics Dashboard</h2>
+
+      {/* Pipeline Overview */}
+      <div className="stats-grid">
+        <div className="stat-card">
+          <div className="stat-value">{analytics.pipeline.total_candidates}</div>
+          <div className="stat-label">Total Candidates</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{analytics.pipeline.total_jobs}</div>
+          <div className="stat-label">Total Jobs</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{analytics.interviews.upcoming}</div>
+          <div className="stat-label">Upcoming Interviews</div>
+        </div>
+        <div className="stat-card">
+          <div className="stat-value">{analytics.offers.pending}</div>
+          <div className="stat-label">Pending Offers</div>
+        </div>
+      </div>
+
+      {/* Conversion Rates */}
+      <div style={{ marginTop: '24px', background: '#f8fafc', padding: '20px', borderRadius: '12px' }}>
+        <h3 style={{ marginBottom: '16px' }}>📊 Conversion Rates</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '16px' }}>
+          <div style={{ textAlign: 'center', padding: '16px', background: 'white', borderRadius: '8px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#2563eb' }}>
+              {analytics.conversion_rates.interview_rate}%
+            </div>
+            <div style={{ color: '#64748b' }}>Interview Rate</div>
+          </div>
+          <div style={{ textAlign: 'center', padding: '16px', background: 'white', borderRadius: '8px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#7c3aed' }}>
+              {analytics.conversion_rates.offer_rate}%
+            </div>
+            <div style={{ color: '#64748b' }}>Offer Rate</div>
+          </div>
+          <div style={{ textAlign: 'center', padding: '16px', background: 'white', borderRadius: '8px' }}>
+            <div style={{ fontSize: '2rem', fontWeight: 'bold', color: '#059669' }}>
+              {analytics.conversion_rates.hire_rate}%
+            </div>
+            <div style={{ color: '#64748b' }}>Hire Rate</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pipeline Funnel */}
+      {funnel && (
+        <div style={{ marginTop: '24px', background: '#f0fdf4', padding: '20px', borderRadius: '12px' }}>
+          <h3 style={{ marginBottom: '16px' }}>🎯 Pipeline Funnel</h3>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            {Object.entries(funnel.funnel).map(([stage, count], i) => (
+              <div key={stage} style={{ textAlign: 'center', flex: 1 }}>
+                <div style={{ fontSize: '1.5rem', fontWeight: 'bold', color: '#166534' }}>{count}</div>
+                <div style={{ fontSize: '0.8rem', color: '#166534', textTransform: 'capitalize' }}>{stage}</div>
+                {i < Object.keys(funnel.funnel).length - 1 && (
+                  <span style={{ position: 'absolute', marginLeft: '20px' }}>→</span>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* Candidate Status Breakdown */}
+      <div style={{ marginTop: '24px', background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+        <h3 style={{ marginBottom: '16px' }}>👥 Candidate Status Breakdown</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px' }}>
+          {Object.entries(analytics.candidate_statuses).map(([status, count]) => (
+            <div key={status} style={{ display: 'flex', justifyContent: 'space-between', padding: '8px', background: '#f8fafc', borderRadius: '6px' }}>
+              <span style={{ textTransform: 'capitalize' }}>{status}</span>
+              <strong>{count}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Campaigns View
+function CampaignsView() {
+  const [campaigns, setCampaigns] = useState([]);
+  const [showForm, setShowForm] = useState(false);
+  const [newCampaign, setNewCampaign] = useState({ name: '', subject: '', body: '' });
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/campaigns`);
+      setCampaigns(response.data.campaigns || []);
+    } catch (err) {
+      console.error('Error fetching campaigns:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_URL}/api/campaigns`, newCampaign);
+      setNewCampaign({ name: '', subject: '', body: '' });
+      setShowForm(false);
+      fetchCampaigns();
+    } catch (err) {
+      alert('Error creating campaign: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const sendCampaign = async (campaignId) => {
+    if (!window.confirm('Send this campaign to all active candidates?')) return;
+    try {
+      const response = await axios.post(`${API_URL}/api/campaigns/${campaignId}/send`);
+      alert(`✅ ${response.data.message}`);
+      fetchCampaigns();
+    } catch (err) {
+      alert('Error sending campaign: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const deleteCampaign = async (id) => {
+    if (!window.confirm('Delete this campaign?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/campaigns/${id}`);
+      fetchCampaigns();
+    } catch (err) {
+      alert('Error deleting campaign: ' + err.message);
+    }
+  };
+
+  return (
+    <div className="campaigns-view">
+      <div className="view-header">
+        <h2>📧 Email Campaigns</h2>
+        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : '+ Create Campaign'}
+        </button>
+      </div>
+
+      {showForm && (
+        <form className="campaign-form" onSubmit={handleSubmit} style={{ background: '#f8fafc', padding: '20px', borderRadius: '12px', marginBottom: '20px' }}>
+          <h3>Create New Campaign</h3>
+          <input
+            type="text"
+            placeholder="Campaign Name *"
+            value={newCampaign.name}
+            onChange={(e) => setNewCampaign({ ...newCampaign, name: e.target.value })}
+            required
+            style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+          />
+          <input
+            type="text"
+            placeholder="Email Subject *"
+            value={newCampaign.subject}
+            onChange={(e) => setNewCampaign({ ...newCampaign, subject: e.target.value })}
+            required
+            style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+          />
+          <textarea
+            placeholder="Email Body *"
+            value={newCampaign.body}
+            onChange={(e) => setNewCampaign({ ...newCampaign, body: e.target.value })}
+            required
+            rows={6}
+            style={{ width: '100%', padding: '10px', marginBottom: '10px', borderRadius: '6px', border: '1px solid #e2e8f0' }}
+          />
+          <button type="submit" className="btn-primary">Create Campaign</button>
+        </form>
+      )}
+
+      {loading ? (
+        <div className="loading">Loading campaigns...</div>
+      ) : campaigns.length === 0 ? (
+        <div className="empty-state">
+          <p>No campaigns yet. Create your first email campaign!</p>
+        </div>
+      ) : (
+        <div className="campaigns-list" style={{ display: 'grid', gap: '16px' }}>
+          {campaigns.map((campaign) => (
+            <div key={campaign.id} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <h3 style={{ margin: 0 }}>{campaign.name}</h3>
+                <span style={{
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.8rem',
+                  background: campaign.status === 'sent' ? '#dcfce7' : campaign.status === 'draft' ? '#f3f4f6' : '#fef3c7',
+                  color: campaign.status === 'sent' ? '#166534' : campaign.status === 'draft' ? '#374151' : '#92400e'
+                }}>
+                  {campaign.status}
+                </span>
+              </div>
+              <p style={{ color: '#64748b', marginBottom: '8px' }}>📬 {campaign.subject}</p>
+              {campaign.status === 'sent' && (
+                <div style={{ display: 'flex', gap: '16px', fontSize: '0.85rem', color: '#64748b', marginBottom: '12px' }}>
+                  <span>📤 {campaign.sent_count} sent</span>
+                  <span>👁️ {campaign.open_rate}% opened</span>
+                  <span>🖱️ {campaign.click_rate}% clicked</span>
+                  <span>💬 {campaign.reply_rate}% replied</span>
+                </div>
+              )}
+              <div style={{ display: 'flex', gap: '8px' }}>
+                {campaign.status === 'draft' && (
+                  <button
+                    onClick={() => sendCampaign(campaign.id)}
+                    style={{ padding: '6px 12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                  >
+                    📤 Send Campaign
+                  </button>
+                )}
+                <button
+                  onClick={() => deleteCampaign(campaign.id)}
+                  style={{ padding: '6px 12px', background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Interviews View
+function InterviewsView() {
+  const [interviews, setInterviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchInterviews();
+  }, []);
+
+  const fetchInterviews = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/interviews`);
+      setInterviews(response.data.interviews || []);
+    } catch (err) {
+      console.error('Error fetching interviews:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      await axios.put(`${API_URL}/api/interviews/${id}`, { status });
+      fetchInterviews();
+    } catch (err) {
+      alert('Error updating interview: ' + err.message);
+    }
+  };
+
+  const deleteInterview = async (id) => {
+    if (!window.confirm('Delete this interview?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/interviews/${id}`);
+      fetchInterviews();
+    } catch (err) {
+      alert('Error deleting interview: ' + err.message);
+    }
+  };
+
+  return (
+    <div className="interviews-view">
+      <div className="view-header">
+        <h2>🗓️ Interview Schedule</h2>
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading interviews...</div>
+      ) : interviews.length === 0 ? (
+        <div className="empty-state">
+          <p>No interviews scheduled yet. Schedule interviews from candidate profiles.</p>
+        </div>
+      ) : (
+        <div className="interviews-list" style={{ display: 'grid', gap: '16px' }}>
+          {interviews.map((interview) => (
+            <div key={interview.id} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <div>
+                  <h3 style={{ margin: 0 }}>{interview.candidate_name}</h3>
+                  <p style={{ color: '#64748b', margin: '4px 0' }}>for {interview.job_title}</p>
+                </div>
+                <span style={{
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.8rem',
+                  background: interview.status === 'completed' ? '#dcfce7' : interview.status === 'scheduled' ? '#dbeafe' : '#fee2e2',
+                  color: interview.status === 'completed' ? '#166534' : interview.status === 'scheduled' ? '#1e40af' : '#991b1b'
+                }}>
+                  {interview.status}
+                </span>
+              </div>
+              <div style={{ display: 'flex', gap: '16px', fontSize: '0.85rem', color: '#64748b', marginBottom: '12px' }}>
+                <span>📅 {new Date(interview.scheduled_at).toLocaleDateString()}</span>
+                <span>🕐 {new Date(interview.scheduled_at).toLocaleTimeString()}</span>
+                <span>⏱️ {interview.duration_minutes} min</span>
+                <span>📹 {interview.interview_type}</span>
+              </div>
+              {interview.location && <p style={{ fontSize: '0.85rem', color: '#64748b' }}>📍 {interview.location}</p>}
+              {interview.rating && <p style={{ fontSize: '0.85rem' }}>⭐ Rating: {interview.rating}/5</p>}
+              <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                {interview.status === 'scheduled' && (
+                  <>
+                    <button
+                      onClick={() => updateStatus(interview.id, 'completed')}
+                      style={{ padding: '6px 12px', background: '#059669', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                    >
+                      ✅ Complete
+                    </button>
+                    <button
+                      onClick={() => updateStatus(interview.id, 'cancelled')}
+                      style={{ padding: '6px 12px', background: '#f59e0b', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                    >
+                      ❌ Cancel
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => deleteInterview(interview.id)}
+                  style={{ padding: '6px 12px', background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Offers View
+function OffersView() {
+  const [offers, setOffers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const fetchOffers = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/offers`);
+      setOffers(response.data.offers || []);
+    } catch (err) {
+      console.error('Error fetching offers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (id, status) => {
+    try {
+      await axios.put(`${API_URL}/api/offers/${id}`, { status });
+      fetchOffers();
+    } catch (err) {
+      alert('Error updating offer: ' + err.message);
+    }
+  };
+
+  const deleteOffer = async (id) => {
+    if (!window.confirm('Delete this offer?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/offers/${id}`);
+      fetchOffers();
+    } catch (err) {
+      alert('Error deleting offer: ' + err.message);
+    }
+  };
+
+  const formatSalary = (salary) => {
+    if (!salary) return 'N/A';
+    return '$' + salary.toLocaleString();
+  };
+
+  return (
+    <div className="offers-view">
+      <div className="view-header">
+        <h2>💰 Job Offers</h2>
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading offers...</div>
+      ) : offers.length === 0 ? (
+        <div className="empty-state">
+          <p>No offers yet. Create offers for candidates who passed interviews.</p>
+        </div>
+      ) : (
+        <div className="offers-list" style={{ display: 'grid', gap: '16px' }}>
+          {offers.map((offer) => (
+            <div key={offer.id} style={{ background: 'white', padding: '20px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '12px' }}>
+                <div>
+                  <h3 style={{ margin: 0 }}>{offer.candidate_name}</h3>
+                  <p style={{ color: '#64748b', margin: '4px 0' }}>for {offer.job_title}</p>
+                </div>
+                <span style={{
+                  padding: '4px 12px',
+                  borderRadius: '20px',
+                  fontSize: '0.8rem',
+                  background: offer.status === 'accepted' ? '#dcfce7' : offer.status === 'sent' ? '#dbeafe' : offer.status === 'declined' ? '#fee2e2' : '#f3f4f6',
+                  color: offer.status === 'accepted' ? '#166534' : offer.status === 'sent' ? '#1e40af' : offer.status === 'declined' ? '#991b1b' : '#374151'
+                }}>
+                  {offer.status}
+                </span>
+              </div>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: '12px', marginBottom: '12px' }}>
+                <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#059669' }}>{formatSalary(offer.salary)}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Base Salary</div>
+                </div>
+                <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#7c3aed' }}>{offer.equity || 'N/A'}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Equity</div>
+                </div>
+                <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', textAlign: 'center' }}>
+                  <div style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#2563eb' }}>{formatSalary(offer.signing_bonus)}</div>
+                  <div style={{ fontSize: '0.75rem', color: '#64748b' }}>Signing Bonus</div>
+                </div>
+              </div>
+              {offer.start_date && <p style={{ fontSize: '0.85rem', color: '#64748b' }}>📅 Start Date: {offer.start_date}</p>}
+              <div style={{ display: 'flex', gap: '8px', marginTop: '12px' }}>
+                {offer.status === 'draft' && (
+                  <button
+                    onClick={() => updateStatus(offer.id, 'sent')}
+                    style={{ padding: '6px 12px', background: '#2563eb', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                  >
+                    📤 Send Offer
+                  </button>
+                )}
+                {offer.status === 'sent' && (
+                  <>
+                    <button
+                      onClick={() => updateStatus(offer.id, 'accepted')}
+                      style={{ padding: '6px 12px', background: '#059669', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                    >
+                      ✅ Accepted
+                    </button>
+                    <button
+                      onClick={() => updateStatus(offer.id, 'declined')}
+                      style={{ padding: '6px 12px', background: '#dc2626', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                    >
+                      ❌ Declined
+                    </button>
+                  </>
+                )}
+                <button
+                  onClick={() => deleteOffer(offer.id)}
+                  style={{ padding: '6px 12px', background: '#fee2e2', color: '#991b1b', border: 'none', borderRadius: '6px', cursor: 'pointer' }}
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }
