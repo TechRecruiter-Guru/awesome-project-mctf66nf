@@ -1,0 +1,38 @@
+Subject: Re: Compliance + recruiting bundle for [Company]?
+
+[First Name],
+
+Following up because this week alone, 3 robotics CTOs told us the same story:
+
+**"Our Series A term sheet required safety documentation. We had design docs and test logs, but no structured safety case. Consultants quoted $300K+ and 9 months. We almost lost the round."**
+
+Then, after they closed funding, they spent another 6 months trying to hire 3-5 robotics engineers at $30K per placement.
+
+That's the exact double-bottleneck we solve:
+
+✅ **Automated extraction:** Our proprietary AI reads your existing docs (PDFs, spreadsheets, CAD files) and generates GSN-compliant safety cases
+✅ **Instant delivery:** Upload and pitch VCs the same day with a live website
+✅ **Investor-ready format:** Hazard analysis, probabilistic risk models, validation sims—what due diligence teams actually ask for
+
+**PLUS:**
+✅ **Pre-vetted robotics talent:** 12-month access to our network (Microsoft, NVIDIA, Intel, Boston Dynamics)
+✅ **No placement fees on first 3 hires:** Save $60K-$90K
+✅ **14-day average hire time:** vs. 90 days industry standard
+
+**Who this works for:**
+- Pre-seed/Series A physical AI (humanoids, drones, AMRs, cobots)
+- Companies with prototypes but need both compliance docs AND engineering talent
+- CTOs who want to move fast (compliance + hiring in parallel, not sequential)
+
+**Not a fit if:**
+- You're post-Series B with dedicated safety + recruiting teams
+- You haven't built hardware yet (no test data = nothing to extract)
+
+[Live Demo - Healthcare Robot Example] → https://safetycaseai-platformv2.vercel.app/demo.html
+
+Still relevant for [Company]? Happy to show you the backend in 15 minutes.
+
+Best,
+[Your Name]
+Physical AI Pros
+[Calendar Link]

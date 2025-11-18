@@ -150,7 +150,7 @@ export default function OrderPage() {
             </button>
 
             <p className="text-sm text-gray-500 text-center">
-              Price: $499 • No recurring fees • 48-hour delivery
+              Price: $2k • No recurring fees • Instant delivery
             </p>
           </form>
         </div>

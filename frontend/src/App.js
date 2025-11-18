@@ -213,14 +213,56 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     last_name: '',
     email: '',
     primary_expertise: '',
-    google_scholar_url: ''
+    google_scholar_url: '',
+    github_url: '',
+    orcid_id: ''
   });
+  const [enriching, setEnriching] = useState({});
+  const [impactScores, setImpactScores] = useState({});
+
+  // Enrich candidate from various sources
+  const enrichCandidate = async (candidateId, source) => {
+    setEnriching(prev => ({ ...prev, [`${candidateId}-${source}`]: true }));
+    try {
+      const response = await axios.post(`${API_URL}/api/candidates/${candidateId}/enrich/${source}`);
+      alert(`✅ ${response.data.message}`);
+      onRefresh();
+    } catch (err) {
+      alert(`❌ Error: ${err.response?.data?.error || err.message}`);
+    } finally {
+      setEnriching(prev => ({ ...prev, [`${candidateId}-${source}`]: false }));
+    }
+  };
+
+  // Extract skills from candidate
+  const extractSkills = async (candidateId) => {
+    setEnriching(prev => ({ ...prev, [`${candidateId}-skills`]: true }));
+    try {
+      const response = await axios.post(`${API_URL}/api/candidates/${candidateId}/extract-skills`);
+      alert(`✅ Extracted ${response.data.skills_extracted} skills!`);
+      onRefresh();
+    } catch (err) {
+      alert(`❌ Error: ${err.response?.data?.error || err.message}`);
+    } finally {
+      setEnriching(prev => ({ ...prev, [`${candidateId}-skills`]: false }));
+    }
+  };
+
+  // Get impact score for candidate
+  const getImpactScore = async (candidateId) => {
+    try {
+      const response = await axios.get(`${API_URL}/api/candidates/${candidateId}/impact-score`);
+      setImpactScores(prev => ({ ...prev, [candidateId]: response.data }));
+    } catch (err) {
+      alert(`❌ Error: ${err.response?.data?.error || err.message}`);
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/api/candidates`, newCandidate);
-      setNewCandidate({ first_name: '', last_name: '', email: '', primary_expertise: '', google_scholar_url: '' });
+      setNewCandidate({ first_name: '', last_name: '', email: '', primary_expertise: '', google_scholar_url: '', github_url: '', orcid_id: '' });
       setShowForm(false);
       onRefresh();
     } catch (err) {
@@ -271,9 +313,21 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
           />
           <input
             type="url"
+            placeholder="GitHub URL"
+            value={newCandidate.github_url}
+            onChange={(e) => setNewCandidate({ ...newCandidate, github_url: e.target.value })}
+          />
+          <input
+            type="url"
             placeholder="Google Scholar URL"
             value={newCandidate.google_scholar_url}
             onChange={(e) => setNewCandidate({ ...newCandidate, google_scholar_url: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="ORCID ID (e.g., 0000-0002-1234-5678)"
+            value={newCandidate.orcid_id}
+            onChange={(e) => setNewCandidate({ ...newCandidate, orcid_id: e.target.value })}
           />
           <button type="submit" className="btn-primary">Create Candidate</button>
         </form>
@@ -351,6 +405,74 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                 {candidate.citation_count && <span>Citations: {candidate.citation_count}</span>}
                 {candidate.publication_count > 0 && <span>Publications: {candidate.publication_count}</span>}
               </div>
+              {/* Impact Score Display */}
+              {impactScores[candidate.id] && (
+                <div style={{ background: '#f0fdf4', padding: '12px', borderRadius: '8px', marginTop: '12px', marginBottom: '12px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <strong style={{ color: '#166534' }}>🏆 Impact Score: {impactScores[candidate.id].impact_score}/100</strong>
+                    <span style={{ background: '#dcfce7', padding: '4px 8px', borderRadius: '4px', fontSize: '0.8rem', color: '#166534' }}>
+                      {impactScores[candidate.id].tier}
+                    </span>
+                  </div>
+                </div>
+              )}
+
+              {/* Enrichment Actions */}
+              <div style={{ background: '#f8fafc', padding: '12px', borderRadius: '8px', marginTop: '12px' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px', color: '#475569' }}>
+                  🔄 Auto-Enrich Profile
+                </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px' }}>
+                  {candidate.github_url && (
+                    <button
+                      onClick={() => enrichCandidate(candidate.id, 'github')}
+                      disabled={enriching[`${candidate.id}-github`]}
+                      style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#1f2937', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      {enriching[`${candidate.id}-github`] ? '...' : '💻 GitHub'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => enrichCandidate(candidate.id, 'arxiv')}
+                    disabled={enriching[`${candidate.id}-arxiv`]}
+                    style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#b91c1c', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    {enriching[`${candidate.id}-arxiv`] ? '...' : '📄 arXiv'}
+                  </button>
+                  {candidate.orcid_id && (
+                    <button
+                      onClick={() => enrichCandidate(candidate.id, 'orcid')}
+                      disabled={enriching[`${candidate.id}-orcid`]}
+                      style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#a3e635', color: '#1a2e05', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      {enriching[`${candidate.id}-orcid`] ? '...' : '🆔 ORCID'}
+                    </button>
+                  )}
+                  {candidate.google_scholar_url && (
+                    <button
+                      onClick={() => enrichCandidate(candidate.id, 'scholar')}
+                      disabled={enriching[`${candidate.id}-scholar`]}
+                      style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#4285f4', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                    >
+                      {enriching[`${candidate.id}-scholar`] ? '...' : '🎓 Scholar'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => extractSkills(candidate.id)}
+                    disabled={enriching[`${candidate.id}-skills`]}
+                    style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#7c3aed', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    {enriching[`${candidate.id}-skills`] ? '...' : '🧠 Extract Skills'}
+                  </button>
+                  <button
+                    onClick={() => getImpactScore(candidate.id)}
+                    style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#059669', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    📊 Impact Score
+                  </button>
+                </div>
+              </div>
+
               <div className="card-actions">
                 <button className="btn-delete" onClick={() => onDelete(candidate.id)}>Delete</button>
               </div>
@@ -368,15 +490,34 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
     title: '',
     company: '',
     required_expertise: '',
+    required_skills: '',
     education_required: '',
     confidential: false
   });
+  const [matchResults, setMatchResults] = useState({});
+  const [matching, setMatching] = useState({});
+
+  // Match candidates to a job
+  const matchCandidates = async (jobId) => {
+    setMatching(prev => ({ ...prev, [jobId]: true }));
+    try {
+      const response = await axios.post(`${API_URL}/api/jobs/${jobId}/match-candidates`, {
+        min_score: 0,
+        top_n: 5
+      });
+      setMatchResults(prev => ({ ...prev, [jobId]: response.data }));
+    } catch (err) {
+      alert(`❌ Error: ${err.response?.data?.error || err.message}`);
+    } finally {
+      setMatching(prev => ({ ...prev, [jobId]: false }));
+    }
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/api/jobs`, newJob);
-      setNewJob({ title: '', company: '', required_expertise: '', education_required: '', confidential: false });
+      setNewJob({ title: '', company: '', required_expertise: '', required_skills: '', education_required: '', confidential: false });
       setShowForm(false);
       onRefresh();
     } catch (err) {
@@ -415,6 +556,12 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             placeholder="Required Expertise (e.g., Deep Learning, MLOps)"
             value={newJob.required_expertise}
             onChange={(e) => setNewJob({ ...newJob, required_expertise: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Required Skills (comma-separated: python, pytorch, tensorflow)"
+            value={newJob.required_skills}
+            onChange={(e) => setNewJob({ ...newJob, required_skills: e.target.value })}
           />
           <select
             value={newJob.education_required}
@@ -466,6 +613,77 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
               {job.application_count > 0 && (
                 <p className="applications-count">📋 {job.application_count} applications</p>
               )}
+
+              {/* AI Matching Section */}
+              <div style={{ background: '#f0f9ff', padding: '12px', borderRadius: '8px', marginTop: '12px' }}>
+                <button
+                  onClick={() => matchCandidates(job.id)}
+                  disabled={matching[job.id]}
+                  style={{
+                    fontSize: '0.85rem',
+                    padding: '8px 16px',
+                    background: '#2563eb',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    width: '100%',
+                    fontWeight: '600'
+                  }}
+                >
+                  {matching[job.id] ? '🔄 Matching...' : '🎯 AI Match Candidates'}
+                </button>
+
+                {/* Match Results */}
+                {matchResults[job.id] && (
+                  <div style={{ marginTop: '12px' }}>
+                    <div style={{ fontSize: '0.85rem', fontWeight: '600', color: '#1e40af', marginBottom: '8px' }}>
+                      Found {matchResults[job.id].matches_found} matches:
+                    </div>
+                    {matchResults[job.id].top_matches.length === 0 ? (
+                      <p style={{ fontSize: '0.8rem', color: '#64748b' }}>No matching candidates found.</p>
+                    ) : (
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        {matchResults[job.id].top_matches.map((match, i) => (
+                          <div key={i} style={{
+                            background: 'white',
+                            padding: '8px',
+                            borderRadius: '6px',
+                            border: '1px solid #e2e8f0',
+                            fontSize: '0.8rem'
+                          }}>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                              <strong>{match.candidate_name}</strong>
+                              <span style={{
+                                background: match.match_score >= 50 ? '#dcfce7' : '#fef3c7',
+                                color: match.match_score >= 50 ? '#166534' : '#92400e',
+                                padding: '2px 6px',
+                                borderRadius: '4px',
+                                fontWeight: '600'
+                              }}>
+                                {match.match_score}%
+                              </span>
+                            </div>
+                            {match.primary_expertise && (
+                              <div style={{ color: '#64748b', marginTop: '4px' }}>
+                                🎯 {match.primary_expertise}
+                              </div>
+                            )}
+                            {(match.h_index || match.citations) && (
+                              <div style={{ color: '#64748b', marginTop: '2px' }}>
+                                {match.h_index && `H-index: ${match.h_index}`}
+                                {match.h_index && match.citations && ' • '}
+                                {match.citations && `Citations: ${match.citations}`}
+                              </div>
+                            )}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+
               <div className="card-actions">
                 <button className="btn-delete" onClick={() => onDelete(job.id)}>Delete</button>
               </div>

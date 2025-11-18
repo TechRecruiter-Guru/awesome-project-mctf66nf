@@ -1,0 +1,49 @@
+Subject: Should I close your file?
+
+[First Name],
+
+Haven't heard back, so I'm assuming one of three things:
+
+1. **Timing's off:** You're heads-down on [specific milestone] and compliance/hiring isn't urgent yet
+2. **Already handled:** You've got safety docs + recruiting locked down (rare for pre-Series A, but congrats if so)
+3. **Just not interested:** No worries—happy to close your file
+
+Before I do, one last data point:
+
+The average physical AI startup spends **$590K** on compliance consultants ($500K) and recruiting fees ($90K for 3 engineers). Timeline: **12+ months**.
+
+We've brought that down to **$15K** and **90 days** for the Full Stack Bundle:
+- Safety case website (Instant delivery)
+- 3 engineering hires with no placement fees
+- 12-month recruiting support for additional roles
+
+**If you're genuinely slammed right now:**
+Reply with "Q1 2026" and I'll ping you in January when fundraising heats up.
+
+**If this just isn't a fit:**
+Reply "Not relevant" and I'll remove you from my list—no hard feelings.
+
+**If 15 minutes makes sense:**
+[Grab time here] - I'll show you the live demo and you can decide if it's worth $15K to skip 12 months of consultant hell.
+
+Either way, best of luck with [Company]. Building physical AI is hard enough without regulatory quicksand.
+
+Best,
+[Your Name]
+Physical AI Pros
+[Calendar Link]
+
+P.S. - If compliance OR hiring is becoming urgent, this is my direct cell: [Your Phone]. Fastest way to get answers.
+
+---
+
+**Quick FAQ:**
+
+**Q: What's the catch with "no placement fees"?**
+A: No catch. First 3 hires are included in the $15K bundle. After that, 18K flat fee placement fees - YES, this is no typo! Our overhead is low, so we pass the savings to clients.
+
+**Q: What if we only need compliance, not recruiting?**
+A: Compliance-only package is $2K (safety case website only). Bundle is for companies scaling teams post-funding.
+
+**Q: How fast can you actually hire robotics engineers?**
+A: 14-day average time-to-offer. We maintain a warm pipeline of 200+ candidates from Microsoft, NVIDIA, Intel, Boston Dynamics, Tesla, Waymo. When you say "I need a senior perception engineer," we already know 5 people who fit.

@@ -1,0 +1,38 @@
+Subject: Compliance + recruiting bundle for [Company]?
+
+Hi [First Name],
+
+Saw [Company] just raised [Round] for [specific use case]. Congrats on the momentum.
+
+Most robotics CTOs hit two bottlenecks after funding:
+
+1️⃣ **Compliance:** 6-12 months waiting for ISO 13482 safety cases ($500K consultants)
+2️⃣ **Talent:** 90+ days to hire each robotics engineer ($30K recruiter fees per hire)
+
+We built the only bundle that solves both:
+
+**$15K Full Stack Package:**
+→ Safety case website Instantly (GSN-validated, investor-ready)
+→ 12 months recruiting support (pre-vetted candidates from Microsoft, NVIDIA, Boston Dynamics)
+→ No placement fees on first 3 hires (save $60K-$90K)
+→ 14-day average time-to-offer (vs. 90-day industry standard)
+
+**The alternative:**
+- $500K compliance consultants + $90K recruiting fees = $590K
+- 6-12 months for safety case + 90 days per engineering hire = 12+ months to full team
+
+**Our bundle:**
+- $15K total
+- Compliance done Instantly, first engineer hired in 14 days
+
+[Live Demo] → https://safetycaseai-platformv2.vercel.app/demo.html
+[See Bundle Details] → https://safetycaseai-platformv2.vercel.app/#bundle
+
+Worth 15 minutes to see if this accelerates your Series A roadmap?
+
+Best,
+[Your Name]
+Physical AI Pros | Compliance + Talent Infrastructure for Robotics
+[Calendar Link]
+
+P.S. - We've placed 1,000+ engineers at Tesla, Waymo, Boston Dynamics, Anduril. If you're hiring, we already know who's available.

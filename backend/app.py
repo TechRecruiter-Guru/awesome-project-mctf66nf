@@ -425,6 +425,665 @@ def delete_candidate(candidate_id):
     return jsonify({"message": "Candidate deleted successfully"})
 
 
+# ==================== CANDIDATE ENRICHMENT APIs ====================
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/github', methods=['POST'])
+def enrich_from_github(candidate_id):
+    """Auto-enrich candidate profile from GitHub API"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    if not candidate.github_url:
+        return jsonify({"error": "No GitHub URL provided for this candidate"}), 400
+
+    try:
+        # Extract username from GitHub URL
+        # Handles: https://github.com/username or github.com/username
+        username = candidate.github_url.rstrip('/').split('/')[-1]
+
+        # Fetch from GitHub API
+        headers = {
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'ATS-Recruiter'
+        }
+
+        # Add GitHub token if available for higher rate limits
+        github_token = os.environ.get('GITHUB_TOKEN')
+        if github_token:
+            headers['Authorization'] = f'token {github_token}'
+
+        response = requests.get(f'https://api.github.com/users/{username}', headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            data = response.json()
+
+            # Update candidate with GitHub data
+            candidate.github_followers = data.get('followers', 0)
+            candidate.github_repos = data.get('public_repos', 0)
+            candidate.bio = data.get('bio') or candidate.bio  # Keep existing if GitHub has none
+            candidate.location = data.get('location') or candidate.location
+            candidate.company = data.get('company') or candidate.company
+
+            # Fetch top programming languages from repos
+            languages = get_user_languages(username, headers)
+            if languages:
+                # Store as comma-separated string in skills field
+                existing_skills = candidate.skills or ''
+                new_skills = ', '.join(languages)
+                if existing_skills:
+                    candidate.skills = f"{existing_skills}, {new_skills}"
+                else:
+                    candidate.skills = new_skills
+
+            db.session.commit()
+
+            return jsonify({
+                "success": True,
+                "message": f"Enriched profile from GitHub user: {username}",
+                "data": {
+                    "followers": candidate.github_followers,
+                    "repos": candidate.github_repos,
+                    "languages": languages,
+                    "bio": candidate.bio,
+                    "location": candidate.location,
+                    "company": candidate.company
+                }
+            })
+        elif response.status_code == 404:
+            return jsonify({"error": f"GitHub user '{username}' not found"}), 404
+        elif response.status_code == 403:
+            return jsonify({"error": "GitHub API rate limit exceeded. Add GITHUB_TOKEN to environment variables."}), 429
+        else:
+            return jsonify({"error": f"GitHub API error: {response.status_code}"}), 500
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to enrich from GitHub: {str(e)}"}), 500
+
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/arxiv', methods=['POST'])
+def enrich_from_arxiv(candidate_id):
+    """Auto-fetch publications from arXiv API"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Need either arXiv author ID or name to search
+    author_query = None
+    if candidate.arxiv_author_id:
+        author_query = candidate.arxiv_author_id
+    else:
+        # Try searching by name
+        author_query = f"{candidate.first_name} {candidate.last_name}"
+
+    try:
+        import arxiv
+
+        # Search arXiv for author's papers
+        search = arxiv.Search(
+            query=f'au:{author_query}',
+            max_results=20,
+            sort_by=arxiv.SortCriterion.SubmittedDate
+        )
+
+        papers_added = 0
+        papers_data = []
+
+        for result in search.results():
+            # Check if publication already exists
+            arxiv_id = result.entry_id.split('/')[-1]  # Extract ID from URL
+            existing = Publication.query.filter_by(
+                candidate_id=candidate_id,
+                arxiv_id=arxiv_id
+            ).first()
+
+            if not existing:
+                # Add new publication
+                publication = Publication(
+                    candidate_id=candidate_id,
+                    title=result.title,
+                    authors=', '.join([author.name for author in result.authors]),
+                    journal='arXiv',
+                    year=result.published.year,
+                    citations=0,  # arXiv API doesn't provide citations
+                    url=result.entry_id,
+                    arxiv_id=arxiv_id,
+                    abstract=result.summary[:500] if result.summary else None  # Truncate abstract
+                )
+                db.session.add(publication)
+                papers_added += 1
+
+                papers_data.append({
+                    'title': result.title,
+                    'year': result.published.year,
+                    'arxiv_id': arxiv_id,
+                    'url': result.entry_id
+                })
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Found {papers_added} new papers from arXiv",
+            "papers_added": papers_added,
+            "total_publications": len(candidate.publications),
+            "papers": papers_data
+        })
+
+    except ImportError:
+        return jsonify({"error": "arXiv library not installed. Run: pip install arxiv"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch from arXiv: {str(e)}"}), 500
+
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/orcid', methods=['POST'])
+def enrich_from_orcid(candidate_id):
+    """Auto-enrich candidate profile from ORCID API"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    if not candidate.orcid_id:
+        return jsonify({"error": "No ORCID ID provided for this candidate"}), 400
+
+    try:
+        # ORCID public API endpoint
+        orcid_id = candidate.orcid_id.replace('https://orcid.org/', '').replace('http://orcid.org/', '')
+        url = f'https://pub.orcid.org/v3.0/{orcid_id}/record'
+
+        headers = {
+            'Accept': 'application/json'
+        }
+
+        response = requests.get(url, headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            data = response.json()
+
+            # Extract researcher information
+            person = data.get('person', {})
+            bio = person.get('biography', {})
+
+            # Update candidate bio if available
+            if bio and bio.get('content'):
+                candidate.bio = bio['content']
+
+            # Extract employment/affiliation
+            activities = data.get('activities-summary', {})
+            employments = activities.get('employments', {}).get('affiliation-group', [])
+
+            if employments:
+                # Get most recent employment
+                latest = employments[0].get('summaries', [{}])[0].get('employment-summary', {})
+                org = latest.get('organization', {})
+                if org.get('name'):
+                    candidate.company = org['name']
+                if org.get('address', {}).get('city'):
+                    city = org['address']['city']
+                    country = org['address'].get('country', '')
+                    candidate.location = f"{city}, {country}" if country else city
+
+            # Count publications from ORCID
+            works = activities.get('works', {}).get('group', [])
+            orcid_publication_count = len(works)
+
+            db.session.commit()
+
+            return jsonify({
+                "success": True,
+                "message": f"Enriched profile from ORCID: {orcid_id}",
+                "data": {
+                    "orcid_id": orcid_id,
+                    "bio": candidate.bio,
+                    "company": candidate.company,
+                    "location": candidate.location,
+                    "orcid_publications": orcid_publication_count
+                }
+            })
+        elif response.status_code == 404:
+            return jsonify({"error": f"ORCID ID '{orcid_id}' not found"}), 404
+        else:
+            return jsonify({"error": f"ORCID API error: {response.status_code}"}), 500
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to enrich from ORCID: {str(e)}"}), 500
+
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/scholar', methods=['POST'])
+def enrich_from_scholar(candidate_id):
+    """Auto-enrich candidate profile from Google Scholar"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Need either Google Scholar URL or name to search
+    if not candidate.google_scholar_url and not (candidate.first_name and candidate.last_name):
+        return jsonify({"error": "Need Google Scholar URL or candidate name"}), 400
+
+    try:
+        from scholarly import scholarly, ProxyGenerator
+
+        # Optional: Use a proxy to avoid rate limiting (requires free-proxy package)
+        # pg = ProxyGenerator()
+        # pg.FreeProxies()
+        # scholarly.use_proxy(pg)
+
+        author = None
+
+        if candidate.google_scholar_url:
+            # Extract scholar ID from URL
+            # Format: https://scholar.google.com/citations?user=SCHOLAR_ID
+            if 'user=' in candidate.google_scholar_url:
+                scholar_id = candidate.google_scholar_url.split('user=')[1].split('&')[0]
+                author = scholarly.search_author_id(scholar_id)
+            else:
+                return jsonify({"error": "Invalid Google Scholar URL format"}), 400
+        else:
+            # Search by name
+            search_query = f"{candidate.first_name} {candidate.last_name}"
+            search_results = scholarly.search_author(search_query)
+            author = next(search_results, None)  # Get first result
+
+        if not author:
+            return jsonify({"error": "Author not found on Google Scholar"}), 404
+
+        # Fill in author details
+        author = scholarly.fill(author)
+
+        # Update candidate with Scholar metrics
+        candidate.h_index = author.get('hindex', 0)
+        candidate.citation_count = author.get('citedby', 0)
+
+        # Update affiliation if available
+        if author.get('affiliation'):
+            candidate.company = author['affiliation']
+
+        # Update research interests/expertise
+        if author.get('interests'):
+            candidate.primary_expertise = author['interests'][0] if author['interests'] else None
+
+        # Fetch publications
+        publications = author.get('publications', [])
+        papers_added = 0
+        papers_data = []
+
+        for pub in publications[:20]:  # Limit to 20 most recent
+            pub_filled = scholarly.fill(pub)
+
+            # Check if publication already exists by title
+            existing = Publication.query.filter_by(
+                candidate_id=candidate_id,
+                title=pub_filled['bib'].get('title', '')
+            ).first()
+
+            if not existing and pub_filled['bib'].get('title'):
+                publication = Publication(
+                    candidate_id=candidate_id,
+                    title=pub_filled['bib']['title'],
+                    authors=pub_filled['bib'].get('author', ''),
+                    journal=pub_filled['bib'].get('venue', 'Unknown'),
+                    year=int(pub_filled['bib'].get('pub_year', 0)) if pub_filled['bib'].get('pub_year') else None,
+                    citations=pub_filled.get('num_citations', 0),
+                    url=pub_filled.get('pub_url', pub_filled.get('eprint_url', ''))
+                )
+                db.session.add(publication)
+                papers_added += 1
+
+                papers_data.append({
+                    'title': publication.title,
+                    'year': publication.year,
+                    'citations': publication.citations
+                })
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Enriched profile from Google Scholar",
+            "data": {
+                "h_index": candidate.h_index,
+                "citations": candidate.citation_count,
+                "affiliation": candidate.company,
+                "expertise": candidate.primary_expertise,
+                "papers_added": papers_added,
+                "total_publications": len(candidate.publications)
+            },
+            "papers": papers_data[:5]  # Return first 5 papers
+        })
+
+    except ImportError:
+        return jsonify({"error": "scholarly library not installed. Run: pip install scholarly"}), 500
+    except StopIteration:
+        return jsonify({"error": "No Google Scholar profile found for this author"}), 404
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch from Google Scholar: {str(e)}"}), 500
+
+
+# ==================== PHASE 3: AI/ML FEATURES ====================
+
+# Top AI/ML conferences for tracking
+TOP_CONFERENCES = [
+    'NeurIPS', 'NIPS', 'ICML', 'ICLR', 'CVPR', 'ICCV', 'ECCV',
+    'AAAI', 'IJCAI', 'ACL', 'EMNLP', 'NAACL', 'KDD', 'SIGIR',
+    'ICRA', 'IROS', 'RSS', 'CoRL'
+]
+
+# AI/ML skills taxonomy
+AI_ML_SKILLS = {
+    'deep_learning': ['deep learning', 'neural network', 'cnn', 'rnn', 'lstm', 'transformer', 'gpt', 'bert', 'attention'],
+    'computer_vision': ['computer vision', 'image processing', 'object detection', 'segmentation', 'yolo', 'rcnn', 'opencv'],
+    'nlp': ['nlp', 'natural language processing', 'text mining', 'language model', 'tokenization', 'embedding'],
+    'reinforcement_learning': ['reinforcement learning', 'rl', 'policy gradient', 'q-learning', 'dqn', 'ppo', 'actor-critic'],
+    'robotics': ['robotics', 'robot', 'manipulation', 'navigation', 'slam', 'ros', 'motion planning'],
+    'ml_frameworks': ['pytorch', 'tensorflow', 'keras', 'jax', 'scikit-learn', 'pandas', 'numpy'],
+    'programming': ['python', 'c++', 'java', 'javascript', 'go', 'rust', 'cuda'],
+    'ml_ops': ['docker', 'kubernetes', 'mlflow', 'wandb', 'aws', 'gcp', 'azure']
+}
+
+
+@app.route('/api/candidates/<int:candidate_id>/extract-skills', methods=['POST'])
+def extract_skills_from_candidate(candidate_id):
+    """Auto-extract AI/ML skills from candidate's bio, publications, and GitHub"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Collect all text sources
+    text_sources = []
+
+    if candidate.bio:
+        text_sources.append(candidate.bio.lower())
+    if candidate.primary_expertise:
+        text_sources.append(candidate.primary_expertise.lower())
+
+    # Add publication titles and abstracts
+    for pub in candidate.publications:
+        if pub.title:
+            text_sources.append(pub.title.lower())
+        if hasattr(pub, 'abstract') and pub.abstract:
+            text_sources.append(pub.abstract.lower())
+
+    # Combine all text
+    combined_text = ' '.join(text_sources)
+
+    # Extract skills by category
+    extracted_skills = {}
+    skill_count = 0
+
+    for category, keywords in AI_ML_SKILLS.items():
+        found_skills = []
+        for keyword in keywords:
+            if keyword in combined_text:
+                found_skills.append(keyword)
+                skill_count += 1
+
+        if found_skills:
+            extracted_skills[category] = list(set(found_skills))  # Remove duplicates
+
+    # Update candidate skills field
+    all_skills = []
+    for category_skills in extracted_skills.values():
+        all_skills.extend(category_skills)
+
+    if all_skills:
+        # Merge with existing skills
+        existing = candidate.skills.split(', ') if candidate.skills else []
+        combined = list(set(existing + all_skills))
+        candidate.skills = ', '.join(combined)
+        db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "skills_extracted": skill_count,
+        "skills_by_category": extracted_skills,
+        "total_skills": len(all_skills),
+        "updated_skills": candidate.skills
+    })
+
+
+@app.route('/api/candidates/<int:candidate_id>/impact-score', methods=['GET'])
+def calculate_research_impact_score(candidate_id):
+    """Calculate research impact score based on multiple factors"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Initialize score components
+    score_breakdown = {
+        'h_index_score': 0,
+        'citation_score': 0,
+        'publication_score': 0,
+        'github_score': 0,
+        'conference_score': 0,
+        'total_score': 0
+    }
+
+    # H-Index Score (0-25 points)
+    # h-index of 20+ is excellent, scale accordingly
+    if candidate.h_index:
+        score_breakdown['h_index_score'] = min(candidate.h_index * 1.25, 25)
+
+    # Citation Score (0-25 points)
+    # 1000+ citations is excellent
+    if candidate.citation_count:
+        score_breakdown['citation_score'] = min(candidate.citation_count / 40, 25)
+
+    # Publication Score (0-20 points)
+    # 20+ publications is excellent
+    pub_count = len(candidate.publications)
+    score_breakdown['publication_score'] = min(pub_count, 20)
+
+    # GitHub Activity Score (0-15 points)
+    # Followers (0-10 points), Repos (0-5 points)
+    if candidate.github_followers:
+        score_breakdown['github_score'] += min(candidate.github_followers / 100, 10)
+    if candidate.github_repos:
+        score_breakdown['github_score'] += min(candidate.github_repos / 20, 5)
+
+    # Top Conference Publications (0-15 points)
+    # Publications in NeurIPS, ICML, CVPR, etc.
+    conference_pubs = 0
+    for pub in candidate.publications:
+        venue = pub.journal.upper() if pub.journal else ''
+        for conf in TOP_CONFERENCES:
+            if conf in venue:
+                conference_pubs += 1
+                break
+    score_breakdown['conference_score'] = min(conference_pubs * 3, 15)
+
+    # Calculate total (out of 100)
+    score_breakdown['total_score'] = round(sum([
+        score_breakdown['h_index_score'],
+        score_breakdown['citation_score'],
+        score_breakdown['publication_score'],
+        score_breakdown['github_score'],
+        score_breakdown['conference_score']
+    ]), 2)
+
+    # Determine tier
+    total = score_breakdown['total_score']
+    if total >= 80:
+        tier = 'World-Class Researcher'
+    elif total >= 60:
+        tier = 'Senior Researcher'
+    elif total >= 40:
+        tier = 'Established Researcher'
+    elif total >= 20:
+        tier = 'Emerging Researcher'
+    else:
+        tier = 'Early Career'
+
+    return jsonify({
+        "candidate_id": candidate_id,
+        "candidate_name": f"{candidate.first_name} {candidate.last_name}",
+        "impact_score": score_breakdown['total_score'],
+        "tier": tier,
+        "breakdown": score_breakdown,
+        "metrics": {
+            "h_index": candidate.h_index,
+            "citations": candidate.citation_count,
+            "publications": pub_count,
+            "github_followers": candidate.github_followers,
+            "github_repos": candidate.github_repos,
+            "top_conference_pubs": conference_pubs
+        }
+    })
+
+
+@app.route('/api/jobs/<int:job_id>/match-candidates', methods=['POST'])
+def match_candidates_to_job(job_id):
+    """AI-powered candidate matching for a job"""
+    job = Job.query.get_or_404(job_id)
+
+    # Get match parameters
+    data = request.get_json() or {}
+    min_score = data.get('min_score', 0)
+    top_n = data.get('top_n', 10)
+
+    # Get all candidates
+    candidates = Candidate.query.all()
+
+    # Calculate match score for each candidate
+    matches = []
+
+    for candidate in candidates:
+        match_score = 0
+        score_details = {}
+
+        # 1. Expertise Match (0-30 points)
+        expertise_score = 0
+        if job.required_expertise and candidate.primary_expertise:
+            job_expertise = job.required_expertise.lower()
+            candidate_expertise = candidate.primary_expertise.lower()
+
+            # Exact match
+            if candidate_expertise in job_expertise or job_expertise in candidate_expertise:
+                expertise_score = 30
+            # Partial match
+            elif any(word in job_expertise for word in candidate_expertise.split()):
+                expertise_score = 15
+
+        score_details['expertise_match'] = expertise_score
+        match_score += expertise_score
+
+        # 2. Skills Match (0-25 points)
+        skills_score = 0
+        if job.required_skills and candidate.skills:
+            job_skills = set(job.required_skills.lower().split(','))
+            candidate_skills = set(candidate.skills.lower().split(','))
+
+            # Count overlapping skills
+            overlap = len(job_skills.intersection(candidate_skills))
+            total_required = len(job_skills)
+
+            if total_required > 0:
+                skills_score = (overlap / total_required) * 25
+
+        score_details['skills_match'] = round(skills_score, 2)
+        match_score += skills_score
+
+        # 3. Research Impact (0-20 points)
+        # Use h-index and citations as proxy
+        impact_score = 0
+        if candidate.h_index:
+            impact_score += min(candidate.h_index, 10)
+        if candidate.citation_count:
+            impact_score += min(candidate.citation_count / 100, 10)
+
+        score_details['research_impact'] = round(impact_score, 2)
+        match_score += impact_score
+
+        # 4. Experience Level (0-15 points)
+        experience_score = 0
+        if candidate.years_experience:
+            # Assume job requires 5 years (adjust based on job.experience_required if available)
+            target_years = 5
+            if hasattr(job, 'experience_required') and job.experience_required:
+                target_years = job.experience_required
+
+            # Perfect match at target, decay above/below
+            diff = abs(candidate.years_experience - target_years)
+            experience_score = max(15 - diff * 2, 0)
+
+        score_details['experience_match'] = round(experience_score, 2)
+        match_score += experience_score
+
+        # 5. GitHub Activity (0-10 points)
+        github_score = 0
+        if candidate.github_repos:
+            github_score += min(candidate.github_repos / 10, 5)
+        if candidate.github_followers:
+            github_score += min(candidate.github_followers / 50, 5)
+
+        score_details['github_activity'] = round(github_score, 2)
+        match_score += github_score
+
+        # Total score (out of 100)
+        total_score = round(match_score, 2)
+
+        # Only include if above minimum score
+        if total_score >= min_score:
+            matches.append({
+                'candidate_id': candidate.id,
+                'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+                'email': candidate.email,
+                'match_score': total_score,
+                'score_breakdown': score_details,
+                'primary_expertise': candidate.primary_expertise,
+                'h_index': candidate.h_index,
+                'citations': candidate.citation_count,
+                'github_url': candidate.github_url
+            })
+
+    # Sort by match score (descending)
+    matches.sort(key=lambda x: x['match_score'], reverse=True)
+
+    # Return top N matches
+    top_matches = matches[:top_n]
+
+    return jsonify({
+        "job_id": job_id,
+        "job_title": job.title,
+        "total_candidates_evaluated": len(candidates),
+        "matches_found": len(matches),
+        "top_matches": top_matches
+    })
+
+
+@app.route('/api/publications/analyze-conferences', methods=['GET'])
+def analyze_conference_publications():
+    """Analyze all publications to identify top conference papers"""
+    all_publications = Publication.query.all()
+
+    conference_stats = {}
+    top_conference_papers = []
+
+    for pub in all_publications:
+        venue = pub.journal.upper() if pub.journal else ''
+
+        # Check if it's a top conference
+        for conf in TOP_CONFERENCES:
+            if conf in venue:
+                # Track conference stats
+                if conf not in conference_stats:
+                    conference_stats[conf] = 0
+                conference_stats[conf] += 1
+
+                # Add to top conference papers
+                candidate = Candidate.query.get(pub.candidate_id)
+                top_conference_papers.append({
+                    'publication_id': pub.id,
+                    'title': pub.title,
+                    'conference': conf,
+                    'year': pub.year,
+                    'citations': pub.citations,
+                    'candidate_name': f"{candidate.first_name} {candidate.last_name}" if candidate else 'Unknown',
+                    'candidate_id': pub.candidate_id
+                })
+                break
+
+    # Sort conferences by paper count
+    sorted_conferences = sorted(conference_stats.items(), key=lambda x: x[1], reverse=True)
+
+    # Sort papers by citations
+    top_conference_papers.sort(key=lambda x: x['citations'] or 0, reverse=True)
+
+    return jsonify({
+        "total_publications": len(all_publications),
+        "top_conference_papers": len(top_conference_papers),
+        "conference_breakdown": dict(sorted_conferences),
+        "papers": top_conference_papers[:50]  # Return top 50
+    })
+
+
 # ==================== JOBS ====================
 
 @app.route('/api/jobs', methods=['GET'])
@@ -1007,5 +1666,526 @@ def export_candidates():
     }), 201
 
 
+# ==================== PHASE 4: ADVANCED FEATURES ====================
+
+# Email Campaign Model
+class EmailCampaign(db.Model):
+    """Email campaign for candidate outreach"""
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(200), nullable=False)
+    subject = db.Column(db.String(500), nullable=False)
+    body = db.Column(db.Text, nullable=False)
+    status = db.Column(db.String(50), default='draft')  # draft, scheduled, sent, paused
+    scheduled_at = db.Column(db.DateTime)
+    sent_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Stats
+    total_recipients = db.Column(db.Integer, default=0)
+    sent_count = db.Column(db.Integer, default=0)
+    opened_count = db.Column(db.Integer, default=0)
+    clicked_count = db.Column(db.Integer, default=0)
+    replied_count = db.Column(db.Integer, default=0)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'name': self.name,
+            'subject': self.subject,
+            'body': self.body,
+            'status': self.status,
+            'scheduled_at': self.scheduled_at.isoformat() if self.scheduled_at else None,
+            'sent_at': self.sent_at.isoformat() if self.sent_at else None,
+            'created_at': self.created_at.isoformat(),
+            'total_recipients': self.total_recipients,
+            'sent_count': self.sent_count,
+            'opened_count': self.opened_count,
+            'clicked_count': self.clicked_count,
+            'replied_count': self.replied_count,
+            'open_rate': round((self.opened_count / self.sent_count * 100), 1) if self.sent_count > 0 else 0,
+            'click_rate': round((self.clicked_count / self.sent_count * 100), 1) if self.sent_count > 0 else 0,
+            'reply_rate': round((self.replied_count / self.sent_count * 100), 1) if self.sent_count > 0 else 0
+        }
+
+
+# Interview Model
+class Interview(db.Model):
+    """Interview scheduling"""
+    id = db.Column(db.Integer, primary_key=True)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+
+    interview_type = db.Column(db.String(100))  # phone, video, onsite, technical
+    scheduled_at = db.Column(db.DateTime, nullable=False)
+    duration_minutes = db.Column(db.Integer, default=60)
+    location = db.Column(db.String(300))  # Zoom link, office address, etc.
+
+    interviewers = db.Column(db.Text)  # JSON array of interviewer names/emails
+    notes = db.Column(db.Text)
+
+    status = db.Column(db.String(50), default='scheduled')  # scheduled, completed, cancelled, no_show
+    feedback = db.Column(db.Text)
+    rating = db.Column(db.Integer)  # 1-5 rating
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        candidate = Candidate.query.get(self.candidate_id)
+        job = Job.query.get(self.job_id)
+        return {
+            'id': self.id,
+            'candidate_id': self.candidate_id,
+            'candidate_name': f"{candidate.first_name} {candidate.last_name}" if candidate else 'Unknown',
+            'job_id': self.job_id,
+            'job_title': job.title if job else 'Unknown',
+            'interview_type': self.interview_type,
+            'scheduled_at': self.scheduled_at.isoformat(),
+            'duration_minutes': self.duration_minutes,
+            'location': self.location,
+            'interviewers': self.interviewers,
+            'notes': self.notes,
+            'status': self.status,
+            'feedback': self.feedback,
+            'rating': self.rating,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+# Offer Model
+class Offer(db.Model):
+    """Job offer management"""
+    id = db.Column(db.Integer, primary_key=True)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=False)
+
+    salary = db.Column(db.Integer)
+    equity = db.Column(db.String(100))  # e.g., "0.1%"
+    signing_bonus = db.Column(db.Integer)
+    start_date = db.Column(db.Date)
+
+    status = db.Column(db.String(50), default='draft')  # draft, sent, negotiating, accepted, declined, expired
+    sent_at = db.Column(db.DateTime)
+    expires_at = db.Column(db.DateTime)
+    responded_at = db.Column(db.DateTime)
+
+    notes = db.Column(db.Text)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        candidate = Candidate.query.get(self.candidate_id)
+        job = Job.query.get(self.job_id)
+        return {
+            'id': self.id,
+            'candidate_id': self.candidate_id,
+            'candidate_name': f"{candidate.first_name} {candidate.last_name}" if candidate else 'Unknown',
+            'job_id': self.job_id,
+            'job_title': job.title if job else 'Unknown',
+            'salary': self.salary,
+            'equity': self.equity,
+            'signing_bonus': self.signing_bonus,
+            'start_date': self.start_date.isoformat() if self.start_date else None,
+            'status': self.status,
+            'sent_at': self.sent_at.isoformat() if self.sent_at else None,
+            'expires_at': self.expires_at.isoformat() if self.expires_at else None,
+            'responded_at': self.responded_at.isoformat() if self.responded_at else None,
+            'notes': self.notes,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+# ==================== EMAIL CAMPAIGN ENDPOINTS ====================
+
+@app.route('/api/campaigns', methods=['GET'])
+def get_campaigns():
+    """Get all email campaigns"""
+    campaigns = EmailCampaign.query.order_by(EmailCampaign.created_at.desc()).all()
+    return jsonify({
+        'campaigns': [c.to_dict() for c in campaigns],
+        'total': len(campaigns)
+    })
+
+
+@app.route('/api/campaigns', methods=['POST'])
+def create_campaign():
+    """Create new email campaign"""
+    data = request.get_json()
+
+    if not data or 'name' not in data or 'subject' not in data or 'body' not in data:
+        return jsonify({"error": "Name, subject, and body are required"}), 400
+
+    campaign = EmailCampaign(
+        name=data['name'],
+        subject=data['subject'],
+        body=data['body'],
+        status='draft'
+    )
+
+    db.session.add(campaign)
+    db.session.commit()
+
+    return jsonify(campaign.to_dict()), 201
+
+
+@app.route('/api/campaigns/<int:campaign_id>', methods=['PUT'])
+def update_campaign(campaign_id):
+    """Update email campaign"""
+    campaign = EmailCampaign.query.get_or_404(campaign_id)
+    data = request.get_json()
+
+    for field in ['name', 'subject', 'body', 'status']:
+        if field in data:
+            setattr(campaign, field, data[field])
+
+    if 'scheduled_at' in data and data['scheduled_at']:
+        campaign.scheduled_at = datetime.fromisoformat(data['scheduled_at'].replace('Z', '+00:00'))
+        campaign.status = 'scheduled'
+
+    db.session.commit()
+    return jsonify(campaign.to_dict())
+
+
+@app.route('/api/campaigns/<int:campaign_id>/send', methods=['POST'])
+def send_campaign(campaign_id):
+    """Simulate sending campaign to candidates"""
+    campaign = EmailCampaign.query.get_or_404(campaign_id)
+    data = request.get_json() or {}
+
+    # Get target candidates
+    candidate_ids = data.get('candidate_ids', [])
+
+    if not candidate_ids:
+        # If no specific IDs, get all active candidates
+        candidates = Candidate.query.filter(Candidate.status.in_(['new', 'reviewing', 'interviewing'])).all()
+        candidate_ids = [c.id for c in candidates]
+
+    # Simulate sending (in production, integrate with email service)
+    campaign.total_recipients = len(candidate_ids)
+    campaign.sent_count = len(candidate_ids)
+    campaign.sent_at = datetime.utcnow()
+    campaign.status = 'sent'
+
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": f"Campaign sent to {len(candidate_ids)} recipients",
+        "campaign": campaign.to_dict()
+    })
+
+
+@app.route('/api/campaigns/<int:campaign_id>', methods=['DELETE'])
+def delete_campaign(campaign_id):
+    """Delete email campaign"""
+    campaign = EmailCampaign.query.get_or_404(campaign_id)
+    db.session.delete(campaign)
+    db.session.commit()
+    return jsonify({"message": "Campaign deleted successfully"})
+
+
+# ==================== INTERVIEW SCHEDULING ENDPOINTS ====================
+
+@app.route('/api/interviews', methods=['GET'])
+def get_interviews():
+    """Get all interviews"""
+    status = request.args.get('status')
+    candidate_id = request.args.get('candidate_id')
+
+    query = Interview.query
+    if status:
+        query = query.filter_by(status=status)
+    if candidate_id:
+        query = query.filter_by(candidate_id=candidate_id)
+
+    interviews = query.order_by(Interview.scheduled_at.desc()).all()
+    return jsonify({
+        'interviews': [i.to_dict() for i in interviews],
+        'total': len(interviews)
+    })
+
+
+@app.route('/api/interviews', methods=['POST'])
+def create_interview():
+    """Schedule new interview"""
+    data = request.get_json()
+
+    required = ['candidate_id', 'job_id', 'scheduled_at']
+    if not data or not all(field in data for field in required):
+        return jsonify({"error": "candidate_id, job_id, and scheduled_at are required"}), 400
+
+    interview = Interview(
+        candidate_id=data['candidate_id'],
+        job_id=data['job_id'],
+        interview_type=data.get('interview_type', 'video'),
+        scheduled_at=datetime.fromisoformat(data['scheduled_at'].replace('Z', '+00:00')),
+        duration_minutes=data.get('duration_minutes', 60),
+        location=data.get('location'),
+        interviewers=data.get('interviewers'),
+        notes=data.get('notes'),
+        status='scheduled'
+    )
+
+    db.session.add(interview)
+    db.session.commit()
+
+    return jsonify(interview.to_dict()), 201
+
+
+@app.route('/api/interviews/<int:interview_id>', methods=['PUT'])
+def update_interview(interview_id):
+    """Update interview"""
+    interview = Interview.query.get_or_404(interview_id)
+    data = request.get_json()
+
+    for field in ['interview_type', 'duration_minutes', 'location', 'interviewers', 'notes', 'status', 'feedback', 'rating']:
+        if field in data:
+            setattr(interview, field, data[field])
+
+    if 'scheduled_at' in data:
+        interview.scheduled_at = datetime.fromisoformat(data['scheduled_at'].replace('Z', '+00:00'))
+
+    db.session.commit()
+    return jsonify(interview.to_dict())
+
+
+@app.route('/api/interviews/<int:interview_id>', methods=['DELETE'])
+def delete_interview(interview_id):
+    """Delete interview"""
+    interview = Interview.query.get_or_404(interview_id)
+    db.session.delete(interview)
+    db.session.commit()
+    return jsonify({"message": "Interview deleted successfully"})
+
+
+# ==================== OFFER MANAGEMENT ENDPOINTS ====================
+
+@app.route('/api/offers', methods=['GET'])
+def get_offers():
+    """Get all offers"""
+    status = request.args.get('status')
+
+    query = Offer.query
+    if status:
+        query = query.filter_by(status=status)
+
+    offers = query.order_by(Offer.created_at.desc()).all()
+    return jsonify({
+        'offers': [o.to_dict() for o in offers],
+        'total': len(offers)
+    })
+
+
+@app.route('/api/offers', methods=['POST'])
+def create_offer():
+    """Create new job offer"""
+    data = request.get_json()
+
+    if not data or 'candidate_id' not in data or 'job_id' not in data:
+        return jsonify({"error": "candidate_id and job_id are required"}), 400
+
+    offer = Offer(
+        candidate_id=data['candidate_id'],
+        job_id=data['job_id'],
+        salary=data.get('salary'),
+        equity=data.get('equity'),
+        signing_bonus=data.get('signing_bonus'),
+        notes=data.get('notes'),
+        status='draft'
+    )
+
+    if data.get('start_date'):
+        offer.start_date = datetime.strptime(data['start_date'], '%Y-%m-%d').date()
+
+    db.session.add(offer)
+    db.session.commit()
+
+    return jsonify(offer.to_dict()), 201
+
+
+@app.route('/api/offers/<int:offer_id>', methods=['PUT'])
+def update_offer(offer_id):
+    """Update offer"""
+    offer = Offer.query.get_or_404(offer_id)
+    data = request.get_json()
+
+    for field in ['salary', 'equity', 'signing_bonus', 'notes', 'status']:
+        if field in data:
+            setattr(offer, field, data[field])
+
+    if 'start_date' in data and data['start_date']:
+        offer.start_date = datetime.strptime(data['start_date'], '%Y-%m-%d').date()
+
+    # Track status changes
+    if data.get('status') == 'sent' and offer.status != 'sent':
+        offer.sent_at = datetime.utcnow()
+    elif data.get('status') in ['accepted', 'declined']:
+        offer.responded_at = datetime.utcnow()
+
+    db.session.commit()
+    return jsonify(offer.to_dict())
+
+
+@app.route('/api/offers/<int:offer_id>', methods=['DELETE'])
+def delete_offer(offer_id):
+    """Delete offer"""
+    offer = Offer.query.get_or_404(offer_id)
+    db.session.delete(offer)
+    db.session.commit()
+    return jsonify({"message": "Offer deleted successfully"})
+
+
+# ==================== ANALYTICS DASHBOARD ENDPOINTS ====================
+
+@app.route('/api/analytics/overview', methods=['GET'])
+def get_analytics_overview():
+    """Get comprehensive analytics overview"""
+
+    # Pipeline metrics
+    total_candidates = Candidate.query.count()
+    total_jobs = Job.query.count()
+    total_applications = Application.query.count()
+
+    # Candidate status breakdown
+    candidate_statuses = {}
+    for status in ['new', 'reviewing', 'interviewing', 'offer', 'hired', 'rejected']:
+        count = Candidate.query.filter_by(status=status).count()
+        candidate_statuses[status] = count
+
+    # Job status breakdown
+    job_statuses = {}
+    for status in ['open', 'closed', 'filled', 'on_hold']:
+        count = Job.query.filter_by(status=status).count()
+        job_statuses[status] = count
+
+    # Interview stats
+    total_interviews = Interview.query.count()
+    completed_interviews = Interview.query.filter_by(status='completed').count()
+    upcoming_interviews = Interview.query.filter(
+        Interview.scheduled_at > datetime.utcnow(),
+        Interview.status == 'scheduled'
+    ).count()
+
+    # Offer stats
+    total_offers = Offer.query.count()
+    accepted_offers = Offer.query.filter_by(status='accepted').count()
+    pending_offers = Offer.query.filter(Offer.status.in_(['sent', 'negotiating'])).count()
+
+    # Calculate conversion rates
+    interview_rate = round((completed_interviews / total_candidates * 100), 1) if total_candidates > 0 else 0
+    offer_rate = round((total_offers / total_candidates * 100), 1) if total_candidates > 0 else 0
+    hire_rate = round((accepted_offers / total_offers * 100), 1) if total_offers > 0 else 0
+
+    # Top expertise areas
+    expertise_counts = {}
+    candidates = Candidate.query.all()
+    for c in candidates:
+        if c.primary_expertise:
+            expertise_counts[c.primary_expertise] = expertise_counts.get(c.primary_expertise, 0) + 1
+
+    top_expertise = sorted(expertise_counts.items(), key=lambda x: x[1], reverse=True)[:5]
+
+    return jsonify({
+        'pipeline': {
+            'total_candidates': total_candidates,
+            'total_jobs': total_jobs,
+            'total_applications': total_applications
+        },
+        'candidate_statuses': candidate_statuses,
+        'job_statuses': job_statuses,
+        'interviews': {
+            'total': total_interviews,
+            'completed': completed_interviews,
+            'upcoming': upcoming_interviews
+        },
+        'offers': {
+            'total': total_offers,
+            'accepted': accepted_offers,
+            'pending': pending_offers
+        },
+        'conversion_rates': {
+            'interview_rate': interview_rate,
+            'offer_rate': offer_rate,
+            'hire_rate': hire_rate
+        },
+        'top_expertise': dict(top_expertise)
+    })
+
+
+@app.route('/api/analytics/pipeline-funnel', methods=['GET'])
+def get_pipeline_funnel():
+    """Get pipeline funnel metrics"""
+
+    funnel = {
+        'sourced': Candidate.query.filter_by(status='new').count(),
+        'screening': Candidate.query.filter_by(status='reviewing').count(),
+        'interviewing': Candidate.query.filter_by(status='interviewing').count(),
+        'offer': Candidate.query.filter_by(status='offer').count(),
+        'hired': Candidate.query.filter_by(status='hired').count()
+    }
+
+    return jsonify({
+        'funnel': funnel,
+        'total_in_pipeline': sum(funnel.values())
+    })
+
+
+@app.route('/api/analytics/time-to-hire', methods=['GET'])
+def get_time_to_hire():
+    """Get average time-to-hire metrics"""
+
+    # Calculate average time from candidate creation to hire
+    hired_candidates = Candidate.query.filter_by(status='hired').all()
+
+    if not hired_candidates:
+        return jsonify({
+            'average_days': 0,
+            'total_hired': 0,
+            'message': 'No hired candidates yet'
+        })
+
+    total_days = 0
+    for candidate in hired_candidates:
+        days = (candidate.updated_at - candidate.created_at).days
+        total_days += days
+
+    avg_days = round(total_days / len(hired_candidates), 1)
+
+    return jsonify({
+        'average_days': avg_days,
+        'total_hired': len(hired_candidates),
+        'message': f'Average time to hire: {avg_days} days'
+    })
+
+
+@app.route('/api/analytics/source-effectiveness', methods=['GET'])
+def get_source_effectiveness():
+    """Analyze effectiveness of different candidate sources"""
+
+    # Group candidates by source
+    sources = {}
+    candidates = Candidate.query.all()
+
+    for c in candidates:
+        source = 'Direct' if not c.notes else 'Boolean Search' if 'Boolean' in (c.notes or '') else 'Other'
+        if source not in sources:
+            sources[source] = {'total': 0, 'hired': 0}
+        sources[source]['total'] += 1
+        if c.status == 'hired':
+            sources[source]['hired'] += 1
+
+    # Calculate conversion rates
+    for source in sources:
+        total = sources[source]['total']
+        hired = sources[source]['hired']
+        sources[source]['conversion_rate'] = round((hired / total * 100), 1) if total > 0 else 0
+
+    return jsonify({
+        'sources': sources
+    })
+
+
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(debug=True, host='0.0.0.0', port=port)
