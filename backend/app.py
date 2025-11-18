@@ -751,6 +751,339 @@ def enrich_from_scholar(candidate_id):
         return jsonify({"error": f"Failed to fetch from Google Scholar: {str(e)}"}), 500
 
 
+# ==================== PHASE 3: AI/ML FEATURES ====================
+
+# Top AI/ML conferences for tracking
+TOP_CONFERENCES = [
+    'NeurIPS', 'NIPS', 'ICML', 'ICLR', 'CVPR', 'ICCV', 'ECCV',
+    'AAAI', 'IJCAI', 'ACL', 'EMNLP', 'NAACL', 'KDD', 'SIGIR',
+    'ICRA', 'IROS', 'RSS', 'CoRL'
+]
+
+# AI/ML skills taxonomy
+AI_ML_SKILLS = {
+    'deep_learning': ['deep learning', 'neural network', 'cnn', 'rnn', 'lstm', 'transformer', 'gpt', 'bert', 'attention'],
+    'computer_vision': ['computer vision', 'image processing', 'object detection', 'segmentation', 'yolo', 'rcnn', 'opencv'],
+    'nlp': ['nlp', 'natural language processing', 'text mining', 'language model', 'tokenization', 'embedding'],
+    'reinforcement_learning': ['reinforcement learning', 'rl', 'policy gradient', 'q-learning', 'dqn', 'ppo', 'actor-critic'],
+    'robotics': ['robotics', 'robot', 'manipulation', 'navigation', 'slam', 'ros', 'motion planning'],
+    'ml_frameworks': ['pytorch', 'tensorflow', 'keras', 'jax', 'scikit-learn', 'pandas', 'numpy'],
+    'programming': ['python', 'c++', 'java', 'javascript', 'go', 'rust', 'cuda'],
+    'ml_ops': ['docker', 'kubernetes', 'mlflow', 'wandb', 'aws', 'gcp', 'azure']
+}
+
+
+@app.route('/api/candidates/<int:candidate_id>/extract-skills', methods=['POST'])
+def extract_skills_from_candidate(candidate_id):
+    """Auto-extract AI/ML skills from candidate's bio, publications, and GitHub"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Collect all text sources
+    text_sources = []
+
+    if candidate.bio:
+        text_sources.append(candidate.bio.lower())
+    if candidate.primary_expertise:
+        text_sources.append(candidate.primary_expertise.lower())
+
+    # Add publication titles and abstracts
+    for pub in candidate.publications:
+        if pub.title:
+            text_sources.append(pub.title.lower())
+        if hasattr(pub, 'abstract') and pub.abstract:
+            text_sources.append(pub.abstract.lower())
+
+    # Combine all text
+    combined_text = ' '.join(text_sources)
+
+    # Extract skills by category
+    extracted_skills = {}
+    skill_count = 0
+
+    for category, keywords in AI_ML_SKILLS.items():
+        found_skills = []
+        for keyword in keywords:
+            if keyword in combined_text:
+                found_skills.append(keyword)
+                skill_count += 1
+
+        if found_skills:
+            extracted_skills[category] = list(set(found_skills))  # Remove duplicates
+
+    # Update candidate skills field
+    all_skills = []
+    for category_skills in extracted_skills.values():
+        all_skills.extend(category_skills)
+
+    if all_skills:
+        # Merge with existing skills
+        existing = candidate.skills.split(', ') if candidate.skills else []
+        combined = list(set(existing + all_skills))
+        candidate.skills = ', '.join(combined)
+        db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "skills_extracted": skill_count,
+        "skills_by_category": extracted_skills,
+        "total_skills": len(all_skills),
+        "updated_skills": candidate.skills
+    })
+
+
+@app.route('/api/candidates/<int:candidate_id>/impact-score', methods=['GET'])
+def calculate_research_impact_score(candidate_id):
+    """Calculate research impact score based on multiple factors"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Initialize score components
+    score_breakdown = {
+        'h_index_score': 0,
+        'citation_score': 0,
+        'publication_score': 0,
+        'github_score': 0,
+        'conference_score': 0,
+        'total_score': 0
+    }
+
+    # H-Index Score (0-25 points)
+    # h-index of 20+ is excellent, scale accordingly
+    if candidate.h_index:
+        score_breakdown['h_index_score'] = min(candidate.h_index * 1.25, 25)
+
+    # Citation Score (0-25 points)
+    # 1000+ citations is excellent
+    if candidate.citation_count:
+        score_breakdown['citation_score'] = min(candidate.citation_count / 40, 25)
+
+    # Publication Score (0-20 points)
+    # 20+ publications is excellent
+    pub_count = len(candidate.publications)
+    score_breakdown['publication_score'] = min(pub_count, 20)
+
+    # GitHub Activity Score (0-15 points)
+    # Followers (0-10 points), Repos (0-5 points)
+    if candidate.github_followers:
+        score_breakdown['github_score'] += min(candidate.github_followers / 100, 10)
+    if candidate.github_repos:
+        score_breakdown['github_score'] += min(candidate.github_repos / 20, 5)
+
+    # Top Conference Publications (0-15 points)
+    # Publications in NeurIPS, ICML, CVPR, etc.
+    conference_pubs = 0
+    for pub in candidate.publications:
+        venue = pub.journal.upper() if pub.journal else ''
+        for conf in TOP_CONFERENCES:
+            if conf in venue:
+                conference_pubs += 1
+                break
+    score_breakdown['conference_score'] = min(conference_pubs * 3, 15)
+
+    # Calculate total (out of 100)
+    score_breakdown['total_score'] = round(sum([
+        score_breakdown['h_index_score'],
+        score_breakdown['citation_score'],
+        score_breakdown['publication_score'],
+        score_breakdown['github_score'],
+        score_breakdown['conference_score']
+    ]), 2)
+
+    # Determine tier
+    total = score_breakdown['total_score']
+    if total >= 80:
+        tier = 'World-Class Researcher'
+    elif total >= 60:
+        tier = 'Senior Researcher'
+    elif total >= 40:
+        tier = 'Established Researcher'
+    elif total >= 20:
+        tier = 'Emerging Researcher'
+    else:
+        tier = 'Early Career'
+
+    return jsonify({
+        "candidate_id": candidate_id,
+        "candidate_name": f"{candidate.first_name} {candidate.last_name}",
+        "impact_score": score_breakdown['total_score'],
+        "tier": tier,
+        "breakdown": score_breakdown,
+        "metrics": {
+            "h_index": candidate.h_index,
+            "citations": candidate.citation_count,
+            "publications": pub_count,
+            "github_followers": candidate.github_followers,
+            "github_repos": candidate.github_repos,
+            "top_conference_pubs": conference_pubs
+        }
+    })
+
+
+@app.route('/api/jobs/<int:job_id>/match-candidates', methods=['POST'])
+def match_candidates_to_job(job_id):
+    """AI-powered candidate matching for a job"""
+    job = Job.query.get_or_404(job_id)
+
+    # Get match parameters
+    data = request.get_json() or {}
+    min_score = data.get('min_score', 0)
+    top_n = data.get('top_n', 10)
+
+    # Get all candidates
+    candidates = Candidate.query.all()
+
+    # Calculate match score for each candidate
+    matches = []
+
+    for candidate in candidates:
+        match_score = 0
+        score_details = {}
+
+        # 1. Expertise Match (0-30 points)
+        expertise_score = 0
+        if job.required_expertise and candidate.primary_expertise:
+            job_expertise = job.required_expertise.lower()
+            candidate_expertise = candidate.primary_expertise.lower()
+
+            # Exact match
+            if candidate_expertise in job_expertise or job_expertise in candidate_expertise:
+                expertise_score = 30
+            # Partial match
+            elif any(word in job_expertise for word in candidate_expertise.split()):
+                expertise_score = 15
+
+        score_details['expertise_match'] = expertise_score
+        match_score += expertise_score
+
+        # 2. Skills Match (0-25 points)
+        skills_score = 0
+        if job.required_skills and candidate.skills:
+            job_skills = set(job.required_skills.lower().split(','))
+            candidate_skills = set(candidate.skills.lower().split(','))
+
+            # Count overlapping skills
+            overlap = len(job_skills.intersection(candidate_skills))
+            total_required = len(job_skills)
+
+            if total_required > 0:
+                skills_score = (overlap / total_required) * 25
+
+        score_details['skills_match'] = round(skills_score, 2)
+        match_score += skills_score
+
+        # 3. Research Impact (0-20 points)
+        # Use h-index and citations as proxy
+        impact_score = 0
+        if candidate.h_index:
+            impact_score += min(candidate.h_index, 10)
+        if candidate.citation_count:
+            impact_score += min(candidate.citation_count / 100, 10)
+
+        score_details['research_impact'] = round(impact_score, 2)
+        match_score += impact_score
+
+        # 4. Experience Level (0-15 points)
+        experience_score = 0
+        if candidate.years_experience:
+            # Assume job requires 5 years (adjust based on job.experience_required if available)
+            target_years = 5
+            if hasattr(job, 'experience_required') and job.experience_required:
+                target_years = job.experience_required
+
+            # Perfect match at target, decay above/below
+            diff = abs(candidate.years_experience - target_years)
+            experience_score = max(15 - diff * 2, 0)
+
+        score_details['experience_match'] = round(experience_score, 2)
+        match_score += experience_score
+
+        # 5. GitHub Activity (0-10 points)
+        github_score = 0
+        if candidate.github_repos:
+            github_score += min(candidate.github_repos / 10, 5)
+        if candidate.github_followers:
+            github_score += min(candidate.github_followers / 50, 5)
+
+        score_details['github_activity'] = round(github_score, 2)
+        match_score += github_score
+
+        # Total score (out of 100)
+        total_score = round(match_score, 2)
+
+        # Only include if above minimum score
+        if total_score >= min_score:
+            matches.append({
+                'candidate_id': candidate.id,
+                'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+                'email': candidate.email,
+                'match_score': total_score,
+                'score_breakdown': score_details,
+                'primary_expertise': candidate.primary_expertise,
+                'h_index': candidate.h_index,
+                'citations': candidate.citation_count,
+                'github_url': candidate.github_url
+            })
+
+    # Sort by match score (descending)
+    matches.sort(key=lambda x: x['match_score'], reverse=True)
+
+    # Return top N matches
+    top_matches = matches[:top_n]
+
+    return jsonify({
+        "job_id": job_id,
+        "job_title": job.title,
+        "total_candidates_evaluated": len(candidates),
+        "matches_found": len(matches),
+        "top_matches": top_matches
+    })
+
+
+@app.route('/api/publications/analyze-conferences', methods=['GET'])
+def analyze_conference_publications():
+    """Analyze all publications to identify top conference papers"""
+    all_publications = Publication.query.all()
+
+    conference_stats = {}
+    top_conference_papers = []
+
+    for pub in all_publications:
+        venue = pub.journal.upper() if pub.journal else ''
+
+        # Check if it's a top conference
+        for conf in TOP_CONFERENCES:
+            if conf in venue:
+                # Track conference stats
+                if conf not in conference_stats:
+                    conference_stats[conf] = 0
+                conference_stats[conf] += 1
+
+                # Add to top conference papers
+                candidate = Candidate.query.get(pub.candidate_id)
+                top_conference_papers.append({
+                    'publication_id': pub.id,
+                    'title': pub.title,
+                    'conference': conf,
+                    'year': pub.year,
+                    'citations': pub.citations,
+                    'candidate_name': f"{candidate.first_name} {candidate.last_name}" if candidate else 'Unknown',
+                    'candidate_id': pub.candidate_id
+                })
+                break
+
+    # Sort conferences by paper count
+    sorted_conferences = sorted(conference_stats.items(), key=lambda x: x[1], reverse=True)
+
+    # Sort papers by citations
+    top_conference_papers.sort(key=lambda x: x['citations'] or 0, reverse=True)
+
+    return jsonify({
+        "total_publications": len(all_publications),
+        "top_conference_papers": len(top_conference_papers),
+        "conference_breakdown": dict(sorted_conferences),
+        "papers": top_conference_papers[:50]  # Return top 50
+    })
+
+
 # ==================== JOBS ====================
 
 @app.route('/api/jobs', methods=['GET'])
