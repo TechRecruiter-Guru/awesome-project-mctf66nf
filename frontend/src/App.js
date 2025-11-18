@@ -841,6 +841,8 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
     education_required: '',
     confidential: false
   });
+  const [editingJobId, setEditingJobId] = useState(null);
+  const [editJob, setEditJob] = useState({});
   const [matchResults, setMatchResults] = useState({});
   const [matching, setMatching] = useState({});
 
@@ -869,6 +871,22 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
       onRefresh();
     } catch (err) {
       alert('Error creating job: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const startEditJob = (job) => {
+    setEditingJobId(job.id);
+    setEditJob(job);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`${API_URL}/api/jobs/${editingJobId}`, editJob);
+      setEditingJobId(null);
+      onRefresh();
+    } catch (err) {
+      alert('Error updating job: ' + (err.response?.data?.error || err.message));
     }
   };
 
@@ -930,6 +948,63 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             </label>
           </div>
           <button type="submit" className="btn-primary">Create Job</button>
+        </form>
+      )}
+
+      {editingJobId && (
+        <form className="job-form" onSubmit={handleEditSubmit}>
+          <h3>Edit Job</h3>
+          <input
+            type="text"
+            placeholder="Job Title"
+            value={editJob.title || ''}
+            onChange={(e) => setEditJob({ ...editJob, title: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Company"
+            value={editJob.company || ''}
+            onChange={(e) => setEditJob({ ...editJob, company: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={editJob.location || ''}
+            onChange={(e) => setEditJob({ ...editJob, location: e.target.value })}
+          />
+          <textarea
+            placeholder="Job Description"
+            value={editJob.description || ''}
+            onChange={(e) => setEditJob({ ...editJob, description: e.target.value })}
+            rows="4"
+          />
+          <input
+            type="text"
+            placeholder="Required Expertise"
+            value={editJob.required_expertise || ''}
+            onChange={(e) => setEditJob({ ...editJob, required_expertise: e.target.value })}
+          />
+          <select
+            value={editJob.status || 'open'}
+            onChange={(e) => setEditJob({ ...editJob, status: e.target.value })}
+          >
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+          <div className="checkbox-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={editJob.confidential || false}
+                onChange={(e) => setEditJob({ ...editJob, confidential: e.target.checked })}
+              />
+              <span className="checkbox-label">🔒 Confidential (Stealth Mode)</span>
+            </label>
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" className="btn-primary">Save Changes</button>
+            <button type="button" className="btn-delete" onClick={() => setEditingJobId(null)}>Cancel</button>
+          </div>
         </form>
       )}
 
@@ -1032,6 +1107,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
               </div>
 
               <div className="card-actions">
+                <button className="btn-primary" onClick={() => startEditJob(job)}>✏️ Edit</button>
                 <button className="btn-delete" onClick={() => onDelete(job.id)}>Delete</button>
               </div>
             </div>
