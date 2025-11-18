@@ -6,10 +6,98 @@ import BooleanGenerator from './components/BooleanGenerator';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-// ==================== CANDIDATE LANDING PAGE ====================
+// ==================== PUBLIC JOBS LISTING PAGE ====================
 
-function CandidateLandingPage() {
-  const { jobId } = useParams();
+function PublicJobsPage() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchPublicJobs();
+  }, []);
+
+  const fetchPublicJobs = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/jobs`);
+      // Filter to only open jobs
+      const openJobs = (response.data.jobs || []).filter(job => job.status === 'open');
+      setJobs(openJobs);
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredJobs = jobs.filter(job =>
+    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    job.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (selectedJobId) {
+    return <JobDetailPage jobId={selectedJobId} onBack={() => setSelectedJobId(null)} />;
+  }
+
+  return (
+    <div className="public-jobs-page">
+      <div className="jobs-header">
+        <h1>Open Opportunities</h1>
+        <p>Discover amazing AI/ML positions</p>
+      </div>
+
+      <div className="jobs-search">
+        <input
+          type="text"
+          placeholder="Search by job title, company, or location..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading opportunities...</div>
+      ) : filteredJobs.length === 0 ? (
+        <div className="empty-state">
+          <p>No opportunities match your search</p>
+        </div>
+      ) : (
+        <div className="jobs-grid">
+          {filteredJobs.map(job => (
+            <div key={job.id} className="job-listing-card">
+              <div className="job-listing-header">
+                <h3>{job.title}</h3>
+                {job.confidential && <span className="stealth-badge">🔒 Confidential</span>}
+              </div>
+              <p className="job-company">{job.confidential ? 'Confidential Company' : job.company}</p>
+              <div className="job-meta-info">
+                {job.location && <span>📍 {job.location}</span>}
+                {job.job_type && <span>💼 {job.job_type}</span>}
+              </div>
+              {job.salary_min && job.salary_max && (
+                <p className="salary">💰 ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}</p>
+              )}
+              <p className="job-excerpt">{job.description?.substring(0, 150)}...</p>
+              <button
+                className="view-apply-btn"
+                onClick={() => setSelectedJobId(job.id)}
+              >
+                View & Apply
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ==================== JOB DETAIL + APPLICATION PAGE ====================
+
+function JobDetailPage({ jobId, onBack }) {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -35,7 +123,7 @@ function CandidateLandingPage() {
 
   const fetchJob = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/public/jobs/${jobId}`);
+      const response = await axios.get(`${API_URL}/api/jobs/${jobId}`);
       setJob(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load job posting');
@@ -84,6 +172,7 @@ function CandidateLandingPage() {
           <div className="error-message">
             <h2>Position Not Available</h2>
             <p>{error}</p>
+            <button className="btn-back" onClick={onBack}>← Back to Jobs</button>
           </div>
         </div>
       </div>
@@ -99,6 +188,7 @@ function CandidateLandingPage() {
             <h2>Application Submitted!</h2>
             <p>Thank you for applying for the <strong>{job.title}</strong> position.</p>
             <p>We'll review your application and get back to you soon.</p>
+            <button className="btn-back" onClick={onBack}>← Back to Jobs</button>
           </div>
         </div>
       </div>
@@ -108,12 +198,10 @@ function CandidateLandingPage() {
   return (
     <div className="landing-page">
       <div className="landing-container">
-        <div className="landing-nav">
-          <a href="/" className="recruiter-link">← Back to Recruiter Portal</a>
-        </div>
+        <button className="btn-back-small" onClick={onBack}>← Back to Jobs</button>
         <div className="job-header">
           <div className="company-badge">
-            {job.confidential ? '🔒 Stealth Mode' : job.company}
+            {job.confidential ? '🔒 Confidential' : job.company}
           </div>
           <h1>{job.title}</h1>
           <div className="job-meta">
@@ -132,35 +220,24 @@ function CandidateLandingPage() {
               <p>{job.description}</p>
             </div>
           )}
-
           {job.required_expertise && (
             <div className="detail-section">
               <h3>Required Expertise</h3>
               <p>{job.required_expertise}</p>
             </div>
           )}
-
           {job.requirements && (
             <div className="detail-section">
               <h3>Requirements</h3>
               <p>{job.requirements}</p>
             </div>
           )}
-
           {job.responsibilities && (
             <div className="detail-section">
               <h3>Responsibilities</h3>
               <p>{job.responsibilities}</p>
             </div>
           )}
-
-          {job.research_focus && (
-            <div className="detail-section">
-              <h3>Research Focus</h3>
-              <p>{job.research_focus}</p>
-            </div>
-          )}
-
           {job.education_required && (
             <div className="detail-section">
               <h3>Education</h3>
@@ -175,79 +252,36 @@ function CandidateLandingPage() {
             <div className="form-row">
               <div className="form-group">
                 <label>First Name *</label>
-                <input
-                  type="text"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="text" name="first_name" value={formData.first_name} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
                 <label>Last Name *</label>
-                <input
-                  type="text"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="text" name="last_name" value={formData.last_name} onChange={handleInputChange} required />
               </div>
             </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label>Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
                 <label>Phone</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} />
               </div>
             </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label>Location</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  placeholder="City, Country"
-                />
+                <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="City, Country" />
               </div>
               <div className="form-group">
                 <label>Years of Experience</label>
-                <input
-                  type="number"
-                  name="years_experience"
-                  value={formData.years_experience}
-                  onChange={handleInputChange}
-                  min="0"
-                  max="50"
-                />
+                <input type="number" name="years_experience" value={formData.years_experience} onChange={handleInputChange} min="0" max="50" />
               </div>
             </div>
-
             <div className="form-group">
               <label>Primary Expertise</label>
-              <select
-                name="primary_expertise"
-                value={formData.primary_expertise}
-                onChange={handleInputChange}
-              >
+              <select name="primary_expertise" value={formData.primary_expertise} onChange={handleInputChange}>
                 <option value="">Select your expertise</option>
                 <option value="Deep Learning">Deep Learning</option>
                 <option value="Computer Vision">Computer Vision</option>
@@ -259,56 +293,23 @@ function CandidateLandingPage() {
                 <option value="Other">Other</option>
               </select>
             </div>
-
             <div className="form-group">
               <label>LinkedIn URL</label>
-              <input
-                type="url"
-                name="linkedin_url"
-                value={formData.linkedin_url}
-                onChange={handleInputChange}
-                placeholder="https://linkedin.com/in/yourprofile"
-              />
+              <input type="url" name="linkedin_url" value={formData.linkedin_url} onChange={handleInputChange} placeholder="https://linkedin.com/in/yourprofile" />
             </div>
-
             <div className="form-group">
               <label>GitHub URL</label>
-              <input
-                type="url"
-                name="github_url"
-                value={formData.github_url}
-                onChange={handleInputChange}
-                placeholder="https://github.com/yourusername"
-              />
+              <input type="url" name="github_url" value={formData.github_url} onChange={handleInputChange} placeholder="https://github.com/yourusername" />
             </div>
-
             <div className="form-group">
               <label>Portfolio URL</label>
-              <input
-                type="url"
-                name="portfolio_url"
-                value={formData.portfolio_url}
-                onChange={handleInputChange}
-                placeholder="https://yourportfolio.com"
-              />
+              <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
             </div>
-
             <div className="form-group">
               <label>Cover Letter / Why This Role?</label>
-              <textarea
-                name="cover_letter"
-                value={formData.cover_letter}
-                onChange={handleInputChange}
-                rows="5"
-                placeholder="Tell us why you're interested in this position and what makes you a great fit..."
-              />
+              <textarea name="cover_letter" value={formData.cover_letter} onChange={handleInputChange} rows="5" placeholder="Tell us why you're interested in this position..." />
             </div>
-
-            <button
-              type="submit"
-              className="submit-btn"
-              disabled={submitting}
-            >
+            <button type="submit" className="submit-btn" disabled={submitting}>
               {submitting ? 'Submitting...' : 'Submit Application'}
             </button>
           </form>
@@ -320,6 +321,13 @@ function CandidateLandingPage() {
       </div>
     </div>
   );
+}
+
+// ==================== CANDIDATE LANDING PAGE (OLD - DEPRECATED) ====================
+
+function CandidateLandingPage() {
+  const { jobId } = useParams();
+  return <JobDetailPage jobId={jobId} onBack={() => window.history.back()} />;
 }
 
 // ==================== MAIN ATS APP ====================
@@ -1489,8 +1497,12 @@ function AppWithRouter() {
   return (
     <Router>
       <Routes>
+        {/* Public-facing routes - no login required */}
+        <Route path="/" element={<PublicJobsPage />} />
         <Route path="/apply/:jobId" element={<CandidateLandingPage />} />
-        <Route path="/*" element={<App />} />
+
+        {/* Recruiter portal - internal ATS dashboard */}
+        <Route path="/recruiter/*" element={<App />} />
       </Routes>
     </Router>
   );
