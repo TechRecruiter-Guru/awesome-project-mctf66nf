@@ -425,6 +425,332 @@ def delete_candidate(candidate_id):
     return jsonify({"message": "Candidate deleted successfully"})
 
 
+# ==================== CANDIDATE ENRICHMENT APIs ====================
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/github', methods=['POST'])
+def enrich_from_github(candidate_id):
+    """Auto-enrich candidate profile from GitHub API"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    if not candidate.github_url:
+        return jsonify({"error": "No GitHub URL provided for this candidate"}), 400
+
+    try:
+        # Extract username from GitHub URL
+        # Handles: https://github.com/username or github.com/username
+        username = candidate.github_url.rstrip('/').split('/')[-1]
+
+        # Fetch from GitHub API
+        headers = {
+            'Accept': 'application/vnd.github.v3+json',
+            'User-Agent': 'ATS-Recruiter'
+        }
+
+        # Add GitHub token if available for higher rate limits
+        github_token = os.environ.get('GITHUB_TOKEN')
+        if github_token:
+            headers['Authorization'] = f'token {github_token}'
+
+        response = requests.get(f'https://api.github.com/users/{username}', headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            data = response.json()
+
+            # Update candidate with GitHub data
+            candidate.github_followers = data.get('followers', 0)
+            candidate.github_repos = data.get('public_repos', 0)
+            candidate.bio = data.get('bio') or candidate.bio  # Keep existing if GitHub has none
+            candidate.location = data.get('location') or candidate.location
+            candidate.company = data.get('company') or candidate.company
+
+            # Fetch top programming languages from repos
+            languages = get_user_languages(username, headers)
+            if languages:
+                # Store as comma-separated string in skills field
+                existing_skills = candidate.skills or ''
+                new_skills = ', '.join(languages)
+                if existing_skills:
+                    candidate.skills = f"{existing_skills}, {new_skills}"
+                else:
+                    candidate.skills = new_skills
+
+            db.session.commit()
+
+            return jsonify({
+                "success": True,
+                "message": f"Enriched profile from GitHub user: {username}",
+                "data": {
+                    "followers": candidate.github_followers,
+                    "repos": candidate.github_repos,
+                    "languages": languages,
+                    "bio": candidate.bio,
+                    "location": candidate.location,
+                    "company": candidate.company
+                }
+            })
+        elif response.status_code == 404:
+            return jsonify({"error": f"GitHub user '{username}' not found"}), 404
+        elif response.status_code == 403:
+            return jsonify({"error": "GitHub API rate limit exceeded. Add GITHUB_TOKEN to environment variables."}), 429
+        else:
+            return jsonify({"error": f"GitHub API error: {response.status_code}"}), 500
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to enrich from GitHub: {str(e)}"}), 500
+
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/arxiv', methods=['POST'])
+def enrich_from_arxiv(candidate_id):
+    """Auto-fetch publications from arXiv API"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Need either arXiv author ID or name to search
+    author_query = None
+    if candidate.arxiv_author_id:
+        author_query = candidate.arxiv_author_id
+    else:
+        # Try searching by name
+        author_query = f"{candidate.first_name} {candidate.last_name}"
+
+    try:
+        import arxiv
+
+        # Search arXiv for author's papers
+        search = arxiv.Search(
+            query=f'au:{author_query}',
+            max_results=20,
+            sort_by=arxiv.SortCriterion.SubmittedDate
+        )
+
+        papers_added = 0
+        papers_data = []
+
+        for result in search.results():
+            # Check if publication already exists
+            arxiv_id = result.entry_id.split('/')[-1]  # Extract ID from URL
+            existing = Publication.query.filter_by(
+                candidate_id=candidate_id,
+                arxiv_id=arxiv_id
+            ).first()
+
+            if not existing:
+                # Add new publication
+                publication = Publication(
+                    candidate_id=candidate_id,
+                    title=result.title,
+                    authors=', '.join([author.name for author in result.authors]),
+                    journal='arXiv',
+                    year=result.published.year,
+                    citations=0,  # arXiv API doesn't provide citations
+                    url=result.entry_id,
+                    arxiv_id=arxiv_id,
+                    abstract=result.summary[:500] if result.summary else None  # Truncate abstract
+                )
+                db.session.add(publication)
+                papers_added += 1
+
+                papers_data.append({
+                    'title': result.title,
+                    'year': result.published.year,
+                    'arxiv_id': arxiv_id,
+                    'url': result.entry_id
+                })
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Found {papers_added} new papers from arXiv",
+            "papers_added": papers_added,
+            "total_publications": len(candidate.publications),
+            "papers": papers_data
+        })
+
+    except ImportError:
+        return jsonify({"error": "arXiv library not installed. Run: pip install arxiv"}), 500
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch from arXiv: {str(e)}"}), 500
+
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/orcid', methods=['POST'])
+def enrich_from_orcid(candidate_id):
+    """Auto-enrich candidate profile from ORCID API"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    if not candidate.orcid_id:
+        return jsonify({"error": "No ORCID ID provided for this candidate"}), 400
+
+    try:
+        # ORCID public API endpoint
+        orcid_id = candidate.orcid_id.replace('https://orcid.org/', '').replace('http://orcid.org/', '')
+        url = f'https://pub.orcid.org/v3.0/{orcid_id}/record'
+
+        headers = {
+            'Accept': 'application/json'
+        }
+
+        response = requests.get(url, headers=headers, timeout=10)
+
+        if response.status_code == 200:
+            data = response.json()
+
+            # Extract researcher information
+            person = data.get('person', {})
+            bio = person.get('biography', {})
+
+            # Update candidate bio if available
+            if bio and bio.get('content'):
+                candidate.bio = bio['content']
+
+            # Extract employment/affiliation
+            activities = data.get('activities-summary', {})
+            employments = activities.get('employments', {}).get('affiliation-group', [])
+
+            if employments:
+                # Get most recent employment
+                latest = employments[0].get('summaries', [{}])[0].get('employment-summary', {})
+                org = latest.get('organization', {})
+                if org.get('name'):
+                    candidate.company = org['name']
+                if org.get('address', {}).get('city'):
+                    city = org['address']['city']
+                    country = org['address'].get('country', '')
+                    candidate.location = f"{city}, {country}" if country else city
+
+            # Count publications from ORCID
+            works = activities.get('works', {}).get('group', [])
+            orcid_publication_count = len(works)
+
+            db.session.commit()
+
+            return jsonify({
+                "success": True,
+                "message": f"Enriched profile from ORCID: {orcid_id}",
+                "data": {
+                    "orcid_id": orcid_id,
+                    "bio": candidate.bio,
+                    "company": candidate.company,
+                    "location": candidate.location,
+                    "orcid_publications": orcid_publication_count
+                }
+            })
+        elif response.status_code == 404:
+            return jsonify({"error": f"ORCID ID '{orcid_id}' not found"}), 404
+        else:
+            return jsonify({"error": f"ORCID API error: {response.status_code}"}), 500
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to enrich from ORCID: {str(e)}"}), 500
+
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/scholar', methods=['POST'])
+def enrich_from_scholar(candidate_id):
+    """Auto-enrich candidate profile from Google Scholar"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    # Need either Google Scholar URL or name to search
+    if not candidate.google_scholar_url and not (candidate.first_name and candidate.last_name):
+        return jsonify({"error": "Need Google Scholar URL or candidate name"}), 400
+
+    try:
+        from scholarly import scholarly, ProxyGenerator
+
+        # Optional: Use a proxy to avoid rate limiting (requires free-proxy package)
+        # pg = ProxyGenerator()
+        # pg.FreeProxies()
+        # scholarly.use_proxy(pg)
+
+        author = None
+
+        if candidate.google_scholar_url:
+            # Extract scholar ID from URL
+            # Format: https://scholar.google.com/citations?user=SCHOLAR_ID
+            if 'user=' in candidate.google_scholar_url:
+                scholar_id = candidate.google_scholar_url.split('user=')[1].split('&')[0]
+                author = scholarly.search_author_id(scholar_id)
+            else:
+                return jsonify({"error": "Invalid Google Scholar URL format"}), 400
+        else:
+            # Search by name
+            search_query = f"{candidate.first_name} {candidate.last_name}"
+            search_results = scholarly.search_author(search_query)
+            author = next(search_results, None)  # Get first result
+
+        if not author:
+            return jsonify({"error": "Author not found on Google Scholar"}), 404
+
+        # Fill in author details
+        author = scholarly.fill(author)
+
+        # Update candidate with Scholar metrics
+        candidate.h_index = author.get('hindex', 0)
+        candidate.citation_count = author.get('citedby', 0)
+
+        # Update affiliation if available
+        if author.get('affiliation'):
+            candidate.company = author['affiliation']
+
+        # Update research interests/expertise
+        if author.get('interests'):
+            candidate.primary_expertise = author['interests'][0] if author['interests'] else None
+
+        # Fetch publications
+        publications = author.get('publications', [])
+        papers_added = 0
+        papers_data = []
+
+        for pub in publications[:20]:  # Limit to 20 most recent
+            pub_filled = scholarly.fill(pub)
+
+            # Check if publication already exists by title
+            existing = Publication.query.filter_by(
+                candidate_id=candidate_id,
+                title=pub_filled['bib'].get('title', '')
+            ).first()
+
+            if not existing and pub_filled['bib'].get('title'):
+                publication = Publication(
+                    candidate_id=candidate_id,
+                    title=pub_filled['bib']['title'],
+                    authors=pub_filled['bib'].get('author', ''),
+                    journal=pub_filled['bib'].get('venue', 'Unknown'),
+                    year=int(pub_filled['bib'].get('pub_year', 0)) if pub_filled['bib'].get('pub_year') else None,
+                    citations=pub_filled.get('num_citations', 0),
+                    url=pub_filled.get('pub_url', pub_filled.get('eprint_url', ''))
+                )
+                db.session.add(publication)
+                papers_added += 1
+
+                papers_data.append({
+                    'title': publication.title,
+                    'year': publication.year,
+                    'citations': publication.citations
+                })
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Enriched profile from Google Scholar",
+            "data": {
+                "h_index": candidate.h_index,
+                "citations": candidate.citation_count,
+                "affiliation": candidate.company,
+                "expertise": candidate.primary_expertise,
+                "papers_added": papers_added,
+                "total_publications": len(candidate.publications)
+            },
+            "papers": papers_data[:5]  # Return first 5 papers
+        })
+
+    except ImportError:
+        return jsonify({"error": "scholarly library not installed. Run: pip install scholarly"}), 500
+    except StopIteration:
+        return jsonify({"error": "No Google Scholar profile found for this author"}), 404
+    except Exception as e:
+        return jsonify({"error": f"Failed to fetch from Google Scholar: {str(e)}"}), 500
+
+
 # ==================== JOBS ====================
 
 @app.route('/api/jobs', methods=['GET'])
