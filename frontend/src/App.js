@@ -438,10 +438,34 @@ function App() {
           💼 Jobs ({stats.total_jobs || 0})
         </button>
         <button
+          className={activeTab === 'analytics' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('analytics')}
+        >
+          📈 Analytics
+        </button>
+        <button
+          className={activeTab === 'campaigns' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('campaigns')}
+        >
+          📧 Campaigns
+        </button>
+        <button
+          className={activeTab === 'interviews' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('interviews')}
+        >
+          🗓️ Interviews
+        </button>
+        <button
+          className={activeTab === 'offers' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('offers')}
+        >
+          💰 Offers
+        </button>
+        <button
           className={activeTab === 'boolean' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('boolean')}
         >
-          🔍 Boolean Search
+          🔍 Search
         </button>
         <button
           className={activeTab === 'about' ? 'tab active' : 'tab'}
@@ -473,6 +497,10 @@ function App() {
             onRefresh={fetchJobs}
           />
         )}
+        {activeTab === 'analytics' && <AnalyticsView />}
+        {activeTab === 'campaigns' && <CampaignsView />}
+        {activeTab === 'interviews' && <InterviewsView />}
+        {activeTab === 'offers' && <OffersView />}
         {activeTab === 'boolean' && <BooleanGenerator onStatsRefresh={fetchStats} />}
         {activeTab === 'about' && <AboutView />}
       </main>
@@ -1006,6 +1034,256 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             </div>
           ))}
         </div>
+      )}
+    </div>
+  );
+}
+
+// Analytics View
+function AnalyticsView() {
+  const [analytics, setAnalytics] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchAnalytics();
+  }, []);
+
+  const fetchAnalytics = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/analytics/overview`);
+      setAnalytics(response.data);
+    } catch (err) {
+      console.error('Error fetching analytics:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  if (loading) return <div className="loading">Loading analytics...</div>;
+
+  return (
+    <div className="view-header">
+      <h2>📈 Analytics Dashboard</h2>
+      {analytics && (
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
+          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#667eea' }}>{analytics.total_candidates}</div>
+            <div style={{ color: '#666', marginTop: '4px' }}>Total Candidates</div>
+          </div>
+          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#667eea' }}>{analytics.total_jobs}</div>
+            <div style={{ color: '#666', marginTop: '4px' }}>Total Jobs</div>
+          </div>
+          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>{analytics.hired_candidates}</div>
+            <div style={{ color: '#666', marginTop: '4px' }}>Hired Candidates</div>
+          </div>
+          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
+            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f59e0b' }}>{analytics.avg_time_to_hire}</div>
+            <div style={{ color: '#666', marginTop: '4px' }}>Avg Days to Hire</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Campaigns View
+function CampaignsView() {
+  const [campaigns, setCampaigns] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(false);
+
+  useEffect(() => {
+    fetchCampaigns();
+  }, []);
+
+  const fetchCampaigns = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/campaigns`);
+      setCampaigns(response.data.campaigns || []);
+    } catch (err) {
+      console.error('Error fetching campaigns:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const sendCampaign = async (campaignId) => {
+    try {
+      await axios.post(`${API_URL}/api/campaigns/${campaignId}/send`);
+      alert('Campaign sent successfully!');
+      fetchCampaigns();
+    } catch (err) {
+      console.error('Error sending campaign:', err);
+    }
+  };
+
+  const deleteCampaign = async (campaignId) => {
+    if (!window.confirm('Delete this campaign?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/campaigns/${campaignId}`);
+      fetchCampaigns();
+    } catch (err) {
+      console.error('Error deleting campaign:', err);
+    }
+  };
+
+  if (loading) return <div className="loading">Loading campaigns...</div>;
+
+  return (
+    <div>
+      <div className="view-header">
+        <h2>📧 Email Campaigns</h2>
+        <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
+          {showForm ? 'Cancel' : 'New Campaign'}
+        </button>
+      </div>
+
+      {campaigns.map(campaign => (
+        <div key={campaign.id} className="job-card">
+          <h3>{campaign.name}</h3>
+          <p>{campaign.subject}</p>
+          <p style={{ color: '#666', marginTop: '8px' }}>Recipients: {campaign.recipient_count || 0}</p>
+          <div className="card-actions">
+            <button className="btn-primary" onClick={() => sendCampaign(campaign.id)}>Send</button>
+            <button className="btn-delete" onClick={() => deleteCampaign(campaign.id)}>Delete</button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+// Interviews View
+function InterviewsView() {
+  const [interviews, setInterviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchInterviews();
+  }, []);
+
+  const fetchInterviews = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/interviews`);
+      setInterviews(response.data.interviews || []);
+    } catch (err) {
+      console.error('Error fetching interviews:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateInterviewStatus = async (interviewId, status) => {
+    try {
+      await axios.put(`${API_URL}/api/interviews/${interviewId}`, { status });
+      fetchInterviews();
+    } catch (err) {
+      console.error('Error updating interview:', err);
+    }
+  };
+
+  const deleteInterview = async (interviewId) => {
+    if (!window.confirm('Delete this interview?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/interviews/${interviewId}`);
+      fetchInterviews();
+    } catch (err) {
+      console.error('Error deleting interview:', err);
+    }
+  };
+
+  if (loading) return <div className="loading">Loading interviews...</div>;
+
+  return (
+    <div>
+      <div className="view-header">
+        <h2>🗓️ Interviews</h2>
+      </div>
+
+      {interviews.length === 0 ? (
+        <div className="empty-state">No interviews scheduled</div>
+      ) : (
+        interviews.map(interview => (
+          <div key={interview.id} className="job-card">
+            <h3>{interview.candidate_name} - {interview.interview_stage}</h3>
+            <p>Status: <span className="status-badge">{interview.status}</span></p>
+            <p style={{ color: '#666', marginTop: '8px' }}>Scheduled: {interview.scheduled_date}</p>
+            <div className="card-actions">
+              <button className="btn-primary" onClick={() => updateInterviewStatus(interview.id, 'completed')}>Mark Complete</button>
+              <button className="btn-delete" onClick={() => deleteInterview(interview.id)}>Delete</button>
+            </div>
+          </div>
+        ))
+      )}
+    </div>
+  );
+}
+
+// Offers View
+function OffersView() {
+  const [offers, setOffers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetchOffers();
+  }, []);
+
+  const fetchOffers = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/offers`);
+      setOffers(response.data.offers || []);
+    } catch (err) {
+      console.error('Error fetching offers:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const updateStatus = async (offerId, status) => {
+    try {
+      await axios.put(`${API_URL}/api/offers/${offerId}`, { status });
+      fetchOffers();
+    } catch (err) {
+      console.error('Error updating offer:', err);
+    }
+  };
+
+  const deleteOffer = async (offerId) => {
+    if (!window.confirm('Delete this offer?')) return;
+    try {
+      await axios.delete(`${API_URL}/api/offers/${offerId}`);
+      fetchOffers();
+    } catch (err) {
+      console.error('Error deleting offer:', err);
+    }
+  };
+
+  if (loading) return <div className="loading">Loading offers...</div>;
+
+  return (
+    <div>
+      <div className="view-header">
+        <h2>💰 Offers</h2>
+      </div>
+
+      {offers.length === 0 ? (
+        <div className="empty-state">No offers</div>
+      ) : (
+        offers.map(offer => (
+          <div key={offer.id} className="job-card">
+            <h3>{offer.candidate_name}</h3>
+            <p>Position: {offer.position_title}</p>
+            <p>Status: <span className="status-badge">{offer.status}</span></p>
+            <p style={{ color: '#667eea', marginTop: '8px', fontWeight: '600' }}>Salary: ${offer.salary_offered}</p>
+            <div className="card-actions">
+              <button className="btn-primary" onClick={() => updateStatus(offer.id, 'accepted')}>Accept</button>
+              <button className="btn-primary" onClick={() => updateStatus(offer.id, 'declined')}>Decline</button>
+              <button className="btn-delete" onClick={() => deleteOffer(offer.id)}>Delete</button>
+            </div>
+          </div>
+        ))
       )}
     </div>
   );
