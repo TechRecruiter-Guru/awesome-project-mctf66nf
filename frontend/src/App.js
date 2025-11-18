@@ -108,6 +108,9 @@ function CandidateLandingPage() {
   return (
     <div className="landing-page">
       <div className="landing-container">
+        <div className="landing-nav">
+          <a href="/" className="recruiter-link">← Back to Recruiter Portal</a>
+        </div>
         <div className="job-header">
           <div className="company-badge">
             {job.confidential ? '🔒 Stealth Mode' : job.company}

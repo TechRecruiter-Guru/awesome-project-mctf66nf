@@ -575,6 +575,25 @@ textarea:focus {
   overflow: hidden;
 }
 
+.landing-nav {
+  background: #f7fafc;
+  padding: 12px 20px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.recruiter-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 14px;
+  transition: color 0.2s;
+}
+
+.recruiter-link:hover {
+  color: #764ba2;
+  text-decoration: underline;
+}
+
 .job-header {
   background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
   color: white;
