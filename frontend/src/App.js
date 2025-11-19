@@ -44,8 +44,8 @@ function PublicJobsPage() {
   return (
     <div className="public-jobs-page">
       <div className="jobs-header">
-        <h1>Open Opportunities</h1>
-        <p>Discover amazing AI/ML positions</p>
+        <h1>🚀 AI/ML Career Opportunities</h1>
+        <p>Discover transformative roles in AI, Machine Learning, and Robotics at PAIP</p>
       </div>
 
       <div className="jobs-search">
@@ -421,12 +421,12 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <h1>🤖 AI/ML Applicant Tracking System</h1>
+          <h1>🎯 PAIP - PhysicalAIPros.com</h1>
           <div className={`api-status ${apiStatus === 'healthy' ? 'healthy' : 'unhealthy'}`}>
             API: {apiStatus}
           </div>
         </div>
-        <p className="tagline">Track candidates with research profiles, publications & academic credentials</p>
+        <p className="tagline">The Leader in AI/ML Early Talent Detection | Recruiter Portal</p>
       </header>
 
       <nav className="nav-tabs">
@@ -1514,8 +1514,8 @@ function LoginPage({ onLogin }) {
     <div className="login-page">
       <div className="login-container">
         <div className="login-box">
-          <h1>🔐 Recruiter Portal</h1>
-          <p>Enter password to access the internal ATS dashboard</p>
+          <h1>🔐 PAIP Recruiter Portal</h1>
+          <p>The Leader in AI/ML Early Talent Detection - Login Required</p>
 
           <form onSubmit={handleSubmit}>
             <input

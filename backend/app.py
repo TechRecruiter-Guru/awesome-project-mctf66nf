@@ -314,7 +314,7 @@ with app.app_context():
 def health_check():
     return jsonify({
         "status": "healthy",
-        "message": "AI/ML ATS API is running",
+        "message": "PAIP - PhysicalAIPros.com API is running",
         "version": "1.0.0"
     })
 
