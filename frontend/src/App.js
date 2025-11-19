@@ -1041,6 +1041,7 @@ function ApplicationsView() {
   const [filterStatus, setFilterStatus] = useState('all');
   const [filterJobId, setFilterJobId] = useState('all');
   const [jobs, setJobs] = useState([]);
+  const [selectedApplication, setSelectedApplication] = useState(null);
 
   useEffect(() => {
     fetchApplications();
@@ -1215,7 +1216,7 @@ function ApplicationsView() {
                   </td>
                   <td style={{ padding: '12px' }}>
                     <button
-                      onClick={() => alert(`Application ID: ${app.id}\nCandidate: ${app.candidate_name}\nScore: ${app.overall_score}%\nStatus: ${app.status}`)}
+                      onClick={() => setSelectedApplication(app)}
                       style={{
                         padding: '6px 12px',
                         backgroundColor: '#2563eb',
@@ -1233,6 +1234,119 @@ function ApplicationsView() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {/* APPLICATION DETAILS MODAL */}
+      {selectedApplication && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            maxWidth: '800px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            width: '95%'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0 }}>Application Details</h2>
+              <button
+                onClick={() => setSelectedApplication(null)}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  padding: '6px 12px',
+                  cursor: 'pointer',
+                  fontSize: '1rem'
+                }}
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>CANDIDATE</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.candidate_name}</p>
+              </div>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>JOB POSITION</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.job_title}</p>
+              </div>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>STATUS</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.status}</p>
+              </div>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>OVERALL SCORE</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.overall_score ? selectedApplication.overall_score + '%' : '-'}</p>
+              </div>
+            </div>
+
+            <hr style={{ margin: '20px 0', borderColor: '#e5e7eb' }} />
+
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ margin: '0 0 12px 0', color: '#0f1724' }}>Hiring Intelligence Response</h3>
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '12px',
+                borderRadius: '8px',
+                border: '1px solid #e6e9ef',
+                fontSize: '14px',
+                lineHeight: '1.6',
+                color: '#0f1724',
+                whiteSpace: 'pre-wrap',
+                wordWrap: 'break-word'
+              }}>
+                {selectedApplication.hiring_intelligence || '(No hiring intelligence response provided)'}
+              </div>
+            </div>
+
+            {selectedApplication.hidden_signal && (
+              <div style={{ marginBottom: '20px' }}>
+                <h3 style={{ margin: '0 0 12px 0', color: '#0f1724' }}>Hidden Signal</h3>
+                <div style={{
+                  backgroundColor: '#fef3c7',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #fcd34d',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#78350f'
+                }}>
+                  {selectedApplication.hidden_signal}
+                </div>
+              </div>
+            )}
+
+            <div style={{
+              backgroundColor: '#f3f4f6',
+              padding: '12px',
+              borderRadius: '8px',
+              fontSize: '12px',
+              color: '#6b7280'
+            }}>
+              <p style={{ margin: '0 0 6px 0' }}>
+                <strong>Applied:</strong> {selectedApplication.applied_date ? new Date(selectedApplication.applied_date).toLocaleString() : '-'}
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong>Application ID:</strong> {selectedApplication.id}
+              </p>
+            </div>
+          </div>
         </div>
       )}
     </div>

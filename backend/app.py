@@ -191,6 +191,10 @@ class Application(db.Model):
     culture_fit_score = db.Column(db.Integer)  # 1-100
     overall_score = db.Column(db.Integer)  # Combined score
 
+    # Hiring Intelligence (replaces cover letter)
+    hiring_intelligence = db.Column(db.Text)  # Role-adaptive assessment response
+    hidden_signal = db.Column(db.Text)  # Hidden signal candidate wants noticed
+
     notes = db.Column(db.Text)
 
     # Timestamps
@@ -214,6 +218,8 @@ class Application(db.Model):
             'research_score': self.research_score,
             'culture_fit_score': self.culture_fit_score,
             'overall_score': self.overall_score,
+            'hiring_intelligence': self.hiring_intelligence,
+            'hidden_signal': self.hidden_signal,
             'notes': self.notes,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
@@ -2269,13 +2275,14 @@ def submit_public_application():
         db.session.add(candidate)
         db.session.flush()  # Get candidate ID
 
-    # Create application
+    # Create application (store hiring intelligence + hidden signal)
     application = Application(
         candidate_id=candidate.id,
         job_id=job_id,
         status='applied',
         source='landing_page',
-        notes=data.get('cover_letter', '')
+        hiring_intelligence=data.get('hiring_intelligence', ''),
+        hidden_signal=data.get('hidden_signal', '')
     )
     db.session.add(application)
 
