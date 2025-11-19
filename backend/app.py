@@ -12,6 +12,7 @@ CORS(app)
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True  # Enable SQL logging to see actual queries
 db = SQLAlchemy(app)
 
 # ==================== DATA MODELS ====================
@@ -2317,9 +2318,26 @@ def submit_public_application():
     try:
         print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
         db.session.commit()
-        print(f"✅ APPLICATION SAVED - ID: {application.id}")
-        print(f"   Candidate ID: {candidate.id}")
-        print(f"   Hiring Intelligence Saved: {bool(application.hiring_intelligence)}")
+        print(f"✅ COMMIT SUCCEEDED")
+
+        # VERIFY DATA WAS ACTUALLY SAVED
+        print(f"🔍 VERIFYING DATA IN DATABASE...")
+
+        # Check if candidate exists
+        verify_candidate = Candidate.query.get(candidate.id)
+        if verify_candidate:
+            print(f"   ✅ Candidate {candidate.id} verified in database: {verify_candidate.first_name} {verify_candidate.last_name}")
+        else:
+            print(f"   ❌ CANDIDATE {candidate.id} NOT FOUND IN DATABASE!")
+
+        # Check if application exists
+        verify_app = Application.query.get(application.id)
+        if verify_app:
+            print(f"   ✅ Application {application.id} verified in database")
+            print(f"      Hiring Intelligence: {verify_app.hiring_intelligence[:50] if verify_app.hiring_intelligence else 'EMPTY'}...")
+        else:
+            print(f"   ❌ APPLICATION {application.id} NOT FOUND IN DATABASE!")
+
         return jsonify({
             "message": "Application submitted successfully!",
             "application_id": application.id,
