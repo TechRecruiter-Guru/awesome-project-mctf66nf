@@ -352,15 +352,21 @@ function JobDetailPage({ jobId, onBack }) {
       return;
     }
 
+    const submissionData = {
+      ...formData,
+      job_id: parseInt(jobId),
+      job_title: job.title,
+      years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
+    };
+
+    console.log('📤 Submitting application data:', submissionData);
+
     try {
-      await axios.post(`${API_URL}/api/public/apply`, {
-        ...formData,
-        job_id: parseInt(jobId),
-        job_title: job.title,
-        years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
-      });
+      const response = await axios.post(`${API_URL}/api/public/apply`, submissionData);
+      console.log('✅ Application submitted successfully:', response.data);
       setSubmitted(true);
     } catch (err) {
+      console.error('❌ Submission error:', err.response?.data || err.message);
       alert(err.response?.data?.error || 'Failed to submit application');
     } finally {
       setSubmitting(false);

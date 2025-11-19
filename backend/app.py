@@ -2222,6 +2222,21 @@ def submit_public_application():
     """Submit an application from the public landing page"""
     data = request.json
 
+    print(f"\n📤 RECEIVED APPLICATION DATA:")
+    print(f"   First Name: {data.get('first_name')}")
+    print(f"   Last Name: {data.get('last_name')}")
+    print(f"   Email: {data.get('email')}")
+    print(f"   Phone: {data.get('phone')}")
+    print(f"   Location: {data.get('location')}")
+    print(f"   Years Experience: {data.get('years_experience')}")
+    print(f"   Primary Expertise: {data.get('primary_expertise')}")
+    print(f"   LinkedIn: {data.get('linkedin_url')}")
+    print(f"   GitHub: {data.get('github_url')}")
+    print(f"   Portfolio: {data.get('portfolio_url')}")
+    print(f"   Position: {data.get('position')}")
+    print(f"   Hiring Intelligence: {data.get('hiring_intelligence')[:50] if data.get('hiring_intelligence') else 'EMPTY'}...")
+    print(f"   Hidden Signal: {data.get('hidden_signal')}")
+
     # Validate required fields
     required_fields = ['job_id', 'first_name', 'last_name', 'email']
     for field in required_fields:
@@ -2251,35 +2266,28 @@ def submit_public_application():
             return jsonify({"error": "You have already applied for this position"}), 400
 
         candidate = existing_candidate
-        # Update candidate info if provided
-        if data.get('phone'):
-            candidate.phone = data.get('phone')
-        if data.get('linkedin_url'):
-            candidate.linkedin_url = data.get('linkedin_url')
-        if data.get('github_url'):
-            candidate.github_url = data.get('github_url')
-        if data.get('portfolio_url'):
-            candidate.portfolio_url = data.get('portfolio_url')
-        if data.get('location'):
-            candidate.location = data.get('location')
-        if data.get('years_experience'):
-            candidate.years_experience = data.get('years_experience')
-        if data.get('primary_expertise'):
-            candidate.primary_expertise = data.get('primary_expertise')
+        # Update candidate info if provided - ALWAYS update, even if empty
+        candidate.phone = data.get('phone', '')
+        candidate.linkedin_url = data.get('linkedin_url', '')
+        candidate.github_url = data.get('github_url', '')
+        candidate.portfolio_url = data.get('portfolio_url', '')
+        candidate.location = data.get('location', '')
+        candidate.years_experience = data.get('years_experience')
+        candidate.primary_expertise = data.get('primary_expertise', '')
     else:
         # Create new candidate
         candidate = Candidate(
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
             email=data.get('email'),
-            phone=data.get('phone'),
-            location=data.get('location'),
-            linkedin_url=data.get('linkedin_url'),
-            github_url=data.get('github_url'),
-            portfolio_url=data.get('portfolio_url'),
-            resume_url=data.get('resume_url'),
+            phone=data.get('phone', ''),
+            location=data.get('location', ''),
+            linkedin_url=data.get('linkedin_url', ''),
+            github_url=data.get('github_url', ''),
+            portfolio_url=data.get('portfolio_url', ''),
+            resume_url=data.get('resume_url', ''),
             years_experience=data.get('years_experience'),
-            primary_expertise=data.get('primary_expertise'),
+            primary_expertise=data.get('primary_expertise', ''),
             status='new'
         )
         db.session.add(candidate)
@@ -2299,6 +2307,9 @@ def submit_public_application():
 
     try:
         db.session.commit()
+        print(f"✅ APPLICATION SAVED - ID: {application.id}")
+        print(f"   Candidate ID: {candidate.id}")
+        print(f"   Hiring Intelligence Saved: {bool(application.hiring_intelligence)}")
         return jsonify({
             "message": "Application submitted successfully!",
             "application_id": application.id,
@@ -2306,6 +2317,7 @@ def submit_public_application():
         }), 201
     except Exception as e:
         db.session.rollback()
+        print(f"❌ ERROR SAVING APPLICATION: {str(e)}")
         return jsonify({"error": str(e)}), 500
 
 
