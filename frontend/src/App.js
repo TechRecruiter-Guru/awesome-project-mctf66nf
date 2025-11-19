@@ -104,6 +104,87 @@ const PHYSICAL_AI_RESEARCH_FOCUS = [
   'Autonomous Navigation'
 ];
 
+// ==================== HIRING INTELLIGENCE ROLE PROMPTS ====================
+
+const HIRING_INTELLIGENCE_PROMPTS = {
+  'Robotics Engineer': {
+    label: 'Robotics Systems Intelligence',
+    question: 'When integrating perception, control, and actuation, what is the earliest indicator you monitor to detect system-wide instability—and how do you intervene before the issue compounds?'
+  },
+  'Humanoid Roboticist': {
+    label: 'Embodied Dynamics Insight',
+    question: 'Describe a time when human biomechanics understanding guided a breakthrough in humanoid stability, manipulation, or locomotion. Which non-obvious signal shaped your approach?'
+  },
+  'Autonomous Vehicle Engineer': {
+    label: 'Autonomy Arbitration Intelligence',
+    question: 'When an AV faces conflicting inputs (e.g., perception noise vs motion planning constraints), how do you determine which subsystem receives priority? Share your decision logic and the signals that drove it.'
+  },
+  'Computer Vision Engineer (Robotics)': {
+    label: 'CV-for-Robotics Intelligence',
+    question: 'What is the most critical vision failure mode you design against in physical environments, and which early signal reveals it before overall performance degrades?'
+  },
+  'Perception Engineer': {
+    label: 'Perception Systems Insight',
+    question: 'How do you distinguish true environmental features from sensor artifacts in complex scenes? Describe the signal or test that helps you decide.'
+  },
+  'Motion Planning Engineer': {
+    label: 'Trajectory Intelligence',
+    question: 'When your planner yields a feasible but suboptimal trajectory, what is the first constraint you interrogate to unlock a more efficient or safer path?'
+  },
+  'SLAM Engineer': {
+    label: 'Spatial Intelligence Diagnostic',
+    question: 'In SLAM drift scenarios, what is your go-to method for isolating root cause—and which cue tells you whether the issue is map quality, loop closure, or sensor bias?'
+  },
+  'Autonomous Systems Engineer': {
+    label: 'System Autonomy Insight',
+    question: 'How do you architect decision-making when subsystems report uncertain or contradictory outputs? Describe the governing principle and an example.'
+  },
+  'Robot Control Engineer': {
+    label: 'Control Loop Judgment',
+    question: 'When tuning controllers, what early signal indicates imminent stability loss—and what immediate corrective pattern do you apply?'
+  },
+  'Reinforcement Learning Engineer': {
+    label: 'RL Signal Intelligence',
+    question: 'When training an RL agent, what hidden metric or behavioral cue do you monitor that predicts long-term policy success before reward curves show it?'
+  },
+  'Computer Vision Engineer': {
+    label: 'Vision Modeling Insight',
+    question: 'When a vision model misclassifies or misses detections, what visual or dataset signal do you check first to determine whether the root cause is labeling noise, domain shift, or architecture limits?'
+  },
+  'Deep Learning Engineer': {
+    label: 'Model Behavior Intelligence',
+    question: 'Which model behavior (beyond accuracy) reveals deeper problems—something you watch early to detect future failure—and how do you act on it?'
+  },
+  'ML Systems Engineer': {
+    label: 'Systems-Level ML Intelligence',
+    question: 'When scaling ML pipelines, which system bottleneck do you diagnose first—and which early indicator tells you the pipeline will fail under production load?'
+  },
+  'AI/ML Engineer': {
+    label: 'AI Solutioning Insight',
+    question: 'When balancing performance, latency, and cost, which constraint becomes your anchor—and how do you determine and enforce that anchor in architecture or process?'
+  },
+  'Sensor Fusion Engineer': {
+    label: 'Fusion Signal Intelligence',
+    question: 'When sensor streams diverge, what earliest cue tells you which modality is unreliable, and how do you reconcile conflicting estimates in real time?'
+  },
+  'Embedded AI Engineer': {
+    label: 'On-Device Intelligence Insight',
+    question: 'When deploying models at the edge, which signal first tells you the hardware-software interface will be the limiting factor—and how do you mitigate it?'
+  },
+  'Robotics Software Engineer': {
+    label: 'Software Integration Intelligence',
+    question: 'When debugging heterogeneous robotic stacks, what cross-component signal do you examine first to determine whether the root cause is software logic, timing, or hardware interaction?'
+  },
+  'Machine Learning Engineer': {
+    label: 'ML Insight Diagnostic',
+    question: 'What is your highest-leverage early indicator that a training pipeline is learning the wrong patterns—even before validation metrics degrade?'
+  },
+  'Deep Learning Researcher': {
+    label: 'Research Intelligence Signal',
+    question: 'What subtle model behavior—beyond raw accuracy—signals that a research direction has deep potential and deserves further investment?'
+  }
+};
+
 // ==================== PUBLIC JOBS LISTING PAGE ====================
 
 function PublicJobsPage() {
@@ -234,8 +315,10 @@ function JobDetailPage({ jobId, onBack }) {
     portfolio_url: '',
     years_experience: '',
     primary_expertise: '',
-    cover_letter: ''
+    hiring_intelligence: '',
+    hidden_signal: ''
   });
+  const [intelligencePrompt, setIntelligencePrompt] = useState(null);
 
   useEffect(() => {
     fetchJob();
@@ -261,10 +344,18 @@ function JobDetailPage({ jobId, onBack }) {
     e.preventDefault();
     setSubmitting(true);
 
+    // Validate hiring intelligence is provided
+    if (!formData.hiring_intelligence || !formData.hiring_intelligence.trim()) {
+      alert('Please provide your hiring intelligence response.');
+      setSubmitting(false);
+      return;
+    }
+
     try {
       await axios.post(`${API_URL}/api/public/apply`, {
         ...formData,
         job_id: parseInt(jobId),
+        job_title: job.title,
         years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
       });
       setSubmitted(true);
@@ -403,13 +494,9 @@ function JobDetailPage({ jobId, onBack }) {
               <label>Primary Expertise</label>
               <select name="primary_expertise" value={formData.primary_expertise} onChange={handleInputChange}>
                 <option value="">Select your expertise</option>
-                <option value="Deep Learning">Deep Learning</option>
-                <option value="Computer Vision">Computer Vision</option>
-                <option value="NLP">Natural Language Processing</option>
-                <option value="Reinforcement Learning">Reinforcement Learning</option>
-                <option value="Robotics">Robotics</option>
-                <option value="MLOps">MLOps</option>
-                <option value="Data Science">Data Science</option>
+                {PHYSICAL_AI_EXPERTISE.map(exp => (
+                  <option key={exp} value={exp}>{exp}</option>
+                ))}
                 <option value="Other">Other</option>
               </select>
             </div>
@@ -425,10 +512,102 @@ function JobDetailPage({ jobId, onBack }) {
               <label>Portfolio URL</label>
               <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
             </div>
-            <div className="form-group">
-              <label>Cover Letter / Why This Role?</label>
-              <textarea name="cover_letter" value={formData.cover_letter} onChange={handleInputChange} rows="5" placeholder="Tell us why you're interested in this position..." />
+
+            {/* HIRING INTELLIGENCE SECTION */}
+            <div style={{
+              backgroundColor: '#f0f9ff',
+              padding: '20px',
+              borderRadius: '12px',
+              marginTop: '20px',
+              border: '2px solid #0ea5e9'
+            }}>
+              <h3 style={{ marginTop: 0, color: '#0369a1' }}>🎯 Hiring Intelligence Assessment</h3>
+              <p style={{ color: '#555', fontSize: '0.95rem', marginBottom: '16px' }}>
+                Instead of traditional resumes, we evaluate <strong>judgment, systems-thinking, and decision-making</strong> through role-specific intelligence prompts. This helps us understand how you approach problems in this field.
+              </p>
+
+              {job && HIRING_INTELLIGENCE_PROMPTS[job.title] && (
+                <>
+                  <div style={{
+                    backgroundColor: 'white',
+                    padding: '16px',
+                    borderRadius: '8px',
+                    marginBottom: '16px',
+                    borderLeft: '4px solid #0ea5e9'
+                  }}>
+                    <p style={{ fontSize: '0.85rem', color: '#666', margin: '0 0 8px' }}>
+                      <strong>Intelligence Dimension:</strong>
+                    </p>
+                    <p style={{ fontSize: '1rem', fontWeight: '600', color: '#0369a1', margin: 0 }}>
+                      {HIRING_INTELLIGENCE_PROMPTS[job.title].label}
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ fontWeight: '600', color: '#0f1724', display: 'block', marginBottom: '8px' }}>
+                      Your Response *
+                    </label>
+                    <p style={{
+                      backgroundColor: '#fef3c7',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      fontSize: '0.9rem',
+                      marginBottom: '12px',
+                      margin: '0 0 12px 0',
+                      fontStyle: 'italic',
+                      color: '#92400e'
+                    }}>
+                      "{HIRING_INTELLIGENCE_PROMPTS[job.title].question}"
+                    </p>
+                    <textarea
+                      name="hiring_intelligence"
+                      value={formData.hiring_intelligence}
+                      onChange={handleInputChange}
+                      rows="6"
+                      placeholder="Provide a concise, evidence-based narrative (3–6 short paragraphs recommended). Focus on signals, tradeoffs, and the decision you made."
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '2px solid #0ea5e9',
+                        fontFamily: 'inherit',
+                        fontSize: '1rem'
+                      }}
+                      required
+                    />
+                    <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '8px' }}>
+                      💡 <strong>Tip:</strong> Share specific examples, your reasoning process, and how you validated your approach. Show us your judgment in action.
+                    </p>
+                  </div>
+
+                  <div style={{ marginBottom: '16px' }}>
+                    <label style={{ fontWeight: '600', color: '#0f1724', display: 'block', marginBottom: '8px' }}>
+                      Hidden Signal (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      name="hidden_signal"
+                      value={formData.hidden_signal}
+                      onChange={handleInputChange}
+                      placeholder="E.g., specialized toolchain experience, fieldwork insight, low-level hardware knowledge that others might overlook"
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #d1d5db',
+                        fontFamily: 'inherit',
+                        fontSize: '1rem',
+                        boxSizing: 'border-box'
+                      }}
+                    />
+                    <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '8px' }}>
+                      ✨ Call out unconventional capabilities or domain knowledge often overlooked by hiring teams.
+                    </p>
+                  </div>
+                </>
+              )}
             </div>
+
             <button type="submit" className="submit-btn" disabled={submitting}>
               {submitting ? 'Submitting...' : 'Submit Application'}
             </button>
