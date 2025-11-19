@@ -608,9 +608,94 @@ function JobDetailPage({ jobId, onBack }) {
               )}
             </div>
 
-            <button type="submit" className="submit-btn" disabled={submitting}>
-              {submitting ? 'Submitting...' : 'Submit Application'}
-            </button>
+            {/* JSON PAYLOAD PREVIEW */}
+            <div style={{
+              backgroundColor: '#0f1724',
+              padding: '16px',
+              borderRadius: '8px',
+              marginTop: '20px',
+              marginBottom: '20px'
+            }}>
+              <p style={{ color: '#e6eef8', fontSize: '0.85rem', marginTop: 0, marginBottom: '12px', fontWeight: '600' }}>
+                📋 Payload Preview (JSON)
+              </p>
+              <pre style={{
+                backgroundColor: '#0b1220',
+                color: '#e6eef8',
+                padding: '12px',
+                borderRadius: '6px',
+                overflow: 'auto',
+                fontSize: '11px',
+                lineHeight: '1.4',
+                margin: 0,
+                maxHeight: '200px'
+              }}>
+                {JSON.stringify({
+                  submittedAt: new Date().toISOString(),
+                  jobTitle: job?.title || 'Not selected',
+                  candidateName: formData.first_name && formData.last_name ? `${formData.first_name} ${formData.last_name}` : 'Not provided',
+                  candidateEmail: formData.email || 'Not provided',
+                  hiringIntelligence: {
+                    label: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].label : 'N/A',
+                    question: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].question : '',
+                    answer: formData.hiring_intelligence || '[pending response]'
+                  },
+                  hiddenSignal: formData.hidden_signal || null,
+                  candidateProfile: {
+                    location: formData.location || null,
+                    yearsExperience: formData.years_experience || null,
+                    primaryExpertise: formData.primary_expertise || null,
+                    linkedinUrl: formData.linkedin_url || null,
+                    githubUrl: formData.github_url || null,
+                    portfolioUrl: formData.portfolio_url || null
+                  }
+                }, null, 2)}
+              </pre>
+            </div>
+
+            {/* ACTION BUTTONS */}
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
+              <button
+                type="submit"
+                className="submit-btn"
+                disabled={submitting}
+                style={{ flex: 1 }}
+              >
+                {submitting ? '⏳ Submitting...' : '✅ Submit Application'}
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  // Reset form
+                  setFormData({
+                    first_name: '',
+                    last_name: '',
+                    email: '',
+                    phone: '',
+                    location: '',
+                    linkedin_url: '',
+                    github_url: '',
+                    portfolio_url: '',
+                    years_experience: '',
+                    primary_expertise: '',
+                    hiring_intelligence: '',
+                    hidden_signal: ''
+                  });
+                }}
+                style={{
+                  padding: '12px 24px',
+                  backgroundColor: '#6b7280',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  fontSize: '1rem'
+                }}
+              >
+                🔄 Clear
+              </button>
+            </div>
           </form>
         </div>
 
