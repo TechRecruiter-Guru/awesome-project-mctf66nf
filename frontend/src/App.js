@@ -449,6 +449,12 @@ function App() {
           💼 Jobs ({stats.total_jobs || 0})
         </button>
         <button
+          className={activeTab === 'applications' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('applications')}
+        >
+          📋 Applications ({stats.total_applications || 0})
+        </button>
+        <button
           className={activeTab === 'analytics' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('analytics')}
         >
@@ -508,6 +514,7 @@ function App() {
             onRefresh={fetchJobs}
           />
         )}
+        {activeTab === 'applications' && <ApplicationsView />}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'campaigns' && <CampaignsView />}
         {activeTab === 'interviews' && <InterviewsView />}
@@ -519,6 +526,211 @@ function App() {
       <footer className="app-footer">
         <p>Built for recruiting AI/ML talent through research profiles 🎓 | Open Source Project</p>
       </footer>
+    </div>
+  );
+}
+
+// Applications View
+function ApplicationsView() {
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterJobId, setFilterJobId] = useState('all');
+  const [jobs, setJobs] = useState([]);
+
+  useEffect(() => {
+    fetchApplications();
+    fetchJobs();
+  }, []);
+
+  const fetchApplications = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/applications`);
+      setApplications(response.data.applications || []);
+    } catch (err) {
+      console.error('Error fetching applications:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/jobs`);
+      setJobs(response.data.jobs || []);
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    }
+  };
+
+  const updateApplicationStatus = async (applicationId, newStatus) => {
+    try {
+      await axios.put(`${API_URL}/api/applications/${applicationId}`, { status: newStatus });
+      fetchApplications();
+    } catch (err) {
+      alert('Error updating application: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const filteredApplications = applications.filter(app => {
+    const statusMatch = filterStatus === 'all' || app.status === filterStatus;
+    const jobMatch = filterJobId === 'all' || app.job_id === parseInt(filterJobId);
+    return statusMatch && jobMatch;
+  });
+
+  const getJobTitle = (jobId) => {
+    const job = jobs.find(j => j.id === jobId);
+    return job ? job.title : 'Unknown Job';
+  };
+
+  const statusColors = {
+    'applied': '#3b82f6',
+    'screening': '#f59e0b',
+    'interview': '#8b5cf6',
+    'offer': '#10b981',
+    'hired': '#059669',
+    'rejected': '#ef4444'
+  };
+
+  return (
+    <div className="applications-view">
+      <div className="view-header">
+        <h2>All Applications</h2>
+      </div>
+
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', flexWrap: 'wrap' }}>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Filter by Status:</label>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ddd', minWidth: '150px' }}
+          >
+            <option value="all">All Statuses</option>
+            <option value="applied">Applied</option>
+            <option value="screening">Screening</option>
+            <option value="interview">Interview</option>
+            <option value="offer">Offer</option>
+            <option value="hired">Hired</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Filter by Job:</label>
+          <select
+            value={filterJobId}
+            onChange={(e) => setFilterJobId(e.target.value)}
+            style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ddd', minWidth: '200px' }}
+          >
+            <option value="all">All Jobs</option>
+            {jobs.map(job => (
+              <option key={job.id} value={job.id}>{job.title} ({job.company})</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <p style={{ marginTop: '28px', fontWeight: '600' }}>Total: {filteredApplications.length}</p>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading applications...</div>
+      ) : filteredApplications.length === 0 ? (
+        <div className="empty-state">
+          <p>No applications match your filters</p>
+        </div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f3f4f6', borderBottom: '2px solid #e5e7eb' }}>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Candidate</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Job Position</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Status</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Applied Date</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Overall Score</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredApplications.map((app) => (
+                <tr key={app.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <td style={{ padding: '12px' }}>
+                    <strong>{app.candidate_name}</strong>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {getJobTitle(app.job_id)}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <select
+                      value={app.status}
+                      onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                      style={{
+                        backgroundColor: statusColors[app.status] || '#6b7280',
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '4px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        minWidth: '120px'
+                      }}
+                    >
+                      <option value="applied">Applied</option>
+                      <option value="screening">Screening</option>
+                      <option value="interview">Interview</option>
+                      <option value="offer">Offer</option>
+                      <option value="hired">Hired</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {app.applied_date ? new Date(app.applied_date).toLocaleDateString() : '-'}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {app.overall_score ? (
+                      <span style={{
+                        backgroundColor: app.overall_score >= 70 ? '#dcfce7' : app.overall_score >= 50 ? '#fef3c7' : '#fee2e2',
+                        color: app.overall_score >= 70 ? '#166534' : app.overall_score >= 50 ? '#92400e' : '#991b1b',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontWeight: '600'
+                      }}>
+                        {app.overall_score}%
+                      </span>
+                    ) : '-'}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <button
+                      onClick={() => alert(`Application ID: ${app.id}\nCandidate: ${app.candidate_name}\nScore: ${app.overall_score}%\nStatus: ${app.status}`)}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: '#2563eb',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }
@@ -1004,6 +1216,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             onChange={(e) => setNewJob({ ...newJob, education_required: e.target.value })}
           >
             <option value="">Education Required</option>
+            <option value="No Degree - Just Know-How">No Degree - Just Know-How</option>
             <option value="PhD">PhD</option>
             <option value="Masters">Masters</option>
             <option value="Bachelors">Bachelors</option>
@@ -1104,7 +1317,27 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
                 <p className="stealth-notice">⚠️ Company name hidden until interest shown</p>
               )}
               {job.application_count > 0 && (
-                <p className="applications-count">📋 {job.application_count} applications</p>
+                <button
+                  onClick={() => alert(`📋 ${job.application_count} applications for ${job.title}\n\nGo to Applications tab to manage all applications for this job.`)}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '8px 12px',
+                    marginTop: '8px',
+                    backgroundColor: '#e0f2fe',
+                    color: '#0369a1',
+                    border: '1px solid #0ea5e9',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.9rem',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#cffafe'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#e0f2fe'}
+                >
+                  📋 View {job.application_count} Applications
+                </button>
               )}
 
               {/* AI Matching Section */}
