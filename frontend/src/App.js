@@ -6,6 +6,104 @@ import BooleanGenerator from './components/BooleanGenerator';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
+// ==================== PHYSICAL AI INDUSTRY KEYWORDS ====================
+
+const PHYSICAL_AI_JOB_TITLES = [
+  'Robotics Engineer',
+  'Humanoid Roboticist',
+  'Autonomous Vehicle Engineer',
+  'Computer Vision Engineer (Robotics)',
+  'Perception Engineer',
+  'Motion Planning Engineer',
+  'SLAM Engineer',
+  'Autonomous Systems Engineer',
+  'Robot Control Engineer',
+  'Reinforcement Learning Engineer',
+  'Computer Vision Engineer',
+  'Deep Learning Engineer',
+  'ML Systems Engineer',
+  'AI/ML Engineer',
+  'Sensor Fusion Engineer',
+  'Embedded AI Engineer',
+  'Robotics Software Engineer',
+  'Machine Learning Engineer',
+  'Deep Learning Researcher'
+];
+
+const PHYSICAL_AI_EXPERTISE = [
+  'Computer Vision & SLAM',
+  'Humanoid Robotics',
+  'Autonomous Vehicles',
+  'Robot Control & Dynamics',
+  'Perception & Sensor Fusion',
+  'Motion Planning & Navigation',
+  'Reinforcement Learning',
+  'Deep Learning',
+  'Natural Language Processing',
+  'Object Detection & Tracking',
+  'Path Planning Algorithms',
+  'Autonomous Navigation',
+  'Robotic Manipulation',
+  'Bipedal Locomotion',
+  'Robot Operating System (ROS)',
+  'LIDAR & LiDAR Processing',
+  '3D Scene Understanding',
+  'Real-time Processing',
+  'Edge AI & Embedded Systems'
+];
+
+const PHYSICAL_AI_SKILLS = [
+  'Python',
+  'C++',
+  'TensorFlow',
+  'PyTorch',
+  'OpenCV',
+  'ROS / ROS2',
+  'SLAM Algorithms',
+  'YOLO',
+  'Computer Vision',
+  'Sensor Fusion',
+  'LIDAR Processing',
+  'Point Cloud Processing',
+  'Deep Learning',
+  'Object Detection',
+  'Semantic Segmentation',
+  'Instance Segmentation',
+  'Motion Planning',
+  'Path Planning (RRT, A*)',
+  'Control Theory',
+  'Dynamics Simulation',
+  'Gazebo',
+  'CARLA (Autonomous Driving Simulator)',
+  'CUDA',
+  'Docker',
+  'Git / GitHub',
+  'Linux',
+  'Real-time Systems',
+  'Optimization',
+  'Kalman Filters',
+  'Particle Filters'
+];
+
+const PHYSICAL_AI_RESEARCH_FOCUS = [
+  'Computer Vision for Robotics',
+  'Humanoid Robotics',
+  'Autonomous Vehicles / AVs',
+  'SLAM & Localization',
+  'Motion Planning',
+  'Robotic Manipulation',
+  'Deep Reinforcement Learning',
+  'Robot Learning',
+  'Semantic Understanding',
+  'Real-time Perception',
+  'Sensor Fusion',
+  'Edge AI',
+  'Embedded Systems',
+  'Multi-robot Systems',
+  'Human-Robot Interaction',
+  'Autonomous Navigation'
+];
+
 // ==================== PUBLIC JOBS LISTING PAGE ====================
 
 function PublicJobsPage() {
@@ -73,19 +171,41 @@ function PublicJobsPage() {
                 {job.confidential && <span className="stealth-badge">🔒 Confidential</span>}
               </div>
               <p className="job-company">{job.confidential ? 'Confidential Company' : job.company}</p>
+
               <div className="job-meta-info">
                 {job.location && <span>📍 {job.location}</span>}
                 {job.job_type && <span>💼 {job.job_type}</span>}
               </div>
+
               {job.salary_min && job.salary_max && (
-                <p className="salary">💰 ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}</p>
+                <p className="salary" style={{ fontWeight: '700', color: '#059669', fontSize: '1.1rem' }}>
+                  💰 ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}
+                </p>
               )}
-              <p className="job-excerpt">{job.description?.substring(0, 150)}...</p>
+
+              {job.required_expertise && (
+                <div style={{ marginTop: '8px' }}>
+                  <p style={{ fontSize: '0.85rem', fontWeight: '600', color: '#666', marginBottom: '6px' }}>🎯 Expertise:</p>
+                  <p style={{ fontSize: '0.9rem', color: '#2563eb', fontWeight: '500' }}>{job.required_expertise}</p>
+                </div>
+              )}
+
+              {job.education_required && (
+                <p style={{ fontSize: '0.85rem', color: '#7c3aed', marginTop: '6px' }}>
+                  🎓 {job.education_required}
+                </p>
+              )}
+
+              <p className="job-excerpt" style={{ marginTop: '10px', color: '#555', fontSize: '0.95rem' }}>
+                {job.description?.substring(0, 120)}...
+              </p>
+
               <button
                 className="view-apply-btn"
                 onClick={() => setSelectedJobId(job.id)}
+                style={{ marginTop: '12px' }}
               >
-                View & Apply
+                🔍 View Full Details & Apply
               </button>
             </div>
           ))}
@@ -896,12 +1016,27 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
             onChange={(e) => setNewCandidate({ ...newCandidate, email: e.target.value })}
             required
           />
-          <input
-            type="text"
-            placeholder="Primary Expertise (e.g., Computer Vision, NLP)"
+
+          {/* Primary Expertise Dropdown */}
+          <select
             value={newCandidate.primary_expertise}
             onChange={(e) => setNewCandidate({ ...newCandidate, primary_expertise: e.target.value })}
-          />
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Primary Expertise</option>
+            {PHYSICAL_AI_EXPERTISE.map(exp => (
+              <option key={exp} value={exp}>{exp}</option>
+            ))}
+            <option value="Other">Other (Custom)</option>
+          </select>
+          {newCandidate.primary_expertise === 'Other' && (
+            <input
+              type="text"
+              placeholder="Enter your primary expertise"
+              onChange={(e) => setNewCandidate({ ...newCandidate, primary_expertise: e.target.value })}
+              style={{ marginBottom: '10px' }}
+            />
+          )}
           <input
             type="url"
             placeholder="GitHub URL"
@@ -1185,13 +1320,30 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
       {showForm && (
         <form className="job-form" onSubmit={handleSubmit}>
           <h3>Add New Job</h3>
-          <input
-            type="text"
-            placeholder="Job Title *"
+
+          {/* Job Title Dropdown */}
+          <select
             value={newJob.title}
             onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
             required
-          />
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Job Title *</option>
+            {PHYSICAL_AI_JOB_TITLES.map(title => (
+              <option key={title} value={title}>{title}</option>
+            ))}
+            <option value="Other">Other (Custom Title)</option>
+          </select>
+          {newJob.title === 'Other' && (
+            <input
+              type="text"
+              placeholder="Enter custom job title"
+              value={newJob.title === 'Other' ? '' : newJob.title}
+              onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+              style={{ marginBottom: '10px' }}
+            />
+          )}
+
           <input
             type="text"
             placeholder="Company *"
@@ -1199,18 +1351,49 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
             required
           />
-          <input
-            type="text"
-            placeholder="Required Expertise (e.g., Deep Learning, MLOps)"
+
+          {/* Required Expertise Dropdown */}
+          <select
             value={newJob.required_expertise}
             onChange={(e) => setNewJob({ ...newJob, required_expertise: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Required Skills (comma-separated: python, pytorch, tensorflow)"
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Required Expertise</option>
+            {PHYSICAL_AI_EXPERTISE.map(exp => (
+              <option key={exp} value={exp}>{exp}</option>
+            ))}
+            <option value="Other">Other (Custom)</option>
+          </select>
+          {newJob.required_expertise === 'Other' && (
+            <input
+              type="text"
+              placeholder="Enter custom expertise"
+              onChange={(e) => setNewJob({ ...newJob, required_expertise: e.target.value })}
+              style={{ marginBottom: '10px' }}
+            />
+          )}
+
+          {/* Required Skills Dropdown */}
+          <select
+            value={newJob.required_skills || ''}
+            onChange={(e) => setNewJob({ ...newJob, required_skills: e.target.value })}
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Primary Skill</option>
+            {PHYSICAL_AI_SKILLS.map(skill => (
+              <option key={skill} value={skill}>{skill}</option>
+            ))}
+          </select>
+          <small style={{ display: 'block', marginBottom: '10px', color: '#666' }}>
+            💡 Tip: Separate multiple skills with commas
+          </small>
+          <textarea
+            placeholder="Additional required skills (comma-separated)"
             value={newJob.required_skills}
             onChange={(e) => setNewJob({ ...newJob, required_skills: e.target.value })}
+            style={{ minHeight: '60px', marginBottom: '10px' }}
           />
+
           <select
             value={newJob.education_required}
             onChange={(e) => setNewJob({ ...newJob, education_required: e.target.value })}
