@@ -1303,6 +1303,99 @@ function ApplicationsView() {
 
             <hr style={{ margin: '20px 0', borderColor: '#e5e7eb' }} />
 
+            {/* CANDIDATE PROFILE */}
+            <h3 style={{ margin: '16px 0 12px 0', color: '#0f1724', fontSize: '14px', fontWeight: '700' }}>CANDIDATE PROFILE</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+              {selectedApplication.candidate_email && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>EMAIL</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>
+                    <a href={`mailto:${selectedApplication.candidate_email}`} style={{ color: '#0b63ff', textDecoration: 'none' }}>
+                      {selectedApplication.candidate_email}
+                    </a>
+                  </p>
+                </div>
+              )}
+              {selectedApplication.candidate_phone && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>PHONE</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>
+                    <a href={`tel:${selectedApplication.candidate_phone}`} style={{ color: '#0b63ff', textDecoration: 'none' }}>
+                      {selectedApplication.candidate_phone}
+                    </a>
+                  </p>
+                </div>
+              )}
+              {selectedApplication.candidate_location && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>LOCATION</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>{selectedApplication.candidate_location}</p>
+                </div>
+              )}
+              {selectedApplication.candidate_years_experience !== null && selectedApplication.candidate_years_experience !== '' && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>EXPERIENCE</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>{selectedApplication.candidate_years_experience} years</p>
+                </div>
+              )}
+              {selectedApplication.candidate_primary_expertise && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>PRIMARY EXPERTISE</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>{selectedApplication.candidate_primary_expertise}</p>
+                </div>
+              )}
+            </div>
+
+            {/* PROFESSIONAL LINKS */}
+            {(selectedApplication.candidate_linkedin || selectedApplication.candidate_github || selectedApplication.candidate_portfolio) && (
+              <div style={{ marginBottom: '20px' }}>
+                <h3 style={{ margin: '0 0 12px 0', color: '#0f1724', fontSize: '14px', fontWeight: '700' }}>PROFESSIONAL LINKS</h3>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  {selectedApplication.candidate_linkedin && (
+                    <a href={selectedApplication.candidate_linkedin} target="_blank" rel="noopener noreferrer" style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#0b63ff',
+                      color: 'white',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}>
+                      LinkedIn
+                    </a>
+                  )}
+                  {selectedApplication.candidate_github && (
+                    <a href={selectedApplication.candidate_github} target="_blank" rel="noopener noreferrer" style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#1f2937',
+                      color: 'white',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}>
+                      GitHub
+                    </a>
+                  )}
+                  {selectedApplication.candidate_portfolio && (
+                    <a href={selectedApplication.candidate_portfolio} target="_blank" rel="noopener noreferrer" style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#7c3aed',
+                      color: 'white',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}>
+                      Portfolio
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <hr style={{ margin: '20px 0', borderColor: '#e5e7eb' }} />
+
             <div style={{ marginBottom: '20px' }}>
               <h3 style={{ margin: '0 0 12px 0', color: '#0f1724' }}>Hiring Intelligence Response</h3>
               <div style={{
