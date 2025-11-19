@@ -1491,6 +1491,101 @@ function AboutView() {
   );
 }
 
+// ==================== LOGIN PAGE ====================
+
+function LoginPage({ onLogin }) {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const RECRUITER_PASSWORD = 'recruit123';
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password === RECRUITER_PASSWORD) {
+      onLogin();
+      setPassword('');
+      setError('');
+    } else {
+      setError('❌ Incorrect password');
+      setPassword('');
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-box">
+          <h1>🔐 Recruiter Portal</h1>
+          <p>Enter password to access the internal ATS dashboard</p>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+            />
+            <button type="submit" className="btn-primary">
+              Login
+            </button>
+          </form>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <p className="login-hint">Password: recruit123</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==================== PROTECTED RECRUITER ROUTE ====================
+
+function ProtectedRecruiterRoute() {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem('recruiter_auth') === 'true'
+  );
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('recruiter_auth', 'true');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('recruiter_auth');
+  };
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
+  return (
+    <div>
+      <button
+        className="logout-btn"
+        onClick={handleLogout}
+        style={{
+          position: 'fixed',
+          top: '10px',
+          right: '10px',
+          zIndex: 1000,
+          padding: '8px 16px',
+          backgroundColor: '#dc3545',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          fontSize: '12px'
+        }}
+      >
+        🚪 Logout
+      </button>
+      <App />
+    </div>
+  );
+}
+
 // ==================== APP WITH ROUTING ====================
 
 function AppWithRouter() {
@@ -1501,8 +1596,8 @@ function AppWithRouter() {
         <Route path="/" element={<PublicJobsPage />} />
         <Route path="/apply/:jobId" element={<CandidateLandingPage />} />
 
-        {/* Recruiter portal - internal ATS dashboard */}
-        <Route path="/recruiter/*" element={<App />} />
+        {/* Recruiter portal - password protected */}
+        <Route path="/recruiter/*" element={<ProtectedRecruiterRoute />} />
       </Routes>
     </Router>
   );
