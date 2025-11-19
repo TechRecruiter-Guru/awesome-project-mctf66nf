@@ -2291,7 +2291,16 @@ def submit_public_application():
             status='new'
         )
         db.session.add(candidate)
-        db.session.flush()  # Get candidate ID
+        try:
+            db.session.flush()  # Get candidate ID
+            print(f"✅ Candidate flushed successfully - ID will be: {candidate.id}")
+        except Exception as e:
+            import traceback
+            print(f"❌ ERROR FLUSHING CANDIDATE:")
+            print(f"   Error: {str(e)}")
+            print(f"   Traceback:\n{traceback.format_exc()}")
+            db.session.rollback()
+            return jsonify({"error": f"Failed to create candidate: {str(e)}"}), 500
 
     # Create application (store position, hiring intelligence + hidden signal)
     application = Application(
@@ -2306,6 +2315,7 @@ def submit_public_application():
     db.session.add(application)
 
     try:
+        print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
         db.session.commit()
         print(f"✅ APPLICATION SAVED - ID: {application.id}")
         print(f"   Candidate ID: {candidate.id}")
@@ -2316,9 +2326,14 @@ def submit_public_application():
             "candidate_id": candidate.id
         }), 201
     except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"❌ ERROR SAVING APPLICATION:")
+        print(f"   Error Type: {type(e).__name__}")
+        print(f"   Error Message: {str(e)}")
+        print(f"   Full Traceback:\n{error_trace}")
         db.session.rollback()
-        print(f"❌ ERROR SAVING APPLICATION: {str(e)}")
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"{type(e).__name__}: {str(e)}"}), 500
 
 
 if __name__ == '__main__':
