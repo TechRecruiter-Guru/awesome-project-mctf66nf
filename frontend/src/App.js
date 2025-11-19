@@ -319,6 +319,7 @@ function JobDetailPage({ jobId, onBack }) {
     hidden_signal: ''
   });
   const [intelligencePrompt, setIntelligencePrompt] = useState(null);
+  const [selectedPosition, setSelectedPosition] = useState(null);
 
   useEffect(() => {
     fetchJob();
@@ -538,23 +539,36 @@ function JobDetailPage({ jobId, onBack }) {
               }}>
                 {/* LEFT COLUMN - FORM INPUTS */}
                 <div>
-                  {/* Job Title Selection (shows the job title) */}
+                  {/* Position Selection Dropdown */}
                   <div style={{ marginBottom: '18px' }}>
                     <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
                       Position <span style={{ color: '#0b63ff' }}>*</span>
                     </label>
-                    <div style={{
-                      width: '100%',
-                      padding: '12px',
-                      borderRadius: '8px',
-                      border: '1px solid #e6e9ef',
-                      fontSize: '14px',
-                      backgroundColor: '#f8fafc',
-                      color: '#0f1724',
-                      fontWeight: '600'
-                    }}>
-                      {job?.title || 'Select a job to view intelligence prompt'}
-                    </div>
+                    <select
+                      value={selectedPosition || (job?.title || '')}
+                      onChange={(e) => setSelectedPosition(e.target.value)}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #e6e9ef',
+                        fontSize: '14px',
+                        backgroundColor: '#fff',
+                        color: '#0f1724',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        boxSizing: 'border-box'
+                      }}
+                      required
+                    >
+                      <option value="">— Select a Position —</option>
+                      {PHYSICAL_AI_JOB_TITLES.map(title => (
+                        <option key={title} value={title}>{title}</option>
+                      ))}
+                    </select>
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                      Select the role to reveal a tailored intelligence prompt
+                    </p>
                   </div>
 
                   {/* Candidate Name */}
@@ -623,13 +637,13 @@ function JobDetailPage({ jobId, onBack }) {
                     justifyContent: 'flex-start'
                   }}>
                     <div style={{ fontWeight: '700', marginBottom: '8px', color: '#0f1724' }}>
-                      {job && HIRING_INTELLIGENCE_PROMPTS[job.title]
-                        ? HIRING_INTELLIGENCE_PROMPTS[job.title].label
+                      {(selectedPosition || job?.title) && HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title].label
                         : 'Role-specific Intelligence Question'}
                     </div>
                     <div style={{ color: '#6b7280', fontSize: '14px', lineHeight: '1.45' }}>
-                      {job && HIRING_INTELLIGENCE_PROMPTS[job.title]
-                        ? HIRING_INTELLIGENCE_PROMPTS[job.title].question
+                      {(selectedPosition || job?.title) && HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title].question
                         : 'Fill out the form above to load a targeted question that surfaces judgment and system-level reasoning.'}
                     </div>
                     <div style={{ flex: 1 }} />
@@ -651,8 +665,8 @@ function JobDetailPage({ jobId, onBack }) {
                   value={formData.hiring_intelligence}
                   onChange={handleInputChange}
                   rows="6"
-                  placeholder={job && HIRING_INTELLIGENCE_PROMPTS[job.title]
-                    ? HIRING_INTELLIGENCE_PROMPTS[job.title].question + ' (3–6 short paragraphs recommended)'
+                  placeholder={(selectedPosition || job?.title) && HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title]
+                    ? HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title].question + ' (3–6 short paragraphs recommended)'
                     : 'Select a job position to load the role-specific prompt...'}
                   style={{
                     width: '100%',
