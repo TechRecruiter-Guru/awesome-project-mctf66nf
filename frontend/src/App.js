@@ -315,11 +315,11 @@ function JobDetailPage({ jobId, onBack }) {
     portfolio_url: '',
     years_experience: '',
     primary_expertise: '',
+    position: '',
     hiring_intelligence: '',
     hidden_signal: ''
   });
   const [intelligencePrompt, setIntelligencePrompt] = useState(null);
-  const [selectedPosition, setSelectedPosition] = useState(null);
 
   useEffect(() => {
     fetchJob();
@@ -545,8 +545,9 @@ function JobDetailPage({ jobId, onBack }) {
                       Position <span style={{ color: '#0b63ff' }}>*</span>
                     </label>
                     <select
-                      value={selectedPosition || (job?.title || '')}
-                      onChange={(e) => setSelectedPosition(e.target.value)}
+                      name="position"
+                      value={formData.position || ''}
+                      onChange={handleInputChange}
                       style={{
                         width: '100%',
                         padding: '12px',
@@ -637,13 +638,13 @@ function JobDetailPage({ jobId, onBack }) {
                     justifyContent: 'flex-start'
                   }}>
                     <div style={{ fontWeight: '700', marginBottom: '8px', color: '#0f1724' }}>
-                      {(selectedPosition || job?.title) && HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title]
-                        ? HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title].label
+                      {(formData.position || job?.title) && HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title].label
                         : 'Role-specific Intelligence Question'}
                     </div>
                     <div style={{ color: '#6b7280', fontSize: '14px', lineHeight: '1.45' }}>
-                      {(selectedPosition || job?.title) && HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title]
-                        ? HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title].question
+                      {(formData.position || job?.title) && HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title].question
                         : 'Fill out the form above to load a targeted question that surfaces judgment and system-level reasoning.'}
                     </div>
                     <div style={{ flex: 1 }} />
@@ -665,8 +666,8 @@ function JobDetailPage({ jobId, onBack }) {
                   value={formData.hiring_intelligence}
                   onChange={handleInputChange}
                   rows="6"
-                  placeholder={(selectedPosition || job?.title) && HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title]
-                    ? HIRING_INTELLIGENCE_PROMPTS[selectedPosition || job?.title].question + ' (3–6 short paragraphs recommended)'
+                  placeholder={(formData.position || job?.title) && HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title]
+                    ? HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title].question + ' (3–6 short paragraphs recommended)'
                     : 'Select a job position to load the role-specific prompt...'}
                   style={{
                     width: '100%',
@@ -1287,10 +1288,14 @@ function ApplicationsView() {
                 <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.job_title}</p>
               </div>
               <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>SELECTED ROLE</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.position || selectedApplication.job_title}</p>
+              </div>
+              <div>
                 <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>STATUS</p>
                 <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.status}</p>
               </div>
-              <div>
+              <div style={{ gridColumn: '1 / -1' }}>
                 <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>OVERALL SCORE</p>
                 <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.overall_score ? selectedApplication.overall_score + '%' : '-'}</p>
               </div>

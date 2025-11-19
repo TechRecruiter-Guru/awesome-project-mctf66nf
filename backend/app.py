@@ -179,6 +179,7 @@ class Application(db.Model):
     status = db.Column(db.String(50), default='applied')  # applied, screening, interview, offer, hired, rejected
     stage = db.Column(db.String(100))  # phone screen, technical interview, on-site, etc.
     source = db.Column(db.String(100))  # linkedin, referral, google_scholar, arxiv, etc.
+    position = db.Column(db.String(255))  # Selected position/role (from dropdown)
 
     # Tracking
     applied_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -211,6 +212,7 @@ class Application(db.Model):
             'status': self.status,
             'stage': self.stage,
             'source': self.source,
+            'position': self.position,
             'applied_date': self.applied_date.isoformat() if self.applied_date else None,
             'last_contact_date': self.last_contact_date.isoformat() if self.last_contact_date else None,
             'interview_date': self.interview_date.isoformat() if self.interview_date else None,
@@ -2275,12 +2277,13 @@ def submit_public_application():
         db.session.add(candidate)
         db.session.flush()  # Get candidate ID
 
-    # Create application (store hiring intelligence + hidden signal)
+    # Create application (store position, hiring intelligence + hidden signal)
     application = Application(
         candidate_id=candidate.id,
         job_id=job_id,
         status='applied',
         source='landing_page',
+        position=data.get('position', ''),
         hiring_intelligence=data.get('hiring_intelligence', ''),
         hidden_signal=data.get('hidden_signal', '')
     )
