@@ -513,189 +513,295 @@ function JobDetailPage({ jobId, onBack }) {
               <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
             </div>
 
-            {/* HIRING INTELLIGENCE SECTION */}
+            {/* ==================== PROFESSIONAL PAIP HIRING INTELLIGENCE INTAKE ==================== */}
+
             <div style={{
-              backgroundColor: '#f0f9ff',
-              padding: '20px',
+              backgroundColor: '#ffffff',
               borderRadius: '12px',
-              marginTop: '20px',
-              border: '2px solid #0ea5e9'
+              boxShadow: '0 6px 20px rgba(15,23,36,0.06)',
+              padding: '24px',
+              marginTop: '30px',
+              marginBottom: '20px'
             }}>
-              <h3 style={{ marginTop: 0, color: '#0369a1' }}>🎯 Hiring Intelligence Assessment</h3>
-              <p style={{ color: '#555', fontSize: '0.95rem', marginBottom: '16px' }}>
-                Instead of traditional resumes, we evaluate <strong>judgment, systems-thinking, and decision-making</strong> through role-specific intelligence prompts. This helps us understand how you approach problems in this field.
+              <h2 style={{ margin: '0 0 6px 0', fontSize: '20px', color: '#0f1724' }}>
+                Hiring Intelligence — Role-Aware Intake
+              </h2>
+              <p style={{ color: '#6b7280', margin: '0 0 18px 0', fontSize: '13px' }}>
+                This captures decision-making signals and engineering judgment aligned to the {job?.title}. The question adapts to surface judgment and systems-level reasoning.
               </p>
 
-              {job && HIRING_INTELLIGENCE_PROMPTS[job.title] && (
-                <>
-                  <div style={{
-                    backgroundColor: 'white',
-                    padding: '16px',
-                    borderRadius: '8px',
-                    marginBottom: '16px',
-                    borderLeft: '4px solid #0ea5e9'
-                  }}>
-                    <p style={{ fontSize: '0.85rem', color: '#666', margin: '0 0 8px' }}>
-                      <strong>Intelligence Dimension:</strong>
-                    </p>
-                    <p style={{ fontSize: '1rem', fontWeight: '600', color: '#0369a1', margin: 0 }}>
-                      {HIRING_INTELLIGENCE_PROMPTS[job.title].label}
-                    </p>
-                  </div>
-
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ fontWeight: '600', color: '#0f1724', display: 'block', marginBottom: '8px' }}>
-                      Your Response *
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 360px',
+                gap: '18px',
+                marginBottom: '16px'
+              }}>
+                {/* LEFT COLUMN - FORM INPUTS */}
+                <div>
+                  {/* Job Title Selection (shows the job title) */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                      Position <span style={{ color: '#0b63ff' }}>*</span>
                     </label>
-                    <p style={{
-                      backgroundColor: '#fef3c7',
+                    <div style={{
+                      width: '100%',
                       padding: '12px',
                       borderRadius: '8px',
-                      fontSize: '0.9rem',
-                      marginBottom: '12px',
-                      margin: '0 0 12px 0',
-                      fontStyle: 'italic',
-                      color: '#92400e'
+                      border: '1px solid #e6e9ef',
+                      fontSize: '14px',
+                      backgroundColor: '#f8fafc',
+                      color: '#0f1724',
+                      fontWeight: '600'
                     }}>
-                      "{HIRING_INTELLIGENCE_PROMPTS[job.title].question}"
-                    </p>
-                    <textarea
-                      name="hiring_intelligence"
-                      value={formData.hiring_intelligence}
-                      onChange={handleInputChange}
-                      rows="6"
-                      placeholder="Provide a concise, evidence-based narrative (3–6 short paragraphs recommended). Focus on signals, tradeoffs, and the decision you made."
-                      style={{
-                        width: '100%',
-                        padding: '12px',
-                        borderRadius: '8px',
-                        border: '2px solid #0ea5e9',
-                        fontFamily: 'inherit',
-                        fontSize: '1rem'
-                      }}
-                      required
-                    />
-                    <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '8px' }}>
-                      💡 <strong>Tip:</strong> Share specific examples, your reasoning process, and how you validated your approach. Show us your judgment in action.
-                    </p>
+                      {job?.title || 'Select a job to view intelligence prompt'}
+                    </div>
                   </div>
 
-                  <div style={{ marginBottom: '16px' }}>
-                    <label style={{ fontWeight: '600', color: '#0f1724', display: 'block', marginBottom: '8px' }}>
-                      Hidden Signal (Optional)
+                  {/* Candidate Name */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                      Candidate Name <span style={{ color: '#0b63ff' }}>*</span>
                     </label>
                     <input
                       type="text"
-                      name="hidden_signal"
-                      value={formData.hidden_signal}
-                      onChange={handleInputChange}
-                      placeholder="E.g., specialized toolchain experience, fieldwork insight, low-level hardware knowledge that others might overlook"
+                      placeholder={formData.first_name || formData.last_name ? `${formData.first_name} ${formData.last_name}` : 'First Last'}
+                      value={formData.first_name && formData.last_name ? `${formData.first_name} ${formData.last_name}` : ''}
+                      readOnly
                       style={{
                         width: '100%',
                         padding: '12px',
                         borderRadius: '8px',
-                        border: '1px solid #d1d5db',
-                        fontFamily: 'inherit',
-                        fontSize: '1rem',
-                        boxSizing: 'border-box'
+                        border: '1px solid #e6e9ef',
+                        fontSize: '14px',
+                        backgroundColor: '#f8fafc',
+                        color: '#0f1724'
                       }}
                     />
-                    <p style={{ fontSize: '0.85rem', color: '#666', marginTop: '8px' }}>
-                      ✨ Call out unconventional capabilities or domain knowledge often overlooked by hiring teams.
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                      From your application profile
                     </p>
                   </div>
-                </>
-              )}
+
+                  {/* Contact Email */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                      Contact Email <span style={{ color: '#0b63ff' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={formData.email || 'you@company.com'}
+                      value={formData.email || ''}
+                      readOnly
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #e6e9ef',
+                        fontSize: '14px',
+                        backgroundColor: '#f8fafc',
+                        color: '#0f1724'
+                      }}
+                    />
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                      From your application profile
+                    </p>
+                  </div>
+                </div>
+
+                {/* RIGHT COLUMN - LIVE PREVIEW */}
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '6px', margin: 0 }}>
+                    Live Preview — Adaptive Question
+                  </p>
+                  <div style={{
+                    backgroundColor: '#f8fafc',
+                    borderRadius: '10px',
+                    padding: '12px',
+                    minHeight: '200px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start'
+                  }}>
+                    <div style={{ fontWeight: '700', marginBottom: '8px', color: '#0f1724' }}>
+                      {job && HIRING_INTELLIGENCE_PROMPTS[job.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[job.title].label
+                        : 'Role-specific Intelligence Question'}
+                    </div>
+                    <div style={{ color: '#6b7280', fontSize: '14px', lineHeight: '1.45' }}>
+                      {job && HIRING_INTELLIGENCE_PROMPTS[job.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[job.title].question
+                        : 'Fill out the form above to load a targeted question that surfaces judgment and system-level reasoning.'}
+                    </div>
+                    <div style={{ flex: 1 }} />
+                    <div style={{ color: '#6b7280', fontSize: '12px', marginTop: '8px' }}>
+                      Question adapts based on role; full textarea below captures your narrative.
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* FULL WIDTH - INTELLIGENCE RESPONSE TEXTAREA */}
+              <div style={{ marginTop: '16px', marginBottom: '12px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                  Hiring Intelligence Response
+                  <span style={{ color: '#6b7280', fontWeight: '600', marginLeft: '8px' }}>— role-adaptive</span>
+                </label>
+                <textarea
+                  name="hiring_intelligence"
+                  value={formData.hiring_intelligence}
+                  onChange={handleInputChange}
+                  rows="6"
+                  placeholder={job && HIRING_INTELLIGENCE_PROMPTS[job.title]
+                    ? HIRING_INTELLIGENCE_PROMPTS[job.title].question + ' (3–6 short paragraphs recommended)'
+                    : 'Select a job position to load the role-specific prompt...'}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #e6e9ef',
+                    fontSize: '14px',
+                    backgroundColor: '#fff',
+                    fontFamily: 'inherit',
+                    minHeight: '130px',
+                    boxSizing: 'border-box'
+                  }}
+                  required
+                />
+                <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                  Provide a concise, evidence-based narrative (3–6 short paragraphs recommended). Focus on signals, tradeoffs, and the first-order decision you made.
+                </p>
+              </div>
+
+              {/* HIDDEN SIGNAL FIELD */}
+              <div style={{ marginTop: '12px', marginBottom: '14px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                  Hidden Signal You Think We Should Notice
+                </label>
+                <input
+                  type="text"
+                  name="hidden_signal"
+                  value={formData.hidden_signal}
+                  onChange={handleInputChange}
+                  placeholder="E.g., specialized toolchain, fieldwork, low-level hardware insight"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #e6e9ef',
+                    fontSize: '14px',
+                    backgroundColor: '#fff',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                  Optional: call out unconventional capabilities often overlooked by hiring teams.
+                </p>
+              </div>
+
+              {/* ACTION BUTTONS */}
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '14px', marginBottom: '18px' }}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    backgroundColor: '#0b63ff',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    opacity: submitting ? 0.6 : 1,
+                    fontSize: '14px'
+                  }}
+                >
+                  {submitting ? '⏳ Submitting...' : '✅ Submit Intelligence'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({
+                      first_name: '',
+                      last_name: '',
+                      email: '',
+                      phone: '',
+                      location: '',
+                      linkedin_url: '',
+                      github_url: '',
+                      portfolio_url: '',
+                      years_experience: '',
+                      primary_expertise: '',
+                      hiring_intelligence: '',
+                      hidden_signal: ''
+                    });
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    backgroundColor: '#6b7280',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '14px'
+                  }}
+                >
+                  🔄 Clear
+                </button>
+
+                <div style={{ flex: 1 }} />
+                <div style={{ color: '#6b7280', fontSize: '13px' }} id="statusMsg" />
+              </div>
+
+              {/* JSON PAYLOAD PREVIEW */}
+              <div style={{ marginTop: '18px' }}>
+                <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '6px' }}>
+                  Payload Preview (JSON)
+                </p>
+                <pre style={{
+                  backgroundColor: '#0b1220',
+                  color: '#e6eef8',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  overflow: 'auto',
+                  fontSize: '12px',
+                  lineHeight: '1.4',
+                  margin: 0,
+                  maxHeight: '250px',
+                  boxSizing: 'border-box'
+                }}>
+                  {JSON.stringify({
+                    submittedAt: new Date().toISOString(),
+                    jobTitle: job?.title || 'Not selected',
+                    candidateName: formData.first_name && formData.last_name ? `${formData.first_name} ${formData.last_name}` : null,
+                    candidateEmail: formData.email || null,
+                    intelligence: {
+                      label: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].label : null,
+                      question: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].question : null,
+                      answer: formData.hiring_intelligence || '[pending response]'
+                    },
+                    hiddenSignal: formData.hidden_signal || null,
+                    candidateProfile: {
+                      location: formData.location || null,
+                      yearsExperience: formData.years_experience || null,
+                      primaryExpertise: formData.primary_expertise || null,
+                      linkedinUrl: formData.linkedin_url || null,
+                      githubUrl: formData.github_url || null,
+                      portfolioUrl: formData.portfolio_url || null
+                    }
+                  }, null, 2)}
+                </pre>
+              </div>
             </div>
 
-            {/* JSON PAYLOAD PREVIEW */}
-            <div style={{
-              backgroundColor: '#0f1724',
-              padding: '16px',
-              borderRadius: '8px',
-              marginTop: '20px',
-              marginBottom: '20px'
-            }}>
-              <p style={{ color: '#e6eef8', fontSize: '0.85rem', marginTop: 0, marginBottom: '12px', fontWeight: '600' }}>
-                📋 Payload Preview (JSON)
-              </p>
-              <pre style={{
-                backgroundColor: '#0b1220',
-                color: '#e6eef8',
-                padding: '12px',
-                borderRadius: '6px',
-                overflow: 'auto',
-                fontSize: '11px',
-                lineHeight: '1.4',
-                margin: 0,
-                maxHeight: '200px'
-              }}>
-                {JSON.stringify({
-                  submittedAt: new Date().toISOString(),
-                  jobTitle: job?.title || 'Not selected',
-                  candidateName: formData.first_name && formData.last_name ? `${formData.first_name} ${formData.last_name}` : 'Not provided',
-                  candidateEmail: formData.email || 'Not provided',
-                  hiringIntelligence: {
-                    label: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].label : 'N/A',
-                    question: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].question : '',
-                    answer: formData.hiring_intelligence || '[pending response]'
-                  },
-                  hiddenSignal: formData.hidden_signal || null,
-                  candidateProfile: {
-                    location: formData.location || null,
-                    yearsExperience: formData.years_experience || null,
-                    primaryExpertise: formData.primary_expertise || null,
-                    linkedinUrl: formData.linkedin_url || null,
-                    githubUrl: formData.github_url || null,
-                    portfolioUrl: formData.portfolio_url || null
-                  }
-                }, null, 2)}
-              </pre>
-            </div>
-
-            {/* ACTION BUTTONS */}
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '20px' }}>
-              <button
-                type="submit"
-                className="submit-btn"
-                disabled={submitting}
-                style={{ flex: 1 }}
-              >
-                {submitting ? '⏳ Submitting...' : '✅ Submit Application'}
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  // Reset form
-                  setFormData({
-                    first_name: '',
-                    last_name: '',
-                    email: '',
-                    phone: '',
-                    location: '',
-                    linkedin_url: '',
-                    github_url: '',
-                    portfolio_url: '',
-                    years_experience: '',
-                    primary_expertise: '',
-                    hiring_intelligence: '',
-                    hidden_signal: ''
-                  });
-                }}
-                style={{
-                  padding: '12px 24px',
-                  backgroundColor: '#6b7280',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '6px',
-                  cursor: 'pointer',
-                  fontWeight: '600',
-                  fontSize: '1rem'
-                }}
-              >
-                🔄 Clear
-              </button>
-            </div>
           </form>
         </div>
 
