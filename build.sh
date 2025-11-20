@@ -1,8 +1,10 @@
-#!/usr/bin/env bash
-# exit on error
+#!/bin/bash
 set -o errexit
 
-cd backend
-pip install --upgrade pip
-pip install wheel setuptools
-pip install -r requirements.txt
+echo "Upgrading pip, setuptools, and wheel..."
+pip install --upgrade pip setuptools wheel
+
+echo "Installing requirements..."
+pip install -r backend/requirements.txt
+
+echo "Build complete!"

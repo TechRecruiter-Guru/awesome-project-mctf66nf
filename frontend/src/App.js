@@ -6,10 +6,299 @@ import BooleanGenerator from './components/BooleanGenerator';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000';
 
-// ==================== CANDIDATE LANDING PAGE ====================
+// ==================== PHYSICAL AI INDUSTRY KEYWORDS ====================
 
-function CandidateLandingPage() {
-  const { jobId } = useParams();
+const PHYSICAL_AI_JOB_TITLES = [
+  'Robotics Engineer',
+  'Humanoid Roboticist',
+  'Autonomous Vehicle Engineer',
+  'Computer Vision Engineer (Robotics)',
+  'Perception Engineer',
+  'Motion Planning Engineer',
+  'SLAM Engineer',
+  'Autonomous Systems Engineer',
+  'Robot Control Engineer',
+  'Reinforcement Learning Engineer',
+  'Computer Vision Engineer',
+  'Deep Learning Engineer',
+  'ML Systems Engineer',
+  'AI/ML Engineer',
+  'Sensor Fusion Engineer',
+  'Embedded AI Engineer',
+  'Robotics Software Engineer',
+  'Machine Learning Engineer',
+  'Deep Learning Researcher'
+];
+
+const PHYSICAL_AI_EXPERTISE = [
+  'Computer Vision & SLAM',
+  'Humanoid Robotics',
+  'Autonomous Vehicles',
+  'Robot Control & Dynamics',
+  'Perception & Sensor Fusion',
+  'Motion Planning & Navigation',
+  'Reinforcement Learning',
+  'Deep Learning',
+  'Natural Language Processing',
+  'Object Detection & Tracking',
+  'Path Planning Algorithms',
+  'Autonomous Navigation',
+  'Robotic Manipulation',
+  'Bipedal Locomotion',
+  'Robot Operating System (ROS)',
+  'LIDAR & LiDAR Processing',
+  '3D Scene Understanding',
+  'Real-time Processing',
+  'Edge AI & Embedded Systems'
+];
+
+const PHYSICAL_AI_SKILLS = [
+  'Python',
+  'C++',
+  'TensorFlow',
+  'PyTorch',
+  'OpenCV',
+  'ROS / ROS2',
+  'SLAM Algorithms',
+  'YOLO',
+  'Computer Vision',
+  'Sensor Fusion',
+  'LIDAR Processing',
+  'Point Cloud Processing',
+  'Deep Learning',
+  'Object Detection',
+  'Semantic Segmentation',
+  'Instance Segmentation',
+  'Motion Planning',
+  'Path Planning (RRT, A*)',
+  'Control Theory',
+  'Dynamics Simulation',
+  'Gazebo',
+  'CARLA (Autonomous Driving Simulator)',
+  'CUDA',
+  'Docker',
+  'Git / GitHub',
+  'Linux',
+  'Real-time Systems',
+  'Optimization',
+  'Kalman Filters',
+  'Particle Filters'
+];
+
+const PHYSICAL_AI_RESEARCH_FOCUS = [
+  'Computer Vision for Robotics',
+  'Humanoid Robotics',
+  'Autonomous Vehicles / AVs',
+  'SLAM & Localization',
+  'Motion Planning',
+  'Robotic Manipulation',
+  'Deep Reinforcement Learning',
+  'Robot Learning',
+  'Semantic Understanding',
+  'Real-time Perception',
+  'Sensor Fusion',
+  'Edge AI',
+  'Embedded Systems',
+  'Multi-robot Systems',
+  'Human-Robot Interaction',
+  'Autonomous Navigation'
+];
+
+// ==================== HIRING INTELLIGENCE ROLE PROMPTS ====================
+
+const HIRING_INTELLIGENCE_PROMPTS = {
+  'Robotics Engineer': {
+    label: 'Robotics Systems Intelligence',
+    question: 'When integrating perception, control, and actuation, what is the earliest indicator you monitor to detect system-wide instability—and how do you intervene before the issue compounds?'
+  },
+  'Humanoid Roboticist': {
+    label: 'Embodied Dynamics Insight',
+    question: 'Describe a time when human biomechanics understanding guided a breakthrough in humanoid stability, manipulation, or locomotion. Which non-obvious signal shaped your approach?'
+  },
+  'Autonomous Vehicle Engineer': {
+    label: 'Autonomy Arbitration Intelligence',
+    question: 'When an AV faces conflicting inputs (e.g., perception noise vs motion planning constraints), how do you determine which subsystem receives priority? Share your decision logic and the signals that drove it.'
+  },
+  'Computer Vision Engineer (Robotics)': {
+    label: 'CV-for-Robotics Intelligence',
+    question: 'What is the most critical vision failure mode you design against in physical environments, and which early signal reveals it before overall performance degrades?'
+  },
+  'Perception Engineer': {
+    label: 'Perception Systems Insight',
+    question: 'How do you distinguish true environmental features from sensor artifacts in complex scenes? Describe the signal or test that helps you decide.'
+  },
+  'Motion Planning Engineer': {
+    label: 'Trajectory Intelligence',
+    question: 'When your planner yields a feasible but suboptimal trajectory, what is the first constraint you interrogate to unlock a more efficient or safer path?'
+  },
+  'SLAM Engineer': {
+    label: 'Spatial Intelligence Diagnostic',
+    question: 'In SLAM drift scenarios, what is your go-to method for isolating root cause—and which cue tells you whether the issue is map quality, loop closure, or sensor bias?'
+  },
+  'Autonomous Systems Engineer': {
+    label: 'System Autonomy Insight',
+    question: 'How do you architect decision-making when subsystems report uncertain or contradictory outputs? Describe the governing principle and an example.'
+  },
+  'Robot Control Engineer': {
+    label: 'Control Loop Judgment',
+    question: 'When tuning controllers, what early signal indicates imminent stability loss—and what immediate corrective pattern do you apply?'
+  },
+  'Reinforcement Learning Engineer': {
+    label: 'RL Signal Intelligence',
+    question: 'When training an RL agent, what hidden metric or behavioral cue do you monitor that predicts long-term policy success before reward curves show it?'
+  },
+  'Computer Vision Engineer': {
+    label: 'Vision Modeling Insight',
+    question: 'When a vision model misclassifies or misses detections, what visual or dataset signal do you check first to determine whether the root cause is labeling noise, domain shift, or architecture limits?'
+  },
+  'Deep Learning Engineer': {
+    label: 'Model Behavior Intelligence',
+    question: 'Which model behavior (beyond accuracy) reveals deeper problems—something you watch early to detect future failure—and how do you act on it?'
+  },
+  'ML Systems Engineer': {
+    label: 'Systems-Level ML Intelligence',
+    question: 'When scaling ML pipelines, which system bottleneck do you diagnose first—and which early indicator tells you the pipeline will fail under production load?'
+  },
+  'AI/ML Engineer': {
+    label: 'AI Solutioning Insight',
+    question: 'When balancing performance, latency, and cost, which constraint becomes your anchor—and how do you determine and enforce that anchor in architecture or process?'
+  },
+  'Sensor Fusion Engineer': {
+    label: 'Fusion Signal Intelligence',
+    question: 'When sensor streams diverge, what earliest cue tells you which modality is unreliable, and how do you reconcile conflicting estimates in real time?'
+  },
+  'Embedded AI Engineer': {
+    label: 'On-Device Intelligence Insight',
+    question: 'When deploying models at the edge, which signal first tells you the hardware-software interface will be the limiting factor—and how do you mitigate it?'
+  },
+  'Robotics Software Engineer': {
+    label: 'Software Integration Intelligence',
+    question: 'When debugging heterogeneous robotic stacks, what cross-component signal do you examine first to determine whether the root cause is software logic, timing, or hardware interaction?'
+  },
+  'Machine Learning Engineer': {
+    label: 'ML Insight Diagnostic',
+    question: 'What is your highest-leverage early indicator that a training pipeline is learning the wrong patterns—even before validation metrics degrade?'
+  },
+  'Deep Learning Researcher': {
+    label: 'Research Intelligence Signal',
+    question: 'What subtle model behavior—beyond raw accuracy—signals that a research direction has deep potential and deserves further investment?'
+  }
+};
+
+// ==================== PUBLIC JOBS LISTING PAGE ====================
+
+function PublicJobsPage() {
+  const [jobs, setJobs] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedJobId, setSelectedJobId] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetchPublicJobs();
+  }, []);
+
+  const fetchPublicJobs = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/jobs`);
+      // Filter to only open jobs
+      const openJobs = (response.data.jobs || []).filter(job => job.status === 'open');
+      setJobs(openJobs);
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const filteredJobs = jobs.filter(job =>
+    job.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    job.company.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    job.location.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  if (selectedJobId) {
+    return <JobDetailPage jobId={selectedJobId} onBack={() => setSelectedJobId(null)} />;
+  }
+
+  return (
+    <div className="public-jobs-page">
+      <div className="jobs-header">
+        <h1>🚀 AI/ML Career Opportunities</h1>
+        <p>Discover transformative roles in AI, Machine Learning, and Robotics at PAIP</p>
+      </div>
+
+      <div className="jobs-search">
+        <input
+          type="text"
+          placeholder="Search by job title, company, or location..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading opportunities...</div>
+      ) : filteredJobs.length === 0 ? (
+        <div className="empty-state">
+          <p>No opportunities match your search</p>
+        </div>
+      ) : (
+        <div className="jobs-grid">
+          {filteredJobs.map(job => (
+            <div key={job.id} className="job-listing-card">
+              <div className="job-listing-header">
+                <h3>{job.title}</h3>
+                {job.confidential && <span className="stealth-badge">🔒 Confidential</span>}
+              </div>
+              <p className="job-company">{job.confidential ? 'Confidential Company' : job.company}</p>
+
+              <div className="job-meta-info">
+                {job.location && <span>📍 {job.location}</span>}
+                {job.job_type && <span>💼 {job.job_type}</span>}
+              </div>
+
+              {job.salary_min && job.salary_max && (
+                <p className="salary" style={{ fontWeight: '700', color: '#059669', fontSize: '1.1rem' }}>
+                  💰 ${job.salary_min.toLocaleString()} - ${job.salary_max.toLocaleString()}
+                </p>
+              )}
+
+              {job.required_expertise && (
+                <div style={{ marginTop: '8px' }}>
+                  <p style={{ fontSize: '0.85rem', fontWeight: '600', color: '#666', marginBottom: '6px' }}>🎯 Expertise:</p>
+                  <p style={{ fontSize: '0.9rem', color: '#2563eb', fontWeight: '500' }}>{job.required_expertise}</p>
+                </div>
+              )}
+
+              {job.education_required && (
+                <p style={{ fontSize: '0.85rem', color: '#7c3aed', marginTop: '6px' }}>
+                  🎓 {job.education_required}
+                </p>
+              )}
+
+              <p className="job-excerpt" style={{ marginTop: '10px', color: '#555', fontSize: '0.95rem' }}>
+                {job.description?.substring(0, 120)}...
+              </p>
+
+              <button
+                className="view-apply-btn"
+                onClick={() => setSelectedJobId(job.id)}
+                style={{ marginTop: '12px' }}
+              >
+                🔍 View Full Details & Apply
+              </button>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ==================== JOB DETAIL + APPLICATION PAGE ====================
+
+function JobDetailPage({ jobId, onBack }) {
   const [job, setJob] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,8 +316,11 @@ function CandidateLandingPage() {
     portfolio_url: '',
     years_experience: '',
     primary_expertise: '',
-    cover_letter: ''
+    position: '',
+    hiring_intelligence: '',
+    hidden_signal: ''
   });
+  const [intelligencePrompt, setIntelligencePrompt] = useState(null);
 
   // Hiring Intelligence state
   const [workLinks, setWorkLinks] = useState([
@@ -43,7 +335,7 @@ function CandidateLandingPage() {
 
   const fetchJob = async () => {
     try {
-      const response = await axios.get(`${API_URL}/api/public/jobs/${jobId}`);
+      const response = await axios.get(`${API_URL}/api/jobs/${jobId}`);
       setJob(response.data);
     } catch (err) {
       setError(err.response?.data?.error || 'Failed to load job posting');
@@ -85,22 +377,28 @@ function CandidateLandingPage() {
     e.preventDefault();
     setSubmitting(true);
 
-    try {
-      // Filter out empty work links
-      const validWorkLinks = workLinks.filter(link => link.url.trim() !== '');
+    // Validate hiring intelligence is provided
+    if (!formData.hiring_intelligence || !formData.hiring_intelligence.trim()) {
+      alert('Please provide your hiring intelligence response.');
+      setSubmitting(false);
+      return;
+    }
 
-      await axios.post(`${API_URL}/api/public/apply`, {
-        ...formData,
-        job_id: parseInt(jobId),
-        years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
-        work_links: validWorkLinks,
-        intelligence_response: intelligenceResponse ? {
-          question_id: intelligenceQuestion?.question_id || null,
-          response_text: intelligenceResponse
-        } : null
-      });
+    const submissionData = {
+      ...formData,
+      job_id: parseInt(jobId),
+      job_title: job.title,
+      years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
+    };
+
+    console.log('📤 Submitting application data:', submissionData);
+
+    try {
+      const response = await axios.post(`${API_URL}/api/public/apply`, submissionData);
+      console.log('✅ Application submitted successfully:', response.data);
       setSubmitted(true);
     } catch (err) {
+      console.error('❌ Submission error:', err.response?.data || err.message);
       alert(err.response?.data?.error || 'Failed to submit application');
     } finally {
       setSubmitting(false);
@@ -124,6 +422,7 @@ function CandidateLandingPage() {
           <div className="error-message">
             <h2>Position Not Available</h2>
             <p>{error}</p>
+            <button className="btn-back" onClick={onBack}>← Back to Jobs</button>
           </div>
         </div>
       </div>
@@ -139,6 +438,7 @@ function CandidateLandingPage() {
             <h2>Application Submitted!</h2>
             <p>Thank you for applying for the <strong>{job.title}</strong> position.</p>
             <p>We'll review your application and get back to you soon.</p>
+            <button className="btn-back" onClick={onBack}>← Back to Jobs</button>
           </div>
         </div>
       </div>
@@ -148,12 +448,10 @@ function CandidateLandingPage() {
   return (
     <div className="landing-page">
       <div className="landing-container">
-        <div className="landing-nav">
-          <a href="/" className="recruiter-link">← Back to Recruiter Portal</a>
-        </div>
+        <button className="btn-back-small" onClick={onBack}>← Back to Jobs</button>
         <div className="job-header">
           <div className="company-badge">
-            {job.confidential ? '🔒 Stealth Mode' : job.company}
+            {job.confidential ? '🔒 Confidential' : job.company}
           </div>
           <h1>{job.title}</h1>
           <div className="job-meta">
@@ -172,35 +470,24 @@ function CandidateLandingPage() {
               <p>{job.description}</p>
             </div>
           )}
-
           {job.required_expertise && (
             <div className="detail-section">
               <h3>Required Expertise</h3>
               <p>{job.required_expertise}</p>
             </div>
           )}
-
           {job.requirements && (
             <div className="detail-section">
               <h3>Requirements</h3>
               <p>{job.requirements}</p>
             </div>
           )}
-
           {job.responsibilities && (
             <div className="detail-section">
               <h3>Responsibilities</h3>
               <p>{job.responsibilities}</p>
             </div>
           )}
-
-          {job.research_focus && (
-            <div className="detail-section">
-              <h3>Research Focus</h3>
-              <p>{job.research_focus}</p>
-            </div>
-          )}
-
           {job.education_required && (
             <div className="detail-section">
               <h3>Education</h3>
@@ -215,215 +502,359 @@ function CandidateLandingPage() {
             <div className="form-row">
               <div className="form-group">
                 <label>First Name *</label>
-                <input
-                  type="text"
-                  name="first_name"
-                  value={formData.first_name}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="text" name="first_name" value={formData.first_name} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
                 <label>Last Name *</label>
-                <input
-                  type="text"
-                  name="last_name"
-                  value={formData.last_name}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="text" name="last_name" value={formData.last_name} onChange={handleInputChange} required />
               </div>
             </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label>Email *</label>
-                <input
-                  type="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  required
-                />
+                <input type="email" name="email" value={formData.email} onChange={handleInputChange} required />
               </div>
               <div className="form-group">
                 <label>Phone</label>
-                <input
-                  type="tel"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                />
+                <input type="tel" name="phone" value={formData.phone} onChange={handleInputChange} />
               </div>
             </div>
-
             <div className="form-row">
               <div className="form-group">
                 <label>Location</label>
-                <input
-                  type="text"
-                  name="location"
-                  value={formData.location}
-                  onChange={handleInputChange}
-                  placeholder="City, Country"
-                />
+                <input type="text" name="location" value={formData.location} onChange={handleInputChange} placeholder="City, Country" />
               </div>
               <div className="form-group">
                 <label>Years of Experience</label>
-                <input
-                  type="number"
-                  name="years_experience"
-                  value={formData.years_experience}
-                  onChange={handleInputChange}
-                  min="0"
-                  max="50"
-                />
+                <input type="number" name="years_experience" value={formData.years_experience} onChange={handleInputChange} min="0" max="50" />
               </div>
             </div>
-
             <div className="form-group">
               <label>Primary Expertise</label>
-              <select
-                name="primary_expertise"
-                value={formData.primary_expertise}
-                onChange={handleInputChange}
-              >
+              <select name="primary_expertise" value={formData.primary_expertise} onChange={handleInputChange}>
                 <option value="">Select your expertise</option>
-                <option value="Deep Learning">Deep Learning</option>
-                <option value="Computer Vision">Computer Vision</option>
-                <option value="NLP">Natural Language Processing</option>
-                <option value="Reinforcement Learning">Reinforcement Learning</option>
-                <option value="Robotics">Robotics</option>
-                <option value="MLOps">MLOps</option>
-                <option value="Data Science">Data Science</option>
+                {PHYSICAL_AI_EXPERTISE.map(exp => (
+                  <option key={exp} value={exp}>{exp}</option>
+                ))}
                 <option value="Other">Other</option>
               </select>
             </div>
-
             <div className="form-group">
               <label>LinkedIn URL</label>
-              <input
-                type="url"
-                name="linkedin_url"
-                value={formData.linkedin_url}
-                onChange={handleInputChange}
-                placeholder="https://linkedin.com/in/yourprofile"
-              />
+              <input type="url" name="linkedin_url" value={formData.linkedin_url} onChange={handleInputChange} placeholder="https://linkedin.com/in/yourprofile" />
             </div>
-
             <div className="form-group">
               <label>GitHub URL</label>
-              <input
-                type="url"
-                name="github_url"
-                value={formData.github_url}
-                onChange={handleInputChange}
-                placeholder="https://github.com/yourusername"
-              />
+              <input type="url" name="github_url" value={formData.github_url} onChange={handleInputChange} placeholder="https://github.com/yourusername" />
             </div>
-
             <div className="form-group">
               <label>Portfolio URL</label>
-              <input
-                type="url"
-                name="portfolio_url"
-                value={formData.portfolio_url}
-                onChange={handleInputChange}
-                placeholder="https://yourportfolio.com"
-              />
+              <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
             </div>
 
-            {/* Work Artifact Links Section */}
-            <div className="work-links-section">
-              <h3>Work Artifacts</h3>
-              <p className="section-description">
-                Share links to your work - GitHub repos, papers, projects, or any artifacts that demonstrate your capabilities.
+            {/* ==================== PROFESSIONAL PAIP HIRING INTELLIGENCE INTAKE ==================== */}
+
+            <div style={{
+              backgroundColor: '#ffffff',
+              borderRadius: '12px',
+              boxShadow: '0 6px 20px rgba(15,23,36,0.06)',
+              padding: '24px',
+              marginTop: '30px',
+              marginBottom: '20px'
+            }}>
+              <h2 style={{ margin: '0 0 6px 0', fontSize: '20px', color: '#0f1724' }}>
+                Hiring Intelligence — Role-Aware Intake
+              </h2>
+              <p style={{ color: '#6b7280', margin: '0 0 18px 0', fontSize: '13px' }}>
+                This captures decision-making signals and engineering judgment aligned to the {job?.title}. The question adapts to surface judgment and systems-level reasoning.
               </p>
 
-              {workLinks.map((link, index) => (
-                <div key={index} className="work-link-row">
-                  <select
-                    value={link.link_type}
-                    onChange={(e) => updateWorkLink(index, 'link_type', e.target.value)}
-                  >
-                    <option value="github">GitHub</option>
-                    <option value="paper">Paper/Publication</option>
-                    <option value="portfolio">Portfolio</option>
-                    <option value="project">Project</option>
-                    <option value="other">Other</option>
-                  </select>
-                  <input
-                    type="url"
-                    value={link.url}
-                    onChange={(e) => updateWorkLink(index, 'url', e.target.value)}
-                    placeholder="https://..."
-                  />
-                  <input
-                    type="text"
-                    value={link.title}
-                    onChange={(e) => updateWorkLink(index, 'title', e.target.value)}
-                    placeholder="Title/Description (optional)"
-                  />
-                  {workLinks.length > 1 && (
-                    <button
-                      type="button"
-                      className="remove-link-btn"
-                      onClick={() => removeWorkLink(index)}
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: '1fr 360px',
+                gap: '18px',
+                marginBottom: '16px'
+              }}>
+                {/* LEFT COLUMN - FORM INPUTS */}
+                <div>
+                  {/* Position Selection Dropdown */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                      Position <span style={{ color: '#0b63ff' }}>*</span>
+                    </label>
+                    <select
+                      name="position"
+                      value={formData.position || ''}
+                      onChange={handleInputChange}
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #e6e9ef',
+                        fontSize: '14px',
+                        backgroundColor: '#fff',
+                        color: '#0f1724',
+                        fontWeight: '500',
+                        cursor: 'pointer',
+                        boxSizing: 'border-box'
+                      }}
+                      required
                     >
-                      ×
-                    </button>
-                  )}
+                      <option value="">— Select a Position —</option>
+                      {PHYSICAL_AI_JOB_TITLES.map(title => (
+                        <option key={title} value={title}>{title}</option>
+                      ))}
+                    </select>
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                      Select the role to reveal a tailored intelligence prompt
+                    </p>
+                  </div>
+
+                  {/* Candidate Name */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                      Candidate Name <span style={{ color: '#0b63ff' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={formData.first_name || formData.last_name ? `${formData.first_name} ${formData.last_name}` : 'First Last'}
+                      value={formData.first_name && formData.last_name ? `${formData.first_name} ${formData.last_name}` : ''}
+                      readOnly
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #e6e9ef',
+                        fontSize: '14px',
+                        backgroundColor: '#f8fafc',
+                        color: '#0f1724'
+                      }}
+                    />
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                      From your application profile
+                    </p>
+                  </div>
+
+                  {/* Contact Email */}
+                  <div style={{ marginBottom: '18px' }}>
+                    <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                      Contact Email <span style={{ color: '#0b63ff' }}>*</span>
+                    </label>
+                    <input
+                      type="text"
+                      placeholder={formData.email || 'you@company.com'}
+                      value={formData.email || ''}
+                      readOnly
+                      style={{
+                        width: '100%',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #e6e9ef',
+                        fontSize: '14px',
+                        backgroundColor: '#f8fafc',
+                        color: '#0f1724'
+                      }}
+                    />
+                    <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                      From your application profile
+                    </p>
+                  </div>
                 </div>
-              ))}
 
-              <button
-                type="button"
-                className="add-link-btn"
-                onClick={addWorkLink}
-              >
-                + Add Another Link
-              </button>
-            </div>
-
-            {/* Hiring Intelligence Question Section */}
-            {intelligenceQuestion && intelligenceQuestion.question && (
-              <div className="intelligence-section">
-                <h3>{intelligenceQuestion.label || 'Role-Specific Intelligence Question'}</h3>
-                <p className="intelligence-question">
-                  {intelligenceQuestion.question}
-                </p>
-                <p className="section-description">
-                  This question helps us understand how you think and approach problems.
-                  Please provide a thoughtful response (3-6 paragraphs recommended).
-                </p>
-                <textarea
-                  value={intelligenceResponse}
-                  onChange={(e) => setIntelligenceResponse(e.target.value)}
-                  rows="8"
-                  placeholder="Share your approach, experience, and the signals you look for..."
-                  className="intelligence-response"
-                />
+                {/* RIGHT COLUMN - LIVE PREVIEW */}
+                <div>
+                  <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '6px', margin: 0 }}>
+                    Live Preview — Adaptive Question
+                  </p>
+                  <div style={{
+                    backgroundColor: '#f8fafc',
+                    borderRadius: '10px',
+                    padding: '12px',
+                    minHeight: '200px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'flex-start'
+                  }}>
+                    <div style={{ fontWeight: '700', marginBottom: '8px', color: '#0f1724' }}>
+                      {(formData.position || job?.title) && HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title].label
+                        : 'Role-specific Intelligence Question'}
+                    </div>
+                    <div style={{ color: '#6b7280', fontSize: '14px', lineHeight: '1.45' }}>
+                      {(formData.position || job?.title) && HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title]
+                        ? HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title].question
+                        : 'Fill out the form above to load a targeted question that surfaces judgment and system-level reasoning.'}
+                    </div>
+                    <div style={{ flex: 1 }} />
+                    <div style={{ color: '#6b7280', fontSize: '12px', marginTop: '8px' }}>
+                      Question adapts based on role; full textarea below captures your narrative.
+                    </div>
+                  </div>
+                </div>
               </div>
-            )}
 
-            <div className="form-group">
-              <label>Additional Notes (Optional)</label>
-              <textarea
-                name="cover_letter"
-                value={formData.cover_letter}
-                onChange={handleInputChange}
-                rows="3"
-                placeholder="Any additional context you'd like to share..."
-              />
+              {/* FULL WIDTH - INTELLIGENCE RESPONSE TEXTAREA */}
+              <div style={{ marginTop: '16px', marginBottom: '12px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                  Hiring Intelligence Response
+                  <span style={{ color: '#6b7280', fontWeight: '600', marginLeft: '8px' }}>— role-adaptive</span>
+                </label>
+                <textarea
+                  name="hiring_intelligence"
+                  value={formData.hiring_intelligence}
+                  onChange={handleInputChange}
+                  rows="6"
+                  placeholder={(formData.position || job?.title) && HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title]
+                    ? HIRING_INTELLIGENCE_PROMPTS[formData.position || job?.title].question + ' (3–6 short paragraphs recommended)'
+                    : 'Select a job position to load the role-specific prompt...'}
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #e6e9ef',
+                    fontSize: '14px',
+                    backgroundColor: '#fff',
+                    fontFamily: 'inherit',
+                    minHeight: '130px',
+                    boxSizing: 'border-box'
+                  }}
+                  required
+                />
+                <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                  Provide a concise, evidence-based narrative (3–6 short paragraphs recommended). Focus on signals, tradeoffs, and the first-order decision you made.
+                </p>
+              </div>
+
+              {/* HIDDEN SIGNAL FIELD */}
+              <div style={{ marginTop: '12px', marginBottom: '14px' }}>
+                <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                  Hidden Signal You Think We Should Notice
+                </label>
+                <input
+                  type="text"
+                  name="hidden_signal"
+                  value={formData.hidden_signal}
+                  onChange={handleInputChange}
+                  placeholder="E.g., specialized toolchain, fieldwork, low-level hardware insight"
+                  style={{
+                    width: '100%',
+                    padding: '12px',
+                    borderRadius: '8px',
+                    border: '1px solid #e6e9ef',
+                    fontSize: '14px',
+                    backgroundColor: '#fff',
+                    fontFamily: 'inherit',
+                    boxSizing: 'border-box'
+                  }}
+                />
+                <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px' }}>
+                  Optional: call out unconventional capabilities often overlooked by hiring teams.
+                </p>
+              </div>
+
+              {/* ACTION BUTTONS */}
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '14px', marginBottom: '18px' }}>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    backgroundColor: '#0b63ff',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    opacity: submitting ? 0.6 : 1,
+                    fontSize: '14px'
+                  }}
+                >
+                  {submitting ? '⏳ Submitting...' : '✅ Submit Intelligence'}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setFormData({
+                      first_name: '',
+                      last_name: '',
+                      email: '',
+                      phone: '',
+                      location: '',
+                      linkedin_url: '',
+                      github_url: '',
+                      portfolio_url: '',
+                      years_experience: '',
+                      primary_expertise: '',
+                      hiring_intelligence: '',
+                      hidden_signal: ''
+                    });
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 14px',
+                    borderRadius: '10px',
+                    backgroundColor: '#6b7280',
+                    color: 'white',
+                    border: 'none',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '14px'
+                  }}
+                >
+                  🔄 Clear
+                </button>
+
+                <div style={{ flex: 1 }} />
+                <div style={{ color: '#6b7280', fontSize: '13px' }} id="statusMsg" />
+              </div>
+
+              {/* JSON PAYLOAD PREVIEW */}
+              <div style={{ marginTop: '18px' }}>
+                <p style={{ color: '#6b7280', fontSize: '12px', marginBottom: '6px' }}>
+                  Payload Preview (JSON)
+                </p>
+                <pre style={{
+                  backgroundColor: '#0b1220',
+                  color: '#e6eef8',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  overflow: 'auto',
+                  fontSize: '12px',
+                  lineHeight: '1.4',
+                  margin: 0,
+                  maxHeight: '250px',
+                  boxSizing: 'border-box'
+                }}>
+                  {JSON.stringify({
+                    submittedAt: new Date().toISOString(),
+                    jobTitle: job?.title || 'Not selected',
+                    candidateName: formData.first_name && formData.last_name ? `${formData.first_name} ${formData.last_name}` : null,
+                    candidateEmail: formData.email || null,
+                    intelligence: {
+                      label: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].label : null,
+                      question: job && HIRING_INTELLIGENCE_PROMPTS[job.title] ? HIRING_INTELLIGENCE_PROMPTS[job.title].question : null,
+                      answer: formData.hiring_intelligence || '[pending response]'
+                    },
+                    hiddenSignal: formData.hidden_signal || null,
+                    candidateProfile: {
+                      location: formData.location || null,
+                      yearsExperience: formData.years_experience || null,
+                      primaryExpertise: formData.primary_expertise || null,
+                      linkedinUrl: formData.linkedin_url || null,
+                      githubUrl: formData.github_url || null,
+                      portfolioUrl: formData.portfolio_url || null
+                    }
+                  }, null, 2)}
+                </pre>
+              </div>
             </div>
 
-            <button
-              type="submit"
-              className="submit-btn"
-              disabled={submitting}
-            >
-              {submitting ? 'Submitting...' : 'Submit Hiring Intelligence'}
-            </button>
           </form>
         </div>
 
@@ -433,6 +864,13 @@ function CandidateLandingPage() {
       </div>
     </div>
   );
+}
+
+// ==================== CANDIDATE LANDING PAGE (OLD - DEPRECATED) ====================
+
+function CandidateLandingPage() {
+  const { jobId } = useParams();
+  return <JobDetailPage jobId={jobId} onBack={() => window.history.back()} />;
 }
 
 // ==================== MAIN ATS APP ====================
@@ -526,12 +964,12 @@ function App() {
     <div className="App">
       <header className="app-header">
         <div className="header-content">
-          <h1>🤖 AI/ML Applicant Tracking System</h1>
+          <h1>🎯 PAIP - PhysicalAIPros.com</h1>
           <div className={`api-status ${apiStatus === 'healthy' ? 'healthy' : 'unhealthy'}`}>
             API: {apiStatus}
           </div>
         </div>
-        <p className="tagline">Track candidates with research profiles, publications & academic credentials</p>
+        <p className="tagline">The Leader in AI/ML Early Talent Detection | Recruiter Portal</p>
       </header>
 
       <nav className="nav-tabs">
@@ -552,6 +990,12 @@ function App() {
           onClick={() => setActiveTab('jobs')}
         >
           💼 Jobs ({stats.total_jobs || 0})
+        </button>
+        <button
+          className={activeTab === 'applications' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('applications')}
+        >
+          📋 Applications ({stats.total_applications || 0})
         </button>
         <button
           className={activeTab === 'analytics' ? 'tab active' : 'tab'}
@@ -613,6 +1057,7 @@ function App() {
             onRefresh={fetchJobs}
           />
         )}
+        {activeTab === 'applications' && <ApplicationsView />}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'campaigns' && <CampaignsView />}
         {activeTab === 'interviews' && <InterviewsView />}
@@ -624,6 +1069,422 @@ function App() {
       <footer className="app-footer">
         <p>Built for recruiting AI/ML talent through research profiles 🎓 | Open Source Project</p>
       </footer>
+    </div>
+  );
+}
+
+// Applications View
+function ApplicationsView() {
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [filterJobId, setFilterJobId] = useState('all');
+  const [jobs, setJobs] = useState([]);
+  const [selectedApplication, setSelectedApplication] = useState(null);
+
+  useEffect(() => {
+    fetchApplications();
+    fetchJobs();
+  }, []);
+
+  const fetchApplications = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/applications`);
+      setApplications(response.data.applications || []);
+    } catch (err) {
+      console.error('Error fetching applications:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchJobs = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/jobs`);
+      setJobs(response.data.jobs || []);
+    } catch (err) {
+      console.error('Error fetching jobs:', err);
+    }
+  };
+
+  const updateApplicationStatus = async (applicationId, newStatus) => {
+    try {
+      await axios.put(`${API_URL}/api/applications/${applicationId}`, { status: newStatus });
+      fetchApplications();
+    } catch (err) {
+      alert('Error updating application: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  const filteredApplications = applications.filter(app => {
+    const statusMatch = filterStatus === 'all' || app.status === filterStatus;
+    const jobMatch = filterJobId === 'all' || app.job_id === parseInt(filterJobId);
+    return statusMatch && jobMatch;
+  });
+
+  const getJobTitle = (jobId) => {
+    const job = jobs.find(j => j.id === jobId);
+    return job ? job.title : 'Unknown Job';
+  };
+
+  const statusColors = {
+    'applied': '#3b82f6',
+    'screening': '#f59e0b',
+    'interview': '#8b5cf6',
+    'offer': '#10b981',
+    'hired': '#059669',
+    'rejected': '#ef4444'
+  };
+
+  return (
+    <div className="applications-view">
+      <div className="view-header">
+        <h2>All Applications</h2>
+      </div>
+
+      <div style={{ display: 'flex', gap: '20px', marginBottom: '20px', flexWrap: 'wrap' }}>
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Filter by Status:</label>
+          <select
+            value={filterStatus}
+            onChange={(e) => setFilterStatus(e.target.value)}
+            style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ddd', minWidth: '150px' }}
+          >
+            <option value="all">All Statuses</option>
+            <option value="applied">Applied</option>
+            <option value="screening">Screening</option>
+            <option value="interview">Interview</option>
+            <option value="offer">Offer</option>
+            <option value="hired">Hired</option>
+            <option value="rejected">Rejected</option>
+          </select>
+        </div>
+
+        <div>
+          <label style={{ display: 'block', marginBottom: '8px', fontWeight: '600' }}>Filter by Job:</label>
+          <select
+            value={filterJobId}
+            onChange={(e) => setFilterJobId(e.target.value)}
+            style={{ padding: '8px', borderRadius: '6px', border: '1px solid #ddd', minWidth: '200px' }}
+          >
+            <option value="all">All Jobs</option>
+            {jobs.map(job => (
+              <option key={job.id} value={job.id}>{job.title} ({job.company})</option>
+            ))}
+          </select>
+        </div>
+
+        <div>
+          <p style={{ marginTop: '28px', fontWeight: '600' }}>Total: {filteredApplications.length}</p>
+        </div>
+      </div>
+
+      {loading ? (
+        <div className="loading">Loading applications...</div>
+      ) : filteredApplications.length === 0 ? (
+        <div className="empty-state">
+          <p>No applications match your filters</p>
+        </div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f3f4f6', borderBottom: '2px solid #e5e7eb' }}>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Candidate</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Job Position</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Status</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Applied Date</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Overall Score</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredApplications.map((app) => (
+                <tr key={app.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                  <td style={{ padding: '12px' }}>
+                    <strong>{app.candidate_name}</strong>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {getJobTitle(app.job_id)}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <select
+                      value={app.status}
+                      onChange={(e) => updateApplicationStatus(app.id, e.target.value)}
+                      style={{
+                        backgroundColor: statusColors[app.status] || '#6b7280',
+                        color: 'white',
+                        padding: '6px 12px',
+                        borderRadius: '4px',
+                        border: 'none',
+                        cursor: 'pointer',
+                        fontWeight: '600',
+                        minWidth: '120px'
+                      }}
+                    >
+                      <option value="applied">Applied</option>
+                      <option value="screening">Screening</option>
+                      <option value="interview">Interview</option>
+                      <option value="offer">Offer</option>
+                      <option value="hired">Hired</option>
+                      <option value="rejected">Rejected</option>
+                    </select>
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {app.applied_date ? new Date(app.applied_date).toLocaleDateString() : '-'}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    {app.overall_score ? (
+                      <span style={{
+                        backgroundColor: app.overall_score >= 70 ? '#dcfce7' : app.overall_score >= 50 ? '#fef3c7' : '#fee2e2',
+                        color: app.overall_score >= 70 ? '#166534' : app.overall_score >= 50 ? '#92400e' : '#991b1b',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontWeight: '600'
+                      }}>
+                        {app.overall_score}%
+                      </span>
+                    ) : '-'}
+                  </td>
+                  <td style={{ padding: '12px' }}>
+                    <button
+                      onClick={() => setSelectedApplication(app)}
+                      style={{
+                        padding: '6px 12px',
+                        backgroundColor: '#2563eb',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '4px',
+                        cursor: 'pointer',
+                        fontSize: '0.85rem'
+                      }}
+                    >
+                      View Details
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* APPLICATION DETAILS MODAL */}
+      {selectedApplication && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          zIndex: 1000
+        }}>
+          <div style={{
+            backgroundColor: 'white',
+            borderRadius: '12px',
+            padding: '24px',
+            maxWidth: '800px',
+            maxHeight: '90vh',
+            overflowY: 'auto',
+            width: '95%'
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ margin: 0 }}>Application Details</h2>
+              <button
+                onClick={() => setSelectedApplication(null)}
+                style={{
+                  backgroundColor: 'transparent',
+                  border: '1px solid #ddd',
+                  borderRadius: '4px',
+                  padding: '6px 12px',
+                  cursor: 'pointer',
+                  fontSize: '1rem'
+                }}
+              >
+                ✕ Close
+              </button>
+            </div>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>CANDIDATE</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.candidate_name}</p>
+              </div>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>JOB POSITION</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.job_title}</p>
+              </div>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>SELECTED ROLE</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.position || selectedApplication.job_title}</p>
+              </div>
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>STATUS</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.status}</p>
+              </div>
+              <div style={{ gridColumn: '1 / -1' }}>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>OVERALL SCORE</p>
+                <p style={{ margin: 0, fontSize: '16px', fontWeight: '600' }}>{selectedApplication.overall_score ? selectedApplication.overall_score + '%' : '-'}</p>
+              </div>
+            </div>
+
+            <hr style={{ margin: '20px 0', borderColor: '#e5e7eb' }} />
+
+            {/* CANDIDATE PROFILE */}
+            <h3 style={{ margin: '16px 0 12px 0', color: '#0f1724', fontSize: '14px', fontWeight: '700' }}>CANDIDATE PROFILE</h3>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '20px' }}>
+              {selectedApplication.candidate_email && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>EMAIL</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>
+                    <a href={`mailto:${selectedApplication.candidate_email}`} style={{ color: '#0b63ff', textDecoration: 'none' }}>
+                      {selectedApplication.candidate_email}
+                    </a>
+                  </p>
+                </div>
+              )}
+              {selectedApplication.candidate_phone && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>PHONE</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>
+                    <a href={`tel:${selectedApplication.candidate_phone}`} style={{ color: '#0b63ff', textDecoration: 'none' }}>
+                      {selectedApplication.candidate_phone}
+                    </a>
+                  </p>
+                </div>
+              )}
+              {selectedApplication.candidate_location && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>LOCATION</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>{selectedApplication.candidate_location}</p>
+                </div>
+              )}
+              {selectedApplication.candidate_years_experience !== null && selectedApplication.candidate_years_experience !== '' && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>EXPERIENCE</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>{selectedApplication.candidate_years_experience} years</p>
+                </div>
+              )}
+              {selectedApplication.candidate_primary_expertise && (
+                <div>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>PRIMARY EXPERTISE</p>
+                  <p style={{ margin: 0, fontSize: '14px', color: '#0f1724' }}>{selectedApplication.candidate_primary_expertise}</p>
+                </div>
+              )}
+            </div>
+
+            {/* PROFESSIONAL LINKS */}
+            {(selectedApplication.candidate_linkedin || selectedApplication.candidate_github || selectedApplication.candidate_portfolio) && (
+              <div style={{ marginBottom: '20px' }}>
+                <h3 style={{ margin: '0 0 12px 0', color: '#0f1724', fontSize: '14px', fontWeight: '700' }}>PROFESSIONAL LINKS</h3>
+                <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+                  {selectedApplication.candidate_linkedin && (
+                    <a href={selectedApplication.candidate_linkedin} target="_blank" rel="noopener noreferrer" style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#0b63ff',
+                      color: 'white',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}>
+                      LinkedIn
+                    </a>
+                  )}
+                  {selectedApplication.candidate_github && (
+                    <a href={selectedApplication.candidate_github} target="_blank" rel="noopener noreferrer" style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#1f2937',
+                      color: 'white',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}>
+                      GitHub
+                    </a>
+                  )}
+                  {selectedApplication.candidate_portfolio && (
+                    <a href={selectedApplication.candidate_portfolio} target="_blank" rel="noopener noreferrer" style={{
+                      padding: '8px 12px',
+                      backgroundColor: '#7c3aed',
+                      color: 'white',
+                      borderRadius: '6px',
+                      textDecoration: 'none',
+                      fontSize: '13px',
+                      fontWeight: '600'
+                    }}>
+                      Portfolio
+                    </a>
+                  )}
+                </div>
+              </div>
+            )}
+
+            <hr style={{ margin: '20px 0', borderColor: '#e5e7eb' }} />
+
+            <div style={{ marginBottom: '20px' }}>
+              <h3 style={{ margin: '0 0 12px 0', color: '#0f1724' }}>Hiring Intelligence Response</h3>
+              <div style={{
+                backgroundColor: '#f8fafc',
+                padding: '12px',
+                borderRadius: '8px',
+                border: '1px solid #e6e9ef',
+                fontSize: '14px',
+                lineHeight: '1.6',
+                color: '#0f1724',
+                whiteSpace: 'pre-wrap',
+                wordWrap: 'break-word'
+              }}>
+                {selectedApplication.hiring_intelligence || '(No hiring intelligence response provided)'}
+              </div>
+            </div>
+
+            {selectedApplication.hidden_signal && (
+              <div style={{ marginBottom: '20px' }}>
+                <h3 style={{ margin: '0 0 12px 0', color: '#0f1724' }}>Hidden Signal</h3>
+                <div style={{
+                  backgroundColor: '#fef3c7',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #fcd34d',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  color: '#78350f'
+                }}>
+                  {selectedApplication.hidden_signal}
+                </div>
+              </div>
+            )}
+
+            <div style={{
+              backgroundColor: '#f3f4f6',
+              padding: '12px',
+              borderRadius: '8px',
+              fontSize: '12px',
+              color: '#6b7280'
+            }}>
+              <p style={{ margin: '0 0 6px 0' }}>
+                <strong>Applied:</strong> {selectedApplication.applied_date ? new Date(selectedApplication.applied_date).toLocaleString() : '-'}
+              </p>
+              <p style={{ margin: 0 }}>
+                <strong>Application ID:</strong> {selectedApplication.id}
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -676,6 +1537,13 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     google_scholar_url: '',
     github_url: '',
     orcid_id: ''
+  });
+  const [schedulingInterviewFor, setSchedulingInterviewFor] = useState(null);
+  const [interviewForm, setInterviewForm] = useState({
+    interview_stage: 'phone_screen',
+    scheduled_date: '',
+    interviewer_name: '',
+    notes: ''
   });
   const [enriching, setEnriching] = useState({});
   const [impactScores, setImpactScores] = useState({});
@@ -730,6 +1598,23 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     }
   };
 
+  const scheduleInterview = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.post(`${API_URL}/api/interviews`, {
+        candidate_id: schedulingInterviewFor,
+        ...interviewForm,
+        status: 'scheduled'
+      });
+      alert('✅ Interview scheduled!');
+      setSchedulingInterviewFor(null);
+      setInterviewForm({ interview_stage: 'phone_screen', scheduled_date: '', interviewer_name: '', notes: '' });
+      onRefresh();
+    } catch (err) {
+      alert('Error scheduling interview: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
   return (
     <div className="candidates-view">
       <div className="view-header">
@@ -765,12 +1650,27 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
             onChange={(e) => setNewCandidate({ ...newCandidate, email: e.target.value })}
             required
           />
-          <input
-            type="text"
-            placeholder="Primary Expertise (e.g., Computer Vision, NLP)"
+
+          {/* Primary Expertise Dropdown */}
+          <select
             value={newCandidate.primary_expertise}
             onChange={(e) => setNewCandidate({ ...newCandidate, primary_expertise: e.target.value })}
-          />
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Primary Expertise</option>
+            {PHYSICAL_AI_EXPERTISE.map(exp => (
+              <option key={exp} value={exp}>{exp}</option>
+            ))}
+            <option value="Other">Other (Custom)</option>
+          </select>
+          {newCandidate.primary_expertise === 'Other' && (
+            <input
+              type="text"
+              placeholder="Enter your primary expertise"
+              onChange={(e) => setNewCandidate({ ...newCandidate, primary_expertise: e.target.value })}
+              style={{ marginBottom: '10px' }}
+            />
+          )}
           <input
             type="url"
             placeholder="GitHub URL"
@@ -934,11 +1834,50 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
               </div>
 
               <div className="card-actions">
+                <button className="btn-primary" onClick={() => setSchedulingInterviewFor(candidate.id)}>🗓️ Schedule Interview</button>
                 <button className="btn-delete" onClick={() => onDelete(candidate.id)}>Delete</button>
               </div>
             </div>
           ))}
         </div>
+      )}
+
+      {schedulingInterviewFor && (
+        <form className="candidate-form" onSubmit={scheduleInterview}>
+          <h3>Schedule Interview</h3>
+          <select
+            value={interviewForm.interview_stage}
+            onChange={(e) => setInterviewForm({ ...interviewForm, interview_stage: e.target.value })}
+          >
+            <option value="phone_screen">Phone Screen</option>
+            <option value="technical_interview">Technical Interview</option>
+            <option value="final_interview">Final Interview</option>
+            <option value="offer">Offer Discussion</option>
+          </select>
+          <input
+            type="datetime-local"
+            required
+            value={interviewForm.scheduled_date}
+            onChange={(e) => setInterviewForm({ ...interviewForm, scheduled_date: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Interviewer Name"
+            required
+            value={interviewForm.interviewer_name}
+            onChange={(e) => setInterviewForm({ ...interviewForm, interviewer_name: e.target.value })}
+          />
+          <textarea
+            placeholder="Interview Notes / Questions"
+            value={interviewForm.notes}
+            onChange={(e) => setInterviewForm({ ...interviewForm, notes: e.target.value })}
+            rows="4"
+          />
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" className="btn-primary">Schedule Interview</button>
+            <button type="button" className="btn-delete" onClick={() => setSchedulingInterviewFor(null)}>Cancel</button>
+          </div>
+        </form>
       )}
     </div>
   );
@@ -954,6 +1893,8 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
     education_required: '',
     confidential: false
   });
+  const [editingJobId, setEditingJobId] = useState(null);
+  const [editJob, setEditJob] = useState({});
   const [matchResults, setMatchResults] = useState({});
   const [matching, setMatching] = useState({});
 
@@ -985,6 +1926,22 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
     }
   };
 
+  const startEditJob = (job) => {
+    setEditingJobId(job.id);
+    setEditJob(job);
+  };
+
+  const handleEditSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      await axios.put(`${API_URL}/api/jobs/${editingJobId}`, editJob);
+      setEditingJobId(null);
+      onRefresh();
+    } catch (err) {
+      alert('Error updating job: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
   return (
     <div className="jobs-view">
       <div className="view-header">
@@ -997,13 +1954,30 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
       {showForm && (
         <form className="job-form" onSubmit={handleSubmit}>
           <h3>Add New Job</h3>
-          <input
-            type="text"
-            placeholder="Job Title *"
+
+          {/* Job Title Dropdown */}
+          <select
             value={newJob.title}
             onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
             required
-          />
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Job Title *</option>
+            {PHYSICAL_AI_JOB_TITLES.map(title => (
+              <option key={title} value={title}>{title}</option>
+            ))}
+            <option value="Other">Other (Custom Title)</option>
+          </select>
+          {newJob.title === 'Other' && (
+            <input
+              type="text"
+              placeholder="Enter custom job title"
+              value={newJob.title === 'Other' ? '' : newJob.title}
+              onChange={(e) => setNewJob({ ...newJob, title: e.target.value })}
+              style={{ marginBottom: '10px' }}
+            />
+          )}
+
           <input
             type="text"
             placeholder="Company *"
@@ -1011,23 +1985,55 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
             required
           />
-          <input
-            type="text"
-            placeholder="Required Expertise (e.g., Deep Learning, MLOps)"
+
+          {/* Required Expertise Dropdown */}
+          <select
             value={newJob.required_expertise}
             onChange={(e) => setNewJob({ ...newJob, required_expertise: e.target.value })}
-          />
-          <input
-            type="text"
-            placeholder="Required Skills (comma-separated: python, pytorch, tensorflow)"
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Required Expertise</option>
+            {PHYSICAL_AI_EXPERTISE.map(exp => (
+              <option key={exp} value={exp}>{exp}</option>
+            ))}
+            <option value="Other">Other (Custom)</option>
+          </select>
+          {newJob.required_expertise === 'Other' && (
+            <input
+              type="text"
+              placeholder="Enter custom expertise"
+              onChange={(e) => setNewJob({ ...newJob, required_expertise: e.target.value })}
+              style={{ marginBottom: '10px' }}
+            />
+          )}
+
+          {/* Required Skills Dropdown */}
+          <select
+            value={newJob.required_skills || ''}
+            onChange={(e) => setNewJob({ ...newJob, required_skills: e.target.value })}
+            style={{ marginBottom: '10px' }}
+          >
+            <option value="">Select Primary Skill</option>
+            {PHYSICAL_AI_SKILLS.map(skill => (
+              <option key={skill} value={skill}>{skill}</option>
+            ))}
+          </select>
+          <small style={{ display: 'block', marginBottom: '10px', color: '#666' }}>
+            💡 Tip: Separate multiple skills with commas
+          </small>
+          <textarea
+            placeholder="Additional required skills (comma-separated)"
             value={newJob.required_skills}
             onChange={(e) => setNewJob({ ...newJob, required_skills: e.target.value })}
+            style={{ minHeight: '60px', marginBottom: '10px' }}
           />
+
           <select
             value={newJob.education_required}
             onChange={(e) => setNewJob({ ...newJob, education_required: e.target.value })}
           >
             <option value="">Education Required</option>
+            <option value="No Degree - Just Know-How">No Degree - Just Know-How</option>
             <option value="PhD">PhD</option>
             <option value="Masters">Masters</option>
             <option value="Bachelors">Bachelors</option>
@@ -1043,6 +2049,63 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             </label>
           </div>
           <button type="submit" className="btn-primary">Create Job</button>
+        </form>
+      )}
+
+      {editingJobId && (
+        <form className="job-form" onSubmit={handleEditSubmit}>
+          <h3>Edit Job</h3>
+          <input
+            type="text"
+            placeholder="Job Title"
+            value={editJob.title || ''}
+            onChange={(e) => setEditJob({ ...editJob, title: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Company"
+            value={editJob.company || ''}
+            onChange={(e) => setEditJob({ ...editJob, company: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Location"
+            value={editJob.location || ''}
+            onChange={(e) => setEditJob({ ...editJob, location: e.target.value })}
+          />
+          <textarea
+            placeholder="Job Description"
+            value={editJob.description || ''}
+            onChange={(e) => setEditJob({ ...editJob, description: e.target.value })}
+            rows="4"
+          />
+          <input
+            type="text"
+            placeholder="Required Expertise"
+            value={editJob.required_expertise || ''}
+            onChange={(e) => setEditJob({ ...editJob, required_expertise: e.target.value })}
+          />
+          <select
+            value={editJob.status || 'open'}
+            onChange={(e) => setEditJob({ ...editJob, status: e.target.value })}
+          >
+            <option value="open">Open</option>
+            <option value="closed">Closed</option>
+          </select>
+          <div className="checkbox-container">
+            <label>
+              <input
+                type="checkbox"
+                checked={editJob.confidential || false}
+                onChange={(e) => setEditJob({ ...editJob, confidential: e.target.checked })}
+              />
+              <span className="checkbox-label">🔒 Confidential (Stealth Mode)</span>
+            </label>
+          </div>
+          <div style={{ display: 'flex', gap: '10px' }}>
+            <button type="submit" className="btn-primary">Save Changes</button>
+            <button type="button" className="btn-delete" onClick={() => setEditingJobId(null)}>Cancel</button>
+          </div>
         </form>
       )}
 
@@ -1071,7 +2134,27 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
                 <p className="stealth-notice">⚠️ Company name hidden until interest shown</p>
               )}
               {job.application_count > 0 && (
-                <p className="applications-count">📋 {job.application_count} applications</p>
+                <button
+                  onClick={() => alert(`📋 ${job.application_count} applications for ${job.title}\n\nGo to Applications tab to manage all applications for this job.`)}
+                  style={{
+                    display: 'block',
+                    width: '100%',
+                    padding: '8px 12px',
+                    marginTop: '8px',
+                    backgroundColor: '#e0f2fe',
+                    color: '#0369a1',
+                    border: '1px solid #0ea5e9',
+                    borderRadius: '6px',
+                    cursor: 'pointer',
+                    fontWeight: '600',
+                    fontSize: '0.9rem',
+                    transition: 'all 0.3s'
+                  }}
+                  onMouseEnter={(e) => e.target.style.backgroundColor = '#cffafe'}
+                  onMouseLeave={(e) => e.target.style.backgroundColor = '#e0f2fe'}
+                >
+                  📋 View {job.application_count} Applications
+                </button>
               )}
 
               {/* AI Matching Section */}
@@ -1145,6 +2228,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
               </div>
 
               <div className="card-actions">
+                <button className="btn-primary" onClick={() => startEditJob(job)}>✏️ Edit</button>
                 <button className="btn-delete" onClick={() => onDelete(job.id)}>Delete</button>
               </div>
             </div>
@@ -1457,14 +2541,113 @@ function AboutView() {
   );
 }
 
+// ==================== LOGIN PAGE ====================
+
+function LoginPage({ onLogin }) {
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const RECRUITER_PASSWORD = 'recruit123';
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (password === RECRUITER_PASSWORD) {
+      onLogin();
+      setPassword('');
+      setError('');
+    } else {
+      setError('❌ Incorrect password');
+      setPassword('');
+    }
+  };
+
+  return (
+    <div className="login-page">
+      <div className="login-container">
+        <div className="login-box">
+          <h1>🔐 PAIP Recruiter Portal</h1>
+          <p>The Leader in AI/ML Early Talent Detection - Login Required</p>
+
+          <form onSubmit={handleSubmit}>
+            <input
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              autoFocus
+            />
+            <button type="submit" className="btn-primary">
+              Login
+            </button>
+          </form>
+
+          {error && <p className="error-message">{error}</p>}
+
+          <p className="login-hint">Password: recruit123</p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==================== PROTECTED RECRUITER ROUTE ====================
+
+function ProtectedRecruiterRoute() {
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    localStorage.getItem('recruiter_auth') === 'true'
+  );
+
+  const handleLogin = () => {
+    setIsAuthenticated(true);
+    localStorage.setItem('recruiter_auth', 'true');
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('recruiter_auth');
+  };
+
+  if (!isAuthenticated) {
+    return <LoginPage onLogin={handleLogin} />;
+  }
+
+  return (
+    <div>
+      <button
+        className="logout-btn"
+        onClick={handleLogout}
+        style={{
+          position: 'fixed',
+          top: '10px',
+          right: '10px',
+          zIndex: 1000,
+          padding: '8px 16px',
+          backgroundColor: '#dc3545',
+          color: 'white',
+          border: 'none',
+          borderRadius: '4px',
+          cursor: 'pointer',
+          fontSize: '12px'
+        }}
+      >
+        🚪 Logout
+      </button>
+      <App />
+    </div>
+  );
+}
+
 // ==================== APP WITH ROUTING ====================
 
 function AppWithRouter() {
   return (
     <Router>
       <Routes>
+        {/* Public-facing routes - no login required */}
+        <Route path="/" element={<PublicJobsPage />} />
         <Route path="/apply/:jobId" element={<CandidateLandingPage />} />
-        <Route path="/*" element={<App />} />
+
+        {/* Recruiter portal - password protected */}
+        <Route path="/recruiter/*" element={<ProtectedRecruiterRoute />} />
       </Routes>
     </Router>
   );

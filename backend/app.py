@@ -12,6 +12,7 @@ CORS(app)
 # Database configuration
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ECHO'] = True  # Enable SQL logging to see actual queries
 db = SQLAlchemy(app)
 
 # ==================== DATA MODELS ====================
@@ -179,6 +180,7 @@ class Application(db.Model):
     status = db.Column(db.String(50), default='applied')  # applied, screening, interview, offer, hired, rejected
     stage = db.Column(db.String(100))  # phone screen, technical interview, on-site, etc.
     source = db.Column(db.String(100))  # linkedin, referral, google_scholar, arxiv, etc.
+    position = db.Column(db.String(255))  # Selected position/role (from dropdown)
 
     # Tracking
     applied_date = db.Column(db.DateTime, default=datetime.utcnow)
@@ -190,6 +192,10 @@ class Application(db.Model):
     research_score = db.Column(db.Integer)  # Based on publications, citations
     culture_fit_score = db.Column(db.Integer)  # 1-100
     overall_score = db.Column(db.Integer)  # Combined score
+
+    # Hiring Intelligence (replaces cover letter)
+    hiring_intelligence = db.Column(db.Text)  # Role-adaptive assessment response
+    hidden_signal = db.Column(db.Text)  # Hidden signal candidate wants noticed
 
     notes = db.Column(db.Text)
 
@@ -203,10 +209,19 @@ class Application(db.Model):
             'candidate_id': self.candidate_id,
             'job_id': self.job_id,
             'candidate_name': f"{self.candidate.first_name} {self.candidate.last_name}" if self.candidate else None,
+            'candidate_email': self.candidate.email if self.candidate else None,
+            'candidate_phone': self.candidate.phone if self.candidate else None,
+            'candidate_location': self.candidate.location if self.candidate else None,
+            'candidate_years_experience': self.candidate.years_experience if self.candidate else None,
+            'candidate_primary_expertise': self.candidate.primary_expertise if self.candidate else None,
+            'candidate_linkedin': self.candidate.linkedin_url if self.candidate else None,
+            'candidate_github': self.candidate.github_url if self.candidate else None,
+            'candidate_portfolio': self.candidate.portfolio_url if self.candidate else None,
             'job_title': self.job.title if self.job else None,
             'status': self.status,
             'stage': self.stage,
             'source': self.source,
+            'position': self.position,
             'applied_date': self.applied_date.isoformat() if self.applied_date else None,
             'last_contact_date': self.last_contact_date.isoformat() if self.last_contact_date else None,
             'interview_date': self.interview_date.isoformat() if self.interview_date else None,
@@ -214,6 +229,8 @@ class Application(db.Model):
             'research_score': self.research_score,
             'culture_fit_score': self.culture_fit_score,
             'overall_score': self.overall_score,
+            'hiring_intelligence': self.hiring_intelligence,
+            'hidden_signal': self.hidden_signal,
             'notes': self.notes,
             'created_at': self.created_at.isoformat(),
             'updated_at': self.updated_at.isoformat()
@@ -314,7 +331,7 @@ with app.app_context():
 def health_check():
     return jsonify({
         "status": "healthy",
-        "message": "AI/ML ATS API is running",
+        "message": "PAIP - PhysicalAIPros.com API is running",
         "version": "1.0.0"
     })
 
@@ -2772,6 +2789,21 @@ def submit_public_application():
 
     data = request.json
 
+    print(f"\n📤 RECEIVED APPLICATION DATA:")
+    print(f"   First Name: {data.get('first_name')}")
+    print(f"   Last Name: {data.get('last_name')}")
+    print(f"   Email: {data.get('email')}")
+    print(f"   Phone: {data.get('phone')}")
+    print(f"   Location: {data.get('location')}")
+    print(f"   Years Experience: {data.get('years_experience')}")
+    print(f"   Primary Expertise: {data.get('primary_expertise')}")
+    print(f"   LinkedIn: {data.get('linkedin_url')}")
+    print(f"   GitHub: {data.get('github_url')}")
+    print(f"   Portfolio: {data.get('portfolio_url')}")
+    print(f"   Position: {data.get('position')}")
+    print(f"   Hiring Intelligence: {data.get('hiring_intelligence')[:50] if data.get('hiring_intelligence') else 'EMPTY'}...")
+    print(f"   Hidden Signal: {data.get('hidden_signal')}")
+
     # Validate required fields
     required_fields = ['job_id', 'first_name', 'last_name', 'email']
     for field in required_fields:
@@ -2801,39 +2833,41 @@ def submit_public_application():
             return jsonify({"error": "You have already applied for this position"}), 400
 
         candidate = existing_candidate
-        # Update candidate info if provided
-        if data.get('phone'):
-            candidate.phone = data.get('phone')
-        if data.get('linkedin_url'):
-            candidate.linkedin_url = data.get('linkedin_url')
-        if data.get('github_url'):
-            candidate.github_url = data.get('github_url')
-        if data.get('portfolio_url'):
-            candidate.portfolio_url = data.get('portfolio_url')
-        if data.get('location'):
-            candidate.location = data.get('location')
-        if data.get('years_experience'):
-            candidate.years_experience = data.get('years_experience')
-        if data.get('primary_expertise'):
-            candidate.primary_expertise = data.get('primary_expertise')
+        # Update candidate info if provided - ALWAYS update, even if empty
+        candidate.phone = data.get('phone', '')
+        candidate.linkedin_url = data.get('linkedin_url', '')
+        candidate.github_url = data.get('github_url', '')
+        candidate.portfolio_url = data.get('portfolio_url', '')
+        candidate.location = data.get('location', '')
+        candidate.years_experience = data.get('years_experience')
+        candidate.primary_expertise = data.get('primary_expertise', '')
     else:
         # Create new candidate
         candidate = Candidate(
             first_name=data.get('first_name'),
             last_name=data.get('last_name'),
             email=data.get('email'),
-            phone=data.get('phone'),
-            location=data.get('location'),
-            linkedin_url=data.get('linkedin_url'),
-            github_url=data.get('github_url'),
-            portfolio_url=data.get('portfolio_url'),
-            resume_url=data.get('resume_url'),
+            phone=data.get('phone', ''),
+            location=data.get('location', ''),
+            linkedin_url=data.get('linkedin_url', ''),
+            github_url=data.get('github_url', ''),
+            portfolio_url=data.get('portfolio_url', ''),
+            resume_url=data.get('resume_url', ''),
             years_experience=data.get('years_experience'),
-            primary_expertise=data.get('primary_expertise'),
+            primary_expertise=data.get('primary_expertise', ''),
             status='new'
         )
         db.session.add(candidate)
-        db.session.flush()  # Get candidate ID
+        try:
+            db.session.flush()  # Get candidate ID
+            print(f"✅ Candidate flushed successfully - ID will be: {candidate.id}")
+        except Exception as e:
+            import traceback
+            print(f"❌ ERROR FLUSHING CANDIDATE:")
+            print(f"   Error: {str(e)}")
+            print(f"   Traceback:\n{traceback.format_exc()}")
+            db.session.rollback()
+            return jsonify({"error": f"Failed to create candidate: {str(e)}"}), 500
 
     # Process work artifact links (Hiring Intelligence)
     work_links = data.get('work_links', [])
@@ -2847,12 +2881,15 @@ def submit_public_application():
             )
             db.session.add(link)
 
-    # Create application
+    # Create application (store position, hiring intelligence + hidden signal)
     application = Application(
         candidate_id=candidate.id,
         job_id=job_id,
         status='applied',
-        source='hiring_intelligence',  # Updated source to indicate HI submission
+        source='hiring_intelligence',
+        position=data.get('position', ''),
+        hiring_intelligence=data.get('hiring_intelligence', ''),
+        hidden_signal=data.get('hidden_signal', ''),
         notes=data.get('cover_letter', '')
     )
     db.session.add(application)
@@ -2923,7 +2960,28 @@ def submit_public_application():
             db.session.add(submission)
 
     try:
+        print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
         db.session.commit()
+        print(f"✅ COMMIT SUCCEEDED")
+
+        # VERIFY DATA WAS ACTUALLY SAVED
+        print(f"🔍 VERIFYING DATA IN DATABASE...")
+
+        # Check if candidate exists
+        verify_candidate = Candidate.query.get(candidate.id)
+        if verify_candidate:
+            print(f"   ✅ Candidate {candidate.id} verified in database: {verify_candidate.first_name} {verify_candidate.last_name}")
+        else:
+            print(f"   ❌ CANDIDATE {candidate.id} NOT FOUND IN DATABASE!")
+
+        # Check if application exists
+        verify_app = Application.query.get(application.id)
+        if verify_app:
+            print(f"   ✅ Application {application.id} verified in database")
+            print(f"      Hiring Intelligence: {verify_app.hiring_intelligence[:50] if verify_app.hiring_intelligence else 'EMPTY'}...")
+        else:
+            print(f"   ❌ APPLICATION {application.id} NOT FOUND IN DATABASE!")
+
         return jsonify({
             "message": "Hiring Intelligence Submission received successfully!",
             "application_id": application.id,
@@ -2931,8 +2989,14 @@ def submit_public_application():
             "has_intelligence_data": bool(intelligence_response)
         }), 201
     except Exception as e:
+        import traceback
+        error_trace = traceback.format_exc()
+        print(f"❌ ERROR SAVING APPLICATION:")
+        print(f"   Error Type: {type(e).__name__}")
+        print(f"   Error Message: {str(e)}")
+        print(f"   Full Traceback:\n{error_trace}")
         db.session.rollback()
-        return jsonify({"error": str(e)}), 500
+        return jsonify({"error": f"{type(e).__name__}: {str(e)}"}), 500
 
 
 @app.route('/api/public/jobs/<int:job_id>/question', methods=['GET'])
