@@ -304,6 +304,7 @@ function JobDetailPage({ jobId, onBack }) {
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [intelligenceQuestion, setIntelligenceQuestion] = useState(null);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -321,8 +322,15 @@ function JobDetailPage({ jobId, onBack }) {
   });
   const [intelligencePrompt, setIntelligencePrompt] = useState(null);
 
+  // Hiring Intelligence state
+  const [workLinks, setWorkLinks] = useState([
+    { link_type: 'github', url: '', title: '' }
+  ]);
+  const [intelligenceResponse, setIntelligenceResponse] = useState('');
+
   useEffect(() => {
     fetchJob();
+    fetchIntelligenceQuestion();
   }, [jobId]);
 
   const fetchJob = async () => {
@@ -336,9 +344,33 @@ function JobDetailPage({ jobId, onBack }) {
     }
   };
 
+  const fetchIntelligenceQuestion = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/public/jobs/${jobId}/question`);
+      setIntelligenceQuestion(response.data);
+    } catch (err) {
+      console.log('No intelligence question available for this role');
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Work Links handlers
+  const addWorkLink = () => {
+    setWorkLinks([...workLinks, { link_type: 'other', url: '', title: '' }]);
+  };
+
+  const removeWorkLink = (index) => {
+    setWorkLinks(workLinks.filter((_, i) => i !== index));
+  };
+
+  const updateWorkLink = (index, field, value) => {
+    const updated = [...workLinks];
+    updated[index][field] = value;
+    setWorkLinks(updated);
   };
 
   const handleSubmit = async (e) => {

@@ -1160,3 +1160,157 @@ textarea:focus {
   padding-top: 20px;
   border-top: 1px solid #eee;
 }
+
+/* ==================== HIRING INTELLIGENCE STYLES ==================== */
+
+/* Work Links Section */
+.work-links-section {
+  margin: 30px 0;
+  padding: 25px;
+  background: #f8fafc;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+}
+
+.work-links-section h3 {
+  color: #667eea;
+  margin-bottom: 10px;
+  font-size: 1.3rem;
+}
+
+.section-description {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.work-link-row {
+  display: grid;
+  grid-template-columns: 140px 1fr 1fr auto;
+  gap: 10px;
+  margin-bottom: 12px;
+  align-items: center;
+}
+
+.work-link-row select {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  background: white;
+}
+
+.work-link-row input {
+  padding: 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+
+.work-link-row input:focus,
+.work-link-row select:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.remove-link-btn {
+  background: #ef4444;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.remove-link-btn:hover {
+  background: #dc2626;
+}
+
+.add-link-btn {
+  background: none;
+  border: 2px dashed #667eea;
+  color: #667eea;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.2s;
+  margin-top: 10px;
+}
+
+.add-link-btn:hover {
+  background: rgba(102, 126, 234, 0.1);
+}
+
+/* Intelligence Question Section */
+.intelligence-section {
+  margin: 30px 0;
+  padding: 25px;
+  background: linear-gradient(135deg, #f0f4ff 0%, #e8f0fe 100%);
+  border-radius: 12px;
+  border: 2px solid #667eea;
+}
+
+.intelligence-section h3 {
+  color: #667eea;
+  margin-bottom: 15px;
+  font-size: 1.3rem;
+}
+
+.intelligence-question {
+  font-size: 1.1rem;
+  color: #1e293b;
+  line-height: 1.6;
+  margin-bottom: 15px;
+  font-weight: 500;
+  padding: 15px;
+  background: white;
+  border-radius: 8px;
+  border-left: 4px solid #667eea;
+}
+
+.intelligence-response {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.6;
+  resize: vertical;
+  min-height: 200px;
+  font-family: inherit;
+}
+
+.intelligence-response:focus {
+  outline: none;
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.2);
+}
+
+.intelligence-response::placeholder {
+  color: #94a3b8;
+}
+
+/* Responsive adjustments for work links */
+@media (max-width: 768px) {
+  .work-link-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .work-link-row select,
+  .work-link-row input {
+    width: 100%;
+  }
+
+  .remove-link-btn {
+    width: 100%;
+    height: auto;
+    padding: 8px;
+  }
+}
