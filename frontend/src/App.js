@@ -15,6 +15,7 @@ function CandidateLandingPage() {
   const [error, setError] = useState(null);
   const [submitted, setSubmitted] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [intelligenceQuestion, setIntelligenceQuestion] = useState(null);
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
@@ -29,8 +30,15 @@ function CandidateLandingPage() {
     cover_letter: ''
   });
 
+  // Hiring Intelligence state
+  const [workLinks, setWorkLinks] = useState([
+    { link_type: 'github', url: '', title: '' }
+  ]);
+  const [intelligenceResponse, setIntelligenceResponse] = useState('');
+
   useEffect(() => {
     fetchJob();
+    fetchIntelligenceQuestion();
   }, [jobId]);
 
   const fetchJob = async () => {
@@ -44,9 +52,33 @@ function CandidateLandingPage() {
     }
   };
 
+  const fetchIntelligenceQuestion = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/public/jobs/${jobId}/question`);
+      setIntelligenceQuestion(response.data);
+    } catch (err) {
+      console.log('No intelligence question available for this role');
+    }
+  };
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  // Work Links handlers
+  const addWorkLink = () => {
+    setWorkLinks([...workLinks, { link_type: 'other', url: '', title: '' }]);
+  };
+
+  const removeWorkLink = (index) => {
+    setWorkLinks(workLinks.filter((_, i) => i !== index));
+  };
+
+  const updateWorkLink = (index, field, value) => {
+    const updated = [...workLinks];
+    updated[index][field] = value;
+    setWorkLinks(updated);
   };
 
   const handleSubmit = async (e) => {
@@ -54,10 +86,18 @@ function CandidateLandingPage() {
     setSubmitting(true);
 
     try {
+      // Filter out empty work links
+      const validWorkLinks = workLinks.filter(link => link.url.trim() !== '');
+
       await axios.post(`${API_URL}/api/public/apply`, {
         ...formData,
         job_id: parseInt(jobId),
-        years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
+        years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
+        work_links: validWorkLinks,
+        intelligence_response: intelligenceResponse ? {
+          question_id: intelligenceQuestion?.question_id || null,
+          response_text: intelligenceResponse
+        } : null
       });
       setSubmitted(true);
     } catch (err) {
@@ -293,14 +333,87 @@ function CandidateLandingPage() {
               />
             </div>
 
+            {/* Work Artifact Links Section */}
+            <div className="work-links-section">
+              <h3>Work Artifacts</h3>
+              <p className="section-description">
+                Share links to your work - GitHub repos, papers, projects, or any artifacts that demonstrate your capabilities.
+              </p>
+
+              {workLinks.map((link, index) => (
+                <div key={index} className="work-link-row">
+                  <select
+                    value={link.link_type}
+                    onChange={(e) => updateWorkLink(index, 'link_type', e.target.value)}
+                  >
+                    <option value="github">GitHub</option>
+                    <option value="paper">Paper/Publication</option>
+                    <option value="portfolio">Portfolio</option>
+                    <option value="project">Project</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <input
+                    type="url"
+                    value={link.url}
+                    onChange={(e) => updateWorkLink(index, 'url', e.target.value)}
+                    placeholder="https://..."
+                  />
+                  <input
+                    type="text"
+                    value={link.title}
+                    onChange={(e) => updateWorkLink(index, 'title', e.target.value)}
+                    placeholder="Title/Description (optional)"
+                  />
+                  {workLinks.length > 1 && (
+                    <button
+                      type="button"
+                      className="remove-link-btn"
+                      onClick={() => removeWorkLink(index)}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                className="add-link-btn"
+                onClick={addWorkLink}
+              >
+                + Add Another Link
+              </button>
+            </div>
+
+            {/* Hiring Intelligence Question Section */}
+            {intelligenceQuestion && intelligenceQuestion.question && (
+              <div className="intelligence-section">
+                <h3>{intelligenceQuestion.label || 'Role-Specific Intelligence Question'}</h3>
+                <p className="intelligence-question">
+                  {intelligenceQuestion.question}
+                </p>
+                <p className="section-description">
+                  This question helps us understand how you think and approach problems.
+                  Please provide a thoughtful response (3-6 paragraphs recommended).
+                </p>
+                <textarea
+                  value={intelligenceResponse}
+                  onChange={(e) => setIntelligenceResponse(e.target.value)}
+                  rows="8"
+                  placeholder="Share your approach, experience, and the signals you look for..."
+                  className="intelligence-response"
+                />
+              </div>
+            )}
+
             <div className="form-group">
-              <label>Cover Letter / Why This Role?</label>
+              <label>Additional Notes (Optional)</label>
               <textarea
                 name="cover_letter"
                 value={formData.cover_letter}
                 onChange={handleInputChange}
-                rows="5"
-                placeholder="Tell us why you're interested in this position and what makes you a great fit..."
+                rows="3"
+                placeholder="Any additional context you'd like to share..."
               />
             </div>
 
@@ -309,7 +422,7 @@ function CandidateLandingPage() {
               className="submit-btn"
               disabled={submitting}
             >
-              {submitting ? 'Submitting...' : 'Submit Application'}
+              {submitting ? 'Submitting...' : 'Submit Hiring Intelligence'}
             </button>
           </form>
         </div>
