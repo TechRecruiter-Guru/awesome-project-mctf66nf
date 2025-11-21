@@ -384,11 +384,21 @@ function JobDetailPage({ jobId, onBack }) {
       return;
     }
 
+    // Filter out empty work links
+    const validWorkLinks = workLinks.filter(link => link.url.trim() !== '');
+
     const submissionData = {
       ...formData,
       job_id: parseInt(jobId),
       job_title: job.title,
-      years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
+      years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
+      // Add work links for backend storage
+      work_links: validWorkLinks,
+      // Format intelligence response for backend
+      intelligence_response: formData.hiring_intelligence ? {
+        question_id: intelligenceQuestion?.question_id || null,
+        response_text: formData.hiring_intelligence
+      } : null
     };
 
     console.log('📤 Submitting application data:', submissionData);
@@ -550,6 +560,111 @@ function JobDetailPage({ jobId, onBack }) {
             <div className="form-group">
               <label>Portfolio URL</label>
               <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
+            </div>
+
+            {/* ==================== WORK ARTIFACTS SECTION ==================== */}
+
+            <div style={{
+              backgroundColor: '#f8fafc',
+              borderRadius: '12px',
+              border: '1px solid #e2e8f0',
+              padding: '24px',
+              marginTop: '30px',
+              marginBottom: '20px'
+            }}>
+              <h2 style={{ margin: '0 0 6px 0', fontSize: '20px', color: '#0f1724' }}>
+                Work Artifacts
+              </h2>
+              <p style={{ color: '#6b7280', margin: '0 0 18px 0', fontSize: '13px' }}>
+                Share links to your work - GitHub repos, papers, projects, or any artifacts that demonstrate your capabilities.
+              </p>
+
+              {workLinks.map((link, index) => (
+                <div key={index} style={{
+                  display: 'grid',
+                  gridTemplateColumns: '140px 1fr 1fr auto',
+                  gap: '10px',
+                  marginBottom: '12px',
+                  alignItems: 'center'
+                }}>
+                  <select
+                    value={link.link_type}
+                    onChange={(e) => updateWorkLink(index, 'link_type', e.target.value)}
+                    style={{
+                      padding: '10px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px',
+                      backgroundColor: 'white'
+                    }}
+                  >
+                    <option value="github">GitHub</option>
+                    <option value="paper">Paper/Publication</option>
+                    <option value="portfolio">Portfolio</option>
+                    <option value="project">Project</option>
+                    <option value="other">Other</option>
+                  </select>
+                  <input
+                    type="url"
+                    value={link.url}
+                    onChange={(e) => updateWorkLink(index, 'url', e.target.value)}
+                    placeholder="https://..."
+                    style={{
+                      padding: '10px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px'
+                    }}
+                  />
+                  <input
+                    type="text"
+                    value={link.title}
+                    onChange={(e) => updateWorkLink(index, 'title', e.target.value)}
+                    placeholder="Title/Description (optional)"
+                    style={{
+                      padding: '10px',
+                      border: '1px solid #d1d5db',
+                      borderRadius: '6px',
+                      fontSize: '14px'
+                    }}
+                  />
+                  {workLinks.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => removeWorkLink(index)}
+                      style={{
+                        background: '#ef4444',
+                        color: 'white',
+                        border: 'none',
+                        borderRadius: '6px',
+                        width: '36px',
+                        height: '36px',
+                        fontSize: '1.2rem',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      ×
+                    </button>
+                  )}
+                </div>
+              ))}
+
+              <button
+                type="button"
+                onClick={addWorkLink}
+                style={{
+                  background: 'none',
+                  border: '2px dashed #667eea',
+                  color: '#667eea',
+                  padding: '10px 20px',
+                  borderRadius: '6px',
+                  cursor: 'pointer',
+                  fontWeight: '600',
+                  marginTop: '10px'
+                }}
+              >
+                + Add Another Link
+              </button>
             </div>
 
             {/* ==================== PROFESSIONAL PAIP HIRING INTELLIGENCE INTAKE ==================== */}
