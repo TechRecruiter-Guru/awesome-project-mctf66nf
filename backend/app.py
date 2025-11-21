@@ -2912,42 +2912,60 @@ def submit_public_application():
         # Process work artifact links (Hiring Intelligence)
         work_links = data.get('work_links', [])
         print(f"📦 Received {len(work_links)} work links")
-        for i, link in enumerate(work_links):
-            print(f"   Link {i+1}: type={link.get('link_type')}, url={link.get('url')[:50] if link.get('url') else 'EMPTY'}, title={link.get('title', 'N/A')}")
 
-        try:
-            links_added = 0
-            for link_data in work_links:
-                # Validate link has both URL and type, and URL is not empty
-                url = link_data.get('url', '').strip()
-                link_type = link_data.get('link_type', '').strip()
+        # Check if candidate_link table exists before trying to use it
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        table_exists = 'candidate_link' in inspector.get_table_names()
 
-                if not url or not link_type:
-                    print(f"⚠️  Skipping invalid link: url='{url}', type='{link_type}'")
-                    continue
+        if not table_exists:
+            print("⚠️  candidate_link table does not exist yet - skipping work links")
+            print("   Work links will be available after database migration")
+        elif len(work_links) > 0:
+            for i, link in enumerate(work_links):
+                print(f"   Link {i+1}: type={link.get('link_type')}, url={link.get('url')[:50] if link.get('url') else 'EMPTY'}, title={link.get('title', 'N/A')}")
 
-                if len(url) > 500:
-                    print(f"⚠️  URL too long ({len(url)} chars), truncating to 500")
-                    url = url[:500]
+            try:
+                links_added = 0
+                for link_data in work_links:
+                    # Validate link has both URL and type, and URL is not empty
+                    url = link_data.get('url', '').strip()
+                    link_type = link_data.get('link_type', '').strip()
 
-                link = CandidateLink(
-                    candidate_id=candidate.id,
-                    link_type=link_type,
-                    url=url,
-                    title=link_data.get('title', '')[:300] if link_data.get('title') else None
-                )
-                db.session.add(link)
-                links_added += 1
+                    if not url or not link_type:
+                        print(f"⚠️  Skipping invalid link: url='{url}', type='{link_type}'")
+                        continue
 
-            if links_added > 0:
-                print(f"✅ Added {links_added} work artifact links")
-            else:
-                print(f"ℹ️  No valid work links to add")
-        except Exception as e:
-            import traceback
-            print(f"⚠️  Could not save work links (table may not exist yet): {str(e)}")
-            print(f"   Traceback:\n{traceback.format_exc()}")
-            # Continue anyway - the application can still be created
+                    if len(url) > 500:
+                        print(f"⚠️  URL too long ({len(url)} chars), truncating to 500")
+                        url = url[:500]
+
+                    link = CandidateLink(
+                        candidate_id=candidate.id,
+                        link_type=link_type,
+                        url=url,
+                        title=link_data.get('title', '')[:300] if link_data.get('title') else None
+                    )
+                    db.session.add(link)
+                    links_added += 1
+
+                if links_added > 0:
+                    print(f"✅ Added {links_added} work artifact links")
+                else:
+                    print(f"ℹ️  No valid work links to add")
+            except Exception as e:
+                import traceback
+                print(f"⚠️  Error saving work links: {str(e)}")
+                print(f"   Traceback:\n{traceback.format_exc()}")
+                # Roll back the bad objects to prevent tainting the session
+                db.session.rollback()
+                # Re-add the candidate since we rolled back
+                if candidate.id is None:
+                    db.session.add(candidate)
+                    db.session.flush()
+                print("   Continuing without work links...")
+        else:
+            print("ℹ️  No work links provided")
 
         # Create application (store position, hiring intelligence + hidden signal)
         application = Application(
@@ -2966,61 +2984,81 @@ def submit_public_application():
         # Process intelligence response (Hiring Intelligence)
         intelligence_response = data.get('intelligence_response')
         if intelligence_response and intelligence_response.get('response_text'):
-            try:
-                # Get or create the question
-                question_id = intelligence_response.get('question_id')
+            # Check if intelligence tables exist
+            intelligence_tables_exist = (
+                'role_question' in inspector.get_table_names() and
+                'intelligence_response' in inspector.get_table_names() and
+                'hiring_intelligence_submission' in inspector.get_table_names()
+            )
 
-                if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
-                    # Create question from template
-                    template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
-                    question = RoleQuestion(
-                        job_id=job_id,
-                        role_title=job.title,
-                        label=template_data['label'],
-                        question=template_data['question'],
-                        is_template=False,
-                        is_active=True
-                    )
-                    db.session.add(question)
+            if not intelligence_tables_exist:
+                print("⚠️  Hiring intelligence tables do not exist yet - skipping intelligence data")
+                print("   Intelligence data stored in Application.hiring_intelligence field as fallback")
+            else:
+                try:
+                    # Get or create the question
+                    question_id = intelligence_response.get('question_id')
+
+                    if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+                        # Create question from template
+                        template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+                        question = RoleQuestion(
+                            job_id=job_id,
+                            role_title=job.title,
+                            label=template_data['label'],
+                            question=template_data['question'],
+                            is_template=False,
+                            is_active=True
+                        )
+                        db.session.add(question)
+                        db.session.flush()
+                        question_id = question.id
+                        print(f"✅ Created RoleQuestion for {job.title}")
+
+                    if question_id:
+                        response = IntelligenceResponse(
+                            application_id=application.id,
+                            question_id=question_id,
+                            response_text=intelligence_response['response_text']
+                        )
+                        db.session.add(response)
+                        print(f"✅ Added IntelligenceResponse")
+
+                        # Auto-generate Hiring Intelligence Submission
+                        submission_data = {
+                            'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+                            'candidate_email': candidate.email,
+                            'position': data.get('position', job.title),
+                            'hidden_signal': data.get('hidden_signal', ''),
+                            'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
+                            'intelligence_response': {
+                                'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
+                                'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
+                                'response_text': intelligence_response['response_text']
+                            },
+                            'generated_at': datetime.utcnow().isoformat()
+                        }
+
+                        submission = HiringIntelligenceSubmission(
+                            application_id=application.id,
+                            submission_data=json_module.dumps(submission_data),
+                            status='pending'
+                        )
+                        db.session.add(submission)
+                        print(f"✅ Created HiringIntelligenceSubmission")
+                except Exception as e:
+                    import traceback
+                    print(f"⚠️  Error saving intelligence data: {str(e)}")
+                    print(f"   Traceback:\n{traceback.format_exc()}")
+                    # Roll back to prevent session tainting
+                    db.session.rollback()
+                    # Re-add what we need
+                    if candidate.id is None:
+                        db.session.add(candidate)
+                        db.session.flush()
+                    db.session.add(application)
                     db.session.flush()
-                    question_id = question.id
-                    print(f"✅ Created RoleQuestion for {job.title}")
-
-                if question_id:
-                    response = IntelligenceResponse(
-                        application_id=application.id,
-                        question_id=question_id,
-                        response_text=intelligence_response['response_text']
-                    )
-                    db.session.add(response)
-                    print(f"✅ Added IntelligenceResponse")
-
-                    # Auto-generate Hiring Intelligence Submission
-                    submission_data = {
-                        'candidate_name': f"{candidate.first_name} {candidate.last_name}",
-                        'candidate_email': candidate.email,
-                        'position': data.get('position', job.title),
-                        'hidden_signal': data.get('hidden_signal', ''),
-                        'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
-                        'intelligence_response': {
-                            'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
-                            'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
-                            'response_text': intelligence_response['response_text']
-                        },
-                        'generated_at': datetime.utcnow().isoformat()
-                    }
-
-                    submission = HiringIntelligenceSubmission(
-                        application_id=application.id,
-                        submission_data=json_module.dumps(submission_data),
-                        status='pending'
-                    )
-                    db.session.add(submission)
-                    print(f"✅ Created HiringIntelligenceSubmission")
-            except Exception as e:
-                print(f"⚠️  Could not save hiring intelligence data (tables may not exist yet): {str(e)}")
-                print(f"   Will still save hiring_intelligence field on Application record")
-                # Continue anyway - the application was created with the hiring_intelligence field
+                    print("   Continuing without intelligence data...")
 
         # Commit the transaction
         print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
