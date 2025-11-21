@@ -324,7 +324,7 @@ function JobDetailPage({ jobId, onBack }) {
 
   // Hiring Intelligence state
   const [workLinks, setWorkLinks] = useState([
-    { link_type: 'github', url: '', title: '' }
+    { link_type: 'linkedin', url: '', title: '' }
   ]);
   const [intelligenceResponse, setIntelligenceResponse] = useState('');
 
@@ -549,18 +549,6 @@ function JobDetailPage({ jobId, onBack }) {
                 <option value="Other">Other</option>
               </select>
             </div>
-            <div className="form-group">
-              <label>LinkedIn URL</label>
-              <input type="url" name="linkedin_url" value={formData.linkedin_url} onChange={handleInputChange} placeholder="https://linkedin.com/in/yourprofile" />
-            </div>
-            <div className="form-group">
-              <label>GitHub URL</label>
-              <input type="url" name="github_url" value={formData.github_url} onChange={handleInputChange} placeholder="https://github.com/yourusername" />
-            </div>
-            <div className="form-group">
-              <label>Portfolio URL</label>
-              <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
-            </div>
 
             {/* ==================== WORK ARTIFACTS SECTION ==================== */}
 
@@ -598,9 +586,10 @@ function JobDetailPage({ jobId, onBack }) {
                       backgroundColor: 'white'
                     }}
                   >
+                    <option value="linkedin">LinkedIn</option>
                     <option value="github">GitHub</option>
-                    <option value="paper">Paper/Publication</option>
                     <option value="portfolio">Portfolio</option>
+                    <option value="paper">Paper/Publication</option>
                     <option value="project">Project</option>
                     <option value="other">Other</option>
                   </select>
