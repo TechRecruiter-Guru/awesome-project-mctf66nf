@@ -2871,15 +2871,20 @@ def submit_public_application():
 
     # Process work artifact links (Hiring Intelligence)
     work_links = data.get('work_links', [])
-    for link_data in work_links:
-        if link_data.get('url') and link_data.get('link_type'):
-            link = CandidateLink(
-                candidate_id=candidate.id,
-                link_type=link_data['link_type'],
-                url=link_data['url'],
-                title=link_data.get('title')
-            )
-            db.session.add(link)
+    try:
+        for link_data in work_links:
+            if link_data.get('url') and link_data.get('link_type'):
+                link = CandidateLink(
+                    candidate_id=candidate.id,
+                    link_type=link_data['link_type'],
+                    url=link_data['url'],
+                    title=link_data.get('title')
+                )
+                db.session.add(link)
+        print(f"✅ Added {len(work_links)} work artifact links")
+    except Exception as e:
+        print(f"⚠️  Could not save work links (table may not exist yet): {str(e)}")
+        # Continue anyway - the application can still be created
 
     # Create application (store position, hiring intelligence + hidden signal)
     application = Application(
@@ -2898,66 +2903,61 @@ def submit_public_application():
     # Process intelligence response (Hiring Intelligence)
     intelligence_response = data.get('intelligence_response')
     if intelligence_response and intelligence_response.get('response_text'):
-        # Get or create the question
-        question_id = intelligence_response.get('question_id')
+        try:
+            # Get or create the question
+            question_id = intelligence_response.get('question_id')
 
-        if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
-            # Create question from template
-            template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
-            question = RoleQuestion(
-                job_id=job_id,
-                role_title=job.title,
-                label=template_data['label'],
-                question=template_data['question'],
-                is_template=False,
-                is_active=True
-            )
-            db.session.add(question)
-            db.session.flush()
-            question_id = question.id
+            if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+                # Create question from template
+                template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+                question = RoleQuestion(
+                    job_id=job_id,
+                    role_title=job.title,
+                    label=template_data['label'],
+                    question=template_data['question'],
+                    is_template=False,
+                    is_active=True
+                )
+                db.session.add(question)
+                db.session.flush()
+                question_id = question.id
+                print(f"✅ Created RoleQuestion for {job.title}")
 
-        if question_id:
-            response = IntelligenceResponse(
-                application_id=application.id,
-                question_id=question_id,
-                response_text=intelligence_response['response_text']
-            )
-            db.session.add(response)
+            if question_id:
+                response = IntelligenceResponse(
+                    application_id=application.id,
+                    question_id=question_id,
+                    response_text=intelligence_response['response_text']
+                )
+                db.session.add(response)
+                print(f"✅ Added IntelligenceResponse")
 
-            # Auto-generate Hiring Intelligence Submission
-            submission_data = {
-                'candidate': {
-                    'id': candidate.id,
-                    'name': f"{candidate.first_name} {candidate.last_name}",
-                    'email': candidate.email,
-                    'location': candidate.location,
-                    'github_url': candidate.github_url,
-                    'portfolio_url': candidate.portfolio_url,
-                    'linkedin_url': candidate.linkedin_url,
-                    'primary_expertise': candidate.primary_expertise,
-                    'skills': candidate.skills,
-                    'years_experience': candidate.years_experience
-                },
-                'job': {
-                    'id': job.id,
-                    'title': job.title,
-                    'company': job.company if not job.confidential else 'Confidential'
-                },
-                'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
-                'intelligence_responses': [{
-                    'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
-                    'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
-                    'response_text': intelligence_response['response_text']
-                }],
-                'generated_at': datetime.utcnow().isoformat()
-            }
+                # Auto-generate Hiring Intelligence Submission
+                submission_data = {
+                    'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+                    'candidate_email': candidate.email,
+                    'position': data.get('position', job.title),
+                    'hidden_signal': data.get('hidden_signal', ''),
+                    'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
+                    'intelligence_response': {
+                        'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
+                        'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
+                        'response_text': intelligence_response['response_text']
+                    },
+                    'generated_at': datetime.utcnow().isoformat()
+                }
 
-            submission = HiringIntelligenceSubmission(
-                application_id=application.id,
-                submission_data=json_module.dumps(submission_data),
-                status='pending'
-            )
-            db.session.add(submission)
+                submission = HiringIntelligenceSubmission(
+                    application_id=application.id,
+                    submission_data=json_module.dumps(submission_data),
+                    status='pending'
+                )
+                db.session.add(submission)
+                print(f"✅ Created HiringIntelligenceSubmission")
+        except Exception as e:
+            print(f"⚠️  Could not save hiring intelligence data (tables may not exist yet): {str(e)}")
+            print(f"   Will still save hiring_intelligence field on Application record")
+            # Continue anyway - the application was created with the hiring_intelligence field
 
     try:
         print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
@@ -3002,48 +3002,66 @@ def submit_public_application():
 @app.route('/api/public/jobs/<int:job_id>/question', methods=['GET'])
 def get_public_job_question(job_id):
     """Get the intelligence question for a public job application"""
-    job = Job.query.get_or_404(job_id)
+    try:
+        job = Job.query.get_or_404(job_id)
 
-    # Only show for open jobs
-    if job.status != 'open':
-        return jsonify({"error": "This position is no longer accepting applications"}), 404
+        # Only show for open jobs
+        if job.status != 'open':
+            return jsonify({"error": "This position is no longer accepting applications"}), 404
 
-    # Check for job-specific question
-    question = RoleQuestion.query.filter_by(job_id=job_id, is_active=True).first()
+        # Check for job-specific question
+        try:
+            question = RoleQuestion.query.filter_by(job_id=job_id, is_active=True).first()
+        except Exception as db_error:
+            print(f"⚠️  RoleQuestion table may not exist yet: {str(db_error)}")
+            question = None
 
-    # If no job-specific, look for template
-    if not question:
-        question = RoleQuestion.query.filter_by(
-            role_title=job.title,
-            is_template=True,
-            is_active=True
-        ).first()
+        # If no job-specific, look for template
+        if not question:
+            try:
+                question = RoleQuestion.query.filter_by(
+                    role_title=job.title,
+                    is_template=True,
+                    is_active=True
+                ).first()
+            except Exception as db_error:
+                print(f"⚠️  RoleQuestion template query failed: {str(db_error)}")
+                question = None
 
-    # If still none, check built-in templates
-    if not question and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
-        template = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+        # If still none, check built-in templates
+        if not question and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+            template = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+            print(f"✅ Using built-in template for {job.title}")
+            return jsonify({
+                'question_id': None,
+                'role_title': job.title,
+                'label': template['label'],
+                'question': template['question'],
+                'source': 'built_in'
+            })
+
+        if question:
+            return jsonify({
+                'question_id': question.id,
+                'role_title': question.role_title,
+                'label': question.label,
+                'question': question.question,
+                'source': 'database'
+            })
+
+        # No question available for this role
+        print(f"⚠️  No intelligence question found for job {job_id} ({job.title})")
         return jsonify({
-            'question_id': None,
-            'role_title': job.title,
-            'label': template['label'],
-            'question': template['question'],
-            'source': 'built_in'
+            'message': 'No intelligence question configured for this role',
+            'question': None
         })
-
-    if question:
-        return jsonify({
-            'question_id': question.id,
-            'role_title': question.role_title,
-            'label': question.label,
-            'question': question.question,
-            'source': 'database'
-        })
-
-    # No question available for this role
-    return jsonify({
-        'message': 'No intelligence question configured for this role',
-        'question': None
-    })
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR in get_public_job_question:")
+        print(f"   Job ID: {job_id}")
+        print(f"   Error: {str(e)}")
+        print(f"   Traceback:\n{traceback.format_exc()}")
+        return jsonify({"error": f"Failed to fetch intelligence question: {str(e)}"}), 500
 
 
 if __name__ == '__main__':
