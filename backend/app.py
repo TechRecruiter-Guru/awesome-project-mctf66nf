@@ -2787,179 +2787,180 @@ def submit_public_application():
     """Submit an application from the public landing page with Hiring Intelligence data"""
     import json as json_module
 
-    data = request.json
+    try:
+        data = request.json
 
-    print(f"\n📤 RECEIVED APPLICATION DATA:")
-    print(f"   First Name: {data.get('first_name')}")
-    print(f"   Last Name: {data.get('last_name')}")
-    print(f"   Email: {data.get('email')}")
-    print(f"   Phone: {data.get('phone')}")
-    print(f"   Location: {data.get('location')}")
-    print(f"   Years Experience: {data.get('years_experience')}")
-    print(f"   Primary Expertise: {data.get('primary_expertise')}")
-    print(f"   LinkedIn: {data.get('linkedin_url')}")
-    print(f"   GitHub: {data.get('github_url')}")
-    print(f"   Portfolio: {data.get('portfolio_url')}")
-    print(f"   Position: {data.get('position')}")
-    print(f"   Hiring Intelligence: {data.get('hiring_intelligence')[:50] if data.get('hiring_intelligence') else 'EMPTY'}...")
-    print(f"   Hidden Signal: {data.get('hidden_signal')}")
+        print(f"\n📤 RECEIVED APPLICATION DATA:")
+        print(f"   First Name: {data.get('first_name')}")
+        print(f"   Last Name: {data.get('last_name')}")
+        print(f"   Email: {data.get('email')}")
+        print(f"   Phone: {data.get('phone')}")
+        print(f"   Location: {data.get('location')}")
+        print(f"   Years Experience: {data.get('years_experience')}")
+        print(f"   Primary Expertise: {data.get('primary_expertise')}")
+        print(f"   LinkedIn: {data.get('linkedin_url')}")
+        print(f"   GitHub: {data.get('github_url')}")
+        print(f"   Portfolio: {data.get('portfolio_url')}")
+        print(f"   Position: {data.get('position')}")
+        print(f"   Hiring Intelligence: {data.get('hiring_intelligence')[:50] if data.get('hiring_intelligence') else 'EMPTY'}...")
+        print(f"   Hidden Signal: {data.get('hidden_signal')}")
 
-    # Validate required fields
-    required_fields = ['job_id', 'first_name', 'last_name', 'email']
-    for field in required_fields:
-        if not data.get(field):
-            return jsonify({"error": f"Missing required field: {field}"}), 400
+        # Validate required fields
+        required_fields = ['job_id', 'first_name', 'last_name', 'email']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"error": f"Missing required field: {field}"}), 400
 
-    job_id = data.get('job_id')
+        job_id = data.get('job_id')
 
-    # Verify job exists and is open
-    job = Job.query.get(job_id)
-    if not job:
-        return jsonify({"error": "Job not found"}), 404
-    if job.status != 'open':
-        return jsonify({"error": "This position is no longer accepting applications"}), 400
+        # Verify job exists and is open
+        job = Job.query.get(job_id)
+        if not job:
+            return jsonify({"error": "Job not found"}), 404
+        if job.status != 'open':
+            return jsonify({"error": "This position is no longer accepting applications"}), 400
 
-    # Check if candidate already exists
-    existing_candidate = Candidate.query.filter_by(email=data.get('email')).first()
+        # Check if candidate already exists
+        existing_candidate = Candidate.query.filter_by(email=data.get('email')).first()
 
-    if existing_candidate:
-        # Check if already applied to this job
-        existing_application = Application.query.filter_by(
-            candidate_id=existing_candidate.id,
-            job_id=job_id
-        ).first()
+        if existing_candidate:
+            # Check if already applied to this job
+            existing_application = Application.query.filter_by(
+                candidate_id=existing_candidate.id,
+                job_id=job_id
+            ).first()
 
-        if existing_application:
-            return jsonify({"error": "You have already applied for this position"}), 400
+            if existing_application:
+                return jsonify({"error": "You have already applied for this position"}), 400
 
-        candidate = existing_candidate
-        # Update candidate info if provided - ALWAYS update, even if empty
-        candidate.phone = data.get('phone', '')
-        candidate.linkedin_url = data.get('linkedin_url', '')
-        candidate.github_url = data.get('github_url', '')
-        candidate.portfolio_url = data.get('portfolio_url', '')
-        candidate.location = data.get('location', '')
-        candidate.years_experience = data.get('years_experience')
-        candidate.primary_expertise = data.get('primary_expertise', '')
-    else:
-        # Create new candidate
-        candidate = Candidate(
-            first_name=data.get('first_name'),
-            last_name=data.get('last_name'),
-            email=data.get('email'),
-            phone=data.get('phone', ''),
-            location=data.get('location', ''),
-            linkedin_url=data.get('linkedin_url', ''),
-            github_url=data.get('github_url', ''),
-            portfolio_url=data.get('portfolio_url', ''),
-            resume_url=data.get('resume_url', ''),
-            years_experience=data.get('years_experience'),
-            primary_expertise=data.get('primary_expertise', ''),
-            status='new'
+            candidate = existing_candidate
+            # Update candidate info if provided - ALWAYS update, even if empty
+            candidate.phone = data.get('phone', '')
+            candidate.linkedin_url = data.get('linkedin_url', '')
+            candidate.github_url = data.get('github_url', '')
+            candidate.portfolio_url = data.get('portfolio_url', '')
+            candidate.location = data.get('location', '')
+            candidate.years_experience = data.get('years_experience')
+            candidate.primary_expertise = data.get('primary_expertise', '')
+        else:
+            # Create new candidate
+            candidate = Candidate(
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                email=data.get('email'),
+                phone=data.get('phone', ''),
+                location=data.get('location', ''),
+                linkedin_url=data.get('linkedin_url', ''),
+                github_url=data.get('github_url', ''),
+                portfolio_url=data.get('portfolio_url', ''),
+                resume_url=data.get('resume_url', ''),
+                years_experience=data.get('years_experience'),
+                primary_expertise=data.get('primary_expertise', ''),
+                status='new'
+            )
+            db.session.add(candidate)
+            try:
+                db.session.flush()  # Get candidate ID
+                print(f"✅ Candidate flushed successfully - ID will be: {candidate.id}")
+            except Exception as e:
+                import traceback
+                print(f"❌ ERROR FLUSHING CANDIDATE:")
+                print(f"   Error: {str(e)}")
+                print(f"   Traceback:\n{traceback.format_exc()}")
+                db.session.rollback()
+                return jsonify({"error": f"Failed to create candidate: {str(e)}"}), 500
+
+        # Process work artifact links (Hiring Intelligence)
+        work_links = data.get('work_links', [])
+        try:
+            for link_data in work_links:
+                if link_data.get('url') and link_data.get('link_type'):
+                    link = CandidateLink(
+                        candidate_id=candidate.id,
+                        link_type=link_data['link_type'],
+                        url=link_data['url'],
+                        title=link_data.get('title')
+                    )
+                    db.session.add(link)
+            print(f"✅ Added {len(work_links)} work artifact links")
+        except Exception as e:
+            print(f"⚠️  Could not save work links (table may not exist yet): {str(e)}")
+            # Continue anyway - the application can still be created
+
+        # Create application (store position, hiring intelligence + hidden signal)
+        application = Application(
+            candidate_id=candidate.id,
+            job_id=job_id,
+            status='applied',
+            source='hiring_intelligence',
+            position=data.get('position', ''),
+            hiring_intelligence=data.get('hiring_intelligence', ''),
+            hidden_signal=data.get('hidden_signal', ''),
+            notes=data.get('cover_letter', '')
         )
-        db.session.add(candidate)
-        try:
-            db.session.flush()  # Get candidate ID
-            print(f"✅ Candidate flushed successfully - ID will be: {candidate.id}")
-        except Exception as e:
-            import traceback
-            print(f"❌ ERROR FLUSHING CANDIDATE:")
-            print(f"   Error: {str(e)}")
-            print(f"   Traceback:\n{traceback.format_exc()}")
-            db.session.rollback()
-            return jsonify({"error": f"Failed to create candidate: {str(e)}"}), 500
+        db.session.add(application)
+        db.session.flush()  # Get application ID
 
-    # Process work artifact links (Hiring Intelligence)
-    work_links = data.get('work_links', [])
-    try:
-        for link_data in work_links:
-            if link_data.get('url') and link_data.get('link_type'):
-                link = CandidateLink(
-                    candidate_id=candidate.id,
-                    link_type=link_data['link_type'],
-                    url=link_data['url'],
-                    title=link_data.get('title')
-                )
-                db.session.add(link)
-        print(f"✅ Added {len(work_links)} work artifact links")
-    except Exception as e:
-        print(f"⚠️  Could not save work links (table may not exist yet): {str(e)}")
-        # Continue anyway - the application can still be created
+        # Process intelligence response (Hiring Intelligence)
+        intelligence_response = data.get('intelligence_response')
+        if intelligence_response and intelligence_response.get('response_text'):
+            try:
+                # Get or create the question
+                question_id = intelligence_response.get('question_id')
 
-    # Create application (store position, hiring intelligence + hidden signal)
-    application = Application(
-        candidate_id=candidate.id,
-        job_id=job_id,
-        status='applied',
-        source='hiring_intelligence',
-        position=data.get('position', ''),
-        hiring_intelligence=data.get('hiring_intelligence', ''),
-        hidden_signal=data.get('hidden_signal', ''),
-        notes=data.get('cover_letter', '')
-    )
-    db.session.add(application)
-    db.session.flush()  # Get application ID
+                if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+                    # Create question from template
+                    template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+                    question = RoleQuestion(
+                        job_id=job_id,
+                        role_title=job.title,
+                        label=template_data['label'],
+                        question=template_data['question'],
+                        is_template=False,
+                        is_active=True
+                    )
+                    db.session.add(question)
+                    db.session.flush()
+                    question_id = question.id
+                    print(f"✅ Created RoleQuestion for {job.title}")
 
-    # Process intelligence response (Hiring Intelligence)
-    intelligence_response = data.get('intelligence_response')
-    if intelligence_response and intelligence_response.get('response_text'):
-        try:
-            # Get or create the question
-            question_id = intelligence_response.get('question_id')
+                if question_id:
+                    response = IntelligenceResponse(
+                        application_id=application.id,
+                        question_id=question_id,
+                        response_text=intelligence_response['response_text']
+                    )
+                    db.session.add(response)
+                    print(f"✅ Added IntelligenceResponse")
 
-            if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
-                # Create question from template
-                template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
-                question = RoleQuestion(
-                    job_id=job_id,
-                    role_title=job.title,
-                    label=template_data['label'],
-                    question=template_data['question'],
-                    is_template=False,
-                    is_active=True
-                )
-                db.session.add(question)
-                db.session.flush()
-                question_id = question.id
-                print(f"✅ Created RoleQuestion for {job.title}")
+                    # Auto-generate Hiring Intelligence Submission
+                    submission_data = {
+                        'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+                        'candidate_email': candidate.email,
+                        'position': data.get('position', job.title),
+                        'hidden_signal': data.get('hidden_signal', ''),
+                        'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
+                        'intelligence_response': {
+                            'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
+                            'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
+                            'response_text': intelligence_response['response_text']
+                        },
+                        'generated_at': datetime.utcnow().isoformat()
+                    }
 
-            if question_id:
-                response = IntelligenceResponse(
-                    application_id=application.id,
-                    question_id=question_id,
-                    response_text=intelligence_response['response_text']
-                )
-                db.session.add(response)
-                print(f"✅ Added IntelligenceResponse")
+                    submission = HiringIntelligenceSubmission(
+                        application_id=application.id,
+                        submission_data=json_module.dumps(submission_data),
+                        status='pending'
+                    )
+                    db.session.add(submission)
+                    print(f"✅ Created HiringIntelligenceSubmission")
+            except Exception as e:
+                print(f"⚠️  Could not save hiring intelligence data (tables may not exist yet): {str(e)}")
+                print(f"   Will still save hiring_intelligence field on Application record")
+                # Continue anyway - the application was created with the hiring_intelligence field
 
-                # Auto-generate Hiring Intelligence Submission
-                submission_data = {
-                    'candidate_name': f"{candidate.first_name} {candidate.last_name}",
-                    'candidate_email': candidate.email,
-                    'position': data.get('position', job.title),
-                    'hidden_signal': data.get('hidden_signal', ''),
-                    'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
-                    'intelligence_response': {
-                        'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
-                        'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
-                        'response_text': intelligence_response['response_text']
-                    },
-                    'generated_at': datetime.utcnow().isoformat()
-                }
-
-                submission = HiringIntelligenceSubmission(
-                    application_id=application.id,
-                    submission_data=json_module.dumps(submission_data),
-                    status='pending'
-                )
-                db.session.add(submission)
-                print(f"✅ Created HiringIntelligenceSubmission")
-        except Exception as e:
-            print(f"⚠️  Could not save hiring intelligence data (tables may not exist yet): {str(e)}")
-            print(f"   Will still save hiring_intelligence field on Application record")
-            # Continue anyway - the application was created with the hiring_intelligence field
-
-    try:
+        # Commit the transaction
         print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
         db.session.commit()
         print(f"✅ COMMIT SUCCEEDED")
@@ -2991,7 +2992,7 @@ def submit_public_application():
     except Exception as e:
         import traceback
         error_trace = traceback.format_exc()
-        print(f"❌ ERROR SAVING APPLICATION:")
+        print(f"❌ ERROR IN /api/public/apply:")
         print(f"   Error Type: {type(e).__name__}")
         print(f"   Error Message: {str(e)}")
         print(f"   Full Traceback:\n{error_trace}")
