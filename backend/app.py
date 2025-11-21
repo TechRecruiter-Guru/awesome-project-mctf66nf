@@ -320,11 +320,6 @@ class SavedSearch(db.Model):
         }
 
 
-# Create tables
-with app.app_context():
-    db.create_all()
-
-
 # ==================== API ENDPOINTS ====================
 
 @app.route('/api/health', methods=['GET'])
@@ -3163,6 +3158,14 @@ def get_public_job_question(job_id):
         print(f"   Error: {str(e)}")
         print(f"   Traceback:\n{traceback.format_exc()}")
         return jsonify({"error": f"Failed to fetch intelligence question: {str(e)}"}), 500
+
+
+# ==================== DATABASE INITIALIZATION ====================
+# IMPORTANT: Must be AFTER all model definitions so SQLAlchemy knows about them
+print("🔧 Initializing database tables...")
+with app.app_context():
+    db.create_all()
+    print("✅ Database tables created successfully")
 
 
 if __name__ == '__main__':
