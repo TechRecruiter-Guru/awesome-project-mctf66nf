@@ -1113,6 +1113,12 @@ function App() {
           📋 Applications ({stats.total_applications || 0})
         </button>
         <button
+          className={activeTab === 'intelligence' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('intelligence')}
+        >
+          🧠 Intelligence
+        </button>
+        <button
           className={activeTab === 'analytics' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('analytics')}
         >
@@ -1173,6 +1179,7 @@ function App() {
           />
         )}
         {activeTab === 'applications' && <ApplicationsView />}
+        {activeTab === 'intelligence' && <IntelligenceSubmissionsView />}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'campaigns' && <CampaignsView />}
         {activeTab === 'interviews' && <InterviewsView />}
@@ -1188,6 +1195,545 @@ function App() {
   );
 }
 
+// Intelligence Report Modal
+function IntelligenceReportModal({ submission, applicationData, onClose, onUpdate }) {
+  const [missingSignal, setMissingSignal] = useState(submission.missing_signal || '');
+  const [passedToScreen, setPassedToScreen] = useState(submission.passed_to_screen || false);
+  const [passedToInterview, setPassedToInterview] = useState(submission.passed_to_interview || false);
+  const [receivedOffer, setReceivedOffer] = useState(submission.received_offer || false);
+  const [saving, setSaving] = useState(false);
+
+  const submissionData = submission.submission_data ? JSON.parse(submission.submission_data) : {};
+  const workLinks = submissionData.work_links || [];
+  const intelligenceResponse = submissionData.intelligence_response || {};
+
+  const saveFeedback = async () => {
+    setSaving(true);
+    try {
+      await axios.put(`${API_URL}/api/intelligence-submissions/${submission.id}`, {
+        missing_signal: missingSignal,
+        passed_to_screen: passedToScreen,
+        passed_to_interview: passedToInterview,
+        received_offer: receivedOffer,
+        status: 'reviewed'
+      });
+      alert('✅ Feedback saved successfully!');
+      onUpdate();
+    } catch (err) {
+      alert('Error saving feedback: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  return (
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100%',
+      height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      zIndex: 2000,
+      overflowY: 'auto'
+    }}>
+      <div style={{
+        backgroundColor: 'white',
+        borderRadius: '16px',
+        padding: '32px',
+        maxWidth: '1000px',
+        maxHeight: '95vh',
+        overflowY: 'auto',
+        width: '95%',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+      }}>
+        {/* HEADER */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px' }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '28px', color: '#0f1724', fontWeight: '700' }}>
+              🧠 Hiring Intelligence Report
+            </h1>
+            <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280' }}>
+              Resume Replacement Document - Built from Impact Intelligence, Not Keywords
+            </p>
+          </div>
+          <button
+            onClick={onClose}
+            style={{
+              backgroundColor: 'transparent',
+              border: '2px solid #e5e7eb',
+              borderRadius: '8px',
+              padding: '8px 16px',
+              cursor: 'pointer',
+              fontSize: '1rem',
+              fontWeight: '600',
+              color: '#6b7280'
+            }}
+          >
+            ✕ Close
+          </button>
+        </div>
+
+        {/* CANDIDATE INFO HEADER */}
+        <div style={{
+          backgroundColor: '#f8fafc',
+          borderRadius: '12px',
+          padding: '20px',
+          marginBottom: '24px',
+          border: '1px solid #e2e8f0'
+        }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>CANDIDATE</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#0f1724' }}>
+                {submissionData.candidate_name || applicationData?.candidate_name || 'Unknown'}
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>POSITION</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#0f1724' }}>
+                {submissionData.position || applicationData?.position || applicationData?.job_title || '-'}
+              </p>
+            </div>
+            {applicationData?.candidate_email && (
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>EMAIL</p>
+                <p style={{ margin: 0, fontSize: '14px' }}>
+                  <a href={`mailto:${applicationData.candidate_email}`} style={{ color: '#0b63ff', textDecoration: 'none' }}>
+                    {applicationData.candidate_email}
+                  </a>
+                </p>
+              </div>
+            )}
+            {submissionData.hidden_signal && (
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>HIDDEN SIGNAL (SELF-IDENTIFIED)</p>
+                <p style={{ margin: 0, fontSize: '14px', color: '#92400e', fontWeight: '600' }}>
+                  {submissionData.hidden_signal}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* WORK ARTIFACTS INTELLIGENCE */}
+        {workLinks.length > 0 && (
+          <div style={{ marginBottom: '24px' }}>
+            <h2 style={{
+              fontSize: '18px',
+              fontWeight: '700',
+              color: '#0f1724',
+              marginBottom: '12px',
+              paddingBottom: '8px',
+              borderBottom: '2px solid #667eea'
+            }}>
+              📦 Work Artifact Intelligence
+            </h2>
+            <div style={{
+              backgroundColor: '#f8fafc',
+              borderRadius: '12px',
+              padding: '16px',
+              border: '1px solid #e2e8f0'
+            }}>
+              {workLinks.map((link, index) => (
+                <div key={index} style={{
+                  backgroundColor: 'white',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  marginBottom: index < workLinks.length - 1 ? '12px' : 0,
+                  border: '1px solid #e2e8f0'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+                    <span style={{
+                      backgroundColor: '#667eea',
+                      color: 'white',
+                      padding: '4px 8px',
+                      borderRadius: '4px',
+                      fontSize: '11px',
+                      fontWeight: '600',
+                      textTransform: 'uppercase'
+                    }}>
+                      {link.link_type}
+                    </span>
+                    {link.title && (
+                      <span style={{ fontWeight: '600', color: '#0f1724' }}>{link.title}</span>
+                    )}
+                  </div>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" style={{
+                    color: '#0b63ff',
+                    textDecoration: 'none',
+                    fontSize: '14px',
+                    wordBreak: 'break-all'
+                  }}>
+                    {link.url}
+                  </a>
+                </div>
+              ))}
+              <div style={{
+                marginTop: '12px',
+                padding: '12px',
+                backgroundColor: '#e0e7ff',
+                borderRadius: '8px',
+                fontSize: '13px',
+                color: '#3730a3',
+                lineHeight: '1.5'
+              }}>
+                <strong>💡 Intelligence Context:</strong> Candidate provided {workLinks.length} work artifact{workLinks.length > 1 ? 's' : ''} for verification.
+                These links enable direct assessment of code quality, research depth, and technical judgment -
+                far superior to resume keywords.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* JUDGMENT & REASONING INTELLIGENCE */}
+        {intelligenceResponse.response_text && (
+          <div style={{ marginBottom: '24px' }}>
+            <h2 style={{
+              fontSize: '18px',
+              fontWeight: '700',
+              color: '#0f1724',
+              marginBottom: '12px',
+              paddingBottom: '8px',
+              borderBottom: '2px solid #667eea'
+            }}>
+              🎯 Judgment & Reasoning Intelligence
+            </h2>
+            <div style={{
+              backgroundColor: '#f0f4ff',
+              borderRadius: '12px',
+              padding: '20px',
+              border: '2px solid #667eea'
+            }}>
+              {intelligenceResponse.question_label && (
+                <div style={{
+                  marginBottom: '12px',
+                  paddingBottom: '12px',
+                  borderBottom: '1px solid #c7d2fe'
+                }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>
+                    ROLE-SPECIFIC INTELLIGENCE QUESTION
+                  </p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#4338ca' }}>
+                    {intelligenceResponse.question_label}
+                  </p>
+                  {intelligenceResponse.question_text && (
+                    <p style={{ margin: '8px 0 0 0', fontSize: '13px', color: '#6b7280', fontStyle: 'italic' }}>
+                      "{intelligenceResponse.question_text}"
+                    </p>
+                  )}
+                </div>
+              )}
+              <div style={{
+                backgroundColor: 'white',
+                padding: '16px',
+                borderRadius: '8px',
+                fontSize: '14px',
+                lineHeight: '1.7',
+                color: '#0f1724',
+                whiteSpace: 'pre-wrap',
+                wordWrap: 'break-word',
+                border: '1px solid #c7d2fe'
+              }}>
+                {intelligenceResponse.response_text}
+              </div>
+              <div style={{
+                marginTop: '12px',
+                padding: '12px',
+                backgroundColor: '#e0e7ff',
+                borderRadius: '8px',
+                fontSize: '13px',
+                color: '#3730a3',
+                lineHeight: '1.5'
+              }}>
+                <strong>💡 Intelligence Context:</strong> This response reveals early signal detection patterns,
+                root cause isolation logic, and intervention decision-making. Look for evidence of systems-level
+                thinking, not just technical keywords.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* RECRUITER FEEDBACK SECTION */}
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={{
+            fontSize: '18px',
+            fontWeight: '700',
+            color: '#0f1724',
+            marginBottom: '12px',
+            paddingBottom: '8px',
+            borderBottom: '2px solid #f59e0b'
+          }}>
+            📝 Recruiter Feedback & Funnel Tracking
+          </h2>
+          <div style={{
+            backgroundColor: '#fffbeb',
+            borderRadius: '12px',
+            padding: '20px',
+            border: '2px solid #f59e0b'
+          }}>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                What 1 Signal is Missing? (1 word or short phrase)
+              </label>
+              <input
+                type="text"
+                value={missingSignal}
+                onChange={(e) => setMissingSignal(e.target.value)}
+                placeholder="e.g., hardware, fieldwork, distributed systems, production scale"
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #fbbf24',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  boxSizing: 'border-box'
+                }}
+              />
+              <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#92400e' }}>
+                Keep it concise - this helps refine candidate sourcing patterns
+              </p>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '12px', color: '#0f1724' }}>
+                Funnel Progression
+              </label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={passedToScreen}
+                    onChange={(e) => setPassedToScreen(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <span style={{ fontSize: '14px', color: '#0f1724' }}>✅ Passed to Phone Screen</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={passedToInterview}
+                    onChange={(e) => setPassedToInterview(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <span style={{ fontSize: '14px', color: '#0f1724' }}>✅ Passed to Onsite Interview</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input
+                    type="checkbox"
+                    checked={receivedOffer}
+                    onChange={(e) => setReceivedOffer(e.target.checked)}
+                    style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                  />
+                  <span style={{ fontSize: '14px', color: '#0f1724' }}>✅ Received Offer</span>
+                </label>
+              </div>
+            </div>
+
+            <button
+              onClick={saveFeedback}
+              disabled={saving}
+              style={{
+                marginTop: '16px',
+                padding: '12px 24px',
+                backgroundColor: '#f59e0b',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                cursor: 'pointer',
+                fontWeight: '600',
+                fontSize: '14px',
+                opacity: saving ? 0.6 : 1
+              }}
+            >
+              {saving ? '💾 Saving...' : '💾 Save Feedback'}
+            </button>
+          </div>
+        </div>
+
+        {/* FOOTER INFO */}
+        <div style={{
+          backgroundColor: '#f3f4f6',
+          padding: '16px',
+          borderRadius: '8px',
+          fontSize: '12px',
+          color: '#6b7280'
+        }}>
+          <p style={{ margin: '0 0 6px 0' }}>
+            <strong>Submission ID:</strong> {submission.id} |
+            <strong> Created:</strong> {submission.created_at ? new Date(submission.created_at).toLocaleString() : '-'} |
+            <strong> Status:</strong> {submission.status}
+          </p>
+          <p style={{ margin: 0, fontStyle: 'italic' }}>
+            This intelligence report replaces traditional resumes by focusing on cognitive patterns,
+            judgment signals, and verifiable work artifacts. No more keyword matching.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// Intelligence Submissions View
+function IntelligenceSubmissionsView() {
+  const [submissions, setSubmissions] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [viewingReport, setViewingReport] = useState(false);
+
+  useEffect(() => {
+    fetchSubmissions();
+    fetchApplications();
+  }, []);
+
+  const fetchSubmissions = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/intelligence-submissions`);
+      setSubmissions(response.data.submissions || []);
+    } catch (err) {
+      console.error('Error fetching intelligence submissions:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchApplications = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/applications`);
+      setApplications(response.data.applications || []);
+    } catch (err) {
+      console.error('Error fetching applications:', err);
+    }
+  };
+
+  const getApplicationData = (applicationId) => {
+    return applications.find(app => app.id === applicationId);
+  };
+
+  const viewIntelligenceReport = async (submission) => {
+    setSelectedSubmission(submission);
+    setViewingReport(true);
+  };
+
+  if (loading) return <div className="loading">Loading intelligence submissions...</div>;
+
+  return (
+    <div>
+      <div className="view-header">
+        <h2>🧠 Hiring Intelligence Submissions</h2>
+        <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '8px' }}>
+          Resume Replacement Reports - The Future of Hiring Manager Submissions
+        </p>
+      </div>
+
+      {submissions.length === 0 ? (
+        <div className="empty-state">
+          <p>No intelligence submissions yet</p>
+          <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '8px' }}>
+            Submissions are automatically generated when candidates complete the hiring intelligence form
+          </p>
+        </div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{
+            width: '100%',
+            borderCollapse: 'collapse',
+            backgroundColor: 'white',
+            borderRadius: '8px',
+            overflow: 'hidden'
+          }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f3f4f6', borderBottom: '2px solid #e5e7eb' }}>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Candidate</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Position</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Status</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Submitted</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Funnel</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submissions.map((submission) => {
+                const appData = getApplicationData(submission.application_id);
+                const submissionData = submission.submission_data ? JSON.parse(submission.submission_data) : {};
+
+                return (
+                  <tr key={submission.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                    <td style={{ padding: '12px' }}>
+                      <strong>{submissionData.candidate_name || appData?.candidate_name || 'Unknown'}</strong>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {submissionData.position || appData?.position || appData?.job_title || '-'}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <span style={{
+                        backgroundColor: submission.status === 'reviewed' ? '#dcfce7' : '#fef3c7',
+                        color: submission.status === 'reviewed' ? '#166534' : '#92400e',
+                        padding: '4px 8px',
+                        borderRadius: '4px',
+                        fontSize: '0.85rem',
+                        fontWeight: '600'
+                      }}>
+                        {submission.status || 'pending'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {submission.created_at ? new Date(submission.created_at).toLocaleDateString() : '-'}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <div style={{ display: 'flex', gap: '4px', fontSize: '0.85rem' }}>
+                        <span title="Passed to Screen">{submission.passed_to_screen ? '✅' : '⬜'}</span>
+                        <span title="Passed to Interview">{submission.passed_to_interview ? '✅' : '⬜'}</span>
+                        <span title="Received Offer">{submission.received_offer ? '✅' : '⬜'}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <button
+                        onClick={() => viewIntelligenceReport(submission)}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#7c3aed',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem',
+                          fontWeight: '600'
+                        }}
+                      >
+                        📄 View Report
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* INTELLIGENCE REPORT MODAL */}
+      {viewingReport && selectedSubmission && (
+        <IntelligenceReportModal
+          submission={selectedSubmission}
+          applicationData={getApplicationData(selectedSubmission.application_id)}
+          onClose={() => {
+            setViewingReport(false);
+            setSelectedSubmission(null);
+          }}
+          onUpdate={fetchSubmissions}
+        />
+      )}
+    </div>
+  );
+}
+
 // Applications View
 function ApplicationsView() {
   const [applications, setApplications] = useState([]);
@@ -1196,10 +1742,13 @@ function ApplicationsView() {
   const [filterJobId, setFilterJobId] = useState('all');
   const [jobs, setJobs] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [intelligenceSubmissions, setIntelligenceSubmissions] = useState([]);
+  const [viewingIntelligence, setViewingIntelligence] = useState(null);
 
   useEffect(() => {
     fetchApplications();
     fetchJobs();
+    fetchIntelligenceSubmissions();
   }, []);
 
   const fetchApplications = async () => {
@@ -1220,6 +1769,28 @@ function ApplicationsView() {
       setJobs(response.data.jobs || []);
     } catch (err) {
       console.error('Error fetching jobs:', err);
+    }
+  };
+
+  const fetchIntelligenceSubmissions = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/intelligence-submissions`);
+      setIntelligenceSubmissions(response.data.submissions || []);
+    } catch (err) {
+      console.error('Error fetching intelligence submissions:', err);
+    }
+  };
+
+  const getIntelligenceSubmission = (applicationId) => {
+    return intelligenceSubmissions.find(sub => sub.application_id === applicationId);
+  };
+
+  const viewIntelligenceReport = (app) => {
+    const submission = getIntelligenceSubmission(app.id);
+    if (submission) {
+      setViewingIntelligence({ submission, applicationData: app });
+    } else {
+      alert('No hiring intelligence submission found for this application');
     }
   };
 
@@ -1369,20 +1940,39 @@ function ApplicationsView() {
                     ) : '-'}
                   </td>
                   <td style={{ padding: '12px' }}>
-                    <button
-                      onClick={() => setSelectedApplication(app)}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#2563eb',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.85rem'
-                      }}
-                    >
-                      View Details
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <button
+                        onClick={() => setSelectedApplication(app)}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#2563eb',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        View Details
+                      </button>
+                      {getIntelligenceSubmission(app.id) && (
+                        <button
+                          onClick={() => viewIntelligenceReport(app)}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#7c3aed',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem',
+                            fontWeight: '600'
+                          }}
+                        >
+                          🧠 Intelligence
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -1599,6 +2189,16 @@ function ApplicationsView() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* INTELLIGENCE REPORT MODAL */}
+      {viewingIntelligence && (
+        <IntelligenceReportModal
+          submission={viewingIntelligence.submission}
+          applicationData={viewingIntelligence.applicationData}
+          onClose={() => setViewingIntelligence(null)}
+          onUpdate={fetchIntelligenceSubmissions}
+        />
       )}
     </div>
   );
