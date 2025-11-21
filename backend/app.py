@@ -1922,6 +1922,7 @@ class HiringIntelligenceSubmission(db.Model):
     received_offer = db.Column(db.Boolean)
 
     # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
     generated_at = db.Column(db.DateTime, default=datetime.utcnow)
     reviewed_at = db.Column(db.DateTime)
 
@@ -1939,6 +1940,7 @@ class HiringIntelligenceSubmission(db.Model):
             'passed_to_screen': self.passed_to_screen,
             'passed_to_interview': self.passed_to_interview,
             'received_offer': self.received_offer,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
             'generated_at': self.generated_at.isoformat() if self.generated_at else None,
             'reviewed_at': self.reviewed_at.isoformat() if self.reviewed_at else None
         }
@@ -2655,17 +2657,34 @@ def add_intelligence_response(application_id):
 @app.route('/api/intelligence-submissions', methods=['GET'])
 def get_intelligence_submissions():
     """Get all hiring intelligence submissions"""
-    status = request.args.get('status')
+    try:
+        status = request.args.get('status')
 
-    query = HiringIntelligenceSubmission.query
-    if status:
-        query = query.filter_by(status=status)
+        query = HiringIntelligenceSubmission.query
+        if status:
+            query = query.filter_by(status=status)
 
-    submissions = query.order_by(HiringIntelligenceSubmission.generated_at.desc()).all()
-    return jsonify({
-        'submissions': [s.to_dict() for s in submissions],
-        'total': len(submissions)
-    })
+        # Try to order by created_at first (more likely to exist), fallback to id
+        try:
+            submissions = query.order_by(HiringIntelligenceSubmission.created_at.desc()).all()
+        except Exception as order_error:
+            print(f"⚠️  Could not order by created_at, trying generated_at: {str(order_error)}")
+            try:
+                submissions = query.order_by(HiringIntelligenceSubmission.generated_at.desc()).all()
+            except Exception:
+                print(f"⚠️  Could not order by generated_at either, using id")
+                submissions = query.order_by(HiringIntelligenceSubmission.id.desc()).all()
+
+        return jsonify({
+            'submissions': [s.to_dict() for s in submissions],
+            'total': len(submissions)
+        })
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR in get_intelligence_submissions:")
+        print(f"   Error: {str(e)}")
+        print(f"   Traceback:\n{traceback.format_exc()}")
+        return jsonify({"error": f"Failed to fetch intelligence submissions: {str(e)}"}), 500
 
 
 @app.route('/api/intelligence-submissions/<int:submission_id>', methods=['GET'])
