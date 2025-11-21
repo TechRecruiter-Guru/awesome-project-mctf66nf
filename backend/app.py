@@ -2660,20 +2660,34 @@ def get_intelligence_submissions():
     try:
         status = request.args.get('status')
 
+        # Check if table exists first
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        if 'hiring_intelligence_submission' not in inspector.get_table_names():
+            print("⚠️  hiring_intelligence_submission table does not exist yet")
+            return jsonify({
+                'submissions': [],
+                'total': 0,
+                'message': 'Intelligence submissions table not created yet'
+            })
+
         query = HiringIntelligenceSubmission.query
         if status:
             query = query.filter_by(status=status)
 
-        # Try to order by created_at first (more likely to exist), fallback to id
-        try:
+        # Try different ordering strategies based on available columns
+        table_columns = [c['name'] for c in inspector.get_columns('hiring_intelligence_submission')]
+        print(f"📊 Available columns in hiring_intelligence_submission: {table_columns}")
+
+        if 'created_at' in table_columns:
+            print("✅ Ordering by created_at")
             submissions = query.order_by(HiringIntelligenceSubmission.created_at.desc()).all()
-        except Exception as order_error:
-            print(f"⚠️  Could not order by created_at, trying generated_at: {str(order_error)}")
-            try:
-                submissions = query.order_by(HiringIntelligenceSubmission.generated_at.desc()).all()
-            except Exception:
-                print(f"⚠️  Could not order by generated_at either, using id")
-                submissions = query.order_by(HiringIntelligenceSubmission.id.desc()).all()
+        elif 'generated_at' in table_columns:
+            print("✅ Ordering by generated_at")
+            submissions = query.order_by(HiringIntelligenceSubmission.generated_at.desc()).all()
+        else:
+            print("✅ Ordering by id (no timestamp columns found)")
+            submissions = query.order_by(HiringIntelligenceSubmission.id.desc()).all()
 
         return jsonify({
             'submissions': [s.to_dict() for s in submissions],
@@ -2684,7 +2698,13 @@ def get_intelligence_submissions():
         print(f"❌ ERROR in get_intelligence_submissions:")
         print(f"   Error: {str(e)}")
         print(f"   Traceback:\n{traceback.format_exc()}")
-        return jsonify({"error": f"Failed to fetch intelligence submissions: {str(e)}"}), 500
+
+        # Return empty list instead of error to prevent UI breakage
+        return jsonify({
+            'submissions': [],
+            'total': 0,
+            'error': str(e)
+        }), 200  # Return 200 with empty data instead of 500
 
 
 @app.route('/api/intelligence-submissions/<int:submission_id>', methods=['GET'])
