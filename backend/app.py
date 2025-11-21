@@ -2911,19 +2911,42 @@ def submit_public_application():
 
         # Process work artifact links (Hiring Intelligence)
         work_links = data.get('work_links', [])
+        print(f"📦 Received {len(work_links)} work links")
+        for i, link in enumerate(work_links):
+            print(f"   Link {i+1}: type={link.get('link_type')}, url={link.get('url')[:50] if link.get('url') else 'EMPTY'}, title={link.get('title', 'N/A')}")
+
         try:
+            links_added = 0
             for link_data in work_links:
-                if link_data.get('url') and link_data.get('link_type'):
-                    link = CandidateLink(
-                        candidate_id=candidate.id,
-                        link_type=link_data['link_type'],
-                        url=link_data['url'],
-                        title=link_data.get('title')
-                    )
-                    db.session.add(link)
-            print(f"✅ Added {len(work_links)} work artifact links")
+                # Validate link has both URL and type, and URL is not empty
+                url = link_data.get('url', '').strip()
+                link_type = link_data.get('link_type', '').strip()
+
+                if not url or not link_type:
+                    print(f"⚠️  Skipping invalid link: url='{url}', type='{link_type}'")
+                    continue
+
+                if len(url) > 500:
+                    print(f"⚠️  URL too long ({len(url)} chars), truncating to 500")
+                    url = url[:500]
+
+                link = CandidateLink(
+                    candidate_id=candidate.id,
+                    link_type=link_type,
+                    url=url,
+                    title=link_data.get('title', '')[:300] if link_data.get('title') else None
+                )
+                db.session.add(link)
+                links_added += 1
+
+            if links_added > 0:
+                print(f"✅ Added {links_added} work artifact links")
+            else:
+                print(f"ℹ️  No valid work links to add")
         except Exception as e:
+            import traceback
             print(f"⚠️  Could not save work links (table may not exist yet): {str(e)}")
+            print(f"   Traceback:\n{traceback.format_exc()}")
             # Continue anyway - the application can still be created
 
         # Create application (store position, hiring intelligence + hidden signal)
