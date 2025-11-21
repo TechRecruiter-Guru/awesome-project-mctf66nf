@@ -1191,10 +1191,18 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
   const [passedToInterview, setPassedToInterview] = useState(submission.passed_to_interview || false);
   const [receivedOffer, setReceivedOffer] = useState(submission.received_offer || false);
   const [saving, setSaving] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [localSubmission, setLocalSubmission] = useState(submission);
 
-  const submissionData = submission.submission_data ? JSON.parse(submission.submission_data) : {};
+  const submissionData = localSubmission.submission_data ? JSON.parse(localSubmission.submission_data) : {};
   const workLinks = submissionData.work_links || [];
   const intelligenceResponse = submissionData.intelligence_response || {};
+
+  // Parse AI analysis results
+  const extractedSkills = localSubmission.extracted_skills ? JSON.parse(localSubmission.extracted_skills) : null;
+  const keyPhrases = localSubmission.key_phrases ? JSON.parse(localSubmission.key_phrases) : null;
+  const aiAssessment = localSubmission.ai_assessment ? JSON.parse(localSubmission.ai_assessment) : null;
+  const artifactAnalysis = localSubmission.artifact_analysis ? JSON.parse(localSubmission.artifact_analysis) : null;
 
   const saveFeedback = async () => {
     setSaving(true);
@@ -1212,6 +1220,29 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
       alert('Error saving feedback: ' + (err.response?.data?.error || err.message));
     } finally {
       setSaving(false);
+    }
+  };
+
+  const generateAIAnalysis = async () => {
+    if (!window.confirm('Generate AI-powered analysis? This will use Claude API to extract skills, analyze artifacts, and provide hiring recommendations.')) {
+      return;
+    }
+
+    setAnalyzing(true);
+    try {
+      const response = await axios.post(`${API_URL}/api/intelligence-submissions/${localSubmission.id}/analyze`);
+      console.log('✅ AI analysis completed:', response.data);
+
+      // Update local submission with new analysis
+      setLocalSubmission(response.data.submission);
+
+      alert('✅ AI Analysis completed successfully!');
+      onUpdate();
+    } catch (err) {
+      console.error('❌ AI Analysis error:', err);
+      alert('Error generating AI analysis: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setAnalyzing(false);
     }
   };
 
@@ -1249,21 +1280,56 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
               Resume Replacement Document - Built from Impact Intelligence, Not Keywords
             </p>
           </div>
-          <button
-            onClick={onClose}
-            style={{
-              backgroundColor: 'transparent',
-              border: '2px solid #e5e7eb',
-              borderRadius: '8px',
-              padding: '8px 16px',
-              cursor: 'pointer',
-              fontSize: '1rem',
-              fontWeight: '600',
-              color: '#6b7280'
-            }}
-          >
-            ✕ Close
-          </button>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            {!localSubmission.ai_analyzed && (
+              <button
+                onClick={generateAIAnalysis}
+                disabled={analyzing}
+                style={{
+                  backgroundColor: analyzing ? '#9ca3af' : '#8b5cf6',
+                  color: 'white',
+                  border: 'none',
+                  borderRadius: '8px',
+                  padding: '10px 20px',
+                  cursor: analyzing ? 'not-allowed' : 'pointer',
+                  fontSize: '14px',
+                  fontWeight: '600',
+                  boxShadow: '0 2px 4px rgba(139, 92, 246, 0.2)',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {analyzing ? '🤖 Analyzing...' : '🤖 Generate AI Assessment'}
+              </button>
+            )}
+            {localSubmission.ai_analyzed && (
+              <div style={{
+                backgroundColor: '#d1fae5',
+                color: '#065f46',
+                padding: '10px 16px',
+                borderRadius: '8px',
+                fontSize: '13px',
+                fontWeight: '600',
+                border: '1px solid #a7f3d0'
+              }}>
+                ✅ AI Analyzed
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              style={{
+                backgroundColor: 'transparent',
+                border: '2px solid #e5e7eb',
+                borderRadius: '8px',
+                padding: '8px 16px',
+                cursor: 'pointer',
+                fontSize: '1rem',
+                fontWeight: '600',
+                color: '#6b7280'
+              }}
+            >
+              ✕ Close
+            </button>
+          </div>
         </div>
 
         {/* CANDIDATE INFO HEADER */}
@@ -1444,6 +1510,305 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
               </div>
             </div>
           </div>
+        )}
+
+        {/* AI-POWERED ANALYSIS SECTIONS */}
+        {localSubmission.ai_analyzed && (
+          <>
+            {/* EXTRACTED SKILLS */}
+            {extractedSkills && extractedSkills.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: '#0f1724',
+                  marginBottom: '12px',
+                  paddingBottom: '8px',
+                  borderBottom: '2px solid #8b5cf6'
+                }}>
+                  🔧 AI-Extracted Technical Skills
+                </h2>
+                <div style={{
+                  backgroundColor: '#f5f3ff',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '1px solid #ddd6fe'
+                }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {extractedSkills.map((skill, index) => (
+                      <span key={index} style={{
+                        backgroundColor: '#8b5cf6',
+                        color: 'white',
+                        padding: '6px 14px',
+                        borderRadius: '20px',
+                        fontSize: '13px',
+                        fontWeight: '600'
+                      }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* KEY PHRASES */}
+            {keyPhrases && keyPhrases.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: '#0f1724',
+                  marginBottom: '12px',
+                  paddingBottom: '8px',
+                  borderBottom: '2px solid #8b5cf6'
+                }}>
+                  🔍 Key Technical Phrases & Signals
+                </h2>
+                <div style={{
+                  backgroundColor: '#f5f3ff',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '1px solid #ddd6fe'
+                }}>
+                  {keyPhrases.map((item, index) => (
+                    <div key={index} style={{
+                      backgroundColor: 'white',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      marginBottom: index < keyPhrases.length - 1 ? '12px' : 0,
+                      border: '1px solid #ddd6fe'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <span style={{
+                          backgroundColor: item.importance === 'high' ? '#dc2626' : item.importance === 'medium' ? '#f59e0b' : '#6b7280',
+                          color: 'white',
+                          padding: '2px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          textTransform: 'uppercase'
+                        }}>
+                          {item.importance || 'medium'}
+                        </span>
+                        <span style={{ fontWeight: '700', color: '#581c87' }}>
+                          "{item.phrase}"
+                        </span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#6b7280', lineHeight: '1.5' }}>
+                        {item.context}
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ARTIFACT ANALYSIS */}
+            {artifactAnalysis && artifactAnalysis.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: '#0f1724',
+                  marginBottom: '12px',
+                  paddingBottom: '8px',
+                  borderBottom: '2px solid #8b5cf6'
+                }}>
+                  📦 AI Work Artifact Analysis
+                </h2>
+                <div style={{
+                  backgroundColor: '#f5f3ff',
+                  borderRadius: '12px',
+                  padding: '16px',
+                  border: '1px solid #ddd6fe'
+                }}>
+                  {artifactAnalysis.map((artifact, index) => (
+                    <div key={index} style={{
+                      backgroundColor: 'white',
+                      padding: '16px',
+                      borderRadius: '8px',
+                      marginBottom: index < artifactAnalysis.length - 1 ? '16px' : 0,
+                      border: '1px solid #ddd6fe'
+                    }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span style={{
+                          backgroundColor: '#8b5cf6',
+                          color: 'white',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          fontWeight: '600',
+                          textTransform: 'uppercase'
+                        }}>
+                          {artifact.type}
+                        </span>
+                        <span style={{
+                          backgroundColor: artifact.relevance === 'high' ? '#10b981' : artifact.relevance === 'medium' ? '#f59e0b' : '#6b7280',
+                          color: 'white',
+                          padding: '4px 8px',
+                          borderRadius: '4px',
+                          fontSize: '11px',
+                          fontWeight: '600'
+                        }}>
+                          Relevance: {artifact.relevance || 'medium'}
+                        </span>
+                      </div>
+                      <a href={artifact.url} target="_blank" rel="noopener noreferrer" style={{
+                        color: '#8b5cf6',
+                        textDecoration: 'none',
+                        fontSize: '13px',
+                        wordBreak: 'break-all',
+                        display: 'block',
+                        marginBottom: '8px'
+                      }}>
+                        {artifact.url}
+                      </a>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#0f1724', lineHeight: '1.6' }}>
+                        {artifact.summary}
+                      </p>
+                      {artifact.quality_indicators && (
+                        <div style={{
+                          backgroundColor: '#f0fdf4',
+                          padding: '8px',
+                          borderRadius: '6px',
+                          fontSize: '13px',
+                          color: '#166534',
+                          border: '1px solid #bbf7d0'
+                        }}>
+                          <strong>Quality:</strong> {artifact.quality_indicators}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AI ASSESSMENT */}
+            {aiAssessment && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{
+                  fontSize: '18px',
+                  fontWeight: '700',
+                  color: '#0f1724',
+                  marginBottom: '12px',
+                  paddingBottom: '8px',
+                  borderBottom: '2px solid #8b5cf6'
+                }}>
+                  🤖 AI Hiring Manager Assessment
+                </h2>
+                <div style={{
+                  backgroundColor: '#f5f3ff',
+                  borderRadius: '12px',
+                  padding: '20px',
+                  border: '2px solid #8b5cf6'
+                }}>
+                  {/* Recommendation Banner */}
+                  {aiAssessment.recommendation && (
+                    <div style={{
+                      backgroundColor: aiAssessment.recommendation.includes('STRONG') ? '#d1fae5' :
+                                      aiAssessment.recommendation.includes('PASS') ? '#dbeafe' : '#fef3c7',
+                      color: aiAssessment.recommendation.includes('STRONG') ? '#065f46' :
+                             aiAssessment.recommendation.includes('PASS') ? '#1e40af' : '#92400e',
+                      padding: '12px 16px',
+                      borderRadius: '8px',
+                      marginBottom: '16px',
+                      fontWeight: '700',
+                      fontSize: '15px',
+                      border: `2px solid ${aiAssessment.recommendation.includes('STRONG') ? '#a7f3d0' :
+                                          aiAssessment.recommendation.includes('PASS') ? '#93c5fd' : '#fde68a'}`
+                    }}>
+                      📌 Recommendation: {aiAssessment.recommendation}
+                    </div>
+                  )}
+
+                  {/* Strengths */}
+                  {aiAssessment.strengths && aiAssessment.strengths.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: '700', color: '#166534' }}>
+                        ✅ Strengths Identified
+                      </h3>
+                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                        {aiAssessment.strengths.map((strength, idx) => (
+                          <li key={idx} style={{ marginBottom: '6px', fontSize: '14px', lineHeight: '1.6', color: '#0f1724' }}>
+                            {strength}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Potential Gaps */}
+                  {aiAssessment.potential_gaps && aiAssessment.potential_gaps.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: '700', color: '#92400e' }}>
+                        ⚠️  Potential Gaps or Concerns
+                      </h3>
+                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                        {aiAssessment.potential_gaps.map((gap, idx) => (
+                          <li key={idx} style={{ marginBottom: '6px', fontSize: '14px', lineHeight: '1.6', color: '#0f1724' }}>
+                            {gap}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Technical Depth & Systems Thinking */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                    {aiAssessment.technical_depth && (
+                      <div style={{
+                        backgroundColor: 'white',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #ddd6fe'
+                      }}>
+                        <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>
+                          TECHNICAL DEPTH
+                        </p>
+                        <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#581c87' }}>
+                          {aiAssessment.technical_depth}
+                        </p>
+                      </div>
+                    )}
+                    {aiAssessment.systems_thinking && (
+                      <div style={{
+                        backgroundColor: 'white',
+                        padding: '12px',
+                        borderRadius: '8px',
+                        border: '1px solid #ddd6fe'
+                      }}>
+                        <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>
+                          SYSTEMS THINKING
+                        </p>
+                        <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#581c87' }}>
+                          {aiAssessment.systems_thinking}
+                        </p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Next Steps */}
+                  {aiAssessment.next_steps && (
+                    <div style={{
+                      backgroundColor: '#e0e7ff',
+                      padding: '12px',
+                      borderRadius: '8px',
+                      border: '1px solid #c7d2fe'
+                    }}>
+                      <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: '700', color: '#3730a3' }}>
+                        💡 Suggested Next Steps
+                      </p>
+                      <p style={{ margin: 0, fontSize: '13px', lineHeight: '1.6', color: '#4338ca' }}>
+                        {aiAssessment.next_steps}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
         )}
 
         {/* RECRUITER FEEDBACK SECTION */}

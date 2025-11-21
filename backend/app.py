@@ -1921,6 +1921,16 @@ class HiringIntelligenceSubmission(db.Model):
     generated_at = db.Column(db.DateTime, default=datetime.utcnow)
     reviewed_at = db.Column(db.DateTime)
 
+    # AI Analysis Fields (for hiring manager's eye automation)
+    extracted_skills = db.Column(db.Text)  # JSON array of technical skills
+    key_phrases = db.Column(db.Text)  # JSON array of {phrase, context, importance}
+    ai_assessment = db.Column(db.Text)  # JSON object with strengths, gaps, depth_score, recommendation
+    artifact_analysis = db.Column(db.Text)  # JSON array of {url, summary, quality, relevance}
+
+    # Analysis Metadata
+    ai_analyzed = db.Column(db.Boolean, default=False)
+    ai_analyzed_at = db.Column(db.DateTime)
+
     def to_dict(self):
         application = Application.query.get(self.application_id)
         return {
@@ -1937,7 +1947,14 @@ class HiringIntelligenceSubmission(db.Model):
             'received_offer': self.received_offer,
             'created_at': self.created_at.isoformat() if self.created_at else None,
             'generated_at': self.generated_at.isoformat() if self.generated_at else None,
-            'reviewed_at': self.reviewed_at.isoformat() if self.reviewed_at else None
+            'reviewed_at': self.reviewed_at.isoformat() if self.reviewed_at else None,
+            # AI Analysis fields
+            'extracted_skills': self.extracted_skills,
+            'key_phrases': self.key_phrases,
+            'ai_assessment': self.ai_assessment,
+            'artifact_analysis': self.artifact_analysis,
+            'ai_analyzed': self.ai_analyzed,
+            'ai_analyzed_at': self.ai_analyzed_at.isoformat() if self.ai_analyzed_at else None
         }
 
 
@@ -2799,6 +2816,178 @@ def delete_intelligence_submission(submission_id):
     db.session.delete(submission)
     db.session.commit()
     return jsonify({"message": "Submission deleted successfully"})
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>/analyze', methods=['POST'])
+def analyze_intelligence_submission(submission_id):
+    """
+    AI-powered analysis of hiring intelligence submission
+    Uses Claude API to extract skills, key phrases, and generate hiring manager assessment
+    """
+    import json as json_module
+
+    try:
+        # Get submission
+        submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+        submission_data = json_module.loads(submission.submission_data) if submission.submission_data else {}
+
+        # Get application and job details
+        application = Application.query.get(submission.application_id)
+        if not application:
+            return jsonify({"error": "Application not found"}), 404
+
+        job = application.job
+        candidate = application.candidate
+
+        # Prepare data for AI analysis
+        work_links = submission_data.get('work_links', [])
+        intelligence_response = submission_data.get('intelligence_response', {})
+        position = submission_data.get('position', job.title if job else '')
+
+        # Check for Anthropic API key
+        api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if not api_key:
+            return jsonify({"error": "ANTHROPIC_API_KEY not configured"}), 500
+
+        # Import Anthropic SDK
+        try:
+            from anthropic import Anthropic
+        except ImportError:
+            return jsonify({"error": "Anthropic SDK not installed. Run: pip install anthropic"}), 500
+
+        # Initialize Claude API
+        client = Anthropic(api_key=api_key)
+
+        # Build analysis prompt
+        analysis_prompt = f"""You are an expert technical recruiter and hiring manager for Physical AI roles (robotics, autonomous systems, computer vision, etc.).
+
+Analyze this hiring intelligence submission and provide structured insights:
+
+**CANDIDATE:** {candidate.first_name} {candidate.last_name}
+**POSITION:** {position}
+
+**WORK ARTIFACTS:**
+{json_module.dumps(work_links, indent=2) if work_links else "None provided"}
+
+**INTELLIGENCE RESPONSE:**
+Question: {intelligence_response.get('question_text', 'N/A')}
+Response: {intelligence_response.get('response_text', 'N/A')}
+
+**CANDIDATE BACKGROUND:**
+- Years Experience: {candidate.years_experience if candidate.years_experience else 'Not specified'}
+- Primary Expertise: {candidate.primary_expertise if candidate.primary_expertise else 'Not specified'}
+- Location: {candidate.location if candidate.location else 'Not specified'}
+
+---
+
+Provide a comprehensive analysis in the following JSON format:
+
+{{
+  "extracted_skills": [
+    "skill1", "skill2", "skill3", ...
+  ],
+  "key_phrases": [
+    {{
+      "phrase": "the exact phrase or concept",
+      "context": "why this matters for the role",
+      "importance": "high/medium/low"
+    }},
+    ...
+  ],
+  "artifact_analysis": [
+    {{
+      "url": "the artifact URL",
+      "type": "github/linkedin/portfolio/paper/project/other",
+      "summary": "2-3 sentence summary of what this demonstrates",
+      "quality_indicators": "what stands out about quality/depth",
+      "relevance": "how relevant to role requirements (high/medium/low)"
+    }},
+    ...
+  ],
+  "ai_assessment": {{
+    "strengths": [
+      "Specific strength 1 with evidence",
+      "Specific strength 2 with evidence",
+      "Specific strength 3 with evidence"
+    ],
+    "potential_gaps": [
+      "Gap or concern 1",
+      "Gap or concern 2"
+    ],
+    "technical_depth": "Junior/Mid/Senior/Staff - with brief justification",
+    "systems_thinking": "Strong/Moderate/Limited - with evidence",
+    "recommendation": "STRONG_PASS/PASS/MAYBE/PASS_WITH_CONCERNS - with reasoning",
+    "next_steps": "Suggested interview focus areas or screening questions"
+  }}
+}}
+
+Focus on:
+1. Technical skills (languages, frameworks, tools, methodologies)
+2. Physical AI-specific expertise (robotics, perception, control, planning, etc.)
+3. Systems-level thinking vs pure implementation
+4. Evidence of production experience, not just academic
+5. Judgment and decision-making patterns revealed in intelligence response
+6. Code quality and documentation practices (if GitHub links provided)
+
+Return ONLY the JSON, no additional text."""
+
+        print(f"🤖 Sending analysis request to Claude API for submission {submission_id}...")
+
+        # Call Claude API
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4000,
+            messages=[{
+                "role": "user",
+                "content": analysis_prompt
+            }]
+        )
+
+        # Parse response
+        response_text = message.content[0].text
+        print(f"✅ Received Claude API response")
+
+        # Extract JSON from response (in case Claude adds any extra text)
+        try:
+            # Try to find JSON in response
+            import re
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
+                analysis_result = json_module.loads(json_match.group())
+            else:
+                analysis_result = json_module.loads(response_text)
+        except Exception as parse_error:
+            print(f"⚠️  Error parsing Claude response: {str(parse_error)}")
+            print(f"   Raw response: {response_text[:500]}...")
+            return jsonify({
+                "error": "Failed to parse AI analysis response",
+                "raw_response": response_text
+            }), 500
+
+        # Save analysis to database
+        submission.extracted_skills = json_module.dumps(analysis_result.get('extracted_skills', []))
+        submission.key_phrases = json_module.dumps(analysis_result.get('key_phrases', []))
+        submission.ai_assessment = json_module.dumps(analysis_result.get('ai_assessment', {}))
+        submission.artifact_analysis = json_module.dumps(analysis_result.get('artifact_analysis', []))
+        submission.ai_analyzed = True
+        submission.ai_analyzed_at = datetime.utcnow()
+
+        db.session.commit()
+
+        print(f"✅ AI analysis saved for submission {submission_id}")
+
+        return jsonify({
+            "message": "AI analysis completed successfully",
+            "submission": submission.to_dict()
+        })
+
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR in AI analysis:")
+        print(f"   Error: {str(e)}")
+        print(f"   Traceback:\n{traceback.format_exc()}")
+        db.session.rollback()
+        return jsonify({"error": f"AI analysis failed: {str(e)}"}), 500
 
 
 # ==================== PUBLIC CANDIDATE ENDPOINTS ====================
