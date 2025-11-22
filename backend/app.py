@@ -2,9 +2,13 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from dotenv import load_dotenv
 import os
 import requests
 import re
+
+# Load environment variables from .env file (for local development)
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -328,6 +332,22 @@ def health_check():
         "status": "healthy",
         "message": "PAIP - PhysicalAIPros.com API is running",
         "version": "1.0.0"
+    })
+
+
+@app.route('/api/config/check', methods=['GET'])
+def check_config():
+    """Check environment configuration (for debugging)"""
+    anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+    github_token = os.environ.get('GITHUB_TOKEN')
+
+    return jsonify({
+        "anthropic_api_key_configured": bool(anthropic_key),
+        "anthropic_api_key_length": len(anthropic_key) if anthropic_key else 0,
+        "anthropic_api_key_preview": anthropic_key[:10] + "..." if anthropic_key else None,
+        "github_token_configured": bool(github_token),
+        "environment_vars_count": len(os.environ),
+        "environment_vars_list": list(os.environ.keys())[:20]  # First 20 for debugging
     })
 
 
@@ -2844,10 +2864,22 @@ def analyze_intelligence_submission(submission_id):
         intelligence_response = submission_data.get('intelligence_response', {})
         position = submission_data.get('position', job.title if job else '')
 
-        # Check for Anthropic API key
+        # Check for Anthropic API key with detailed debugging
+        print("🔍 Checking for ANTHROPIC_API_KEY...")
+        print(f"   Environment variables available: {list(os.environ.keys())}")
+
         api_key = os.environ.get('ANTHROPIC_API_KEY')
-        if not api_key:
-            return jsonify({"error": "ANTHROPIC_API_KEY not configured"}), 500
+        if api_key:
+            print(f"✅ ANTHROPIC_API_KEY found (length: {len(api_key)}, starts with: {api_key[:10]}...)")
+        else:
+            print("❌ ANTHROPIC_API_KEY not found in environment!")
+            print(f"   Checking case variations...")
+            print(f"   - anthropic_api_key: {os.environ.get('anthropic_api_key', 'NOT FOUND')}")
+            print(f"   - Anthropic_API_Key: {os.environ.get('Anthropic_API_Key', 'NOT FOUND')}")
+            return jsonify({
+                "error": "ANTHROPIC_API_KEY not configured",
+                "debug_info": "API key not found in environment variables. Please ensure ANTHROPIC_API_KEY is set in Render environment settings and the service has been restarted."
+            }), 500
 
         # Import Anthropic SDK
         try:
