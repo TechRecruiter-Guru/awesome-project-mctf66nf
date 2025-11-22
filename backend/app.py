@@ -2,9 +2,13 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+from dotenv import load_dotenv
 import os
 import requests
 import re
+
+# Load environment variables from .env file (for local development)
+load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
@@ -320,11 +324,6 @@ class SavedSearch(db.Model):
         }
 
 
-# Create tables
-with app.app_context():
-    db.create_all()
-
-
 # ==================== API ENDPOINTS ====================
 
 @app.route('/api/health', methods=['GET'])
@@ -333,6 +332,22 @@ def health_check():
         "status": "healthy",
         "message": "PAIP - PhysicalAIPros.com API is running",
         "version": "1.0.0"
+    })
+
+
+@app.route('/api/config/check', methods=['GET'])
+def check_config():
+    """Check environment configuration (for debugging)"""
+    anthropic_key = os.environ.get('ANTHROPIC_API_KEY')
+    github_token = os.environ.get('GITHUB_TOKEN')
+
+    return jsonify({
+        "anthropic_api_key_configured": bool(anthropic_key),
+        "anthropic_api_key_length": len(anthropic_key) if anthropic_key else 0,
+        "anthropic_api_key_preview": anthropic_key[:10] + "..." if anthropic_key else None,
+        "github_token_configured": bool(github_token),
+        "environment_vars_count": len(os.environ),
+        "environment_vars_list": list(os.environ.keys())[:20]  # First 20 for debugging
     })
 
 
@@ -1813,6 +1828,237 @@ class Offer(db.Model):
         }
 
 
+# ==================== HIRING INTELLIGENCE MODELS ====================
+
+class RoleQuestion(db.Model):
+    """Role-specific intelligence questions for hiring assessment"""
+    id = db.Column(db.Integer, primary_key=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=True)  # Null = template question
+
+    # Question Details
+    role_title = db.Column(db.String(200), nullable=False)  # e.g., "Robotics Engineer"
+    label = db.Column(db.String(200), nullable=False)  # e.g., "Robotics Systems Intelligence"
+    question = db.Column(db.Text, nullable=False)  # The actual question text
+
+    # Metadata
+    is_template = db.Column(db.Boolean, default=False)  # True = pre-populated template
+    is_active = db.Column(db.Boolean, default=True)
+
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    # Relationships
+    responses = db.relationship('IntelligenceResponse', backref='question', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'job_id': self.job_id,
+            'role_title': self.role_title,
+            'label': self.label,
+            'question': self.question,
+            'is_template': self.is_template,
+            'is_active': self.is_active,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat()
+        }
+
+
+class CandidateLink(db.Model):
+    """Work artifact links submitted by candidates"""
+    id = db.Column(db.Integer, primary_key=True)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False)
+
+    # Link Details
+    link_type = db.Column(db.String(50), nullable=False)  # github, portfolio, paper, linkedin, other
+    url = db.Column(db.String(500), nullable=False)
+    title = db.Column(db.String(300))  # Optional title/description
+
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'candidate_id': self.candidate_id,
+            'link_type': self.link_type,
+            'url': self.url,
+            'title': self.title,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+class IntelligenceResponse(db.Model):
+    """Candidate responses to intelligence questions"""
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
+    question_id = db.Column(db.Integer, db.ForeignKey('role_question.id'), nullable=False)
+
+    # Response
+    response_text = db.Column(db.Text, nullable=False)
+
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        question = RoleQuestion.query.get(self.question_id)
+        return {
+            'id': self.id,
+            'application_id': self.application_id,
+            'question_id': self.question_id,
+            'question_label': question.label if question else None,
+            'question_text': question.question if question else None,
+            'response_text': self.response_text,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat()
+        }
+
+
+class HiringIntelligenceSubmission(db.Model):
+    """Compiled Hiring Intelligence Submission document"""
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
+
+    # Submission Data (JSON containing the full intelligence document)
+    submission_data = db.Column(db.Text)  # JSON string
+
+    # Status
+    status = db.Column(db.String(50), default='pending')  # pending, generated, reviewed, advanced, rejected
+
+    # Recruiter Feedback
+    missing_signal = db.Column(db.String(200))  # The 1 word/phrase that was missing
+    recruiter_notes = db.Column(db.Text)
+
+    # Funnel Tracking
+    passed_to_screen = db.Column(db.Boolean)
+    passed_to_interview = db.Column(db.Boolean)
+    received_offer = db.Column(db.Boolean)
+
+    # Timestamps
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    generated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reviewed_at = db.Column(db.DateTime)
+
+    # AI Analysis Fields (for hiring manager's eye automation)
+    extracted_skills = db.Column(db.Text)  # JSON array of technical skills
+    key_phrases = db.Column(db.Text)  # JSON array of {phrase, context, importance}
+    ai_assessment = db.Column(db.Text)  # JSON object with strengths, gaps, depth_score, recommendation
+    artifact_analysis = db.Column(db.Text)  # JSON array of {url, summary, quality, relevance}
+
+    # Analysis Metadata
+    ai_analyzed = db.Column(db.Boolean, default=False)
+    ai_analyzed_at = db.Column(db.DateTime)
+
+    def to_dict(self):
+        application = Application.query.get(self.application_id)
+        return {
+            'id': self.id,
+            'application_id': self.application_id,
+            'candidate_name': f"{application.candidate.first_name} {application.candidate.last_name}" if application and application.candidate else None,
+            'job_title': application.job.title if application and application.job else None,
+            'submission_data': self.submission_data,
+            'status': self.status,
+            'missing_signal': self.missing_signal,
+            'recruiter_notes': self.recruiter_notes,
+            'passed_to_screen': self.passed_to_screen,
+            'passed_to_interview': self.passed_to_interview,
+            'received_offer': self.received_offer,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'generated_at': self.generated_at.isoformat() if self.generated_at else None,
+            'reviewed_at': self.reviewed_at.isoformat() if self.reviewed_at else None,
+            # AI Analysis fields
+            'extracted_skills': self.extracted_skills,
+            'key_phrases': self.key_phrases,
+            'ai_assessment': self.ai_assessment,
+            'artifact_analysis': self.artifact_analysis,
+            'ai_analyzed': self.ai_analyzed,
+            'ai_analyzed_at': self.ai_analyzed_at.isoformat() if self.ai_analyzed_at else None
+        }
+
+
+# Pre-populated Physical AI role questions (from hiring intelligence research)
+PHYSICAL_AI_ROLE_QUESTIONS = {
+    "Robotics Engineer": {
+        "label": "Robotics Systems Intelligence",
+        "question": "When integrating perception, control, and actuation, what is the earliest indicator you monitor to detect system-wide instability—and how do you intervene before the issue compounds?"
+    },
+    "Humanoid Roboticist": {
+        "label": "Embodied Dynamics Insight",
+        "question": "Describe a time when human biomechanics understanding guided a breakthrough in humanoid stability, manipulation, or locomotion. Which non-obvious signal shaped your approach?"
+    },
+    "Autonomous Vehicle Engineer": {
+        "label": "Autonomy Arbitration Intelligence",
+        "question": "When an AV faces conflicting inputs (e.g., perception noise vs motion planning constraints), how do you determine which subsystem receives priority? Share your decision logic and the signals that drove it."
+    },
+    "Computer Vision Engineer (Robotics)": {
+        "label": "CV-for-Robotics Intelligence",
+        "question": "What is the most critical vision failure mode you design against in physical environments, and which early signal reveals it before overall performance degrades?"
+    },
+    "Perception Engineer": {
+        "label": "Perception Systems Insight",
+        "question": "How do you distinguish true environmental features from sensor artifacts in complex scenes? Describe the signal or test that helps you decide."
+    },
+    "Motion Planning Engineer": {
+        "label": "Trajectory Intelligence",
+        "question": "When your planner yields a feasible but suboptimal trajectory, what is the first constraint you interrogate to unlock a more efficient or safer path?"
+    },
+    "SLAM Engineer": {
+        "label": "Spatial Intelligence Diagnostic",
+        "question": "In SLAM drift scenarios, what is your go-to method for isolating root cause—and which cue tells you whether the issue is map quality, loop closure, or sensor bias?"
+    },
+    "Autonomous Systems Engineer": {
+        "label": "System Autonomy Insight",
+        "question": "How do you architect decision-making when subsystems report uncertain or contradictory outputs? Describe the governing principle and an example."
+    },
+    "Robot Control Engineer": {
+        "label": "Control Loop Judgment",
+        "question": "When tuning controllers, what early signal indicates imminent stability loss—and what immediate corrective pattern do you apply?"
+    },
+    "Reinforcement Learning Engineer": {
+        "label": "RL Signal Intelligence",
+        "question": "When training an RL agent, what hidden metric or behavioral cue do you monitor that predicts long-term policy success before reward curves show it?"
+    },
+    "Computer Vision Engineer": {
+        "label": "Vision Modeling Insight",
+        "question": "When a vision model misclassifies or misses detections, what visual or dataset signal do you check first to determine whether the root cause is labeling noise, domain shift, or architecture limits?"
+    },
+    "Deep Learning Engineer": {
+        "label": "Model Behavior Intelligence",
+        "question": "Which model behavior (beyond accuracy) reveals deeper problems—something you watch early to detect future failure—and how do you act on it?"
+    },
+    "ML Systems Engineer": {
+        "label": "Systems-Level ML Intelligence",
+        "question": "When scaling ML pipelines, which system bottleneck do you diagnose first—and which early indicator tells you the pipeline will fail under production load?"
+    },
+    "AI/ML Engineer": {
+        "label": "AI Solutioning Insight",
+        "question": "When balancing performance, latency, and cost, which constraint becomes your anchor—and how do you determine and enforce that anchor in architecture or process?"
+    },
+    "Sensor Fusion Engineer": {
+        "label": "Fusion Signal Intelligence",
+        "question": "When sensor streams diverge, what earliest cue tells you which modality is unreliable, and how do you reconcile conflicting estimates in real time?"
+    },
+    "Embedded AI Engineer": {
+        "label": "On-Device Intelligence Insight",
+        "question": "When deploying models at the edge, which signal first tells you the hardware-software interface will be the limiting factor—and how do you mitigate it?"
+    },
+    "Robotics Software Engineer": {
+        "label": "Software Integration Intelligence",
+        "question": "When debugging heterogeneous robotic stacks, what cross-component signal do you examine first to determine whether the root cause is software logic, timing, or hardware interaction?"
+    },
+    "Machine Learning Engineer": {
+        "label": "ML Insight Diagnostic",
+        "question": "What is your highest-leverage early indicator that a training pipeline is learning the wrong patterns—even before validation metrics degrade?"
+    },
+    "Deep Learning Researcher": {
+        "label": "Research Intelligence Signal",
+        "question": "What subtle model behavior—beyond raw accuracy—signals that a research direction has deep potential and deserves further investment?"
+    }
+}
+
+
 # ==================== EMAIL CAMPAIGN ENDPOINTS ====================
 
 @app.route('/api/campaigns', methods=['GET'])
@@ -2203,6 +2449,579 @@ def get_source_effectiveness():
     })
 
 
+# ==================== HIRING INTELLIGENCE ENDPOINTS ====================
+
+@app.route('/api/role-questions/templates', methods=['GET'])
+def get_role_question_templates():
+    """Get all pre-populated Physical AI role question templates"""
+    templates = []
+    for role_title, data in PHYSICAL_AI_ROLE_QUESTIONS.items():
+        templates.append({
+            'role_title': role_title,
+            'label': data['label'],
+            'question': data['question']
+        })
+    return jsonify({
+        'templates': templates,
+        'total': len(templates)
+    })
+
+
+@app.route('/api/role-questions/seed-templates', methods=['POST'])
+def seed_role_question_templates():
+    """Seed the database with pre-populated Physical AI role question templates"""
+    created = 0
+    for role_title, data in PHYSICAL_AI_ROLE_QUESTIONS.items():
+        # Check if template already exists
+        existing = RoleQuestion.query.filter_by(
+            role_title=role_title,
+            is_template=True
+        ).first()
+
+        if not existing:
+            question = RoleQuestion(
+                role_title=role_title,
+                label=data['label'],
+                question=data['question'],
+                is_template=True,
+                is_active=True
+            )
+            db.session.add(question)
+            created += 1
+
+    db.session.commit()
+    return jsonify({
+        'message': f'Seeded {created} role question templates',
+        'created': created,
+        'total_templates': len(PHYSICAL_AI_ROLE_QUESTIONS)
+    })
+
+
+@app.route('/api/jobs/<int:job_id>/questions', methods=['GET'])
+def get_job_questions(job_id):
+    """Get intelligence questions for a specific job"""
+    job = Job.query.get_or_404(job_id)
+
+    # First check for job-specific questions
+    questions = RoleQuestion.query.filter_by(job_id=job_id, is_active=True).all()
+
+    # If no job-specific questions, look for template matching job title
+    if not questions:
+        questions = RoleQuestion.query.filter_by(
+            role_title=job.title,
+            is_template=True,
+            is_active=True
+        ).all()
+
+    # If still no questions, check PHYSICAL_AI_ROLE_QUESTIONS directly
+    if not questions and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+        data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+        return jsonify({
+            'questions': [{
+                'id': None,
+                'job_id': job_id,
+                'role_title': job.title,
+                'label': data['label'],
+                'question': data['question'],
+                'is_template': True,
+                'source': 'built_in'
+            }],
+            'total': 1
+        })
+
+    return jsonify({
+        'questions': [q.to_dict() for q in questions],
+        'total': len(questions)
+    })
+
+
+@app.route('/api/jobs/<int:job_id>/questions', methods=['POST'])
+def create_job_question(job_id):
+    """Create a custom intelligence question for a job"""
+    job = Job.query.get_or_404(job_id)
+    data = request.get_json()
+
+    if not data or 'question' not in data:
+        return jsonify({"error": "Question text is required"}), 400
+
+    question = RoleQuestion(
+        job_id=job_id,
+        role_title=data.get('role_title', job.title),
+        label=data.get('label', 'Custom Intelligence Question'),
+        question=data['question'],
+        is_template=False,
+        is_active=True
+    )
+
+    db.session.add(question)
+    db.session.commit()
+
+    return jsonify(question.to_dict()), 201
+
+
+@app.route('/api/role-questions/<int:question_id>', methods=['PUT'])
+def update_role_question(question_id):
+    """Update a role question"""
+    question = RoleQuestion.query.get_or_404(question_id)
+    data = request.get_json()
+
+    for field in ['role_title', 'label', 'question', 'is_active']:
+        if field in data:
+            setattr(question, field, data[field])
+
+    db.session.commit()
+    return jsonify(question.to_dict())
+
+
+@app.route('/api/role-questions/<int:question_id>', methods=['DELETE'])
+def delete_role_question(question_id):
+    """Delete a role question"""
+    question = RoleQuestion.query.get_or_404(question_id)
+    db.session.delete(question)
+    db.session.commit()
+    return jsonify({"message": "Question deleted successfully"})
+
+
+# ==================== CANDIDATE LINKS ENDPOINTS ====================
+
+@app.route('/api/candidates/<int:candidate_id>/links', methods=['GET'])
+def get_candidate_links(candidate_id):
+    """Get all work artifact links for a candidate"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+    links = CandidateLink.query.filter_by(candidate_id=candidate_id).all()
+    return jsonify({
+        'links': [link.to_dict() for link in links],
+        'total': len(links)
+    })
+
+
+@app.route('/api/candidates/<int:candidate_id>/links', methods=['POST'])
+def add_candidate_link(candidate_id):
+    """Add a work artifact link to a candidate"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+    data = request.get_json()
+
+    if not data or 'url' not in data or 'link_type' not in data:
+        return jsonify({"error": "URL and link_type are required"}), 400
+
+    link = CandidateLink(
+        candidate_id=candidate_id,
+        link_type=data['link_type'],
+        url=data['url'],
+        title=data.get('title')
+    )
+
+    db.session.add(link)
+    db.session.commit()
+
+    return jsonify(link.to_dict()), 201
+
+
+@app.route('/api/candidate-links/<int:link_id>', methods=['DELETE'])
+def delete_candidate_link(link_id):
+    """Delete a candidate link"""
+    link = CandidateLink.query.get_or_404(link_id)
+    db.session.delete(link)
+    db.session.commit()
+    return jsonify({"message": "Link deleted successfully"})
+
+
+# ==================== INTELLIGENCE RESPONSES ENDPOINTS ====================
+
+@app.route('/api/applications/<int:application_id>/intelligence', methods=['GET'])
+def get_application_intelligence(application_id):
+    """Get intelligence responses for an application"""
+    application = Application.query.get_or_404(application_id)
+    responses = IntelligenceResponse.query.filter_by(application_id=application_id).all()
+
+    return jsonify({
+        'responses': [r.to_dict() for r in responses],
+        'total': len(responses)
+    })
+
+
+@app.route('/api/applications/<int:application_id>/intelligence', methods=['POST'])
+def add_intelligence_response(application_id):
+    """Add an intelligence response to an application"""
+    application = Application.query.get_or_404(application_id)
+    data = request.get_json()
+
+    if not data or 'response_text' not in data:
+        return jsonify({"error": "Response text is required"}), 400
+
+    # Get or create question
+    question_id = data.get('question_id')
+
+    if not question_id:
+        # Check if we should use a template question
+        job = Job.query.get(application.job_id)
+        if job and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+            # Create a question from template
+            template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+            question = RoleQuestion(
+                job_id=application.job_id,
+                role_title=job.title,
+                label=template_data['label'],
+                question=template_data['question'],
+                is_template=False,
+                is_active=True
+            )
+            db.session.add(question)
+            db.session.flush()
+            question_id = question.id
+        else:
+            return jsonify({"error": "Question ID is required"}), 400
+
+    response = IntelligenceResponse(
+        application_id=application_id,
+        question_id=question_id,
+        response_text=data['response_text']
+    )
+
+    db.session.add(response)
+    db.session.commit()
+
+    return jsonify(response.to_dict()), 201
+
+
+# ==================== HIRING INTELLIGENCE SUBMISSIONS ENDPOINTS ====================
+
+@app.route('/api/intelligence-submissions', methods=['GET'])
+def get_intelligence_submissions():
+    """Get all hiring intelligence submissions"""
+    try:
+        status = request.args.get('status')
+
+        # Check if table exists first
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        if 'hiring_intelligence_submission' not in inspector.get_table_names():
+            print("⚠️  hiring_intelligence_submission table does not exist yet")
+            return jsonify({
+                'submissions': [],
+                'total': 0,
+                'message': 'Intelligence submissions table not created yet'
+            })
+
+        query = HiringIntelligenceSubmission.query
+        if status:
+            query = query.filter_by(status=status)
+
+        # Try different ordering strategies based on available columns
+        table_columns = [c['name'] for c in inspector.get_columns('hiring_intelligence_submission')]
+        print(f"📊 Available columns in hiring_intelligence_submission: {table_columns}")
+
+        if 'created_at' in table_columns:
+            print("✅ Ordering by created_at")
+            submissions = query.order_by(HiringIntelligenceSubmission.created_at.desc()).all()
+        elif 'generated_at' in table_columns:
+            print("✅ Ordering by generated_at")
+            submissions = query.order_by(HiringIntelligenceSubmission.generated_at.desc()).all()
+        else:
+            print("✅ Ordering by id (no timestamp columns found)")
+            submissions = query.order_by(HiringIntelligenceSubmission.id.desc()).all()
+
+        return jsonify({
+            'submissions': [s.to_dict() for s in submissions],
+            'total': len(submissions)
+        })
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR in get_intelligence_submissions:")
+        print(f"   Error: {str(e)}")
+        print(f"   Traceback:\n{traceback.format_exc()}")
+
+        # Return empty list instead of error to prevent UI breakage
+        return jsonify({
+            'submissions': [],
+            'total': 0,
+            'error': str(e)
+        }), 200  # Return 200 with empty data instead of 500
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>', methods=['GET'])
+def get_intelligence_submission(submission_id):
+    """Get a single hiring intelligence submission"""
+    submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+    return jsonify(submission.to_dict())
+
+
+@app.route('/api/applications/<int:application_id>/generate-submission', methods=['POST'])
+def generate_intelligence_submission(application_id):
+    """Generate a Hiring Intelligence Submission for an application"""
+    import json
+
+    application = Application.query.get_or_404(application_id)
+    candidate = Candidate.query.get(application.candidate_id)
+    job = Job.query.get(application.job_id)
+
+    if not candidate or not job:
+        return jsonify({"error": "Invalid application"}), 400
+
+    # Get intelligence responses
+    responses = IntelligenceResponse.query.filter_by(application_id=application_id).all()
+
+    # Get candidate links
+    links = CandidateLink.query.filter_by(candidate_id=candidate.id).all()
+
+    # Compile the submission data
+    submission_data = {
+        'candidate': {
+            'id': candidate.id,
+            'name': f"{candidate.first_name} {candidate.last_name}",
+            'email': candidate.email,
+            'location': candidate.location,
+            'github_url': candidate.github_url,
+            'portfolio_url': candidate.portfolio_url,
+            'linkedin_url': candidate.linkedin_url,
+            'primary_expertise': candidate.primary_expertise,
+            'skills': candidate.skills,
+            'years_experience': candidate.years_experience
+        },
+        'job': {
+            'id': job.id,
+            'title': job.title,
+            'company': job.company
+        },
+        'work_links': [link.to_dict() for link in links],
+        'intelligence_responses': [response.to_dict() for response in responses],
+        'generated_at': datetime.utcnow().isoformat()
+    }
+
+    # Check if submission already exists
+    existing = HiringIntelligenceSubmission.query.filter_by(application_id=application_id).first()
+
+    if existing:
+        existing.submission_data = json.dumps(submission_data)
+        existing.status = 'generated'
+        existing.generated_at = datetime.utcnow()
+        db.session.commit()
+        return jsonify(existing.to_dict())
+
+    # Create new submission
+    submission = HiringIntelligenceSubmission(
+        application_id=application_id,
+        submission_data=json.dumps(submission_data),
+        status='generated'
+    )
+
+    db.session.add(submission)
+    db.session.commit()
+
+    return jsonify(submission.to_dict()), 201
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>', methods=['PUT'])
+def update_intelligence_submission(submission_id):
+    """Update a hiring intelligence submission (for recruiter feedback)"""
+    submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+    data = request.get_json()
+
+    for field in ['status', 'missing_signal', 'recruiter_notes',
+                  'passed_to_screen', 'passed_to_interview', 'received_offer']:
+        if field in data:
+            setattr(submission, field, data[field])
+
+    if data.get('status') == 'reviewed' and not submission.reviewed_at:
+        submission.reviewed_at = datetime.utcnow()
+
+    db.session.commit()
+    return jsonify(submission.to_dict())
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>', methods=['DELETE'])
+def delete_intelligence_submission(submission_id):
+    """Delete a hiring intelligence submission"""
+    submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+    db.session.delete(submission)
+    db.session.commit()
+    return jsonify({"message": "Submission deleted successfully"})
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>/analyze', methods=['POST'])
+def analyze_intelligence_submission(submission_id):
+    """
+    AI-powered analysis of hiring intelligence submission
+    Uses Claude API to extract skills, key phrases, and generate hiring manager assessment
+    """
+    import json as json_module
+
+    try:
+        # Get submission
+        submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+        submission_data = json_module.loads(submission.submission_data) if submission.submission_data else {}
+
+        # Get application and job details
+        application = Application.query.get(submission.application_id)
+        if not application:
+            return jsonify({"error": "Application not found"}), 404
+
+        job = application.job
+        candidate = application.candidate
+
+        # Prepare data for AI analysis
+        work_links = submission_data.get('work_links', [])
+        intelligence_response = submission_data.get('intelligence_response', {})
+        position = submission_data.get('position', job.title if job else '')
+
+        # Check for Anthropic API key with detailed debugging
+        print("🔍 Checking for ANTHROPIC_API_KEY...")
+        print(f"   Environment variables available: {list(os.environ.keys())}")
+
+        api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if api_key:
+            print(f"✅ ANTHROPIC_API_KEY found (length: {len(api_key)}, starts with: {api_key[:10]}...)")
+        else:
+            print("❌ ANTHROPIC_API_KEY not found in environment!")
+            print(f"   Checking case variations...")
+            print(f"   - anthropic_api_key: {os.environ.get('anthropic_api_key', 'NOT FOUND')}")
+            print(f"   - Anthropic_API_Key: {os.environ.get('Anthropic_API_Key', 'NOT FOUND')}")
+            return jsonify({
+                "error": "ANTHROPIC_API_KEY not configured",
+                "debug_info": "API key not found in environment variables. Please ensure ANTHROPIC_API_KEY is set in Render environment settings and the service has been restarted."
+            }), 500
+
+        # Import Anthropic SDK
+        try:
+            from anthropic import Anthropic
+        except ImportError:
+            return jsonify({"error": "Anthropic SDK not installed. Run: pip install anthropic"}), 500
+
+        # Initialize Claude API
+        client = Anthropic(api_key=api_key)
+
+        # Build analysis prompt
+        analysis_prompt = f"""You are an expert technical recruiter and hiring manager for Physical AI roles (robotics, autonomous systems, computer vision, etc.).
+
+Analyze this hiring intelligence submission and provide structured insights:
+
+**CANDIDATE:** {candidate.first_name} {candidate.last_name}
+**POSITION:** {position}
+
+**WORK ARTIFACTS:**
+{json_module.dumps(work_links, indent=2) if work_links else "None provided"}
+
+**INTELLIGENCE RESPONSE:**
+Question: {intelligence_response.get('question_text', 'N/A')}
+Response: {intelligence_response.get('response_text', 'N/A')}
+
+**CANDIDATE BACKGROUND:**
+- Years Experience: {candidate.years_experience if candidate.years_experience else 'Not specified'}
+- Primary Expertise: {candidate.primary_expertise if candidate.primary_expertise else 'Not specified'}
+- Location: {candidate.location if candidate.location else 'Not specified'}
+
+---
+
+Provide a comprehensive analysis in the following JSON format:
+
+{{
+  "extracted_skills": [
+    "skill1", "skill2", "skill3", ...
+  ],
+  "key_phrases": [
+    {{
+      "phrase": "the exact phrase or concept",
+      "context": "why this matters for the role",
+      "importance": "high/medium/low"
+    }},
+    ...
+  ],
+  "artifact_analysis": [
+    {{
+      "url": "the artifact URL",
+      "type": "github/linkedin/portfolio/paper/project/other",
+      "summary": "2-3 sentence summary of what this demonstrates",
+      "quality_indicators": "what stands out about quality/depth",
+      "relevance": "how relevant to role requirements (high/medium/low)"
+    }},
+    ...
+  ],
+  "ai_assessment": {{
+    "strengths": [
+      "Specific strength 1 with evidence",
+      "Specific strength 2 with evidence",
+      "Specific strength 3 with evidence"
+    ],
+    "potential_gaps": [
+      "Gap or concern 1",
+      "Gap or concern 2"
+    ],
+    "technical_depth": "Junior/Mid/Senior/Staff - with brief justification",
+    "systems_thinking": "Strong/Moderate/Limited - with evidence",
+    "recommendation": "STRONG_PASS/PASS/MAYBE/PASS_WITH_CONCERNS - with reasoning",
+    "next_steps": "Suggested interview focus areas or screening questions"
+  }}
+}}
+
+Focus on:
+1. Technical skills (languages, frameworks, tools, methodologies)
+2. Physical AI-specific expertise (robotics, perception, control, planning, etc.)
+3. Systems-level thinking vs pure implementation
+4. Evidence of production experience, not just academic
+5. Judgment and decision-making patterns revealed in intelligence response
+6. Code quality and documentation practices (if GitHub links provided)
+
+Return ONLY the JSON, no additional text."""
+
+        print(f"🤖 Sending analysis request to Claude API for submission {submission_id}...")
+
+        # Call Claude API
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4000,
+            messages=[{
+                "role": "user",
+                "content": analysis_prompt
+            }]
+        )
+
+        # Parse response
+        response_text = message.content[0].text
+        print(f"✅ Received Claude API response")
+
+        # Extract JSON from response (in case Claude adds any extra text)
+        try:
+            # Try to find JSON in response
+            import re
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
+                analysis_result = json_module.loads(json_match.group())
+            else:
+                analysis_result = json_module.loads(response_text)
+        except Exception as parse_error:
+            print(f"⚠️  Error parsing Claude response: {str(parse_error)}")
+            print(f"   Raw response: {response_text[:500]}...")
+            return jsonify({
+                "error": "Failed to parse AI analysis response",
+                "raw_response": response_text
+            }), 500
+
+        # Save analysis to database
+        submission.extracted_skills = json_module.dumps(analysis_result.get('extracted_skills', []))
+        submission.key_phrases = json_module.dumps(analysis_result.get('key_phrases', []))
+        submission.ai_assessment = json_module.dumps(analysis_result.get('ai_assessment', {}))
+        submission.artifact_analysis = json_module.dumps(analysis_result.get('artifact_analysis', []))
+        submission.ai_analyzed = True
+        submission.ai_analyzed_at = datetime.utcnow()
+
+        db.session.commit()
+
+        print(f"✅ AI analysis saved for submission {submission_id}")
+
+        return jsonify({
+            "message": "AI analysis completed successfully",
+            "submission": submission.to_dict()
+        })
+
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR in AI analysis:")
+        print(f"   Error: {str(e)}")
+        print(f"   Traceback:\n{traceback.format_exc()}")
+        db.session.rollback()
+        return jsonify({"error": f"AI analysis failed: {str(e)}"}), 500
+
+
 # ==================== PUBLIC CANDIDATE ENDPOINTS ====================
 
 @app.route('/api/public/jobs/<int:job_id>', methods=['GET'])
@@ -2220,102 +3039,244 @@ def get_public_job(job_id):
 
 @app.route('/api/public/apply', methods=['POST'])
 def submit_public_application():
-    """Submit an application from the public landing page"""
-    data = request.json
-
-    print(f"\n📤 RECEIVED APPLICATION DATA:")
-    print(f"   First Name: {data.get('first_name')}")
-    print(f"   Last Name: {data.get('last_name')}")
-    print(f"   Email: {data.get('email')}")
-    print(f"   Phone: {data.get('phone')}")
-    print(f"   Location: {data.get('location')}")
-    print(f"   Years Experience: {data.get('years_experience')}")
-    print(f"   Primary Expertise: {data.get('primary_expertise')}")
-    print(f"   LinkedIn: {data.get('linkedin_url')}")
-    print(f"   GitHub: {data.get('github_url')}")
-    print(f"   Portfolio: {data.get('portfolio_url')}")
-    print(f"   Position: {data.get('position')}")
-    print(f"   Hiring Intelligence: {data.get('hiring_intelligence')[:50] if data.get('hiring_intelligence') else 'EMPTY'}...")
-    print(f"   Hidden Signal: {data.get('hidden_signal')}")
-
-    # Validate required fields
-    required_fields = ['job_id', 'first_name', 'last_name', 'email']
-    for field in required_fields:
-        if not data.get(field):
-            return jsonify({"error": f"Missing required field: {field}"}), 400
-
-    job_id = data.get('job_id')
-
-    # Verify job exists and is open
-    job = Job.query.get(job_id)
-    if not job:
-        return jsonify({"error": "Job not found"}), 404
-    if job.status != 'open':
-        return jsonify({"error": "This position is no longer accepting applications"}), 400
-
-    # Check if candidate already exists
-    existing_candidate = Candidate.query.filter_by(email=data.get('email')).first()
-
-    if existing_candidate:
-        # Check if already applied to this job
-        existing_application = Application.query.filter_by(
-            candidate_id=existing_candidate.id,
-            job_id=job_id
-        ).first()
-
-        if existing_application:
-            return jsonify({"error": "You have already applied for this position"}), 400
-
-        candidate = existing_candidate
-        # Update candidate info if provided - ALWAYS update, even if empty
-        candidate.phone = data.get('phone', '')
-        candidate.linkedin_url = data.get('linkedin_url', '')
-        candidate.github_url = data.get('github_url', '')
-        candidate.portfolio_url = data.get('portfolio_url', '')
-        candidate.location = data.get('location', '')
-        candidate.years_experience = data.get('years_experience')
-        candidate.primary_expertise = data.get('primary_expertise', '')
-    else:
-        # Create new candidate
-        candidate = Candidate(
-            first_name=data.get('first_name'),
-            last_name=data.get('last_name'),
-            email=data.get('email'),
-            phone=data.get('phone', ''),
-            location=data.get('location', ''),
-            linkedin_url=data.get('linkedin_url', ''),
-            github_url=data.get('github_url', ''),
-            portfolio_url=data.get('portfolio_url', ''),
-            resume_url=data.get('resume_url', ''),
-            years_experience=data.get('years_experience'),
-            primary_expertise=data.get('primary_expertise', ''),
-            status='new'
-        )
-        db.session.add(candidate)
-        try:
-            db.session.flush()  # Get candidate ID
-            print(f"✅ Candidate flushed successfully - ID will be: {candidate.id}")
-        except Exception as e:
-            import traceback
-            print(f"❌ ERROR FLUSHING CANDIDATE:")
-            print(f"   Error: {str(e)}")
-            print(f"   Traceback:\n{traceback.format_exc()}")
-            db.session.rollback()
-            return jsonify({"error": f"Failed to create candidate: {str(e)}"}), 500
-
-    # Create application (store position, hiring intelligence + hidden signal)
-    application = Application(
-        candidate_id=candidate.id,
-        job_id=job_id,
-        status='applied',
-        source='landing_page',
-        position=data.get('position', ''),
-        hiring_intelligence=data.get('hiring_intelligence', ''),
-        hidden_signal=data.get('hidden_signal', '')
-    )
-    db.session.add(application)
+    """Submit an application from the public landing page with Hiring Intelligence data"""
+    import json as json_module
 
     try:
+        data = request.json
+
+        print(f"\n📤 RECEIVED APPLICATION DATA:")
+        print(f"   First Name: {data.get('first_name')}")
+        print(f"   Last Name: {data.get('last_name')}")
+        print(f"   Email: {data.get('email')}")
+        print(f"   Phone: {data.get('phone')}")
+        print(f"   Location: {data.get('location')}")
+        print(f"   Years Experience: {data.get('years_experience')}")
+        print(f"   Primary Expertise: {data.get('primary_expertise')}")
+        print(f"   LinkedIn: {data.get('linkedin_url')}")
+        print(f"   GitHub: {data.get('github_url')}")
+        print(f"   Portfolio: {data.get('portfolio_url')}")
+        print(f"   Position: {data.get('position')}")
+        print(f"   Hiring Intelligence: {data.get('hiring_intelligence')[:50] if data.get('hiring_intelligence') else 'EMPTY'}...")
+        print(f"   Hidden Signal: {data.get('hidden_signal')}")
+
+        # Validate required fields
+        required_fields = ['job_id', 'first_name', 'last_name', 'email']
+        for field in required_fields:
+            if not data.get(field):
+                return jsonify({"error": f"Missing required field: {field}"}), 400
+
+        job_id = data.get('job_id')
+
+        # Verify job exists and is open
+        job = Job.query.get(job_id)
+        if not job:
+            return jsonify({"error": "Job not found"}), 404
+        if job.status != 'open':
+            return jsonify({"error": "This position is no longer accepting applications"}), 400
+
+        # Check if candidate already exists
+        existing_candidate = Candidate.query.filter_by(email=data.get('email')).first()
+
+        if existing_candidate:
+            # Check if already applied to this job
+            existing_application = Application.query.filter_by(
+                candidate_id=existing_candidate.id,
+                job_id=job_id
+            ).first()
+
+            if existing_application:
+                return jsonify({"error": "You have already applied for this position"}), 400
+
+            candidate = existing_candidate
+            # Update candidate info if provided - ALWAYS update, even if empty
+            candidate.phone = data.get('phone', '')
+            candidate.linkedin_url = data.get('linkedin_url', '')
+            candidate.github_url = data.get('github_url', '')
+            candidate.portfolio_url = data.get('portfolio_url', '')
+            candidate.location = data.get('location', '')
+            candidate.years_experience = data.get('years_experience')
+            candidate.primary_expertise = data.get('primary_expertise', '')
+        else:
+            # Create new candidate
+            candidate = Candidate(
+                first_name=data.get('first_name'),
+                last_name=data.get('last_name'),
+                email=data.get('email'),
+                phone=data.get('phone', ''),
+                location=data.get('location', ''),
+                linkedin_url=data.get('linkedin_url', ''),
+                github_url=data.get('github_url', ''),
+                portfolio_url=data.get('portfolio_url', ''),
+                resume_url=data.get('resume_url', ''),
+                years_experience=data.get('years_experience'),
+                primary_expertise=data.get('primary_expertise', ''),
+                status='new'
+            )
+            db.session.add(candidate)
+            try:
+                db.session.flush()  # Get candidate ID
+                print(f"✅ Candidate flushed successfully - ID will be: {candidate.id}")
+            except Exception as e:
+                import traceback
+                print(f"❌ ERROR FLUSHING CANDIDATE:")
+                print(f"   Error: {str(e)}")
+                print(f"   Traceback:\n{traceback.format_exc()}")
+                db.session.rollback()
+                return jsonify({"error": f"Failed to create candidate: {str(e)}"}), 500
+
+        # Process work artifact links (Hiring Intelligence)
+        work_links = data.get('work_links', [])
+        print(f"📦 Received {len(work_links)} work links")
+
+        # Check if candidate_link table exists before trying to use it
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        table_exists = 'candidate_link' in inspector.get_table_names()
+
+        if not table_exists:
+            print("⚠️  candidate_link table does not exist yet - skipping work links")
+            print("   Work links will be available after database migration")
+        elif len(work_links) > 0:
+            for i, link in enumerate(work_links):
+                print(f"   Link {i+1}: type={link.get('link_type')}, url={link.get('url')[:50] if link.get('url') else 'EMPTY'}, title={link.get('title', 'N/A')}")
+
+            try:
+                links_added = 0
+                for link_data in work_links:
+                    # Validate link has both URL and type, and URL is not empty
+                    url = link_data.get('url', '').strip()
+                    link_type = link_data.get('link_type', '').strip()
+
+                    if not url or not link_type:
+                        print(f"⚠️  Skipping invalid link: url='{url}', type='{link_type}'")
+                        continue
+
+                    if len(url) > 500:
+                        print(f"⚠️  URL too long ({len(url)} chars), truncating to 500")
+                        url = url[:500]
+
+                    link = CandidateLink(
+                        candidate_id=candidate.id,
+                        link_type=link_type,
+                        url=url,
+                        title=link_data.get('title', '')[:300] if link_data.get('title') else None
+                    )
+                    db.session.add(link)
+                    links_added += 1
+
+                if links_added > 0:
+                    print(f"✅ Added {links_added} work artifact links")
+                else:
+                    print(f"ℹ️  No valid work links to add")
+            except Exception as e:
+                import traceback
+                print(f"⚠️  Error saving work links: {str(e)}")
+                print(f"   Traceback:\n{traceback.format_exc()}")
+                # Roll back the bad objects to prevent tainting the session
+                db.session.rollback()
+                # Re-add the candidate since we rolled back
+                if candidate.id is None:
+                    db.session.add(candidate)
+                    db.session.flush()
+                print("   Continuing without work links...")
+        else:
+            print("ℹ️  No work links provided")
+
+        # Create application (store position, hiring intelligence + hidden signal)
+        application = Application(
+            candidate_id=candidate.id,
+            job_id=job_id,
+            status='applied',
+            source='hiring_intelligence',
+            position=data.get('position', ''),
+            hiring_intelligence=data.get('hiring_intelligence', ''),
+            hidden_signal=data.get('hidden_signal', ''),
+            notes=data.get('cover_letter', '')
+        )
+        db.session.add(application)
+        db.session.flush()  # Get application ID
+
+        # Process intelligence response (Hiring Intelligence)
+        intelligence_response = data.get('intelligence_response')
+        if intelligence_response and intelligence_response.get('response_text'):
+            # Check if intelligence tables exist
+            intelligence_tables_exist = (
+                'role_question' in inspector.get_table_names() and
+                'intelligence_response' in inspector.get_table_names() and
+                'hiring_intelligence_submission' in inspector.get_table_names()
+            )
+
+            if not intelligence_tables_exist:
+                print("⚠️  Hiring intelligence tables do not exist yet - skipping intelligence data")
+                print("   Intelligence data stored in Application.hiring_intelligence field as fallback")
+            else:
+                try:
+                    # Get or create the question
+                    question_id = intelligence_response.get('question_id')
+
+                    if not question_id and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+                        # Create question from template
+                        template_data = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+                        question = RoleQuestion(
+                            job_id=job_id,
+                            role_title=job.title,
+                            label=template_data['label'],
+                            question=template_data['question'],
+                            is_template=False,
+                            is_active=True
+                        )
+                        db.session.add(question)
+                        db.session.flush()
+                        question_id = question.id
+                        print(f"✅ Created RoleQuestion for {job.title}")
+
+                    if question_id:
+                        response = IntelligenceResponse(
+                            application_id=application.id,
+                            question_id=question_id,
+                            response_text=intelligence_response['response_text']
+                        )
+                        db.session.add(response)
+                        print(f"✅ Added IntelligenceResponse")
+
+                        # Auto-generate Hiring Intelligence Submission
+                        submission_data = {
+                            'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+                            'candidate_email': candidate.email,
+                            'position': data.get('position', job.title),
+                            'hidden_signal': data.get('hidden_signal', ''),
+                            'work_links': [{'link_type': l.get('link_type'), 'url': l.get('url'), 'title': l.get('title')} for l in work_links],
+                            'intelligence_response': {
+                                'question_label': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('label', 'Custom Question'),
+                                'question_text': PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}).get('question', ''),
+                                'response_text': intelligence_response['response_text']
+                            },
+                            'generated_at': datetime.utcnow().isoformat()
+                        }
+
+                        submission = HiringIntelligenceSubmission(
+                            application_id=application.id,
+                            submission_data=json_module.dumps(submission_data),
+                            status='pending'
+                        )
+                        db.session.add(submission)
+                        print(f"✅ Created HiringIntelligenceSubmission")
+                except Exception as e:
+                    import traceback
+                    print(f"⚠️  Error saving intelligence data: {str(e)}")
+                    print(f"   Traceback:\n{traceback.format_exc()}")
+                    # Roll back to prevent session tainting
+                    db.session.rollback()
+                    # Re-add what we need
+                    if candidate.id is None:
+                        db.session.add(candidate)
+                        db.session.flush()
+                    db.session.add(application)
+                    db.session.flush()
+                    print("   Continuing without intelligence data...")
+
+        # Commit the transaction
         print(f"🔄 Attempting to commit (Candidate ID: {candidate.id}, Application: {application.id})...")
         db.session.commit()
         print(f"✅ COMMIT SUCCEEDED")
@@ -2339,19 +3300,93 @@ def submit_public_application():
             print(f"   ❌ APPLICATION {application.id} NOT FOUND IN DATABASE!")
 
         return jsonify({
-            "message": "Application submitted successfully!",
+            "message": "Hiring Intelligence Submission received successfully!",
             "application_id": application.id,
-            "candidate_id": candidate.id
+            "candidate_id": candidate.id,
+            "has_intelligence_data": bool(intelligence_response)
         }), 201
     except Exception as e:
         import traceback
         error_trace = traceback.format_exc()
-        print(f"❌ ERROR SAVING APPLICATION:")
+        print(f"❌ ERROR IN /api/public/apply:")
         print(f"   Error Type: {type(e).__name__}")
         print(f"   Error Message: {str(e)}")
         print(f"   Full Traceback:\n{error_trace}")
         db.session.rollback()
         return jsonify({"error": f"{type(e).__name__}: {str(e)}"}), 500
+
+
+@app.route('/api/public/jobs/<int:job_id>/question', methods=['GET'])
+def get_public_job_question(job_id):
+    """Get the intelligence question for a public job application"""
+    try:
+        job = Job.query.get_or_404(job_id)
+
+        # Only show for open jobs
+        if job.status != 'open':
+            return jsonify({"error": "This position is no longer accepting applications"}), 404
+
+        # Check for job-specific question
+        try:
+            question = RoleQuestion.query.filter_by(job_id=job_id, is_active=True).first()
+        except Exception as db_error:
+            print(f"⚠️  RoleQuestion table may not exist yet: {str(db_error)}")
+            question = None
+
+        # If no job-specific, look for template
+        if not question:
+            try:
+                question = RoleQuestion.query.filter_by(
+                    role_title=job.title,
+                    is_template=True,
+                    is_active=True
+                ).first()
+            except Exception as db_error:
+                print(f"⚠️  RoleQuestion template query failed: {str(db_error)}")
+                question = None
+
+        # If still none, check built-in templates
+        if not question and job.title in PHYSICAL_AI_ROLE_QUESTIONS:
+            template = PHYSICAL_AI_ROLE_QUESTIONS[job.title]
+            print(f"✅ Using built-in template for {job.title}")
+            return jsonify({
+                'question_id': None,
+                'role_title': job.title,
+                'label': template['label'],
+                'question': template['question'],
+                'source': 'built_in'
+            })
+
+        if question:
+            return jsonify({
+                'question_id': question.id,
+                'role_title': question.role_title,
+                'label': question.label,
+                'question': question.question,
+                'source': 'database'
+            })
+
+        # No question available for this role
+        print(f"⚠️  No intelligence question found for job {job_id} ({job.title})")
+        return jsonify({
+            'message': 'No intelligence question configured for this role',
+            'question': None
+        })
+    except Exception as e:
+        import traceback
+        print(f"❌ ERROR in get_public_job_question:")
+        print(f"   Job ID: {job_id}")
+        print(f"   Error: {str(e)}")
+        print(f"   Traceback:\n{traceback.format_exc()}")
+        return jsonify({"error": f"Failed to fetch intelligence question: {str(e)}"}), 500
+
+
+# ==================== DATABASE INITIALIZATION ====================
+# IMPORTANT: Must be AFTER all model definitions so SQLAlchemy knows about them
+print("🔧 Initializing database tables...")
+with app.app_context():
+    db.create_all()
+    print("✅ Database tables created successfully")
 
 
 if __name__ == '__main__':
