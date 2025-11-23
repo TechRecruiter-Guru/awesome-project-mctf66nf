@@ -325,7 +325,7 @@ function JobDetailPage({ jobId, onBack }) {
 
   // Hiring Intelligence state
   const [workLinks, setWorkLinks] = useState([
-    { link_type: 'linkedin', url: '', title: '' }
+    { link_type: 'github', url: '', title: '' }
   ]);
   const [intelligenceResponse, setIntelligenceResponse] = useState('');
 
@@ -578,7 +578,7 @@ function JobDetailPage({ jobId, onBack }) {
               </p>
             </div>
 
-            {/* ==================== WORK ARTIFACTS SECTION ==================== */}
+            {/* ==================== PROJECTS, PAPERS & CODE ==================== */}
 
             <div style={{
               backgroundColor: '#f8fafc',
@@ -589,10 +589,10 @@ function JobDetailPage({ jobId, onBack }) {
               marginBottom: '20px'
             }}>
               <h2 style={{ margin: '0 0 6px 0', fontSize: '20px', color: '#0f1724' }}>
-                Work Artifacts
+                Projects, Papers & Code
               </h2>
               <p style={{ color: '#6b7280', margin: '0 0 18px 0', fontSize: '13px' }}>
-                Share links to your work - GitHub repos, papers, projects, or any artifacts that demonstrate your capabilities.
+                Share links to your work — GitHub repos, research papers, class projects, portfolio, or any work that demonstrates your capabilities. <strong>No work history required!</strong> College projects, research, and personal work all count.
               </p>
 
               {workLinks.map((link, index) => (
@@ -1276,6 +1276,130 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
     }
   };
 
+  const downloadReport = () => {
+    const candidateName = submissionData.candidate_name || 'Unknown';
+    const position = submissionData.position || 'Position';
+
+    // Generate formatted HTML report
+    let reportHTML = `
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Hiring Intelligence Report - ${candidateName}</title>
+  <style>
+    body { font-family: system-ui, -apple-system, sans-serif; max-width: 900px; margin: 40px auto; padding: 20px; line-height: 1.6; color: #333; }
+    h1 { color: #0f1724; border-bottom: 3px solid #667eea; padding-bottom: 10px; }
+    h2 { color: #0f1724; margin-top: 30px; border-bottom: 2px solid #667eea; padding-bottom: 8px; }
+    .header-info { background: #f8fafc; padding: 20px; border-radius: 8px; margin: 20px 0; }
+    .info-row { display: grid; grid-template-columns: 150px 1fr; margin: 8px 0; }
+    .label { font-weight: 600; color: #6b7280; }
+    .link { color: #0b63ff; text-decoration: none; word-break: break-all; }
+    .link:hover { text-decoration: underline; }
+    .skill-badge { display: inline-block; background: #8b5cf6; color: white; padding: 4px 12px; border-radius: 12px; margin: 4px; font-size: 13px; }
+    .section { background: #f8fafc; padding: 16px; border-radius: 8px; margin: 16px 0; border: 1px solid #e2e8f0; }
+    .response-text { white-space: pre-wrap; background: white; padding: 16px; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .link-item { background: white; padding: 12px; margin: 8px 0; border-radius: 6px; border: 1px solid #e2e8f0; }
+    .link-type { background: #667eea; color: white; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  </style>
+</head>
+<body>
+  <h1>🧠 Hiring Intelligence Report</h1>
+  <p style="color: #6b7280; font-style: italic;">Resume Replacement Document - Built from Impact Intelligence, Not Keywords</p>
+
+  <div class="header-info">
+    <div class="info-row"><span class="label">Candidate:</span><span><strong>${candidateName}</strong></span></div>
+    <div class="info-row"><span class="label">Position:</span><span><strong>${position}</strong></span></div>
+    ${applicationData?.candidate_email ? `<div class="info-row"><span class="label">Email:</span><span><a href="mailto:${applicationData.candidate_email}" class="link">${applicationData.candidate_email}</a></span></div>` : ''}
+    ${submissionData.hidden_signal ? `<div class="info-row"><span class="label">Hidden Signal:</span><span><strong style="color: #92400e;">${submissionData.hidden_signal}</strong></span></div>` : ''}
+  </div>
+
+  ${workLinks.length > 0 ? `
+  <h2>📦 Projects, Papers & Code</h2>
+  <div class="section">
+    ${workLinks.map(link => `
+      <div class="link-item">
+        <span class="link-type">${link.link_type}</span>
+        ${link.title ? `<strong style="margin-left: 10px;">${link.title}</strong><br>` : ''}
+        <a href="${link.url}" target="_blank" class="link">${link.url}</a>
+      </div>
+    `).join('')}
+  </div>
+  ` : ''}
+
+  ${intelligenceResponse.response_text ? `
+  <h2>🎯 Judgment & Reasoning Intelligence</h2>
+  ${intelligenceResponse.question_label ? `<p><strong>Question:</strong> ${intelligenceResponse.question_label}</p>` : ''}
+  <div class="response-text">${intelligenceResponse.response_text}</div>
+  ` : ''}
+
+  ${localSubmission.ai_analyzed && extractedSkills && extractedSkills.length > 0 ? `
+  <h2>🔧 AI-Extracted Technical Skills</h2>
+  <div class="section">
+    ${extractedSkills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}
+  </div>
+  ` : ''}
+
+  ${localSubmission.ai_analyzed && aiAssessment ? `
+  <h2>🤖 AI Hiring Assessment</h2>
+  <div class="section">
+    ${aiAssessment.recommendation ? `<p><strong>Recommendation:</strong> ${aiAssessment.recommendation}</p>` : ''}
+    ${aiAssessment.strengths ? `<p><strong>Key Strengths:</strong> ${aiAssessment.strengths}</p>` : ''}
+    ${aiAssessment.concerns ? `<p><strong>Concerns/Gaps:</strong> ${aiAssessment.concerns}</p>` : ''}
+    ${aiAssessment.next_steps ? `<p><strong>Next Steps:</strong> ${aiAssessment.next_steps}</p>` : ''}
+  </div>
+  ` : ''}
+
+  <hr style="margin: 40px 0; border: none; border-top: 1px solid #e2e8f0;">
+  <p style="text-align: center; color: #6b7280; font-size: 13px;">Generated from PhysicalAIPros.com Hiring Intelligence System</p>
+</body>
+</html>
+    `;
+
+    // Create download
+    const blob = new Blob([reportHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hiring-intelligence-report-${candidateName.replace(/\s+/g, '-')}-${Date.now()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    alert('✅ Report downloaded! Open the HTML file in your browser to view.');
+  };
+
+  const copyShareableLink = () => {
+    // Generate shareable text summary
+    const shareText = `Hiring Intelligence Report
+
+Candidate: ${submissionData.candidate_name || 'Unknown'}
+Position: ${submissionData.position || 'N/A'}
+Email: ${applicationData?.candidate_email || 'N/A'}
+
+View full report in PhysicalAIPros.com portal
+Submission ID: ${localSubmission.id}
+
+${workLinks.length > 0 ? `
+Projects, Papers & Code:
+${workLinks.map((link, i) => `${i + 1}. [${link.link_type}] ${link.url}${link.title ? ` - ${link.title}` : ''}`).join('\n')}
+` : ''}
+
+${localSubmission.ai_analyzed && extractedSkills && extractedSkills.length > 0 ? `
+AI-Extracted Skills: ${extractedSkills.join(', ')}
+` : ''}
+
+Generated from PhysicalAIPros.com Hiring Intelligence System`;
+
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('✅ Shareable report summary copied to clipboard! Paste it in email, Slack, or any communication tool.');
+    }).catch(err => {
+      alert('❌ Failed to copy to clipboard. Please try again.');
+      console.error('Clipboard error:', err);
+    });
+  };
+
   return (
     <div style={{
       position: 'fixed',
@@ -1344,6 +1468,42 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
                 ✅ AI Analyzed
               </div>
             )}
+            <button
+              onClick={downloadReport}
+              style={{
+                backgroundColor: '#10b981',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                boxShadow: '0 2px 4px rgba(16, 185, 129, 0.2)',
+                transition: 'all 0.2s'
+              }}
+              title="Download as HTML file"
+            >
+              📥 Download Report
+            </button>
+            <button
+              onClick={copyShareableLink}
+              style={{
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                padding: '10px 20px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: '600',
+                boxShadow: '0 2px 4px rgba(59, 130, 246, 0.2)',
+                transition: 'all 0.2s'
+              }}
+              title="Copy shareable text summary"
+            >
+              🔗 Share Report
+            </button>
             <button
               onClick={onClose}
               style={{
@@ -1415,7 +1575,7 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
               paddingBottom: '8px',
               borderBottom: '2px solid #667eea'
             }}>
-              📦 Work Artifact Intelligence
+              📦 Projects, Papers & Code
             </h2>
             <div style={{
               backgroundColor: '#f8fafc',
@@ -1466,7 +1626,7 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
                 color: '#3730a3',
                 lineHeight: '1.5'
               }}>
-                <strong>💡 Intelligence Context:</strong> Candidate provided {workLinks.length} work artifact{workLinks.length > 1 ? 's' : ''} for verification.
+                <strong>💡 Intelligence Context:</strong> Candidate provided {workLinks.length} link{workLinks.length > 1 ? 's' : ''} (GitHub repos, research papers, projects, portfolio) for verification.
                 These links enable direct assessment of code quality, research depth, and technical judgment -
                 far superior to resume keywords.
               </div>
@@ -1645,7 +1805,7 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
                   paddingBottom: '8px',
                   borderBottom: '2px solid #8b5cf6'
                 }}>
-                  📦 AI Work Artifact Analysis
+                  📦 AI Analysis: Projects, Papers & Code
                 </h2>
                 <div style={{
                   backgroundColor: '#f5f3ff',
