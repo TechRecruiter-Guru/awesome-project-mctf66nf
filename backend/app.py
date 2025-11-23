@@ -2884,11 +2884,53 @@ def analyze_intelligence_submission(submission_id):
         # Import Anthropic SDK
         try:
             from anthropic import Anthropic
+            import httpx
         except ImportError:
             return jsonify({"error": "Anthropic SDK not installed. Run: pip install anthropic"}), 500
 
-        # Initialize Claude API
-        client = Anthropic(api_key=api_key)
+        # Initialize Claude API with explicit httpx client to avoid proxy issues
+        # Render sets proxy env vars that httpx picks up, but httpx removed 'proxies' parameter
+        # Solution: Create httpx client with proxies explicitly disabled
+        print("🔧 Initializing Anthropic client with custom httpx settings...")
+        try:
+            http_client = httpx.Client(
+                timeout=60.0,
+                follow_redirects=True,
+                # Don't pass proxy settings - let httpx use environment vars if needed
+                # but don't explicitly set proxies parameter which causes errors
+            )
+            client = Anthropic(
+                api_key=api_key,
+                http_client=http_client
+            )
+            print("✅ Anthropic client initialized successfully")
+        except Exception as init_error:
+            print(f"❌ Error initializing Anthropic client: {init_error}")
+            # Fallback: try without custom httpx client
+            print("⚠️  Attempting fallback initialization without custom httpx client...")
+            try:
+                # Temporarily unset proxy environment variables
+                proxy_vars = ['HTTP_PROXY', 'HTTPS_PROXY', 'http_proxy', 'https_proxy',
+                              'ALL_PROXY', 'all_proxy', 'NO_PROXY', 'no_proxy']
+                saved_proxies = {}
+                for var in proxy_vars:
+                    if var in os.environ:
+                        saved_proxies[var] = os.environ.pop(var)
+                        print(f"   Temporarily removed {var}: {saved_proxies[var][:30]}...")
+
+                client = Anthropic(api_key=api_key)
+
+                # Restore proxy environment variables
+                for var, value in saved_proxies.items():
+                    os.environ[var] = value
+
+                print("✅ Anthropic client initialized with proxy workaround")
+            except Exception as fallback_error:
+                print(f"❌ Fallback also failed: {fallback_error}")
+                return jsonify({
+                    "error": "Failed to initialize Anthropic client",
+                    "details": str(fallback_error)
+                }), 500
 
         # Build analysis prompt
         analysis_prompt = f"""You are an expert technical recruiter and hiring manager for Physical AI roles (robotics, autonomous systems, computer vision, etc.).
