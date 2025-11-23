@@ -316,6 +316,7 @@ function JobDetailPage({ jobId, onBack }) {
     portfolio_url: '',
     years_experience: '',
     primary_expertise: '',
+    job_description: '',  // CRITICAL: What the candidate is looking for
     position: '',
     hiring_intelligence: '',
     hidden_signal: ''
@@ -548,6 +549,33 @@ function JobDetailPage({ jobId, onBack }) {
                 ))}
                 <option value="Other">Other</option>
               </select>
+            </div>
+
+            {/* ==================== JOB DESCRIPTION - CRITICAL FIELD ==================== */}
+            <div className="form-group">
+              <label>What role are you looking for? *</label>
+              <textarea
+                name="job_description"
+                value={formData.job_description}
+                onChange={handleInputChange}
+                rows="4"
+                placeholder="Tell us about the role you're seeking, your goals, and what you're looking for in your next position. Include specific areas of interest, technologies you want to work with, or problems you want to solve."
+                required
+                style={{
+                  width: '100%',
+                  padding: '12px',
+                  borderRadius: '8px',
+                  border: '1px solid #d1d5db',
+                  fontSize: '14px',
+                  fontFamily: 'inherit',
+                  lineHeight: '1.5',
+                  resize: 'vertical',
+                  minHeight: '100px'
+                }}
+              />
+              <p style={{ color: '#6b7280', fontSize: '13px', marginTop: '6px', marginBottom: 0 }}>
+                This helps us match you with the right opportunities and understand your career goals.
+              </p>
             </div>
 
             {/* ==================== WORK ARTIFACTS SECTION ==================== */}
@@ -893,6 +921,8 @@ function JobDetailPage({ jobId, onBack }) {
                       portfolio_url: '',
                       years_experience: '',
                       primary_expertise: '',
+                      job_description: '',
+                      position: '',
                       hiring_intelligence: '',
                       hidden_signal: ''
                     });

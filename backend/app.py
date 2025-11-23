@@ -39,6 +39,7 @@ class Candidate(db.Model):
     resume_url = db.Column(db.String(300))
     company = db.Column(db.String(200))
     bio = db.Column(db.Text)
+    job_description = db.Column(db.Text)  # CRITICAL: What role/position the candidate is looking for
 
     # GitHub Metrics
     github_followers = db.Column(db.Integer)
@@ -85,6 +86,7 @@ class Candidate(db.Model):
             'resume_url': self.resume_url,
             'company': self.company,
             'bio': self.bio,
+            'job_description': self.job_description,
             'github_followers': self.github_followers,
             'github_repos': self.github_repos,
             'google_scholar_url': self.google_scholar_url,
@@ -3095,6 +3097,7 @@ def submit_public_application():
         print(f"   Location: {data.get('location')}")
         print(f"   Years Experience: {data.get('years_experience')}")
         print(f"   Primary Expertise: {data.get('primary_expertise')}")
+        print(f"   Job Description: {data.get('job_description')[:80] if data.get('job_description') else 'EMPTY'}...")
         print(f"   LinkedIn: {data.get('linkedin_url')}")
         print(f"   GitHub: {data.get('github_url')}")
         print(f"   Portfolio: {data.get('portfolio_url')}")
@@ -3139,6 +3142,7 @@ def submit_public_application():
             candidate.location = data.get('location', '')
             candidate.years_experience = data.get('years_experience')
             candidate.primary_expertise = data.get('primary_expertise', '')
+            candidate.job_description = data.get('job_description', '')
         else:
             # Create new candidate
             candidate = Candidate(
@@ -3153,6 +3157,7 @@ def submit_public_application():
                 resume_url=data.get('resume_url', ''),
                 years_experience=data.get('years_experience'),
                 primary_expertise=data.get('primary_expertise', ''),
+                job_description=data.get('job_description', ''),  # CRITICAL: What role candidate wants
                 status='new'
             )
             db.session.add(candidate)
