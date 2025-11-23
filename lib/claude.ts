@@ -7,9 +7,14 @@ export const getClaudeClient = () => {
     throw new Error('ANTHROPIC_API_KEY is not configured');
   }
 
-  return new Anthropic({
+  // Create client configuration
+  // Note: The Anthropic SDK does NOT support a 'proxies' parameter.
+  // Proxy configuration should be done through environment variables or httpAgent if needed.
+  const clientConfig: Anthropic.ClientOptions = {
     apiKey: apiKey,
-  });
+  };
+
+  return new Anthropic(clientConfig);
 };
 
 export async function extractSafetyCaseData(pdfText: string): Promise<any> {
