@@ -1341,12 +1341,62 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
   ` : ''}
 
   ${localSubmission.ai_analyzed && aiAssessment ? `
-  <h2>🤖 AI Hiring Assessment</h2>
-  <div class="section">
-    ${aiAssessment.recommendation ? `<p><strong>Recommendation:</strong> ${aiAssessment.recommendation}</p>` : ''}
-    ${aiAssessment.strengths ? `<p><strong>Key Strengths:</strong> ${aiAssessment.strengths}</p>` : ''}
-    ${aiAssessment.concerns ? `<p><strong>Concerns/Gaps:</strong> ${aiAssessment.concerns}</p>` : ''}
-    ${aiAssessment.next_steps ? `<p><strong>Next Steps:</strong> ${aiAssessment.next_steps}</p>` : ''}
+  <h2>🤖 AI Hiring Manager Assessment</h2>
+  <div class="section" style="background: #f5f3ff; border: 2px solid #8b5cf6; padding: 20px;">
+    ${aiAssessment.recommendation ? `
+      <div style="background: ${aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#d1fae5' :
+                                aiAssessment.recommendation.includes('WITH CAUTION') ? '#fed7aa' :
+                                aiAssessment.recommendation.includes('RECOMMEND') ? '#dbeafe' : '#fef3c7'};
+                  color: ${aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#065f46' :
+                           aiAssessment.recommendation.includes('WITH CAUTION') ? '#9a3412' :
+                           aiAssessment.recommendation.includes('RECOMMEND') ? '#1e40af' : '#92400e'};
+                  padding: 12px 16px; border-radius: 8px; margin-bottom: 16px; font-weight: 700; font-size: 15px;
+                  border: 2px solid ${aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#a7f3d0' :
+                                     aiAssessment.recommendation.includes('WITH CAUTION') ? '#fdba74' :
+                                     aiAssessment.recommendation.includes('RECOMMEND') ? '#93c5fd' : '#fde68a'};">
+        📌 Recommendation: ${aiAssessment.recommendation}
+      </div>
+    ` : ''}
+
+    ${aiAssessment.strengths && Array.isArray(aiAssessment.strengths) && aiAssessment.strengths.length > 0 ? `
+      <div style="margin-bottom: 16px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #166534;">✅ Strengths Identified</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+          ${aiAssessment.strengths.map(s => `<li style="margin-bottom: 6px; font-size: 14px; line-height: 1.6;">${s}</li>`).join('')}
+        </ul>
+      </div>
+    ` : ''}
+
+    ${aiAssessment.potential_gaps && Array.isArray(aiAssessment.potential_gaps) && aiAssessment.potential_gaps.length > 0 ? `
+      <div style="margin-bottom: 16px;">
+        <h3 style="margin: 0 0 8px 0; font-size: 15px; font-weight: 700; color: #92400e;">⚠️ Potential Gaps or Concerns</h3>
+        <ul style="margin: 0; padding-left: 20px;">
+          ${aiAssessment.potential_gaps.map(g => `<li style="margin-bottom: 6px; font-size: 14px; line-height: 1.6;">${g}</li>`).join('')}
+        </ul>
+      </div>
+    ` : ''}
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+      ${aiAssessment.technical_depth ? `
+        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #ddd6fe;">
+          <p style="margin: 0 0 4px 0; font-size: 12px; color: #6b7280; font-weight: 600;">TECHNICAL DEPTH</p>
+          <p style="margin: 0; font-size: 14px; font-weight: 700; color: #581c87;">${aiAssessment.technical_depth}</p>
+        </div>
+      ` : ''}
+      ${aiAssessment.systems_thinking ? `
+        <div style="background: white; padding: 12px; border-radius: 8px; border: 1px solid #ddd6fe;">
+          <p style="margin: 0 0 4px 0; font-size: 12px; color: #6b7280; font-weight: 600;">SYSTEMS THINKING</p>
+          <p style="margin: 0; font-size: 14px; font-weight: 700; color: #581c87;">${aiAssessment.systems_thinking}</p>
+        </div>
+      ` : ''}
+    </div>
+
+    ${aiAssessment.next_steps ? `
+      <div style="background: #e0e7ff; padding: 12px; border-radius: 8px; border: 1px solid #c7d2fe;">
+        <p style="margin: 0 0 6px 0; font-size: 13px; font-weight: 700; color: #3730a3;">💡 Suggested Next Steps</p>
+        <p style="margin: 0; font-size: 13px; line-height: 1.6; color: #4338ca;">${aiAssessment.next_steps}</p>
+      </div>
+    ` : ''}
   </div>
   ` : ''}
 
@@ -1897,17 +1947,20 @@ Generated from PhysicalAIPros.com Hiring Intelligence System`;
                   {/* Recommendation Banner */}
                   {aiAssessment.recommendation && (
                     <div style={{
-                      backgroundColor: aiAssessment.recommendation.includes('STRONG') ? '#d1fae5' :
-                                      aiAssessment.recommendation.includes('PASS') ? '#dbeafe' : '#fef3c7',
-                      color: aiAssessment.recommendation.includes('STRONG') ? '#065f46' :
-                             aiAssessment.recommendation.includes('PASS') ? '#1e40af' : '#92400e',
+                      backgroundColor: aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#d1fae5' :
+                                      aiAssessment.recommendation.includes('WITH CAUTION') ? '#fed7aa' :
+                                      aiAssessment.recommendation.includes('RECOMMEND') ? '#dbeafe' : '#fef3c7',
+                      color: aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#065f46' :
+                             aiAssessment.recommendation.includes('WITH CAUTION') ? '#9a3412' :
+                             aiAssessment.recommendation.includes('RECOMMEND') ? '#1e40af' : '#92400e',
                       padding: '12px 16px',
                       borderRadius: '8px',
                       marginBottom: '16px',
                       fontWeight: '700',
                       fontSize: '15px',
-                      border: `2px solid ${aiAssessment.recommendation.includes('STRONG') ? '#a7f3d0' :
-                                          aiAssessment.recommendation.includes('PASS') ? '#93c5fd' : '#fde68a'}`
+                      border: `2px solid ${aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#a7f3d0' :
+                                          aiAssessment.recommendation.includes('WITH CAUTION') ? '#fdba74' :
+                                          aiAssessment.recommendation.includes('RECOMMEND') ? '#93c5fd' : '#fde68a'}`
                     }}>
                       📌 Recommendation: {aiAssessment.recommendation}
                     </div>
@@ -3211,6 +3264,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
   const [newJob, setNewJob] = useState({
     title: '',
     company: '',
+    description: '',  // CRITICAL: Job description for clarity
     required_expertise: '',
     required_skills: '',
     education_required: '',
@@ -3241,7 +3295,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/api/jobs`, newJob);
-      setNewJob({ title: '', company: '', required_expertise: '', required_skills: '', education_required: '', confidential: false });
+      setNewJob({ title: '', company: '', description: '', required_expertise: '', required_skills: '', education_required: '', confidential: false });
       setShowForm(false);
       onRefresh();
     } catch (err) {
@@ -3308,6 +3362,28 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
             onChange={(e) => setNewJob({ ...newJob, company: e.target.value })}
             required
           />
+
+          {/* ==================== JOB DESCRIPTION - CRITICAL FIELD ==================== */}
+          <textarea
+            placeholder="Job Description - Describe the role, responsibilities, and what you're looking for *"
+            value={newJob.description}
+            onChange={(e) => setNewJob({ ...newJob, description: e.target.value })}
+            rows="6"
+            required
+            style={{
+              marginBottom: '15px',
+              minHeight: '120px',
+              padding: '12px',
+              fontSize: '14px',
+              lineHeight: '1.6',
+              resize: 'vertical',
+              borderRadius: '4px',
+              border: '1px solid #ddd'
+            }}
+          />
+          <small style={{ display: 'block', marginBottom: '15px', color: '#666' }}>
+            💡 Include role responsibilities, team structure, project details, and ideal candidate profile
+          </small>
 
           {/* Required Expertise Dropdown */}
           <select

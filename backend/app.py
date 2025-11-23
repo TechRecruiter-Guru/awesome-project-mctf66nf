@@ -2992,7 +2992,7 @@ Provide a comprehensive analysis in the following JSON format:
     ],
     "technical_depth": "Junior/Mid/Senior/Staff - with brief justification",
     "systems_thinking": "Strong/Moderate/Limited - with evidence",
-    "recommendation": "STRONG_PASS/PASS/MAYBE/PASS_WITH_CONCERNS - with reasoning",
+    "recommendation": "HIGHLY RECOMMEND/RECOMMEND/CONSIDER/RECOMMEND WITH CAUTION - with reasoning",
     "next_steps": "Suggested interview focus areas or screening questions"
   }}
 }}
