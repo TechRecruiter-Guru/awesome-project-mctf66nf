@@ -2635,7 +2635,8 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     primary_expertise: '',
     google_scholar_url: '',
     github_url: '',
-    orcid_id: ''
+    orcid_id: '',
+    skills: []  // Array of selected skills
   });
   const [schedulingInterviewFor, setSchedulingInterviewFor] = useState(null);
   const [interviewForm, setInterviewForm] = useState({
@@ -2688,8 +2689,13 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${API_URL}/api/candidates`, newCandidate);
-      setNewCandidate({ first_name: '', last_name: '', email: '', primary_expertise: '', google_scholar_url: '', github_url: '', orcid_id: '' });
+      // Convert skills array to comma-separated string for backend
+      const candidateData = {
+        ...newCandidate,
+        skills: newCandidate.skills.join(', ')
+      };
+      await axios.post(`${API_URL}/api/candidates`, candidateData);
+      setNewCandidate({ first_name: '', last_name: '', email: '', primary_expertise: '', google_scholar_url: '', github_url: '', orcid_id: '', skills: [] });
       setShowForm(false);
       onRefresh();
     } catch (err) {
@@ -2788,6 +2794,64 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
             value={newCandidate.orcid_id}
             onChange={(e) => setNewCandidate({ ...newCandidate, orcid_id: e.target.value })}
           />
+
+          {/* Skills Checkboxes */}
+          <div style={{ marginTop: '15px', marginBottom: '15px' }}>
+            <label style={{ display: 'block', fontWeight: '600', marginBottom: '10px', color: '#0f1724' }}>
+              Technical Skills
+              <span style={{ fontWeight: 'normal', color: '#6b7280', marginLeft: '8px', fontSize: '0.9em' }}>
+                (Select all that apply)
+              </span>
+            </label>
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(200px, 1fr))',
+              gap: '8px',
+              maxHeight: '300px',
+              overflowY: 'auto',
+              padding: '12px',
+              background: '#f8fafc',
+              borderRadius: '8px',
+              border: '1px solid #e2e8f0'
+            }}>
+              {PHYSICAL_AI_SKILLS.map(skill => (
+                <label key={skill} style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '6px 10px',
+                  cursor: 'pointer',
+                  borderRadius: '4px',
+                  background: newCandidate.skills.includes(skill) ? '#dbeafe' : 'transparent',
+                  transition: 'background 0.2s'
+                }}>
+                  <input
+                    type="checkbox"
+                    checked={newCandidate.skills.includes(skill)}
+                    onChange={(e) => {
+                      if (e.target.checked) {
+                        setNewCandidate({
+                          ...newCandidate,
+                          skills: [...newCandidate.skills, skill]
+                        });
+                      } else {
+                        setNewCandidate({
+                          ...newCandidate,
+                          skills: newCandidate.skills.filter(s => s !== skill)
+                        });
+                      }
+                    }}
+                    style={{ cursor: 'pointer' }}
+                  />
+                  <span style={{ fontSize: '0.9em', color: '#0f1724' }}>{skill}</span>
+                </label>
+              ))}
+            </div>
+            <p style={{ fontSize: '0.85em', color: '#6b7280', marginTop: '8px', marginBottom: 0 }}>
+              {newCandidate.skills.length} skill{newCandidate.skills.length !== 1 ? 's' : ''} selected
+            </p>
+          </div>
+
           <button type="submit" className="btn-primary">Create Candidate</button>
         </form>
       )}
