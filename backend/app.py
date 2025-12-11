@@ -14,7 +14,22 @@ app = Flask(__name__)
 CORS(app)
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
+# CRITICAL: Use PostgreSQL in production (persistent), SQLite for local dev (ephemeral)
+# Railway/Render/Vercel set DATABASE_URL automatically when you provision a Postgres database
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if DATABASE_URL:
+    # Production: Use PostgreSQL (persistent storage)
+    # Fix for SQLAlchemy 1.4+ - replace postgres:// with postgresql://
+    if DATABASE_URL.startswith('postgres://'):
+        DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+    app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+    print("🗄️  Using PostgreSQL database (persistent)")
+else:
+    # Local development: Use SQLite (WARNING: ephemeral on cloud platforms!)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
+    print("⚠️  Using SQLite database (local development only - DO NOT use in production!)")
+
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ECHO'] = True  # Enable SQL logging to see actual queries
 db = SQLAlchemy(app)
