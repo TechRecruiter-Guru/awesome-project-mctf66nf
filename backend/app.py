@@ -345,10 +345,46 @@ class SavedSearch(db.Model):
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
+    """Health check endpoint with database info"""
+    db_uri = app.config.get('SQLALCHEMY_DATABASE_URI', '')
+
+    # Determine database type and persistence status
+    if 'postgresql://' in db_uri or 'postgres://' in db_uri:
+        db_type = "PostgreSQL"
+        persistent = True
+        warning = None
+    elif 'sqlite:///' in db_uri:
+        db_type = "SQLite"
+        persistent = False
+        warning = "⚠️ CRITICAL: Using SQLite - data will be lost on restart! Set DATABASE_URL env var to use PostgreSQL."
+    else:
+        db_type = "Unknown"
+        persistent = False
+        warning = "❌ Unknown database configuration"
+
+    # Count records to verify database is working
+    try:
+        job_count = Job.query.count()
+        candidate_count = Candidate.query.count()
+        db_accessible = True
+    except Exception as e:
+        job_count = None
+        candidate_count = None
+        db_accessible = False
+        warning = f"❌ Database error: {str(e)}"
+
     return jsonify({
         "status": "healthy",
         "message": "PAIP - PhysicalAIPros.com API is running",
-        "version": "1.0.0"
+        "version": "1.0.0",
+        "database": {
+            "type": db_type,
+            "persistent": persistent,
+            "accessible": db_accessible,
+            "job_count": job_count,
+            "candidate_count": candidate_count,
+            "warning": warning
+        }
     })
 
 
