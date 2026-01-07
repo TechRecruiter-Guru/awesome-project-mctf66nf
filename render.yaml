@@ -10,21 +10,25 @@ services:
         value: 3.11.0
       - key: PORT
         value: 10000
-      - key: DATABASE_URL
-        fromDatabase:
-          name: institutional-memory-db
-          property: connectionString
       - key: FLASK_ENV
         value: production
+      # DATABASE_URL: Add this manually in Render dashboard
+      # Link to your existing free tier database
     healthCheckPath: /api/health
 
-  # PostgreSQL Database
-databases:
-  - name: institutional-memory-db
-    databaseName: institutional_memory
-    user: institutional_memory_user
-    plan: free
+# Comment out database creation since you already have a free tier database
+# Instead, you'll manually link your existing database in the Render dashboard
+# databases:
+#   - name: institutional-memory-db
+#     databaseName: institutional_memory
+#     user: institutional_memory_user
+#     plan: free
 
-# Note: After first deployment, you need to run database initialization:
-# 1. Go to Render Dashboard → Shell
-# 2. Run: python backend/init_db.py
+# Instructions:
+# 1. Deploy this web service first
+# 2. In Render Dashboard → institutional-memory-api → Environment
+# 3. Add environment variable:
+#    Key: DATABASE_URL
+#    Value: [Select your existing database's Internal Database URL]
+# 4. Redeploy the service
+# 5. Run: python backend/init_db.py in the Shell
