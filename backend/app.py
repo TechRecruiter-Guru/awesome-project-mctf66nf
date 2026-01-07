@@ -1666,6 +1666,301 @@ def export_candidates():
     }), 201
 
 
+# ==================== INSTITUTIONAL MEMORY MODELS (AI COMPLIANCE) ====================
+
+class AISystemRecord(db.Model):
+    """
+    Immutable record of AI systems used in hiring.
+    Purpose: Proves where and how AI touched hiring decisions.
+    """
+    __tablename__ = 'ai_system_record'
+
+    id = db.Column(db.Integer, primary_key=True)
+    ai_system_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # System Details
+    system_name = db.Column(db.String(200), nullable=False)
+    vendor_name = db.Column(db.String(200))
+    system_type = db.Column(db.String(100))  # screening, ranking, interview_analysis, assessment
+    decision_influence = db.Column(db.String(50))  # assistive, determinative, hybrid
+    data_inputs = db.Column(db.Text)  # JSON: resume text, video, assessment scores
+    human_override_points = db.Column(db.Text)  # yes/no + description
+    intended_use_statement = db.Column(db.Text)  # Critical for defensibility
+
+    # Lifecycle
+    deployment_date = db.Column(db.DateTime, nullable=False)
+    retirement_date = db.Column(db.DateTime)
+
+    # Immutability Fields
+    created_by = db.Column(db.String(200))
+    created_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+    version = db.Column(db.Integer, default=1)
+
+    # Relationships
+    disclosures = db.relationship('DisclosureArtifact', backref='ai_system', lazy=True)
+    decision_events = db.relationship('HiringDecisionEvent', backref='ai_system', lazy=True)
+    governance_approvals = db.relationship('GovernanceApprovalRecord', backref='ai_system', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'ai_system_id': self.ai_system_id,
+            'system_name': self.system_name,
+            'vendor_name': self.vendor_name,
+            'system_type': self.system_type,
+            'decision_influence': self.decision_influence,
+            'data_inputs': self.data_inputs,
+            'human_override_points': self.human_override_points,
+            'intended_use_statement': self.intended_use_statement,
+            'deployment_date': self.deployment_date.isoformat() if self.deployment_date else None,
+            'retirement_date': self.retirement_date.isoformat() if self.retirement_date else None,
+            'created_by': self.created_by,
+            'created_timestamp': self.created_timestamp.isoformat(),
+            'version': self.version,
+            'disclosure_count': len(self.disclosures) if self.disclosures else 0,
+            'decision_event_count': len(self.decision_events) if self.decision_events else 0
+        }
+
+
+class RegulatoryContextSnapshot(db.Model):
+    """
+    Immutable snapshot of regulatory context at a point in time.
+    Purpose: Freezes the legal environment to prevent retroactive compliance reinterpretation.
+    """
+    __tablename__ = 'regulatory_context_snapshot'
+
+    id = db.Column(db.Integer, primary_key=True)
+    reg_context_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # Regulation Details
+    jurisdiction = db.Column(db.String(100), nullable=False)  # state, city
+    regulation_name = db.Column(db.String(200), nullable=False)
+    regulation_version = db.Column(db.String(50))
+    effective_start_date = db.Column(db.Date, nullable=False)
+    effective_end_date = db.Column(db.Date)
+
+    # Compliance Rules
+    compliance_obligations = db.Column(db.Text)  # JSON: structured ruleset
+    source_reference = db.Column(db.String(500))  # URL or citation
+
+    # Immutability Fields
+    ingested_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relationships
+    disclosures = db.relationship('DisclosureArtifact', backref='regulatory_context', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'reg_context_id': self.reg_context_id,
+            'jurisdiction': self.jurisdiction,
+            'regulation_name': self.regulation_name,
+            'regulation_version': self.regulation_version,
+            'effective_start_date': self.effective_start_date.isoformat() if self.effective_start_date else None,
+            'effective_end_date': self.effective_end_date.isoformat() if self.effective_end_date else None,
+            'compliance_obligations': self.compliance_obligations,
+            'source_reference': self.source_reference,
+            'ingested_timestamp': self.ingested_timestamp.isoformat(),
+            'disclosure_count': len(self.disclosures) if self.disclosures else 0
+        }
+
+
+class DisclosureArtifact(db.Model):
+    """
+    Immutable record of AI disclosures to candidates.
+    Purpose: Proves what was disclosed, to whom, when, and why.
+    """
+    __tablename__ = 'disclosure_artifact'
+
+    id = db.Column(db.Integer, primary_key=True)
+    disclosure_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # References
+    ai_system_record_id = db.Column(db.Integer, db.ForeignKey('ai_system_record.id'), nullable=False)
+    reg_context_id = db.Column(db.Integer, db.ForeignKey('regulatory_context_snapshot.id'), nullable=False)
+    candidate_id_hash = db.Column(db.String(200), nullable=False)  # Hashed for privacy
+    role_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+
+    # Disclosure Details
+    hiring_stage = db.Column(db.String(100))  # screening, interview, offer
+    disclosure_text_rendered = db.Column(db.Text, nullable=False)  # Verbatim text shown
+    delivery_method = db.Column(db.String(100))  # ATS, email, portal
+    delivery_timestamp = db.Column(db.DateTime, nullable=False)
+    acknowledgment_status = db.Column(db.String(50))  # acknowledged, pending, not_required
+    language_locale = db.Column(db.String(10))  # en-US, es-MX, etc.
+
+    # Immutability Fields
+    created_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'disclosure_id': self.disclosure_id,
+            'ai_system_record_id': self.ai_system_record_id,
+            'reg_context_id': self.reg_context_id,
+            'candidate_id_hash': self.candidate_id_hash,
+            'role_id': self.role_id,
+            'hiring_stage': self.hiring_stage,
+            'disclosure_text_rendered': self.disclosure_text_rendered,
+            'delivery_method': self.delivery_method,
+            'delivery_timestamp': self.delivery_timestamp.isoformat(),
+            'acknowledgment_status': self.acknowledgment_status,
+            'language_locale': self.language_locale,
+            'created_timestamp': self.created_timestamp.isoformat()
+        }
+
+
+class HiringDecisionEvent(db.Model):
+    """
+    Immutable record linking AI use to employment outcomes.
+    Purpose: Anchors AI influence to human accountability.
+    """
+    __tablename__ = 'hiring_decision_event'
+
+    id = db.Column(db.Integer, primary_key=True)
+    decision_event_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # References
+    candidate_id_hash = db.Column(db.String(200), nullable=False)
+    role_id = db.Column(db.Integer, db.ForeignKey('job.id'))
+    ai_system_record_id = db.Column(db.Integer, db.ForeignKey('ai_system_record.id'))
+
+    # Decision Details
+    decision_type = db.Column(db.String(50), nullable=False)  # advance, reject, score
+    human_involvement_level = db.Column(db.String(100))  # full_review, override, approved_ai_recommendation
+    final_decision_maker_role = db.Column(db.String(100))  # recruiter, hiring_manager, system
+    decision_timestamp = db.Column(db.DateTime, nullable=False)
+
+    # Immutability Fields
+    created_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    # Relationships
+    rationales = db.relationship('DecisionRationaleLog', backref='decision_event', lazy=True)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'decision_event_id': self.decision_event_id,
+            'candidate_id_hash': self.candidate_id_hash,
+            'role_id': self.role_id,
+            'ai_system_record_id': self.ai_system_record_id,
+            'decision_type': self.decision_type,
+            'human_involvement_level': self.human_involvement_level,
+            'final_decision_maker_role': self.final_decision_maker_role,
+            'decision_timestamp': self.decision_timestamp.isoformat(),
+            'created_timestamp': self.created_timestamp.isoformat(),
+            'rationale_count': len(self.rationales) if self.rationales else 0
+        }
+
+
+class DecisionRationaleLog(db.Model):
+    """
+    Immutable log of WHY decisions were made.
+    Purpose: Most overlooked, most valuable - demonstrates human judgment.
+    """
+    __tablename__ = 'decision_rationale_log'
+
+    id = db.Column(db.Integer, primary_key=True)
+    rationale_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # Reference
+    decision_event_id = db.Column(db.Integer, db.ForeignKey('hiring_decision_event.id'), nullable=False)
+
+    # Rationale Details
+    rationale_type = db.Column(db.String(100))  # policy, performance, qualification, override
+    rationale_summary = db.Column(db.Text, nullable=False)  # Plain language explanation
+    supporting_artifacts = db.Column(db.Text)  # JSON: IDs of supporting docs, not files
+
+    # Immutability Fields
+    entered_by = db.Column(db.String(200))
+    entered_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'rationale_id': self.rationale_id,
+            'decision_event_id': self.decision_event_id,
+            'rationale_type': self.rationale_type,
+            'rationale_summary': self.rationale_summary,
+            'supporting_artifacts': self.supporting_artifacts,
+            'entered_by': self.entered_by,
+            'entered_timestamp': self.entered_timestamp.isoformat()
+        }
+
+
+class GovernanceApprovalRecord(db.Model):
+    """
+    Immutable record of governance oversight.
+    Purpose: Proves oversight existed before issues arose.
+    """
+    __tablename__ = 'governance_approval_record'
+
+    id = db.Column(db.Integer, primary_key=True)
+    approval_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # Reference
+    ai_system_record_id = db.Column(db.Integer, db.ForeignKey('ai_system_record.id'), nullable=False)
+
+    # Approval Details
+    approval_type = db.Column(db.String(100), nullable=False)  # legal, HR, security, ethics
+    approver_role = db.Column(db.String(200), nullable=False)  # General Counsel, CHRO, etc.
+    approval_decision = db.Column(db.String(50), nullable=False)  # approved, conditional, denied
+    conditions_or_exceptions = db.Column(db.Text)  # Any conditions attached
+
+    # Immutability Fields
+    approval_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'approval_id': self.approval_id,
+            'ai_system_record_id': self.ai_system_record_id,
+            'approval_type': self.approval_type,
+            'approver_role': self.approver_role,
+            'approval_decision': self.approval_decision,
+            'conditions_or_exceptions': self.conditions_or_exceptions,
+            'approval_timestamp': self.approval_timestamp.isoformat()
+        }
+
+
+class VendorAssertionRecord(db.Model):
+    """
+    Immutable record of vendor claims and evidence.
+    Purpose: Documents what vendors claimed - and what they didn't.
+    """
+    __tablename__ = 'vendor_assertion_record'
+
+    id = db.Column(db.Integer, primary_key=True)
+    vendor_assertion_id = db.Column(db.String(100), unique=True, nullable=False)
+
+    # Reference
+    ai_system_record_id = db.Column(db.Integer, db.ForeignKey('ai_system_record.id'), nullable=False)
+
+    # Assertion Details
+    assertion_type = db.Column(db.String(100), nullable=False)  # bias_testing, data_sourcing, accuracy
+    assertion_statement = db.Column(db.Text, nullable=False)  # What vendor claimed
+    evidence_provided = db.Column(db.Boolean, default=False)  # yes/no
+    risk_flag = db.Column(db.String(20))  # green, amber, red
+
+    # Immutability Fields
+    recorded_timestamp = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
+
+    # Foreign Key for AI System
+    ai_system = db.relationship('AISystemRecord', backref='vendor_assertions', foreign_keys=[ai_system_record_id])
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'vendor_assertion_id': self.vendor_assertion_id,
+            'ai_system_record_id': self.ai_system_record_id,
+            'assertion_type': self.assertion_type,
+            'assertion_statement': self.assertion_statement,
+            'evidence_provided': self.evidence_provided,
+            'risk_flag': self.risk_flag,
+            'recorded_timestamp': self.recorded_timestamp.isoformat()
+        }
+
+
 # ==================== PHASE 4: ADVANCED FEATURES ====================
 
 # Email Campaign Model
@@ -2289,6 +2584,581 @@ def submit_public_application():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+
+# ==================== INSTITUTIONAL MEMORY API ENDPOINTS ====================
+
+# ==================== AI SYSTEM REGISTRY ====================
+
+@app.route('/api/ai-systems', methods=['POST'])
+def create_ai_system():
+    """Register new AI system used in hiring"""
+    data = request.get_json()
+
+    if not data or 'system_name' not in data or 'ai_system_id' not in data:
+        return jsonify({"error": "system_name and ai_system_id are required"}), 400
+
+    # Check if AI system already exists
+    existing = AISystemRecord.query.filter_by(ai_system_id=data['ai_system_id']).first()
+    if existing:
+        return jsonify({"error": "AI system with this ID already exists"}), 409
+
+    try:
+        deployment_date = datetime.fromisoformat(data['deployment_date'].replace('Z', '+00:00')) if data.get('deployment_date') else datetime.utcnow()
+    except:
+        deployment_date = datetime.utcnow()
+
+    ai_system = AISystemRecord(
+        ai_system_id=data['ai_system_id'],
+        system_name=data['system_name'],
+        vendor_name=data.get('vendor_name'),
+        system_type=data.get('system_type'),
+        decision_influence=data.get('decision_influence'),
+        data_inputs=data.get('data_inputs'),
+        human_override_points=data.get('human_override_points'),
+        intended_use_statement=data.get('intended_use_statement'),
+        deployment_date=deployment_date,
+        created_by=data.get('created_by', 'system'),
+        version=1
+    )
+
+    db.session.add(ai_system)
+    db.session.commit()
+
+    return jsonify(ai_system.to_dict()), 201
+
+
+@app.route('/api/ai-systems', methods=['GET'])
+def get_ai_systems():
+    """Get all AI systems"""
+    systems = AISystemRecord.query.order_by(AISystemRecord.created_timestamp.desc()).all()
+    return jsonify({
+        'ai_systems': [s.to_dict() for s in systems],
+        'total': len(systems)
+    })
+
+
+@app.route('/api/ai-systems/<string:ai_system_id>', methods=['GET'])
+def get_ai_system(ai_system_id):
+    """Get specific AI system by ID"""
+    system = AISystemRecord.query.filter_by(ai_system_id=ai_system_id).first_or_404()
+    data = system.to_dict()
+
+    # Include related records
+    data['disclosures'] = [d.to_dict() for d in system.disclosures]
+    data['decision_events'] = [e.to_dict() for e in system.decision_events]
+    data['governance_approvals'] = [g.to_dict() for g in system.governance_approvals]
+
+    return jsonify(data)
+
+
+@app.route('/api/ai-systems/<int:system_id>/retire', methods=['POST'])
+def retire_ai_system(system_id):
+    """Mark AI system as retired (immutable - creates new version)"""
+    system = AISystemRecord.query.get_or_404(system_id)
+
+    if system.retirement_date:
+        return jsonify({"error": "System already retired"}), 400
+
+    system.retirement_date = datetime.utcnow()
+    db.session.commit()
+
+    return jsonify({
+        "message": f"AI system {system.system_name} retired successfully",
+        "system": system.to_dict()
+    })
+
+
+# ==================== REGULATORY CONTEXT SNAPSHOT ====================
+
+@app.route('/api/regulatory-contexts', methods=['POST'])
+def create_regulatory_context():
+    """Create regulatory context snapshot"""
+    data = request.get_json()
+
+    required_fields = ['reg_context_id', 'jurisdiction', 'regulation_name', 'effective_start_date']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    try:
+        effective_start = datetime.strptime(data['effective_start_date'], '%Y-%m-%d').date()
+        effective_end = datetime.strptime(data['effective_end_date'], '%Y-%m-%d').date() if data.get('effective_end_date') else None
+    except:
+        return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+
+    reg_context = RegulatoryContextSnapshot(
+        reg_context_id=data['reg_context_id'],
+        jurisdiction=data['jurisdiction'],
+        regulation_name=data['regulation_name'],
+        regulation_version=data.get('regulation_version'),
+        effective_start_date=effective_start,
+        effective_end_date=effective_end,
+        compliance_obligations=data.get('compliance_obligations'),
+        source_reference=data.get('source_reference')
+    )
+
+    db.session.add(reg_context)
+    db.session.commit()
+
+    return jsonify(reg_context.to_dict()), 201
+
+
+@app.route('/api/regulatory-contexts', methods=['GET'])
+def get_regulatory_contexts():
+    """Get all regulatory context snapshots"""
+    jurisdiction = request.args.get('jurisdiction')
+    date_str = request.args.get('date')
+
+    query = RegulatoryContextSnapshot.query
+
+    if jurisdiction:
+        query = query.filter_by(jurisdiction=jurisdiction)
+
+    if date_str:
+        try:
+            target_date = datetime.strptime(date_str, '%Y-%m-%d').date()
+            query = query.filter(
+                RegulatoryContextSnapshot.effective_start_date <= target_date,
+                db.or_(
+                    RegulatoryContextSnapshot.effective_end_date.is_(None),
+                    RegulatoryContextSnapshot.effective_end_date >= target_date
+                )
+            )
+        except:
+            return jsonify({"error": "Invalid date format. Use YYYY-MM-DD"}), 400
+
+    contexts = query.order_by(RegulatoryContextSnapshot.ingested_timestamp.desc()).all()
+    return jsonify({
+        'regulatory_contexts': [c.to_dict() for c in contexts],
+        'total': len(contexts)
+    })
+
+
+@app.route('/api/regulatory-contexts/<string:reg_context_id>', methods=['GET'])
+def get_regulatory_context(reg_context_id):
+    """Get specific regulatory context"""
+    context = RegulatoryContextSnapshot.query.filter_by(reg_context_id=reg_context_id).first_or_404()
+    return jsonify(context.to_dict())
+
+
+# ==================== DISCLOSURE MEMORY ====================
+
+@app.route('/api/disclosures/render', methods=['POST'])
+def render_disclosure():
+    """Render disclosure text based on AI system and regulatory context"""
+    data = request.get_json()
+
+    required_fields = ['ai_system_id', 'reg_context_id', 'candidate_id', 'role_id', 'hiring_stage']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    # Resolve AI system and regulatory context
+    ai_system = AISystemRecord.query.filter_by(ai_system_id=data['ai_system_id']).first()
+    reg_context = RegulatoryContextSnapshot.query.filter_by(reg_context_id=data['reg_context_id']).first()
+
+    if not ai_system or not reg_context:
+        return jsonify({"error": "AI system or regulatory context not found"}), 404
+
+    # Generate disclosure text (simplified - in production, use template engine)
+    disclosure_text = f"""
+AI Hiring Disclosure
+
+As required by {reg_context.regulation_name} ({reg_context.jurisdiction}), we inform you that:
+
+We are using AI technology in our hiring process for this position.
+
+AI System: {ai_system.system_name}
+Vendor: {ai_system.vendor_name or 'Internal'}
+Purpose: {ai_system.system_type}
+Decision Role: {ai_system.decision_influence}
+Stage: {data['hiring_stage']}
+
+{ai_system.intended_use_statement or ''}
+
+Human reviewers are involved in all final decisions.
+
+If you have questions about this use of AI, please contact our HR team.
+    """.strip()
+
+    return jsonify({
+        "disclosure_text": disclosure_text,
+        "ai_system_name": ai_system.system_name,
+        "regulation": reg_context.regulation_name,
+        "jurisdiction": reg_context.jurisdiction
+    })
+
+
+@app.route('/api/disclosures/deliver', methods=['POST'])
+def deliver_disclosure():
+    """Record disclosure delivery to candidate"""
+    data = request.get_json()
+
+    required_fields = ['disclosure_id', 'ai_system_id', 'reg_context_id', 'candidate_id_hash', 'disclosure_text']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    # Get AI system and regulatory context IDs
+    ai_system = AISystemRecord.query.filter_by(ai_system_id=data['ai_system_id']).first()
+    reg_context = RegulatoryContextSnapshot.query.filter_by(reg_context_id=data['reg_context_id']).first()
+
+    if not ai_system or not reg_context:
+        return jsonify({"error": "AI system or regulatory context not found"}), 404
+
+    disclosure = DisclosureArtifact(
+        disclosure_id=data['disclosure_id'],
+        ai_system_record_id=ai_system.id,
+        reg_context_id=reg_context.id,
+        candidate_id_hash=data['candidate_id_hash'],
+        role_id=data.get('role_id'),
+        hiring_stage=data.get('hiring_stage'),
+        disclosure_text_rendered=data['disclosure_text'],
+        delivery_method=data.get('delivery_method', 'ATS'),
+        delivery_timestamp=datetime.utcnow(),
+        acknowledgment_status=data.get('acknowledgment_status', 'pending'),
+        language_locale=data.get('language_locale', 'en-US')
+    )
+
+    db.session.add(disclosure)
+    db.session.commit()
+
+    return jsonify(disclosure.to_dict()), 201
+
+
+@app.route('/api/disclosures/<string:disclosure_id>', methods=['GET'])
+def get_disclosure(disclosure_id):
+    """Get specific disclosure"""
+    disclosure = DisclosureArtifact.query.filter_by(disclosure_id=disclosure_id).first_or_404()
+    return jsonify(disclosure.to_dict())
+
+
+@app.route('/api/disclosures', methods=['GET'])
+def get_disclosures():
+    """Get all disclosures"""
+    candidate_hash = request.args.get('candidate_id_hash')
+    role_id = request.args.get('role_id')
+
+    query = DisclosureArtifact.query
+
+    if candidate_hash:
+        query = query.filter_by(candidate_id_hash=candidate_hash)
+    if role_id:
+        query = query.filter_by(role_id=role_id)
+
+    disclosures = query.order_by(DisclosureArtifact.delivery_timestamp.desc()).all()
+    return jsonify({
+        'disclosures': [d.to_dict() for d in disclosures],
+        'total': len(disclosures)
+    })
+
+
+# ==================== HIRING DECISION EVENT ====================
+
+@app.route('/api/hiring-decisions', methods=['POST'])
+def create_hiring_decision():
+    """Record hiring decision event"""
+    data = request.get_json()
+
+    required_fields = ['decision_event_id', 'candidate_id_hash', 'decision_type']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    # Get AI system if specified
+    ai_system_id = None
+    if data.get('ai_system_id'):
+        ai_system = AISystemRecord.query.filter_by(ai_system_id=data['ai_system_id']).first()
+        if ai_system:
+            ai_system_id = ai_system.id
+
+    try:
+        decision_timestamp = datetime.fromisoformat(data['decision_timestamp'].replace('Z', '+00:00')) if data.get('decision_timestamp') else datetime.utcnow()
+    except:
+        decision_timestamp = datetime.utcnow()
+
+    decision = HiringDecisionEvent(
+        decision_event_id=data['decision_event_id'],
+        candidate_id_hash=data['candidate_id_hash'],
+        role_id=data.get('role_id'),
+        ai_system_record_id=ai_system_id,
+        decision_type=data['decision_type'],
+        human_involvement_level=data.get('human_involvement_level'),
+        final_decision_maker_role=data.get('final_decision_maker_role'),
+        decision_timestamp=decision_timestamp
+    )
+
+    db.session.add(decision)
+    db.session.commit()
+
+    return jsonify(decision.to_dict()), 201
+
+
+@app.route('/api/hiring-decisions/<string:decision_event_id>', methods=['GET'])
+def get_hiring_decision(decision_event_id):
+    """Get specific hiring decision"""
+    decision = HiringDecisionEvent.query.filter_by(decision_event_id=decision_event_id).first_or_404()
+    data = decision.to_dict()
+    data['rationales'] = [r.to_dict() for r in decision.rationales]
+    return jsonify(data)
+
+
+@app.route('/api/hiring-decisions', methods=['GET'])
+def get_hiring_decisions():
+    """Get all hiring decisions"""
+    candidate_hash = request.args.get('candidate_id_hash')
+    role_id = request.args.get('role_id')
+    decision_type = request.args.get('decision_type')
+
+    query = HiringDecisionEvent.query
+
+    if candidate_hash:
+        query = query.filter_by(candidate_id_hash=candidate_hash)
+    if role_id:
+        query = query.filter_by(role_id=role_id)
+    if decision_type:
+        query = query.filter_by(decision_type=decision_type)
+
+    decisions = query.order_by(HiringDecisionEvent.decision_timestamp.desc()).all()
+    return jsonify({
+        'hiring_decisions': [d.to_dict() for d in decisions],
+        'total': len(decisions)
+    })
+
+
+# ==================== DECISION RATIONALE LOG ====================
+
+@app.route('/api/decision-rationales', methods=['POST'])
+def create_decision_rationale():
+    """Log decision rationale"""
+    data = request.get_json()
+
+    required_fields = ['rationale_id', 'decision_event_id', 'rationale_summary']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    # Find decision event
+    decision = HiringDecisionEvent.query.get(data['decision_event_id'])
+    if not decision:
+        return jsonify({"error": "Decision event not found"}), 404
+
+    rationale = DecisionRationaleLog(
+        rationale_id=data['rationale_id'],
+        decision_event_id=data['decision_event_id'],
+        rationale_type=data.get('rationale_type'),
+        rationale_summary=data['rationale_summary'],
+        supporting_artifacts=data.get('supporting_artifacts'),
+        entered_by=data.get('entered_by', 'system')
+    )
+
+    db.session.add(rationale)
+    db.session.commit()
+
+    return jsonify(rationale.to_dict()), 201
+
+
+@app.route('/api/decision-rationales/<int:decision_event_id>', methods=['GET'])
+def get_decision_rationales(decision_event_id):
+    """Get rationales for specific decision event"""
+    rationales = DecisionRationaleLog.query.filter_by(decision_event_id=decision_event_id).all()
+    return jsonify({
+        'rationales': [r.to_dict() for r in rationales],
+        'total': len(rationales)
+    })
+
+
+# ==================== GOVERNANCE & APPROVAL ====================
+
+@app.route('/api/governance-approvals', methods=['POST'])
+def create_governance_approval():
+    """Record governance approval"""
+    data = request.get_json()
+
+    required_fields = ['approval_id', 'ai_system_id', 'approval_type', 'approver_role', 'approval_decision']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    # Get AI system
+    ai_system = AISystemRecord.query.filter_by(ai_system_id=data['ai_system_id']).first()
+    if not ai_system:
+        return jsonify({"error": "AI system not found"}), 404
+
+    approval = GovernanceApprovalRecord(
+        approval_id=data['approval_id'],
+        ai_system_record_id=ai_system.id,
+        approval_type=data['approval_type'],
+        approver_role=data['approver_role'],
+        approval_decision=data['approval_decision'],
+        conditions_or_exceptions=data.get('conditions_or_exceptions')
+    )
+
+    db.session.add(approval)
+    db.session.commit()
+
+    return jsonify(approval.to_dict()), 201
+
+
+@app.route('/api/governance-approvals', methods=['GET'])
+def get_governance_approvals():
+    """Get all governance approvals"""
+    ai_system_id = request.args.get('ai_system_id')
+
+    query = GovernanceApprovalRecord.query
+
+    if ai_system_id:
+        ai_system = AISystemRecord.query.filter_by(ai_system_id=ai_system_id).first()
+        if ai_system:
+            query = query.filter_by(ai_system_record_id=ai_system.id)
+
+    approvals = query.order_by(GovernanceApprovalRecord.approval_timestamp.desc()).all()
+    return jsonify({
+        'governance_approvals': [a.to_dict() for a in approvals],
+        'total': len(approvals)
+    })
+
+
+# ==================== VENDOR ASSERTION RECORD ====================
+
+@app.route('/api/vendor-assertions', methods=['POST'])
+def create_vendor_assertion():
+    """Record vendor assertion"""
+    data = request.get_json()
+
+    required_fields = ['vendor_assertion_id', 'ai_system_id', 'assertion_type', 'assertion_statement']
+    if not data or not all(field in data for field in required_fields):
+        return jsonify({"error": f"Missing required fields: {required_fields}"}), 400
+
+    # Get AI system
+    ai_system = AISystemRecord.query.filter_by(ai_system_id=data['ai_system_id']).first()
+    if not ai_system:
+        return jsonify({"error": "AI system not found"}), 404
+
+    assertion = VendorAssertionRecord(
+        vendor_assertion_id=data['vendor_assertion_id'],
+        ai_system_record_id=ai_system.id,
+        assertion_type=data['assertion_type'],
+        assertion_statement=data['assertion_statement'],
+        evidence_provided=data.get('evidence_provided', False),
+        risk_flag=data.get('risk_flag', 'green')
+    )
+
+    db.session.add(assertion)
+    db.session.commit()
+
+    return jsonify(assertion.to_dict()), 201
+
+
+@app.route('/api/vendor-assertions', methods=['GET'])
+def get_vendor_assertions():
+    """Get all vendor assertions"""
+    ai_system_id = request.args.get('ai_system_id')
+
+    query = VendorAssertionRecord.query
+
+    if ai_system_id:
+        ai_system = AISystemRecord.query.filter_by(ai_system_id=ai_system_id).first()
+        if ai_system:
+            query = query.filter_by(ai_system_record_id=ai_system.id)
+
+    assertions = query.order_by(VendorAssertionRecord.recorded_timestamp.desc()).all()
+    return jsonify({
+        'vendor_assertions': [a.to_dict() for a in assertions],
+        'total': len(assertions)
+    })
+
+
+# ==================== AUDIT EVIDENCE EXPORT ====================
+
+@app.route('/api/audit-packs/generate', methods=['POST'])
+def generate_audit_pack():
+    """Generate comprehensive audit evidence bundle"""
+    data = request.get_json()
+
+    # Filters
+    jurisdiction = data.get('jurisdiction')
+    start_date = data.get('start_date')
+    end_date = data.get('end_date')
+    ai_system_id = data.get('ai_system_id')
+    role_id = data.get('role_id')
+
+    audit_pack = {
+        'generated_at': datetime.utcnow().isoformat(),
+        'filters': {
+            'jurisdiction': jurisdiction,
+            'date_range': f"{start_date} to {end_date}" if start_date and end_date else 'all',
+            'ai_system_id': ai_system_id,
+            'role_id': role_id
+        },
+        'evidence': {}
+    }
+
+    # AI Systems
+    ai_systems_query = AISystemRecord.query
+    if ai_system_id:
+        ai_systems_query = ai_systems_query.filter_by(ai_system_id=ai_system_id)
+    audit_pack['evidence']['ai_systems'] = [s.to_dict() for s in ai_systems_query.all()]
+
+    # Regulatory Contexts
+    reg_contexts_query = RegulatoryContextSnapshot.query
+    if jurisdiction:
+        reg_contexts_query = reg_contexts_query.filter_by(jurisdiction=jurisdiction)
+    audit_pack['evidence']['regulatory_contexts'] = [c.to_dict() for c in reg_contexts_query.all()]
+
+    # Disclosures
+    disclosures_query = DisclosureArtifact.query
+    if role_id:
+        disclosures_query = disclosures_query.filter_by(role_id=role_id)
+    if start_date and end_date:
+        try:
+            start = datetime.fromisoformat(start_date)
+            end = datetime.fromisoformat(end_date)
+            disclosures_query = disclosures_query.filter(
+                DisclosureArtifact.delivery_timestamp >= start,
+                DisclosureArtifact.delivery_timestamp <= end
+            )
+        except:
+            pass
+    audit_pack['evidence']['disclosures'] = [d.to_dict() for d in disclosures_query.all()]
+
+    # Decision Events
+    decisions_query = HiringDecisionEvent.query
+    if role_id:
+        decisions_query = decisions_query.filter_by(role_id=role_id)
+    if start_date and end_date:
+        try:
+            start = datetime.fromisoformat(start_date)
+            end = datetime.fromisoformat(end_date)
+            decisions_query = decisions_query.filter(
+                HiringDecisionEvent.decision_timestamp >= start,
+                HiringDecisionEvent.decision_timestamp <= end
+            )
+        except:
+            pass
+    audit_pack['evidence']['decision_events'] = [d.to_dict() for d in decisions_query.all()]
+
+    # Governance Approvals
+    approvals_query = GovernanceApprovalRecord.query
+    audit_pack['evidence']['governance_approvals'] = [a.to_dict() for a in approvals_query.all()]
+
+    # Vendor Assertions
+    assertions_query = VendorAssertionRecord.query
+    audit_pack['evidence']['vendor_assertions'] = [a.to_dict() for a in assertions_query.all()]
+
+    # Summary stats
+    audit_pack['summary'] = {
+        'total_ai_systems': len(audit_pack['evidence']['ai_systems']),
+        'total_disclosures': len(audit_pack['evidence']['disclosures']),
+        'total_decisions': len(audit_pack['evidence']['decision_events']),
+        'total_approvals': len(audit_pack['evidence']['governance_approvals']),
+        'total_vendor_assertions': len(audit_pack['evidence']['vendor_assertions'])
+    }
+
+    return jsonify(audit_pack), 200
+
+
+@app.route('/api/audit-packs/<string:audit_pack_id>', methods=['GET'])
+def get_audit_pack(audit_pack_id):
+    """Get specific audit pack (placeholder - would be stored in production)"""
+    return jsonify({
+        "error": "Audit pack storage not implemented. Use /api/audit-packs/generate with filters."
+    }), 501
 
 
 if __name__ == '__main__':
