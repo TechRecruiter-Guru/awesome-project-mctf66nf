@@ -711,6 +711,475 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
             Questions? sales@yourdomain.com
         </p>
     </div>
+
+    <footer style="background: #2c3e50; color: white; padding: 40px 20px; text-align: center;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <p style="margin-bottom: 20px;">© 2026 Institutional Memory API. All rights reserved.</p>
+            <p style="opacity: 0.8;">
+                <a href="/terms-of-service" style="color: #3498db; text-decoration: none; margin: 0 15px;">Terms of Service</a> •
+                <a href="/privacy-policy" style="color: #3498db; text-decoration: none; margin: 0 15px;">Privacy Policy</a> •
+                <a href="mailto:support@yourdomain.com" style="color: #3498db; text-decoration: none; margin: 0 15px;">Support</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
+    """, 200
+
+
+@app.route('/terms-of-service', methods=['GET'])
+def terms_of_service():
+    """Terms of Service page"""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms of Service - Institutional Memory API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        h2 { color: #667eea; margin-top: 40px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+        h3 { color: #555; margin-top: 25px; }
+        .last-updated { color: #666; font-style: italic; margin-bottom: 30px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        strong { color: #d63031; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <h1>Terms of Service</h1>
+    <p class="last-updated">Last Updated: January 8, 2026</p>
+
+    <p>Welcome to Institutional Memory API ("Service", "we", "us", or "our"). By accessing or using our Service, you agree to be bound by these Terms of Service ("Terms").</p>
+
+    <h2>1. Service Description</h2>
+    <p>Institutional Memory API provides a compliance documentation service for AI-powered hiring decisions. Our Service allows customers ("you", "Customer") to:</p>
+    <ul>
+        <li>Register and document AI systems used in hiring processes</li>
+        <li>Record hiring decisions with immutable timestamps</li>
+        <li>Log candidate disclosures and regulatory compliance activities</li>
+        <li>Generate audit-ready evidence packs for legal challenges</li>
+    </ul>
+
+    <h2>2. Account Registration</h2>
+    <p>To use the Service, you must:</p>
+    <ul>
+        <li>Provide accurate and complete company information</li>
+        <li>Maintain the security of your API keys</li>
+        <li>Be authorized to enter into this agreement on behalf of your organization</li>
+        <li>Comply with all applicable employment and data protection laws</li>
+    </ul>
+
+    <h2>3. Data Ownership and Usage</h2>
+    <h3>3.1 Customer Data Ownership</h3>
+    <p>You retain all rights, title, and interest in the data you submit to our Service ("Customer Data"). We do not claim ownership of your hiring records, decision logs, or compliance documentation.</p>
+
+    <h3>3.2 Our Right to Process Data</h3>
+    <p>You grant us permission to process Customer Data solely to provide the Service, including:</p>
+    <ul>
+        <li>Storing hiring decision metadata</li>
+        <li>Generating audit reports and compliance packs</li>
+        <li>Maintaining immutable timestamps and cryptographic hashes</li>
+    </ul>
+
+    <h3>3.3 Privacy Protections</h3>
+    <p>We hash candidate identifiers using SHA-256 to protect personally identifiable information (PII). See our <a href="/privacy-policy">Privacy Policy</a> for details.</p>
+
+    <h2>4. Data Retention Policy</h2>
+    <p><strong>Default Retention:</strong> We retain Customer Data for <strong>7 years</strong> from the date of creation, consistent with employment law record-keeping requirements.</p>
+
+    <p><strong>Legal Hold:</strong> Customers may flag records for "legal hold" during active litigation, preventing automatic deletion.</p>
+
+    <p><strong>Post-Termination:</strong> Upon account cancellation, we provide a 30-day grace period for data export. After 30 days, data is permanently deleted unless a paid archive plan is maintained.</p>
+
+    <h2>5. Service Level Agreement (SLA)</h2>
+    <h3>5.1 Uptime Guarantee</h3>
+    <ul>
+        <li><strong>Starter Plan:</strong> 99.0% monthly uptime</li>
+        <li><strong>Professional Plan:</strong> 99.9% monthly uptime</li>
+        <li><strong>Enterprise Plan:</strong> 99.95% monthly uptime with dedicated support</li>
+    </ul>
+
+    <h3>5.2 Support Response Times</h3>
+    <ul>
+        <li><strong>Starter:</strong> 24-hour email response</li>
+        <li><strong>Professional:</strong> 4-hour email response (business hours)</li>
+        <li><strong>Enterprise:</strong> 1-hour response with dedicated Slack channel</li>
+    </ul>
+
+    <h2>6. Prohibited Uses</h2>
+    <p>You may NOT use the Service to:</p>
+    <ul>
+        <li>Violate any laws (including employment discrimination laws)</li>
+        <li>Store false or fabricated hiring records</li>
+        <li>Attempt to reverse-engineer or access other customers' data</li>
+        <li>Resell the Service without explicit partnership agreement</li>
+        <li>Exceed API rate limits or abuse system resources</li>
+    </ul>
+
+    <h2>7. Limitation of Liability</h2>
+    <p><strong>IMPORTANT: THIS SERVICE ASSISTS WITH COMPLIANCE DOCUMENTATION BUT DOES NOT GUARANTEE LEGAL OUTCOMES.</strong></p>
+
+    <p>To the maximum extent permitted by law:</p>
+    <ul>
+        <li>We are NOT liable for legal judgments, fines, or penalties arising from your hiring practices</li>
+        <li>Our total liability is limited to the <strong>lesser of $10,000 USD or 12 months of fees paid</strong></li>
+        <li>We are NOT liable for indirect, consequential, or punitive damages</li>
+        <li>You are responsible for ensuring your hiring practices comply with all applicable laws</li>
+    </ul>
+
+    <h3>7.1 No Legal Advice</h3>
+    <p>This Service provides record-keeping technology, NOT legal advice. Consult with employment law attorneys for compliance guidance.</p>
+
+    <h2>8. Indemnification</h2>
+    <p>You agree to indemnify and hold us harmless from claims arising from:</p>
+    <ul>
+        <li>Your use of the Service</li>
+        <li>Your hiring practices or employment decisions</li>
+        <li>Your violation of these Terms or applicable laws</li>
+        <li>Disputes with candidates, employees, or regulatory agencies</li>
+    </ul>
+
+    <h2>9. Pricing and Payment</h2>
+    <h3>9.1 Subscription Fees</h3>
+    <p>Fees are billed monthly or annually in advance. See our pricing page for current rates.</p>
+
+    <h3>9.2 Overage Charges</h3>
+    <p>If you exceed your plan's decision volume limit, overage fees apply at $0.50 per additional decision.</p>
+
+    <h3>9.3 Price Changes</h3>
+    <p>We may change prices with 30 days notice. Existing customers are grandfathered for 12 months.</p>
+
+    <h2>10. Termination</h2>
+    <h3>10.1 By Customer</h3>
+    <p>You may cancel at any time with 30 days notice. No refunds for partial months.</p>
+
+    <h3>10.2 By Us</h3>
+    <p>We may suspend or terminate your account if you:</p>
+    <ul>
+        <li>Violate these Terms</li>
+        <li>Fail to pay fees for 15 days after due date</li>
+        <li>Use the Service for illegal purposes</li>
+    </ul>
+
+    <h3>10.3 Data Export</h3>
+    <p>Upon termination, we provide data export in JSON format within 30 days. After 30 days, data is permanently deleted.</p>
+
+    <h2>11. Data Security</h2>
+    <p>We implement industry-standard security measures:</p>
+    <ul>
+        <li>Encryption at rest and in transit (TLS 1.3)</li>
+        <li>SHA-256 hashing of candidate identifiers</li>
+        <li>API key authentication for all requests</li>
+        <li>Regular security audits and penetration testing</li>
+    </ul>
+
+    <p><strong>Data Breach Notification:</strong> We will notify you within 72 hours of discovering any data breach affecting your Customer Data.</p>
+
+    <h2>12. Compliance Certifications</h2>
+    <p>Our Service is designed to assist with:</p>
+    <ul>
+        <li>NYC Local Law 144 (AI hiring disclosure requirements)</li>
+        <li>California AB 2013 (automated decision systems)</li>
+        <li>EU AI Act (high-risk AI systems documentation)</li>
+        <li>EEOC record-keeping requirements</li>
+    </ul>
+
+    <p><strong>Note:</strong> Compliance with these laws depends on YOUR hiring practices. We provide tools, not legal guarantees.</p>
+
+    <h2>13. Modifications to Terms</h2>
+    <p>We may update these Terms with 30 days notice. Continued use after changes constitutes acceptance.</p>
+
+    <h2>14. Governing Law</h2>
+    <p>These Terms are governed by the laws of the State of Delaware, USA, without regard to conflict of law provisions.</p>
+
+    <h2>15. Dispute Resolution</h2>
+    <p>Any disputes shall be resolved through binding arbitration in Delaware, USA, under JAMS rules. You waive the right to class action lawsuits.</p>
+
+    <h2>16. Contact Information</h2>
+    <p>For questions about these Terms, contact us at:</p>
+    <p>
+        <strong>Email:</strong> legal@yourdomain.com<br>
+        <strong>Support:</strong> support@yourdomain.com
+    </p>
+
+    <hr style="margin: 40px 0;">
+    <p style="text-align: center; color: #666;">
+        <a href="/" style="color: #667eea;">← Return to Home</a> •
+        <a href="/privacy-policy" style="color: #667eea;">Privacy Policy</a>
+    </p>
+</body>
+</html>
+    """, 200
+
+
+@app.route('/privacy-policy', methods=['GET'])
+def privacy_policy():
+    """Privacy Policy page"""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Privacy Policy - Institutional Memory API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        h2 { color: #667eea; margin-top: 40px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+        h3 { color: #555; margin-top: 25px; }
+        .last-updated { color: #666; font-style: italic; margin-bottom: 30px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .highlight { background: #fff3cd; padding: 15px; border-left: 4px solid #ffc107; margin: 20px 0; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <h1>Privacy Policy</h1>
+    <p class="last-updated">Last Updated: January 8, 2026</p>
+
+    <div class="highlight">
+        <strong>TL;DR:</strong> We store minimal data (company info + hashed hiring records), use industry-standard encryption, comply with GDPR/CCPA, and NEVER sell your data.
+    </div>
+
+    <h2>1. Introduction</h2>
+    <p>Institutional Memory API ("we", "us", "our") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our Service.</p>
+
+    <h2>2. Information We Collect</h2>
+
+    <h3>2.1 Account Information</h3>
+    <table>
+        <tr>
+            <th>Data Type</th>
+            <th>What We Collect</th>
+            <th>Why We Need It</th>
+        </tr>
+        <tr>
+            <td>Company Details</td>
+            <td>Company name, billing email</td>
+            <td>Account management, billing</td>
+        </tr>
+        <tr>
+            <td>API Credentials</td>
+            <td>API keys (hashed in database)</td>
+            <td>Authentication and access control</td>
+        </tr>
+        <tr>
+            <td>Billing Information</td>
+            <td>Credit card details (via Stripe)</td>
+            <td>Payment processing (we don't store cards)</td>
+        </tr>
+    </table>
+
+    <h3>2.2 Hiring Decision Metadata</h3>
+    <p><strong>What We Store:</strong></p>
+    <ul>
+        <li><strong>Candidate Identifiers (HASHED):</strong> We use SHA-256 to hash candidate IDs/emails. We NEVER store raw PII.</li>
+        <li><strong>Decision Data:</strong> Hiring decision type (hired/rejected), timestamps, human review flags</li>
+        <li><strong>AI System Records:</strong> Names of AI tools used, vendor information, bias audit dates</li>
+        <li><strong>Disclosure Logs:</strong> Timestamps and delivery methods of candidate disclosures</li>
+    </ul>
+
+    <p><strong>What We DON'T Store:</strong></p>
+    <ul>
+        <li>❌ Candidate names (hashed only)</li>
+        <li>❌ Candidate resumes or application materials</li>
+        <li>❌ Protected class information (race, gender, age, etc.)</li>
+        <li>❌ Interview notes or subjective assessments</li>
+    </ul>
+
+    <h3>2.3 Technical Data</h3>
+    <ul>
+        <li><strong>API Logs:</strong> Request timestamps, endpoint accessed, IP addresses, user agent</li>
+        <li><strong>Error Logs:</strong> System errors and debugging information (via Sentry.io)</li>
+        <li><strong>Analytics:</strong> Service usage patterns (aggregated, non-personal)</li>
+    </ul>
+
+    <h2>3. How We Use Your Information</h2>
+    <p>We use collected data to:</p>
+    <ul>
+        <li>✅ Provide the institutional memory service</li>
+        <li>✅ Generate audit packs and compliance reports</li>
+        <li>✅ Process payments and manage subscriptions</li>
+        <li>✅ Provide customer support</li>
+        <li>✅ Detect and prevent security breaches</li>
+        <li>✅ Improve service performance and reliability</li>
+    </ul>
+
+    <p>We do NOT use your data to:</p>
+    <ul>
+        <li>❌ Train machine learning models</li>
+        <li>❌ Sell or share with third parties for marketing</li>
+        <li>❌ Target advertising</li>
+        <li>❌ Make automated decisions about individuals</li>
+    </ul>
+
+    <h2>4. Data Sharing and Disclosure</h2>
+    <h3>4.1 Third-Party Service Providers</h3>
+    <p>We share limited data with trusted partners:</p>
+    <table>
+        <tr>
+            <th>Service</th>
+            <th>Provider</th>
+            <th>Data Shared</th>
+            <th>Purpose</th>
+        </tr>
+        <tr>
+            <td>Hosting</td>
+            <td>Render.com</td>
+            <td>All service data</td>
+            <td>Infrastructure and database hosting</td>
+        </tr>
+        <tr>
+            <td>Payments</td>
+            <td>Stripe</td>
+            <td>Billing email, company name</td>
+            <td>Payment processing</td>
+        </tr>
+        <tr>
+            <td>Error Tracking</td>
+            <td>Sentry.io</td>
+            <td>Error logs, stack traces</td>
+            <td>Debugging and monitoring</td>
+        </tr>
+    </table>
+
+    <h3>4.2 Legal Requirements</h3>
+    <p>We may disclose data if required by:</p>
+    <ul>
+        <li>Court orders or subpoenas</li>
+        <li>Government investigations</li>
+        <li>Protection of our legal rights</li>
+        <li>Prevention of fraud or illegal activity</li>
+    </ul>
+
+    <h3>4.3 Business Transfers</h3>
+    <p>If we are acquired or merged, customer data may be transferred. We will notify you 30 days before any change in ownership.</p>
+
+    <h2>5. Data Security</h2>
+    <p>We implement industry-standard security measures:</p>
+    <ul>
+        <li><strong>Encryption in Transit:</strong> TLS 1.3 for all API connections</li>
+        <li><strong>Encryption at Rest:</strong> AES-256 encryption for database storage</li>
+        <li><strong>Hashing:</strong> SHA-256 for candidate identifiers and API keys</li>
+        <li><strong>Access Controls:</strong> Role-based permissions, API key authentication</li>
+        <li><strong>Monitoring:</strong> 24/7 security monitoring and intrusion detection</li>
+        <li><strong>Audits:</strong> Regular security audits and penetration testing</li>
+    </ul>
+
+    <p><strong>Data Breach Notification:</strong> We will notify affected customers within 72 hours of discovering a breach, as required by GDPR.</p>
+
+    <h2>6. Data Retention</h2>
+    <p><strong>Active Accounts:</strong> We retain data for 7 years from creation date (employment law standard).</p>
+
+    <p><strong>Canceled Accounts:</strong> 30-day grace period for data export, then permanent deletion.</p>
+
+    <p><strong>Legal Holds:</strong> Data flagged for litigation is retained until legal hold is released.</p>
+
+    <h2>7. Your Privacy Rights</h2>
+
+    <h3>7.1 GDPR Rights (EU Residents)</h3>
+    <p>You have the right to:</p>
+    <ul>
+        <li><strong>Access:</strong> Request a copy of your data</li>
+        <li><strong>Rectification:</strong> Correct inaccurate data</li>
+        <li><strong>Erasure ("Right to be Forgotten"):</strong> Request deletion (subject to legal retention requirements)</li>
+        <li><strong>Data Portability:</strong> Receive data in machine-readable format (JSON)</li>
+        <li><strong>Objection:</strong> Object to data processing</li>
+        <li><strong>Restriction:</strong> Limit how we use your data</li>
+    </ul>
+
+    <h3>7.2 CCPA Rights (California Residents)</h3>
+    <p>California residents have the right to:</p>
+    <ul>
+        <li>Know what personal information is collected</li>
+        <li>Know if personal information is sold (we DON'T sell data)</li>
+        <li>Request deletion of personal information</li>
+        <li>Opt-out of sale (N/A - we don't sell data)</li>
+        <li>Non-discrimination for exercising privacy rights</li>
+    </ul>
+
+    <h3>7.3 How to Exercise Your Rights</h3>
+    <p>Email us at <strong>privacy@yourdomain.com</strong> with:</p>
+    <ul>
+        <li>Subject: "Privacy Rights Request"</li>
+        <li>Your company name and account email</li>
+        <li>Specific request (access, deletion, export, etc.)</li>
+    </ul>
+    <p>We respond within 30 days.</p>
+
+    <h2>8. International Data Transfers</h2>
+    <p>Our servers are located in the United States. If you access the Service from the EU or other regions with data protection laws, your data will be transferred to the US.</p>
+
+    <p><strong>EU-US Data Transfer Safeguards:</strong></p>
+    <ul>
+        <li>Standard Contractual Clauses (SCCs) with service providers</li>
+        <li>Encryption for data in transit and at rest</li>
+        <li>Regular compliance audits</li>
+    </ul>
+
+    <h2>9. Cookies and Tracking</h2>
+    <p><strong>We do NOT use cookies for tracking or advertising.</strong></p>
+
+    <p>We may use session cookies for:</p>
+    <ul>
+        <li>API authentication (temporary session management)</li>
+        <li>Security (CSRF protection)</li>
+    </ul>
+
+    <p>No third-party advertising cookies are used.</p>
+
+    <h2>10. Children's Privacy</h2>
+    <p>Our Service is NOT directed to individuals under 18. We do not knowingly collect data from children. If we discover such data, it will be deleted immediately.</p>
+
+    <h2>11. Changes to This Privacy Policy</h2>
+    <p>We may update this Privacy Policy with 30 days notice. Material changes will be communicated via email to your account address.</p>
+
+    <h2>12. Contact Us</h2>
+    <p>For privacy-related questions or requests:</p>
+    <p>
+        <strong>Email:</strong> privacy@yourdomain.com<br>
+        <strong>Data Protection Officer:</strong> dpo@yourdomain.com<br>
+        <strong>Support:</strong> support@yourdomain.com
+    </p>
+
+    <h2>13. Regulatory Compliance</h2>
+    <p>We comply with:</p>
+    <ul>
+        <li>✅ GDPR (General Data Protection Regulation) - EU</li>
+        <li>✅ CCPA (California Consumer Privacy Act) - California</li>
+        <li>✅ PIPEDA (Personal Information Protection and Electronic Documents Act) - Canada</li>
+        <li>✅ SOC 2 Type II controls (in progress for enterprise customers)</li>
+    </ul>
+
+    <hr style="margin: 40px 0;">
+    <p style="text-align: center; color: #666;">
+        <a href="/" style="color: #667eea;">← Return to Home</a> •
+        <a href="/terms-of-service" style="color: #667eea;">Terms of Service</a>
+    </p>
 </body>
 </html>
     """, 200
