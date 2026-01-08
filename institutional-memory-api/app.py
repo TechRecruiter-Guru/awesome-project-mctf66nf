@@ -309,6 +309,12 @@ def require_api_key(f):
 
 # ==================== API ENDPOINTS ====================
 
+@app.route('/', methods=['GET'])
+def root():
+    """Root endpoint for basic health check"""
+    return "OK", 200
+
+
 @app.route('/api/health', methods=['GET'])
 def health_check():
     """Health check endpoint"""
