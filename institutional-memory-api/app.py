@@ -316,8 +316,393 @@ def require_api_key(f):
 
 @app.route('/', methods=['GET'])
 def root():
-    """Root endpoint for basic health check"""
-    return "OK", 200
+    """Landing page"""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institutional Memory API - AI Hiring Compliance Defense</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .hero h1 {
+            font-size: 3em;
+            margin-bottom: 20px;
+            font-weight: 700;
+        }
+        .hero p {
+            font-size: 1.3em;
+            margin-bottom: 30px;
+            opacity: 0.95;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 15px 40px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-size: 1.2em;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 60px 20px;
+        }
+        .problem {
+            background: #fff3cd;
+            border-left: 5px solid #ff6b6b;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        .problem h2 {
+            color: #d63031;
+            margin-bottom: 15px;
+        }
+        .solution {
+            background: #d4edda;
+            border-left: 5px solid #28a745;
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        .solution h2 {
+            color: #155724;
+            margin-bottom: 15px;
+        }
+        .demo-section {
+            background: #f8f9fa;
+            padding: 60px 20px;
+        }
+        .demo-box {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 20px 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .demo-box pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        .pricing {
+            background: white;
+            padding: 60px 20px;
+        }
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .pricing-card {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 40px 30px;
+            text-align: center;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .pricing-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        .pricing-card.featured {
+            border-color: #667eea;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            transform: scale(1.05);
+        }
+        .price {
+            font-size: 3em;
+            font-weight: 700;
+            margin: 20px 0;
+        }
+        .features {
+            list-style: none;
+            margin: 30px 0;
+        }
+        .features li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+        .stats {
+            background: #667eea;
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 40px;
+            margin-top: 40px;
+        }
+        .stat-box h3 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        h2 {
+            font-size: 2.5em;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .api-endpoint {
+            background: #e7f3ff;
+            padding: 10px;
+            border-radius: 5px;
+            font-family: monospace;
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <h1>🛡️ Institutional Memory API</h1>
+        <p>When your AI hiring gets challenged, have complete evidence ready in seconds</p>
+        <a href="#demo" class="cta-button">See Live Demo</a>
+        <a href="#pricing" class="cta-button" style="background: white; color: #667eea; margin-left: 20px;">View Pricing</a>
+    </div>
+
+    <div class="container">
+        <div class="problem">
+            <h2>⚠️ The $500K Problem</h2>
+            <p><strong>Your company uses AI to screen 10,000 job applicants.</strong></p>
+            <p>One year later: <em>"I'm filing an EEOC complaint for AI discrimination..."</em></p>
+            <p><strong>Can you prove what AI you used? What disclosures you made? Why you rejected them?</strong></p>
+            <p style="margin-top: 20px; font-size: 1.2em; color: #d63031;">
+                Without institutional memory: $50K-500K in legal costs, discovery hell, potential fines.
+            </p>
+        </div>
+
+        <div class="solution">
+            <h2>✅ The 60-Second Solution</h2>
+            <p><strong>One API call. Complete audit pack. Case closed.</strong></p>
+            <div class="api-endpoint">
+                GET /api/audit-pack/generate?candidate_id=john.doe@email.com
+            </div>
+            <p style="margin-top: 20px;">Returns: Every AI system used, every decision made, every disclosure delivered, complete timeline.</p>
+            <p style="font-size: 1.2em; color: #155724; margin-top: 15px;">
+                <strong>Your legal team has everything. Your company is defensible.</strong>
+            </p>
+        </div>
+    </div>
+
+    <div class="stats">
+        <h2>The Market Opportunity</h2>
+        <div class="stats-grid">
+            <div class="stat-box">
+                <h3>73%</h3>
+                <p>of companies use AI in hiring</p>
+            </div>
+            <div class="stat-box">
+                <h3>$250K</h3>
+                <p>Average cost of discrimination lawsuit</p>
+            </div>
+            <div class="stat-box">
+                <h3>2025+</h3>
+                <p>NYC, EU, California AI disclosure laws</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="demo-section" id="demo">
+        <div class="container">
+            <h2>🎬 Live Demo: What Your Customers Get</h2>
+            <p style="text-align: center; margin-bottom: 30px; font-size: 1.2em;">
+                Watch what happens when a company gets challenged
+            </p>
+
+            <h3>Step 1: Company Registers (One-Time Setup)</h3>
+            <div class="demo-box">
+                <pre>
+POST /api/company/register
+{
+  "company_name": "TechCorp",
+  "plan_type": "pro"
+}
+
+Response:
+{
+  "company_id": "comp_a1b2c3d4",
+  "api_key": "im_live_x7y8z9...",
+  "message": "✓ Ready to record institutional memory"
+}
+                </pre>
+            </div>
+
+            <h3>Step 2: Record AI Systems (Automatic Integration)</h3>
+            <div class="demo-box">
+                <pre>
+POST /api/webhook/ai-system
+{
+  "system_name": "HireVue Video Screening",
+  "vendor": "HireVue Inc",
+  "decision_type": "ranking"
+}
+
+✓ Recorded. Immutable timestamp: 2025-01-15 09:30:00
+                </pre>
+            </div>
+
+            <h3>Step 3: Log Hiring Decisions (Every Candidate)</h3>
+            <div class="demo-box">
+                <pre>
+POST /api/webhook/hiring-decision
+{
+  "candidate_id": "john.doe@email.com",
+  "decision_type": "rejected",
+  "human_involvement": "full_review",
+  "rationale": "Skills mismatch - required 5yr Python, candidate has 2yr"
+}
+
+✓ Decision logged. Privacy-protected hash stored.
+                </pre>
+            </div>
+
+            <h3>Step 4: ONE YEAR LATER... Legal Challenge Arrives</h3>
+            <div class="demo-box">
+                <pre>
+📧 Email from candidate's lawyer:
+"My client was discriminated against by your AI hiring system.
+We're filing an EEOC complaint. Prepare for discovery."
+
+😰 Without Institutional Memory: Panic, scrambling, $200K legal bills
+
+😎 With Institutional Memory: One API call...
+                </pre>
+            </div>
+
+            <h3>Step 5: Generate Complete Audit Pack (60 Seconds)</h3>
+            <div class="demo-box">
+                <pre>
+GET /api/audit-pack/generate?candidate_email=john.doe@email.com
+
+Response: Complete Evidence Bundle
+{
+  "compliance_status": "DEFENSIBLE",
+  "evidence": {
+    "ai_systems_used": [
+      {
+        "name": "HireVue Video Screening",
+        "when_registered": "2025-01-15 09:30:00",
+        "vendor": "HireVue Inc",
+        "bias_audit_date": "2024-11-20"
+      }
+    ],
+    "decisions": [
+      {
+        "decision": "rejected",
+        "timestamp": "2025-01-20 14:22:00",
+        "human_review": "YES - Reviewed by Sarah Chen, Senior Recruiter",
+        "rationale": "Skills mismatch - required 5yr Python, candidate has 2yr"
+      }
+    ],
+    "disclosures_delivered": [
+      {
+        "disclosure_type": "ai_usage_notice",
+        "delivered_at": "2025-01-10 08:15:00",
+        "method": "email",
+        "content_snapshot": "We use AI tools including video screening..."
+      }
+    ]
+  },
+  "summary": "All disclosures delivered. Human review documented. Legitimate business rationale recorded."
+}
+
+✅ Your legal team has everything.
+✅ Case defensible.
+✅ $500K saved.
+                </pre>
+            </div>
+        </div>
+    </div>
+
+    <div class="pricing" id="pricing">
+        <div class="container">
+            <h2>💰 Pricing: Pay Per Protected Hire</h2>
+            <p style="text-align: center; margin-bottom: 20px;">
+                Integrate once. Protect every hire. Scale as you grow.
+            </p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">$499<span style="font-size: 0.4em;">/mo</span></div>
+                    <p>Perfect for small ATS platforms</p>
+                    <ul class="features">
+                        <li>Up to 1,000 decisions/month</li>
+                        <li>Full API access</li>
+                        <li>Audit pack generation</li>
+                        <li>Email support</li>
+                    </ul>
+                    <a href="mailto:sales@yourdomain.com?subject=Starter Plan Inquiry" class="cta-button">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <h3>Professional</h3>
+                    <div class="price">$1,499<span style="font-size: 0.4em;">/mo</span></div>
+                    <p>Most popular for growing companies</p>
+                    <ul class="features">
+                        <li>Up to 10,000 decisions/month</li>
+                        <li>Priority support</li>
+                        <li>Custom integrations</li>
+                        <li>Compliance dashboard</li>
+                        <li>Multi-tenant support</li>
+                    </ul>
+                    <a href="mailto:sales@yourdomain.com?subject=Professional Plan Inquiry" class="cta-button">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <p>For large ATS vendors</p>
+                    <ul class="features">
+                        <li>Unlimited decisions</li>
+                        <li>White-label options</li>
+                        <li>Dedicated support</li>
+                        <li>SLA guarantees</li>
+                        <li>Revenue sharing available</li>
+                    </ul>
+                    <a href="mailto:sales@yourdomain.com?subject=Enterprise Plan Inquiry" class="cta-button">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="hero" style="padding: 60px 20px;">
+        <h2>🚀 Ready to Protect Your Customers?</h2>
+        <p>Integrate Institutional Memory in 1 hour. Protect every hire from day one.</p>
+        <a href="mailto:sales@yourdomain.com?subject=API Integration Request" class="cta-button" style="font-size: 1.3em; padding: 20px 50px;">Schedule Integration Call</a>
+        <p style="margin-top: 30px; opacity: 0.9;">
+            <strong>API Documentation:</strong> <a href="/api/health" style="color: white;">/api/health</a> •
+            Questions? sales@yourdomain.com
+        </p>
+    </div>
+</body>
+</html>
+    """, 200
 
 
 @app.route('/api/health', methods=['GET'])
