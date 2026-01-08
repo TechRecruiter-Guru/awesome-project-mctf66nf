@@ -35,15 +35,6 @@ else:
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# Initialize database tables on first request
-@app.before_first_request
-def create_tables():
-    try:
-        db.create_all()
-        print("✓ Database tables created")
-    except Exception as e:
-        print(f"Database init error: {e}")
-
 # ==================== MULTI-TENANT SUPPORT ====================
 
 class Company(db.Model):
@@ -293,6 +284,10 @@ class VendorAssertionRecord(db.Model):
             'risk_flag': self.risk_flag
         }
 
+
+# Initialize database tables
+with app.app_context():
+    db.create_all()
 
 # ==================== AUTHENTICATION ====================
 
