@@ -1611,8 +1611,516 @@ def faq():
 
 @app.route('/docs', methods=['GET'])
 def docs():
-    """API Documentation page"""
+    """Gated documentation access page"""
     return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Defensible Hiring AI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        h2 { color: #667eea; margin-top: 40px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .gate-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 50px;
+            border-radius: 15px;
+            text-align: center;
+            margin: 40px 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .gate-box h2 { color: white; margin-bottom: 20px; }
+        .feature-list {
+            text-align: left;
+            max-width: 600px;
+            margin: 30px auto;
+            background: rgba(255,255,255,0.1);
+            padding: 25px;
+            border-radius: 10px;
+        }
+        .feature-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255,255,255,0.2);
+        }
+        .feature-list li:last-child { border-bottom: none; }
+        .cta-button {
+            display: inline-block;
+            background: #ff6b6b;
+            color: white;
+            padding: 18px 40px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin: 20px 10px;
+            transition: transform 0.2s;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        .cta-button.secondary {
+            background: white;
+            color: #667eea;
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 30px;
+            border-left: 5px solid #667eea;
+            margin: 30px 0;
+            border-radius: 5px;
+        }
+        .lock-icon { font-size: 3em; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <h1>API Documentation</h1>
+    <p style="color: #666; margin-bottom: 30px;">Complete integration guide and technical reference</p>
+
+    <div class="gate-box">
+        <div class="lock-icon">🔒</div>
+        <h2>Documentation Access</h2>
+        <p style="font-size: 1.1em; margin-bottom: 30px;">
+            Our detailed API documentation includes integration guides, code examples,
+            and technical specifications for our institutional memory platform.
+        </p>
+
+        <div class="feature-list">
+            <strong>What's included:</strong>
+            <ul style="list-style: none; padding-left: 0;">
+                <li>✓ Complete API endpoint reference</li>
+                <li>✓ Authentication & security guide</li>
+                <li>✓ Integration code examples (Python, Node.js)</li>
+                <li>✓ Request/response schemas</li>
+                <li>✓ Webhook implementation patterns</li>
+                <li>✓ Error handling best practices</li>
+                <li>✓ Compliance checklist for NYC/CA/IL</li>
+                <li>✓ Test environment access</li>
+            </ul>
+        </div>
+
+        <p style="margin: 30px 0; font-size: 1.1em;">
+            <strong>For enterprise customers and integration partners only.</strong>
+        </p>
+
+        <a href="mailto:sales@defensiblehiringai.com?subject=Documentation Access Request&body=Company:%0D%0ARole:%0D%0AUse Case:%0D%0A" class="cta-button">Request Documentation Access</a>
+        <a href="mailto:sales@defensiblehiringai.com?subject=Schedule Demo" class="cta-button secondary">Schedule Live Demo</a>
+    </div>
+
+    <div class="info-box">
+        <h3 style="color: #667eea; margin-bottom: 15px;">🤝 Not Technical? No Problem.</h3>
+        <p style="margin-bottom: 15px;">
+            <strong>If you're a VP of HR, General Counsel, or Compliance Officer:</strong>
+        </p>
+        <p>
+            You don't need to understand the technical details.
+            <a href="/get-started" style="color: #667eea; font-weight: 600;">Our Get Started guide</a>
+            explains how to hand off implementation to your engineering team after purchase.
+        </p>
+        <p style="margin-top: 20px;">
+            <strong>Typical process:</strong>
+        </p>
+        <ol style="color: #555;">
+            <li>You (buyer) schedule a demo with our sales team</li>
+            <li>We show you the compliance value (no code required)</li>
+            <li>Your company signs up and pays</li>
+            <li>We send integration guide to your CTO/engineering team</li>
+            <li>Our team helps them integrate (1-2 hours implementation)</li>
+            <li>You're compliant within 48 hours</li>
+        </ol>
+    </div>
+
+    <div class="info-box">
+        <h3 style="color: #667eea; margin-bottom: 15px;">💼 Integration Partners (ATS Vendors)</h3>
+        <p>
+            Building an ATS or HR Tech platform? We offer white-label partnerships with:
+        </p>
+        <ul style="color: #555;">
+            <li>Revenue sharing (70/30 split)</li>
+            <li>Complete integration support</li>
+            <li>Co-marketing opportunities</li>
+            <li>Partner documentation portal</li>
+        </ul>
+        <p style="margin-top: 20px;">
+            <a href="mailto:partnerships@defensiblehiringai.com?subject=Partnership Inquiry" style="color: #667eea; font-weight: 600;">Contact our partnerships team →</a>
+        </p>
+    </div>
+
+    <h2>Quick Overview (High-Level)</h2>
+    <p>Our API provides institutional memory for AI hiring through four core capabilities:</p>
+
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0;">
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 8px;">
+            <h3 style="color: #667eea;">1. System Registration</h3>
+            <p style="color: #555;">Document which AI tools you use in hiring (HireVue, resume parsers, etc.)</p>
+        </div>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 8px;">
+            <h3 style="color: #667eea;">2. Decision Logging</h3>
+            <p style="color: #555;">Record every hiring decision with timestamps and rationales</p>
+        </div>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 8px;">
+            <h3 style="color: #667eea;">3. Disclosure Tracking</h3>
+            <p style="color: #555;">Log candidate notifications and consent records</p>
+        </div>
+        <div style="background: #f8f9fa; padding: 25px; border-radius: 8px;">
+            <h3 style="color: #667eea;">4. Audit Pack Generation</h3>
+            <p style="color: #555;">Generate complete evidence bundles when legally challenged</p>
+        </div>
+    </div>
+
+    <div style="background: #fff3cd; padding: 25px; border-left: 5px solid #ffc107; margin: 40px 0; border-radius: 5px;">
+        <h3 style="color: #d63031; margin-bottom: 15px;">🔒 Why Documentation is Gated</h3>
+        <p style="color: #555;">
+            Our institutional memory platform is built on proprietary technology and compliance expertise.
+            We provide detailed documentation to customers and integration partners to ensure successful
+            implementation while protecting our intellectual property.
+        </p>
+        <p style="color: #555; margin-top: 15px;">
+            <strong>For access:</strong> Schedule a demo or contact our sales team.
+            We typically grant documentation access within 24 hours of inquiry.
+        </p>
+    </div>
+
+    <hr style="margin: 40px 0;">
+    <p style="text-align: center; color: #666;">
+        <a href="/" style="color: #667eea;">← Return to Home</a> •
+        <a href="/faq" style="color: #667eea;">FAQ</a> •
+        <a href="/get-started" style="color: #667eea;">Get Started</a>
+    </p>
+</body>
+</html>
+    """, 200
+
+
+@app.route('/get-started', methods=['GET'])
+def get_started():
+    """Non-technical buyer onboarding guide"""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Get Started - Defensible Hiring AI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        h2 { color: #667eea; margin-top: 40px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .persona-box {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 5px solid #667eea;
+            border-radius: 5px;
+        }
+        .step {
+            background: white;
+            padding: 30px;
+            margin: 20px 0;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .step-number {
+            background: #667eea;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-right: 15px;
+        }
+        .cta-button {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 15px 30px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: 600;
+            margin: 10px 5px;
+        }
+        .cta-button:hover { background: #5568d3; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        th { background: #f8f9fa; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <h1>Get Started with Defensible Hiring AI</h1>
+    <p style="color: #666; margin-bottom: 30px;">The complete guide from evaluation to implementation</p>
+
+    <div class="persona-box">
+        <h3 style="color: #667eea; margin-bottom: 15px;">👔 Are You Non-Technical?</h3>
+        <p>
+            <strong>You don't need to be an engineer to buy Defensible Hiring AI.</strong>
+        </p>
+        <p style="margin-top: 15px;">
+            If you're a VP of HR, General Counsel, Compliance Officer, or business leader evaluating
+            compliance solutions, this guide explains exactly how to get started without writing a line of code.
+        </p>
+    </div>
+
+    <h2>The Complete Process</h2>
+
+    <div class="step">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="step-number">1</span>
+            <h3 style="margin: 0;">Schedule a Demo (You + Sales Team)</h3>
+        </div>
+        <p><strong>Who's involved:</strong> You (buyer), our sales team</p>
+        <p><strong>Duration:</strong> 15-30 minutes</p>
+        <p><strong>What happens:</strong></p>
+        <ul>
+            <li>We show you the compliance value proposition (no technical details)</li>
+            <li>Walk through a simulated legal challenge scenario</li>
+            <li>Demonstrate audit pack generation</li>
+            <li>Answer your compliance questions</li>
+            <li>Discuss pricing and ROI</li>
+        </ul>
+        <p><strong>What you need to prepare:</strong></p>
+        <ul>
+            <li>Do you hire in NYC, CA, IL, or CO? (determines legal requirement)</li>
+            <li>How many candidates do you screen per month?</li>
+            <li>What AI tools do you currently use? (ATS, video screening, etc.)</li>
+        </ul>
+        <a href="mailto:sales@defensiblehiringai.com?subject=Schedule Demo" class="cta-button">Schedule Your Demo</a>
+    </div>
+
+    <div class="step">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="step-number">2</span>
+            <h3 style="margin: 0;">Sign Contract & Pay (Business Decision)</h3>
+        </div>
+        <p><strong>Who's involved:</strong> You, your legal/procurement team</p>
+        <p><strong>Duration:</strong> 1-5 days (depending on approval process)</p>
+        <p><strong>What happens:</strong></p>
+        <ul>
+            <li>We send you a service agreement</li>
+            <li>Your legal team reviews (we provide standard SLA, liability terms)</li>
+            <li>You select a plan: Starter ($499/mo), Professional ($1,499/mo), or Enterprise</li>
+            <li>Payment via credit card or invoice (annual prepay gets 16% discount)</li>
+        </ul>
+        <p><strong>What you receive immediately:</strong></p>
+        <ul>
+            <li>✓ Company account created</li>
+            <li>✓ API credentials generated</li>
+            <li>✓ Integration guide sent to your technical contact</li>
+            <li>✓ Welcome email with next steps</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="step-number">3</span>
+            <h3 style="margin: 0;">Technical Handoff (Your Team + Our Team)</h3>
+        </div>
+        <p><strong>Who's involved:</strong> Your CTO/Engineering Lead, our implementation team</p>
+        <p><strong>Duration:</strong> 30-60 minute kickoff call</p>
+        <p><strong>What happens:</strong></p>
+        <ul>
+            <li>We email your technical contact with integration guide</li>
+            <li>Schedule kickoff call with your engineering team</li>
+            <li>Walk through API authentication and endpoints</li>
+            <li>Provide code examples for your tech stack</li>
+            <li>Answer technical questions</li>
+        </ul>
+        <p><strong>What your technical team needs:</strong></p>
+        <ul>
+            <li>Access to your ATS/hiring system codebase</li>
+            <li>Ability to make HTTP POST requests (basic API integration)</li>
+            <li>1-2 hours of engineering time</li>
+        </ul>
+        <div style="background: #e7f3ff; padding: 20px; border-radius: 5px; margin-top: 20px;">
+            <strong>For non-technical buyers:</strong> You don't attend this call!
+            Your engineers handle it. We'll send you a summary when it's done.
+        </div>
+    </div>
+
+    <div class="step">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="step-number">4</span>
+            <h3 style="margin: 0;">Integration & Testing (Engineering Team)</h3>
+        </div>
+        <p><strong>Who's involved:</strong> Your engineering team, our support team</p>
+        <p><strong>Duration:</strong> 1-2 hours of coding time</p>
+        <p><strong>What happens:</strong></p>
+        <ol>
+            <li>Your engineers add our API calls to your hiring workflow:
+                <ul>
+                    <li>When a candidate is screened → Log decision to our API</li>
+                    <li>When AI tool is used → Register system with our API</li>
+                    <li>When disclosure is sent → Record with our API</li>
+                </ul>
+            </li>
+            <li>Test with sample data (we provide test candidates)</li>
+            <li>Generate test audit pack to verify it works</li>
+            <li>Go live!</li>
+        </ol>
+        <p><strong>Support available:</strong></p>
+        <ul>
+            <li>Starter: Email support (24-hour response)</li>
+            <li>Professional: Email support (4-hour response)</li>
+            <li>Enterprise: Dedicated Slack channel (1-hour response)</li>
+        </ul>
+    </div>
+
+    <div class="step">
+        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+            <span class="step-number">5</span>
+            <h3 style="margin: 0;">You're Compliant! (Everyone Celebrates)</h3>
+        </div>
+        <p><strong>Duration:</strong> Usually complete within 48 hours of purchase</p>
+        <p><strong>What you get:</strong></p>
+        <ul>
+            <li>✓ Every hiring decision is now automatically documented</li>
+            <li>✓ Immutable audit trail for legal defensibility</li>
+            <li>✓ Ability to generate audit packs in 60 seconds when challenged</li>
+            <li>✓ Compliance with NYC Local Law 144, California AB 2013, Illinois AI Act</li>
+            <li>✓ Peace of mind for your legal team</li>
+        </ul>
+        <div style="background: #d4edda; padding: 20px; border-radius: 5px; margin-top: 20px; border-left: 5px solid #28a745;">
+            <strong style="color: #155724;">Success!</strong> You're now protected from the $500K legal problem.
+            Every candidate you screen from here on is documented and defensible.
+        </div>
+    </div>
+
+    <h2>Roles & Responsibilities</h2>
+
+    <table>
+        <tr>
+            <th>Role</th>
+            <th>Responsibilities</th>
+            <th>Time Commitment</th>
+        </tr>
+        <tr>
+            <td><strong>You (Buyer)</strong><br>VP HR, GC, Compliance Officer</td>
+            <td>
+                • Evaluate solution<br>
+                • Attend demo<br>
+                • Get budget approval<br>
+                • Sign contract<br>
+                • Connect us with technical team
+            </td>
+            <td>2-3 hours total</td>
+        </tr>
+        <tr>
+            <td><strong>Your Legal/Procurement</strong></td>
+            <td>
+                • Review service agreement<br>
+                • Approve vendor<br>
+                • Process payment
+            </td>
+            <td>1-2 hours</td>
+        </tr>
+        <tr>
+            <td><strong>Your CTO/Engineering</strong></td>
+            <td>
+                • Attend technical kickoff<br>
+                • Implement API integration<br>
+                • Test and validate<br>
+                • Deploy to production
+            </td>
+            <td>2-4 hours</td>
+        </tr>
+        <tr>
+            <td><strong>Our Sales Team</strong></td>
+            <td>
+                • Demo product<br>
+                • Answer questions<br>
+                • Send proposal<br>
+                • Handle onboarding
+            </td>
+            <td>We handle everything</td>
+        </tr>
+        <tr>
+            <td><strong>Our Implementation Team</strong></td>
+            <td>
+                • Technical kickoff call<br>
+                • Integration support<br>
+                • Answer engineering questions<br>
+                • Validate implementation
+            </td>
+            <td>We handle everything</td>
+        </tr>
+    </table>
+
+    <h2>Common Questions from Non-Technical Buyers</h2>
+
+    <div class="persona-box">
+        <strong>Q: Do I need to understand APIs or coding?</strong><br>
+        <strong>A:</strong> No! Your engineering team handles the technical implementation.
+        You just need to approve the purchase and introduce us to your technical contact.
+    </div>
+
+    <div class="persona-box">
+        <strong>Q: What if we don't have an engineering team?</strong><br>
+        <strong>A:</strong> If you're using an existing ATS (Greenhouse, Lever, etc.),
+        we can work with their support team to enable the integration. For very small companies,
+        we offer managed implementation ($2,500 one-time setup fee).
+    </div>
+
+    <div class="persona-box">
+        <strong>Q: How long until we're compliant?</strong><br>
+        <strong>A:</strong> Typically 48 hours from purchase to live.
+        Most of that is coordination time - the actual technical work is 1-2 hours.
+    </div>
+
+    <div class="persona-box">
+        <strong>Q: What if we get challenged before implementation is complete?</strong><br>
+        <strong>A:</strong> We'll work with you to document your historical data to the extent possible,
+        but our protection starts from the moment you go live. This is why we recommend implementing
+        <em>before</em> you need it.
+    </div>
+
+    <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 40px; text-align: center; border-radius: 10px; margin: 40px 0;">
+        <h2 style="color: white; margin-bottom: 20px;">Ready to Get Started?</h2>
+        <p style="font-size: 1.1em; margin-bottom: 30px;">
+            Join companies in NYC, California, and Illinois who are protecting themselves from AI hiring lawsuits.
+        </p>
+        <a href="mailto:sales@defensiblehiringai.com?subject=Get Started Request" class="cta-button" style="background: white; color: #667eea; font-size: 1.2em; padding: 18px 40px;">Schedule Your Demo</a>
+        <p style="margin-top: 20px; opacity: 0.9;">
+            Questions? Email sales@defensiblehiringai.com or call us at [your phone]
+        </p>
+    </div>
+
+    <hr style="margin: 40px 0;">
+    <p style="text-align: center; color: #666;">
+        <a href="/" style="color: #667eea;">← Return to Home</a> •
+        <a href="/faq" style="color: #667eea;">FAQ</a> •
+        <a href="/docs" style="color: #667eea;">API Documentation</a>
+    </p>
+</body>
+</html>
+    """, 200
 <!DOCTYPE html>
 <html lang="en">
 <head>
