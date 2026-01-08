@@ -517,15 +517,6 @@ def generate_audit_pack(company):
     return jsonify(audit_pack), 200
 
 
-# Auto-initialize database tables on startup
-with app.app_context():
-    try:
-        db.create_all()
-        print("✓ Database tables initialized")
-    except Exception as e:
-        print(f"Note: Database already exists or error: {e}")
-
-
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     app.run(debug=True, host='0.0.0.0', port=port)
