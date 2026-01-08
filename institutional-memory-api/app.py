@@ -500,7 +500,7 @@ def root():
             <a href="/docs">API Docs</a>
             <a href="/faq">FAQ</a>
             <a href="#pricing">Pricing</a>
-            <a href="mailto:sales@yourdomain.com">Contact Sales</a>
+            <a href="mailto:sales@defensiblehiringai.com">Contact Sales</a>
         </nav>
         <h1>🛡️ Institutional Memory API</h1>
         <p>When your AI hiring gets challenged, have complete evidence ready in seconds</p>
@@ -603,7 +603,7 @@ def root():
                 </div>
                 <p style="margin-top: 30px; font-size: 1.1em;">
                     <strong>Don't know if you're covered?</strong>
-                    <a href="mailto:compliance@yourdomain.com?subject=Am I Required to Comply?" style="color: #667eea; text-decoration: underline;">Ask our compliance team →</a>
+                    <a href="mailto:compliance@defensiblehiringai.com?subject=Am I Required to Comply?" style="color: #667eea; text-decoration: underline;">Ask our compliance team →</a>
                 </p>
             </div>
         </div>
@@ -768,7 +768,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                         <li>Audit pack generation</li>
                         <li>Email support</li>
                     </ul>
-                    <a href="mailto:sales@yourdomain.com?subject=Starter Plan Inquiry" class="cta-button">Get Started</a>
+                    <a href="mailto:sales@defensiblehiringai.com?subject=Starter Plan Inquiry" class="cta-button">Get Started</a>
                 </div>
 
                 <div class="pricing-card featured">
@@ -782,7 +782,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                         <li>Compliance dashboard</li>
                         <li>Multi-tenant support</li>
                     </ul>
-                    <a href="mailto:sales@yourdomain.com?subject=Professional Plan Inquiry" class="cta-button">Start Free Trial</a>
+                    <a href="mailto:sales@defensiblehiringai.com?subject=Professional Plan Inquiry" class="cta-button">Start Free Trial</a>
                 </div>
 
                 <div class="pricing-card">
@@ -796,7 +796,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                         <li>SLA guarantees</li>
                         <li>Revenue sharing available</li>
                     </ul>
-                    <a href="mailto:sales@yourdomain.com?subject=Enterprise Plan Inquiry" class="cta-button">Contact Sales</a>
+                    <a href="mailto:sales@defensiblehiringai.com?subject=Enterprise Plan Inquiry" class="cta-button">Contact Sales</a>
                 </div>
             </div>
         </div>
@@ -805,10 +805,10 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
     <div class="hero" style="padding: 60px 20px;">
         <h2>🚀 Ready to Protect Your Customers?</h2>
         <p>Integrate Institutional Memory in 1 hour. Protect every hire from day one.</p>
-        <a href="mailto:sales@yourdomain.com?subject=API Integration Request" class="cta-button" style="font-size: 1.3em; padding: 20px 50px;">Schedule Integration Call</a>
+        <a href="mailto:sales@defensiblehiringai.com?subject=API Integration Request" class="cta-button" style="font-size: 1.3em; padding: 20px 50px;">Schedule Integration Call</a>
         <p style="margin-top: 30px; opacity: 0.9;">
             <strong>API Documentation:</strong> <a href="/api/health" style="color: white;">/api/health</a> •
-            Questions? sales@yourdomain.com
+            Questions? sales@defensiblehiringai.com
         </p>
     </div>
 
@@ -818,7 +818,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
             <p style="opacity: 0.8;">
                 <a href="/terms-of-service" style="color: #3498db; text-decoration: none; margin: 0 15px;">Terms of Service</a> •
                 <a href="/privacy-policy" style="color: #3498db; text-decoration: none; margin: 0 15px;">Privacy Policy</a> •
-                <a href="mailto:support@yourdomain.com" style="color: #3498db; text-decoration: none; margin: 0 15px;">Support</a>
+                <a href="mailto:support@defensiblehiringai.com" style="color: #3498db; text-decoration: none; margin: 0 15px;">Support</a>
             </p>
         </div>
     </footer>
@@ -1010,8 +1010,8 @@ def terms_of_service():
     <h2>16. Contact Information</h2>
     <p>For questions about these Terms, contact us at:</p>
     <p>
-        <strong>Email:</strong> legal@yourdomain.com<br>
-        <strong>Support:</strong> support@yourdomain.com
+        <strong>Email:</strong> legal@defensiblehiringai.com<br>
+        <strong>Support:</strong> support@defensiblehiringai.com
     </p>
 
     <hr style="margin: 40px 0;">
@@ -1223,7 +1223,7 @@ def privacy_policy():
     </ul>
 
     <h3>7.3 How to Exercise Your Rights</h3>
-    <p>Email us at <strong>privacy@yourdomain.com</strong> with:</p>
+    <p>Email us at <strong>privacy@defensiblehiringai.com</strong> with:</p>
     <ul>
         <li>Subject: "Privacy Rights Request"</li>
         <li>Your company name and account email</li>
@@ -1261,9 +1261,9 @@ def privacy_policy():
     <h2>12. Contact Us</h2>
     <p>For privacy-related questions or requests:</p>
     <p>
-        <strong>Email:</strong> privacy@yourdomain.com<br>
-        <strong>Data Protection Officer:</strong> dpo@yourdomain.com<br>
-        <strong>Support:</strong> support@yourdomain.com
+        <strong>Email:</strong> privacy@defensiblehiringai.com<br>
+        <strong>Data Protection Officer:</strong> dpo@defensiblehiringai.com<br>
+        <strong>Support:</strong> support@defensiblehiringai.com
     </p>
 
     <h2>13. Regulatory Compliance</h2>
@@ -1494,7 +1494,7 @@ def faq():
         <div class="faq-answer">
             <strong>A:</strong>
             <ul>
-                <li><strong>Starter:</strong> Email support@yourdomain.com (24-hour response)</li>
+                <li><strong>Starter:</strong> Email support@defensiblehiringai.com (24-hour response)</li>
                 <li><strong>Professional:</strong> Email support (4-hour response, business hours)</li>
                 <li><strong>Enterprise:</strong> Dedicated Slack channel (1-hour response, 24/7)</li>
             </ul>
@@ -1585,14 +1585,14 @@ def faq():
                 <li>Dedicated integration support</li>
                 <li>Co-marketing opportunities</li>
             </ul>
-            Contact sales@yourdomain.com for partnership details.
+            Contact sales@defensiblehiringai.com for partnership details.
         </div>
     </div>
 
     <div class="cta-box">
         <h2 style="color: white; margin-bottom: 15px;">Still Have Questions?</h2>
         <p>Our team is here to help. Get in touch and we'll respond within 24 hours.</p>
-        <a href="mailto:support@yourdomain.com?subject=FAQ Question">Contact Support</a>
+        <a href="mailto:support@defensiblehiringai.com?subject=FAQ Question">Contact Support</a>
         <a href="/docs" style="background: white; color: #667eea; margin-left: 15px;">View API Docs</a>
     </div>
 
@@ -1742,7 +1742,7 @@ def docs():
     <div class="code-block">
         <pre>
 # Example authenticated request
-curl -X POST https://institutional-memory-api.onrender.com/api/webhook/ai-system \\
+curl -X POST https://defensiblehiringai.com/api/webhook/ai-system \\
   -H "Content-Type: application/json" \\
   -H "X-API-Key: im_live_your_api_key_here" \\
   -d '{"system_name": "HireVue", "vendor": "HireVue Inc"}'
@@ -1750,7 +1750,7 @@ curl -X POST https://institutional-memory-api.onrender.com/api/webhook/ai-system
     </div>
 
     <h2>Base URL</h2>
-    <p><strong>Production:</strong> <code>https://institutional-memory-api.onrender.com/api</code></p>
+    <p><strong>Production:</strong> <code>https://defensiblehiringai.com/api</code></p>
     <p><strong>All responses:</strong> JSON format</p>
 
     <h2>Endpoints</h2>
@@ -2100,7 +2100,7 @@ Content-Type: application/json
 import requests
 
 API_KEY = "im_live_your_api_key_here"
-BASE_URL = "https://institutional-memory-api.onrender.com/api"
+BASE_URL = "https://defensiblehiringai.com/api"
 HEADERS = {
     "Content-Type": "application/json",
     "X-API-Key": API_KEY
@@ -2138,7 +2138,7 @@ print(response.json())
 const axios = require('axios');
 
 const API_KEY = 'im_live_your_api_key_here';
-const BASE_URL = 'https://institutional-memory-api.onrender.com/api';
+const BASE_URL = 'https://defensiblehiringai.com/api';
 const headers = {
   'Content-Type': 'application/json',
   'X-API-Key': API_KEY
@@ -2192,9 +2192,9 @@ async function logDecision() {
     </ul>
 
     <h2>Support</h2>
-    <p><strong>Questions?</strong> Contact us at <a href="mailto:support@yourdomain.com">support@yourdomain.com</a></p>
-    <p><strong>Bugs?</strong> Report at <a href="mailto:bugs@yourdomain.com">bugs@yourdomain.com</a></p>
-    <p><strong>Feature Requests?</strong> Email <a href="mailto:product@yourdomain.com">product@yourdomain.com</a></p>
+    <p><strong>Questions?</strong> Contact us at <a href="mailto:support@defensiblehiringai.com">support@defensiblehiringai.com</a></p>
+    <p><strong>Bugs?</strong> Report at <a href="mailto:bugs@defensiblehiringai.com">bugs@defensiblehiringai.com</a></p>
+    <p><strong>Feature Requests?</strong> Email <a href="mailto:product@defensiblehiringai.com">product@defensiblehiringai.com</a></p>
 
     <hr style="margin: 40px 0;">
     <p style="text-align: center; color: #666;">

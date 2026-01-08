@@ -15,7 +15,7 @@ import requests
 import json
 from datetime import datetime, timedelta
 
-BASE_URL = "https://institutional-memory-api.onrender.com/api"
+BASE_URL = "https://defensiblehiringai.com/api"
 HEADERS = {"Content-Type": "application/json"}
 
 def print_section(title):
