@@ -532,6 +532,83 @@ def root():
         </div>
     </div>
 
+    <div style="background: #fff3cd; padding: 60px 20px; border-top: 5px solid #ffc107; border-bottom: 5px solid #ffc107;">
+        <div class="container">
+            <h2 style="text-align: center; color: #d63031; margin-bottom: 30px;">⚖️ Is This Legally Required in Your State?</h2>
+            <p style="text-align: center; font-size: 1.2em; margin-bottom: 40px; color: #555;">
+                <strong>Short answer:</strong> If you hire in NYC, California, Illinois, Colorado, or the EU - <strong style="color: #d63031;">YES, compliance is MANDATORY.</strong><br>
+                If not? You're next. Regulations are spreading fast.
+            </p>
+
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px;">
+                <div style="background: white; padding: 25px; border-radius: 10px; border-left: 5px solid #dc3545;">
+                    <h3 style="color: #dc3545; margin-bottom: 15px;">🚨 MANDATORY NOW</h3>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>New York City:</strong> Local Law 144 (since Jan 2023)</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>California:</strong> AB 2013 (since Jan 2024)</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Illinois:</strong> AI Video Interview Act (since 2020)</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;"><strong>Colorado:</strong> AI Act (effective Feb 2026)</li>
+                        <li style="padding: 8px 0;"><strong>European Union:</strong> AI Act (phased rollout)</li>
+                    </ul>
+                    <p style="margin-top: 20px; color: #dc3545; font-weight: 600;">
+                        ⚠️ Non-compliance penalties: $500-$1,500 per violation in NYC alone
+                    </p>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 10px; border-left: 5px solid #ffc107;">
+                    <h3 style="color: #f39c12; margin-bottom: 15px;">⏰ COMING SOON</h3>
+                    <ul style="list-style: none; padding-left: 0; color: #555;">
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">• Washington (bill pending)</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">• Massachusetts (proposed)</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">• New Jersey (under review)</li>
+                        <li style="padding: 8px 0; border-bottom: 1px solid #eee;">• Federal AI Act (proposed)</li>
+                        <li style="padding: 8px 0;">• 12+ other states drafting legislation</li>
+                    </ul>
+                    <p style="margin-top: 20px; color: #f39c12; font-weight: 600;">
+                        📈 Experts predict 20+ states by 2027
+                    </p>
+                </div>
+
+                <div style="background: white; padding: 25px; border-radius: 10px; border-left: 5px solid #28a745;">
+                    <h3 style="color: #28a745; margin-bottom: 15px;">💡 EVEN IF NOT REQUIRED...</h3>
+                    <p style="color: #555; margin-bottom: 15px;">You still face legal risk from:</p>
+                    <ul style="color: #555;">
+                        <li style="padding: 5px 0;"><strong>EEOC:</strong> Can sue for discrimination without specific AI laws</li>
+                        <li style="padding: 5px 0;"><strong>Interstate hiring:</strong> If you hire NY/CA candidates, you must comply</li>
+                        <li style="padding: 5px 0;"><strong>Future-proofing:</strong> Better to be compliant before your state passes a law</li>
+                        <li style="padding: 5px 0;"><strong>Competitive advantage:</strong> Show candidates you're transparent</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                <h3 style="color: #667eea; margin-bottom: 20px;">🎯 Who MUST Comply Right Now?</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: left;">
+                    <div>
+                        <strong style="color: #dc3545;">✓ You have offices in NYC, CA, IL, or CO</strong><br>
+                        <span style="color: #666; font-size: 0.95em;">Mandatory compliance with state laws</span>
+                    </div>
+                    <div>
+                        <strong style="color: #dc3545;">✓ You hire remote workers in those states</strong><br>
+                        <span style="color: #666; font-size: 0.95em;">Laws apply to candidate location</span>
+                    </div>
+                    <div>
+                        <strong style="color: #dc3545;">✓ You use AI screening of any kind</strong><br>
+                        <span style="color: #666; font-size: 0.95em;">Resume parsers, video analysis, scoring tools</span>
+                    </div>
+                    <div>
+                        <strong style="color: #dc3545;">✓ You're an ATS vendor serving multi-state clients</strong><br>
+                        <span style="color: #666; font-size: 0.95em;">Your customers need compliance tools</span>
+                    </div>
+                </div>
+                <p style="margin-top: 30px; font-size: 1.1em;">
+                    <strong>Don't know if you're covered?</strong>
+                    <a href="mailto:compliance@yourdomain.com?subject=Am I Required to Comply?" style="color: #667eea; text-decoration: underline;">Ask our compliance team →</a>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <div class="stats">
         <h2>The Market Opportunity</h2>
         <div class="stats-grid">
