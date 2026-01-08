@@ -529,112 +529,123 @@ def root():
 
     <div class="demo-section" id="demo">
         <div class="container">
-            <h2>🎬 Live Demo: What Your Customers Get</h2>
+            <h2>🎬 What Your Customers Get: The Complete Evidence Pack</h2>
             <p style="text-align: center; margin-bottom: 30px; font-size: 1.2em;">
-                Watch what happens when a company gets challenged
+                From legal chaos to instant compliance in 60 seconds
             </p>
 
-            <h3>Step 1: Company Registers (One-Time Setup)</h3>
-            <div class="demo-box">
-                <pre>
-POST /api/company/register
-{
-  "company_name": "TechCorp",
-  "plan_type": "pro"
-}
+            <h3 style="text-align: center; color: #d63031; margin: 40px 0 20px 0;">📧 The Nightmare Scenario</h3>
+            <div class="demo-box" style="background: #fff3cd; color: #333; border-left: 5px solid #d63031;">
+                <pre style="color: #333;">
+<strong>Email from Candidate's Attorney:</strong>
+Subject: Notice of EEOC Complaint - AI Discrimination
 
-Response:
-{
-  "company_id": "comp_a1b2c3d4",
-  "api_key": "im_live_x7y8z9...",
-  "message": "✓ Ready to record institutional memory"
-}
+"My client, Sarah Martinez, applied for Senior Engineer on January 15, 2025.
+She was rejected by your AI screening system within 48 hours.
+
+We believe this constitutes algorithmic discrimination under NYC Local Law 144
+and California AB 2013. We are filing an EEOC complaint and demand:
+
+1. All AI systems used in her evaluation
+2. Complete decision rationale and timeline
+3. Proof of bias audits and AI disclosures
+4. Evidence of human oversight
+
+You have 30 days to respond or face discovery costs exceeding $200,000."
                 </pre>
             </div>
 
-            <h3>Step 2: Record AI Systems (Automatic Integration)</h3>
-            <div class="demo-box">
-                <pre>
-POST /api/webhook/ai-system
-{
-  "system_name": "HireVue Video Screening",
-  "vendor": "HireVue Inc",
-  "decision_type": "ranking"
-}
+            <h3 style="text-align: center; color: #155724; margin: 40px 0 20px 0;">✅ Your Response: 60 Seconds Later</h3>
+            <p style="text-align: center; margin-bottom: 30px;">
+                With Institutional Memory, your legal team generates a complete Audit Evidence Pack instantly:
+            </p>
 
-✓ Recorded. Immutable timestamp: 2025-01-15 09:30:00
-                </pre>
+            <div style="background: white; border: 3px solid #28a745; border-radius: 10px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
+                <h3 style="text-align: center; color: #155724;">📄 COMPLIANCE AUDIT PACK</h3>
+                <p style="text-align: center; color: #666; margin-bottom: 30px;">Generated: January 8, 2026 | Case: Martinez v. TechCorp | Status: <strong style="color: #28a745;">DEFENSIBLE</strong></p>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h4 style="color: #667eea;">🤖 AI Systems - Complete Audit Trail</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                            <strong>HireVue Video Screening v3.2</strong><br>
+                            <span style="color: #666;">• Registered: Jan 15, 2025 09:30:00 UTC (Before candidate applied)</span><br>
+                            <span style="color: #666;">• NYC Bias Audit: Completed Nov 20, 2024 by Acme Auditors LLC</span><br>
+                            <span style="color: #666;">• Audit Results: No disparate impact found (80% rule compliant)</span>
+                        </li>
+                        <li style="padding: 10px 0;">
+                            <strong>Resume Parser AI v2.1</strong><br>
+                            <span style="color: #666;">• Registered: Dec 1, 2024 14:22:00 UTC</span><br>
+                            <span style="color: #666;">• Vendor: ResumeBot Inc | Bias Audit: Sep 2024</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h4 style="color: #667eea;">⚖️ Decision Record - Human Review Documented</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                            <strong>AI Screening Result:</strong> 72/100 (Passed threshold of 70)<br>
+                            <span style="color: #666;">Timestamp: Jan 17, 2025 10:15:22 UTC</span>
+                        </li>
+                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                            <strong>Human Review:</strong> Conducted by Sarah Chen, Senior Recruiter<br>
+                            <span style="color: #666;">Timestamp: Jan 17, 2025 14:30:00 UTC (4 hours after AI screen)</span><br>
+                            <span style="color: #666;">Decision: Rejected</span>
+                        </li>
+                        <li style="padding: 10px 0;">
+                            <strong>Documented Rationale:</strong><br>
+                            <span style="color: #666;">"Position requires 5+ years Python experience with Django framework. Candidate resume shows 2 years Python, no Django. Job description clearly stated this requirement. Decision based on objective skills gap, not AI recommendation."</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
+                    <h4 style="color: #667eea;">📢 Disclosures - Complete Paper Trail</h4>
+                    <ul style="list-style: none; padding-left: 0;">
+                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
+                            <strong>AI Usage Notice Delivered:</strong> Jan 10, 2025 08:15:00 UTC<br>
+                            <span style="color: #666;">Method: Email to candidate@email.com (Confirmed opened)</span><br>
+                            <span style="color: #666;">Content: "TechCorp uses AI tools to assist in screening. Final decisions made by humans. Bias audits completed per NYC LL144."</span>
+                        </li>
+                        <li style="padding: 10px 0;">
+                            <strong>Job Posting Disclosure:</strong> Jan 5, 2025<br>
+                            <span style="color: #666;">Posted on careers page with AI usage disclosure before applications opened</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #28a745;">
+                    <h4 style="color: #155724; text-align: center;">✅ LEGAL ASSESSMENT</h4>
+                    <p style="text-align: center; margin: 15px 0;">
+                        ✓ All AI systems properly registered and audited<br>
+                        ✓ Human review documented with legitimate rationale<br>
+                        ✓ Candidate disclosures delivered and confirmed<br>
+                        ✓ Regulatory compliance demonstrated (NYC LL144, CA AB2013)<br>
+                    </p>
+                    <p style="text-align: center; font-size: 1.3em; color: #155724; margin-top: 20px;">
+                        <strong>Company position: DEFENSIBLE</strong>
+                    </p>
+                </div>
             </div>
 
-            <h3>Step 3: Log Hiring Decisions (Every Candidate)</h3>
-            <div class="demo-box">
-                <pre>
-POST /api/webhook/hiring-decision
-{
-  "candidate_id": "john.doe@email.com",
-  "decision_type": "rejected",
-  "human_involvement": "full_review",
-  "rationale": "Skills mismatch - required 5yr Python, candidate has 2yr"
-}
-
-✓ Decision logged. Privacy-protected hash stored.
-                </pre>
-            </div>
-
-            <h3>Step 4: ONE YEAR LATER... Legal Challenge Arrives</h3>
-            <div class="demo-box">
-                <pre>
-📧 Email from candidate's lawyer:
-"My client was discriminated against by your AI hiring system.
-We're filing an EEOC complaint. Prepare for discovery."
-
-😰 Without Institutional Memory: Panic, scrambling, $200K legal bills
-
-😎 With Institutional Memory: One API call...
-                </pre>
-            </div>
-
-            <h3>Step 5: Generate Complete Audit Pack (60 Seconds)</h3>
-            <div class="demo-box">
-                <pre>
-GET /api/audit-pack/generate?candidate_email=john.doe@email.com
-
-Response: Complete Evidence Bundle
-{
-  "compliance_status": "DEFENSIBLE",
-  "evidence": {
-    "ai_systems_used": [
-      {
-        "name": "HireVue Video Screening",
-        "when_registered": "2025-01-15 09:30:00",
-        "vendor": "HireVue Inc",
-        "bias_audit_date": "2024-11-20"
-      }
-    ],
-    "decisions": [
-      {
-        "decision": "rejected",
-        "timestamp": "2025-01-20 14:22:00",
-        "human_review": "YES - Reviewed by Sarah Chen, Senior Recruiter",
-        "rationale": "Skills mismatch - required 5yr Python, candidate has 2yr"
-      }
-    ],
-    "disclosures_delivered": [
-      {
-        "disclosure_type": "ai_usage_notice",
-        "delivered_at": "2025-01-10 08:15:00",
-        "method": "email",
-        "content_snapshot": "We use AI tools including video screening..."
-      }
-    ]
-  },
-  "summary": "All disclosures delivered. Human review documented. Legitimate business rationale recorded."
-}
-
-✅ Your legal team has everything.
-✅ Case defensible.
-✅ $500K saved.
-                </pre>
+            <div style="text-align: center; margin: 40px 0;">
+                <div style="display: inline-block; background: #fff3cd; padding: 30px; border-radius: 10px; margin: 20px;">
+                    <h4 style="color: #d63031;">😰 Without Institutional Memory</h4>
+                    <p>• Scrambling through old emails<br>
+                    • Hunting for audit reports<br>
+                    • Reconstructing decisions from memory<br>
+                    • 6-12 months of discovery<br>
+                    • <strong>$200K+ legal costs</strong></p>
+                </div>
+                <div style="display: inline-block; background: #d4edda; padding: 30px; border-radius: 10px; margin: 20px;">
+                    <h4 style="color: #155724;">😎 With Institutional Memory</h4>
+                    <p>• Complete evidence in 60 seconds<br>
+                    • Every decision documented<br>
+                    • Immutable audit trail<br>
+                    • Case closed quickly<br>
+                    • <strong>$500K saved</strong></p>
+                </div>
             </div>
         </div>
     </div>
