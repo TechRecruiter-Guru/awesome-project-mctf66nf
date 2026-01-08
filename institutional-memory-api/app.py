@@ -323,7 +323,7 @@ def root():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Institutional Memory API - AI Hiring Compliance Defense</title>
+    <title>Defensible Hiring AI - Make AI Hiring Legally Defensible</title>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -502,8 +502,9 @@ def root():
             <a href="#pricing">Pricing</a>
             <a href="mailto:sales@defensiblehiringai.com">Contact Sales</a>
         </nav>
-        <h1>🛡️ Institutional Memory API</h1>
-        <p>When your AI hiring gets challenged, have complete evidence ready in seconds</p>
+        <h1>🛡️ Defensible Hiring AI</h1>
+        <p style="font-size: 1.3em; margin-bottom: 10px;"><strong>Make Your AI Hiring Legally Defensible in 60 Seconds</strong></p>
+        <p>Our institutional memory API provides instant, complete evidence when you're challenged by EEOC, candidates, or regulators.</p>
         <a href="#demo" class="cta-button">See Live Demo</a>
         <a href="#pricing" class="cta-button" style="background: white; color: #667eea; margin-left: 20px;">View Pricing</a>
     </div>
@@ -814,7 +815,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
 
     <footer style="background: #2c3e50; color: white; padding: 40px 20px; text-align: center;">
         <div style="max-width: 1200px; margin: 0 auto;">
-            <p style="margin-bottom: 20px;">© 2026 Institutional Memory API. All rights reserved.</p>
+            <p style="margin-bottom: 20px;">© 2026 Defensible Hiring AI. All rights reserved.</p>
             <p style="opacity: 0.8;">
                 <a href="/terms-of-service" style="color: #3498db; text-decoration: none; margin: 0 15px;">Terms of Service</a> •
                 <a href="/privacy-policy" style="color: #3498db; text-decoration: none; margin: 0 15px;">Privacy Policy</a> •
@@ -836,7 +837,7 @@ def terms_of_service():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Terms of Service - Institutional Memory API</title>
+    <title>Terms of Service - Defensible Hiring AI</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -1033,7 +1034,7 @@ def privacy_policy():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Privacy Policy - Institutional Memory API</title>
+    <title>Privacy Policy - Defensible Hiring AI</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -1294,7 +1295,7 @@ def faq():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FAQ - Institutional Memory API</title>
+    <title>FAQ - Defensible Hiring AI</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -1617,7 +1618,7 @@ def docs():
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>API Documentation - Institutional Memory API</title>
+    <title>API Documentation - Defensible Hiring AI</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
