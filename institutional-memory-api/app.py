@@ -29,10 +29,20 @@ if database_url:
         database_url = database_url.replace('postgres://', 'postgresql://', 1)
     app.config['SQLALCHEMY_DATABASE_URI'] = database_url
 else:
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///institutional_memory.db'
+    # Use in-memory SQLite for ephemeral environments (Render free tier)
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///:memory:'
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+
+# Initialize database tables on first request
+@app.before_first_request
+def create_tables():
+    try:
+        db.create_all()
+        print("✓ Database tables created")
+    except Exception as e:
+        print(f"Database init error: {e}")
 
 # ==================== MULTI-TENANT SUPPORT ====================
 
