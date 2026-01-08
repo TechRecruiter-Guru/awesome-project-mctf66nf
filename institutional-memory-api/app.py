@@ -475,10 +475,33 @@ def root():
             font-family: monospace;
             margin: 10px 0;
         }
+        nav {
+            background: rgba(0,0,0,0.2);
+            padding: 15px 20px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        nav a {
+            color: white;
+            text-decoration: none;
+            margin: 0 20px;
+            font-weight: 500;
+            font-size: 1.05em;
+        }
+        nav a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <div class="hero">
+        <nav>
+            <a href="/">Home</a>
+            <a href="/docs">API Docs</a>
+            <a href="/faq">FAQ</a>
+            <a href="#pricing">Pricing</a>
+            <a href="mailto:sales@yourdomain.com">Contact Sales</a>
+        </nav>
         <h1>🛡️ Institutional Memory API</h1>
         <p>When your AI hiring gets challenged, have complete evidence ready in seconds</p>
         <a href="#demo" class="cta-button">See Live Demo</a>
@@ -1179,6 +1202,929 @@ def privacy_policy():
     <p style="text-align: center; color: #666;">
         <a href="/" style="color: #667eea;">← Return to Home</a> •
         <a href="/terms-of-service" style="color: #667eea;">Terms of Service</a>
+    </p>
+</body>
+</html>
+    """, 200
+
+
+@app.route('/faq', methods=['GET'])
+def faq():
+    """FAQ page"""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAQ - Institutional Memory API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 20px; }
+        h2 { color: #667eea; margin-top: 40px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .faq-item {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 20px 0;
+            border-left: 4px solid #667eea;
+            border-radius: 5px;
+        }
+        .faq-question {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+        .faq-answer { color: #555; }
+        .category { background: #667eea; color: white; padding: 8px 15px; border-radius: 20px; font-size: 0.9em; display: inline-block; margin-bottom: 10px; }
+        .cta-box {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+            border-radius: 10px;
+            margin: 40px 0;
+        }
+        .cta-box a {
+            color: white;
+            background: #ff6b6b;
+            padding: 12px 30px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin-top: 15px;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <h1>Frequently Asked Questions</h1>
+    <p style="color: #666; margin-bottom: 30px;">Everything you need to know about Institutional Memory API</p>
+
+    <h2>Getting Started</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What is Institutional Memory API?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Institutional Memory API is a compliance-as-a-service platform that helps companies using AI in hiring create immutable audit trails. When you're challenged legally (EEOC complaint, discrimination lawsuit), we provide instant, complete evidence packs showing:
+            <ul>
+                <li>What AI systems you used (with bias audit proof)</li>
+                <li>Every hiring decision made (with timestamps and rationales)</li>
+                <li>All disclosures delivered to candidates</li>
+                <li>Human review documentation</li>
+            </ul>
+            Think of us as the "black box" for AI hiring - if something goes wrong, we have the complete flight recorder.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: How long does integration take?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> 1-2 hours for most ATS platforms. Our webhook-based API requires:
+            <ol>
+                <li>Register your company (get API key) - 2 minutes</li>
+                <li>Add 3-5 webhook calls to your hiring workflow - 30-60 minutes</li>
+                <li>Test with sample data - 15 minutes</li>
+                <li>Generate your first audit pack - 5 minutes</li>
+            </ol>
+            We provide code examples in Python, Node.js, Ruby, and cURL. See our <a href="/docs">API Documentation</a>.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Do I need to change my existing hiring process?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> No! Our API integrates silently into your existing workflow. You continue hiring exactly as you do now - we just record what happened in the background. No UI changes, no workflow disruption.
+        </div>
+    </div>
+
+    <h2>Privacy & Compliance</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Do you store candidate personal information?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> No. We use SHA-256 hashing to convert candidate identifiers (email, ID) into one-way cryptographic hashes. We NEVER store:
+            <ul>
+                <li>❌ Candidate names</li>
+                <li>❌ Resumes or applications</li>
+                <li>❌ Protected class data (race, gender, age)</li>
+                <li>❌ Interview notes or assessments</li>
+            </ul>
+            We only store decision metadata (hired/rejected, timestamp, rationale) linked to a hash. This protects candidate privacy while proving your compliance.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Are you GDPR and CCPA compliant?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Yes. We comply with:
+            <ul>
+                <li>✅ GDPR (EU) - Right to access, deletion, portability</li>
+                <li>✅ CCPA (California) - No data selling, opt-out rights</li>
+                <li>✅ PIPEDA (Canada)</li>
+                <li>✅ 72-hour breach notification (GDPR requirement)</li>
+            </ul>
+            See our <a href="/privacy-policy">Privacy Policy</a> for full details.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: How long do you retain data?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Default: <strong>7 years</strong> from the decision date. This aligns with employment law record-keeping requirements (EEOC, statute of limitations). You can:
+            <ul>
+                <li>Configure custom retention periods (3-10 years)</li>
+                <li>Flag records for "legal hold" during active litigation (prevents deletion)</li>
+                <li>Export all data in JSON format when you cancel</li>
+            </ul>
+            After cancellation: 30-day grace period, then permanent deletion.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Can I delete a hiring decision record?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> No - that's the point! Immutability is what makes our audit trail defensible in court. If you could delete or edit records, they wouldn't be trustworthy evidence.
+
+            <p><strong>Exception:</strong> Legal hold flag prevents automatic deletion during litigation, but you can't retroactively edit past decisions.</p>
+        </div>
+    </div>
+
+    <h2>Pricing & Plans</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: How does pricing work?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> We charge based on the number of hiring decisions you protect per month:
+            <ul>
+                <li><strong>Starter:</strong> $499/month (up to 1,000 decisions)</li>
+                <li><strong>Professional:</strong> $1,499/month (up to 10,000 decisions)</li>
+                <li><strong>Enterprise:</strong> Custom pricing (unlimited decisions)</li>
+            </ul>
+            <strong>Overage:</strong> $0.50 per decision beyond your plan limit.
+            <br><strong>Annual discount:</strong> Save 16% (2 months free) when you pay annually.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What counts as a "decision"?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Each hiring outcome logged counts as one decision:
+            <ul>
+                <li>Candidate rejected after AI screening = 1 decision</li>
+                <li>Candidate hired after interview = 1 decision</li>
+                <li>Candidate withdrew application = 1 decision (if you want to track it)</li>
+            </ul>
+            <strong>What doesn't count:</strong> Logging AI systems, recording disclosures, generating audit packs (unlimited at any tier).
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Do you offer a free trial?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Yes! 14-day free trial, no credit card required. You get full access to all features to test integration and generate sample audit packs.
+        </div>
+    </div>
+
+    <h2>Technical Questions</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What's your uptime SLA?</div>
+        <div class="faq-answer">
+            <strong>A:</strong>
+            <ul>
+                <li><strong>Starter:</strong> 99.0% monthly uptime (~7 hours downtime/month)</li>
+                <li><strong>Professional:</strong> 99.9% monthly uptime (~43 minutes downtime/month)</li>
+                <li><strong>Enterprise:</strong> 99.95% monthly uptime (~22 minutes downtime/month)</li>
+            </ul>
+            We monitor with Pingdom and provide a public status page.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: How do I get support?</div>
+        <div class="faq-answer">
+            <strong>A:</strong>
+            <ul>
+                <li><strong>Starter:</strong> Email support@yourdomain.com (24-hour response)</li>
+                <li><strong>Professional:</strong> Email support (4-hour response, business hours)</li>
+                <li><strong>Enterprise:</strong> Dedicated Slack channel (1-hour response, 24/7)</li>
+            </ul>
+            All plans include access to documentation and API examples.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What if your service goes down during a legal challenge?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> We recommend:
+            <ol>
+                <li><strong>Proactive exports:</strong> Generate audit packs quarterly and save to your own storage</li>
+                <li><strong>Legal hold mode:</strong> When litigation starts, immediately export all relevant data</li>
+                <li><strong>Backup access:</strong> Enterprise customers get direct database backups</li>
+            </ol>
+            Our SLA includes 99.9%+ uptime, but you should never rely on ANY single system for legal defense.
+        </div>
+    </div>
+
+    <h2>Legal & Compliance</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Does using your service guarantee I won't get sued?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> <strong style="color: #d63031;">No.</strong> We provide documentation tools, not legal protection. If you discriminate in hiring, you can still be sued.
+
+            <p><strong>What we DO provide:</strong> When you're challenged, you'll have instant, complete evidence showing:
+            <ul>
+                <li>You used properly audited AI systems</li>
+                <li>You disclosed AI usage to candidates</li>
+                <li>Humans reviewed decisions</li>
+                <li>You had legitimate, documented rationales</li>
+            </ul>
+            This dramatically reduces legal costs and improves your defensibility - but it's not a legal shield. Consult employment lawyers for compliance advice.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What regulations does this help me comply with?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Our service assists with:
+            <ul>
+                <li><strong>NYC Local Law 144:</strong> AI bias audits, candidate disclosures, record-keeping</li>
+                <li><strong>California AB 2013:</strong> Automated decision system documentation</li>
+                <li><strong>EU AI Act:</strong> High-risk AI system transparency requirements</li>
+                <li><strong>EEOC Requirements:</strong> Hiring record retention (Title VII)</li>
+            </ul>
+            See our <a href="/docs">compliance guide</a> for details.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What happens to my data if I cancel?</div>
+        <div class="faq-answer">
+            <strong>A:</strong>
+            <ol>
+                <li><strong>Day 1-30:</strong> Grace period. Data is read-only, you can export everything in JSON.</li>
+                <li><strong>Day 31+:</strong> Data is permanently deleted from all systems (backups included).</li>
+            </ol>
+            <strong>Exception:</strong> You can maintain a paid "Archive Mode" ($99/month) for read-only access if you have ongoing litigation.
+        </div>
+    </div>
+
+    <h2>Use Cases</h2>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Who is this for?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Perfect for:
+            <ul>
+                <li><strong>ATS Vendors:</strong> Offer compliance as a feature to your customers (white-label available)</li>
+                <li><strong>Enterprises:</strong> Hiring 1,000+ candidates/year with AI screening</li>
+                <li><strong>Recruiting Agencies:</strong> Manage compliance for multiple client companies</li>
+                <li><strong>HR Tech Startups:</strong> Add compliance layer without building it yourself</li>
+            </ul>
+            If you use AI in hiring and care about legal risk, this is for you.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Can I white-label this for my ATS customers?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Yes (Enterprise only). We offer:
+            <ul>
+                <li>Custom branding (your logo, domain)</li>
+                <li>Revenue sharing (70/30 split)</li>
+                <li>Dedicated integration support</li>
+                <li>Co-marketing opportunities</li>
+            </ul>
+            Contact sales@yourdomain.com for partnership details.
+        </div>
+    </div>
+
+    <div class="cta-box">
+        <h2 style="color: white; margin-bottom: 15px;">Still Have Questions?</h2>
+        <p>Our team is here to help. Get in touch and we'll respond within 24 hours.</p>
+        <a href="mailto:support@yourdomain.com?subject=FAQ Question">Contact Support</a>
+        <a href="/docs" style="background: white; color: #667eea; margin-left: 15px;">View API Docs</a>
+    </div>
+
+    <hr style="margin: 40px 0;">
+    <p style="text-align: center; color: #666;">
+        <a href="/" style="color: #667eea;">← Return to Home</a> •
+        <a href="/docs" style="color: #667eea;">API Documentation</a> •
+        <a href="/terms-of-service" style="color: #667eea;">Terms</a> •
+        <a href="/privacy-policy" style="color: #667eea;">Privacy</a>
+    </p>
+</body>
+</html>
+    """, 200
+
+
+@app.route('/docs', methods=['GET'])
+def docs():
+    """API Documentation page"""
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Documentation - Institutional Memory API</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.8;
+            color: #333;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        h2 { color: #667eea; margin-top: 50px; border-bottom: 2px solid #e9ecef; padding-bottom: 10px; }
+        h3 { color: #555; margin-top: 30px; }
+        .back-link { display: inline-block; margin-bottom: 20px; color: #667eea; text-decoration: none; }
+        .back-link:hover { text-decoration: underline; }
+        .endpoint {
+            background: #f8f9fa;
+            padding: 25px;
+            margin: 25px 0;
+            border-left: 5px solid #667eea;
+            border-radius: 5px;
+        }
+        .method {
+            background: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9em;
+            display: inline-block;
+            margin-right: 10px;
+        }
+        .method.post { background: #007bff; }
+        .method.get { background: #28a745; }
+        .method.delete { background: #dc3545; }
+        .path {
+            font-family: 'Courier New', monospace;
+            background: #e9ecef;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 1.1em;
+        }
+        .code-block {
+            background: #1e1e1e;
+            color: #00ff00;
+            padding: 20px;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+        }
+        .code-block pre {
+            margin: 0;
+            white-space: pre-wrap;
+        }
+        .param-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        .param-table th,
+        .param-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: left;
+        }
+        .param-table th {
+            background: #f8f9fa;
+            font-weight: 600;
+        }
+        .required {
+            color: #dc3545;
+            font-weight: 600;
+        }
+        .optional {
+            color: #6c757d;
+            font-style: italic;
+        }
+        .auth-box {
+            background: #fff3cd;
+            border-left: 5px solid #ffc107;
+            padding: 20px;
+            margin: 25px 0;
+        }
+        .quickstart {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+        }
+        .quickstart h3 { color: white; }
+    </style>
+</head>
+<body>
+    <a href="/" class="back-link">← Back to Home</a>
+
+    <h1>API Documentation</h1>
+    <p style="color: #666; margin-bottom: 10px;">Complete reference for Institutional Memory API</p>
+    <p style="color: #666; margin-bottom: 30px;">Version 1.0 • Last Updated: January 8, 2026</p>
+
+    <div class="quickstart">
+        <h3>Quick Start (5 minutes)</h3>
+        <ol>
+            <li><strong>Register your company:</strong> POST to /api/company/register → Get your API key</li>
+            <li><strong>Record an AI system:</strong> POST to /api/webhook/ai-system</li>
+            <li><strong>Log a hiring decision:</strong> POST to /api/webhook/hiring-decision</li>
+            <li><strong>Generate audit pack:</strong> GET /api/audit-pack/generate</li>
+        </ol>
+        <p>That's it! You now have institutional memory protection.</p>
+    </div>
+
+    <h2>Authentication</h2>
+
+    <div class="auth-box">
+        <strong>All API requests require authentication via API key.</strong>
+        <br><br>
+        <strong>Header:</strong> <code>X-API-Key: your_api_key_here</code>
+        <br><br>
+        Get your API key by registering your company (see endpoint below).
+    </div>
+
+    <div class="code-block">
+        <pre>
+# Example authenticated request
+curl -X POST https://institutional-memory-api.onrender.com/api/webhook/ai-system \\
+  -H "Content-Type: application/json" \\
+  -H "X-API-Key: im_live_your_api_key_here" \\
+  -d '{"system_name": "HireVue", "vendor": "HireVue Inc"}'
+        </pre>
+    </div>
+
+    <h2>Base URL</h2>
+    <p><strong>Production:</strong> <code>https://institutional-memory-api.onrender.com/api</code></p>
+    <p><strong>All responses:</strong> JSON format</p>
+
+    <h2>Endpoints</h2>
+
+    <!-- Company Registration -->
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/company/register</span>
+        <p style="margin-top: 15px;"><strong>Description:</strong> Register your company and receive an API key. This is your first step.</p>
+
+        <h4>Request Body:</h4>
+        <table class="param-table">
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>company_name</td>
+                <td>string</td>
+                <td><span class="required">Required</span></td>
+                <td>Your company name</td>
+            </tr>
+            <tr>
+                <td>plan_type</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>"free", "starter", "pro", "enterprise" (default: "free")</td>
+            </tr>
+        </table>
+
+        <h4>Example Request:</h4>
+        <div class="code-block">
+            <pre>
+POST /api/company/register
+Content-Type: application/json
+
+{
+  "company_name": "TechCorp Inc",
+  "plan_type": "pro"
+}
+            </pre>
+        </div>
+
+        <h4>Example Response:</h4>
+        <div class="code-block">
+            <pre>
+{
+  "message": "Company registered successfully",
+  "company_id": "comp_a1b2c3d4e5f6",
+  "api_key": "im_live_x7y8z9w1v2u3t4s5r6q7p8o9",
+  "plan_type": "pro"
+}
+
+⚠️ SAVE YOUR API KEY - You'll need it for all subsequent requests!
+            </pre>
+        </div>
+    </div>
+
+    <!-- Record AI System -->
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/webhook/ai-system</span>
+        <p style="margin-top: 15px;"><strong>Description:</strong> Register an AI system you use in hiring. Do this once per AI tool.</p>
+
+        <h4>Authentication:</h4>
+        <p><span class="required">Required:</span> X-API-Key header</p>
+
+        <h4>Request Body:</h4>
+        <table class="param-table">
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>system_name</td>
+                <td>string</td>
+                <td><span class="required">Required</span></td>
+                <td>Name of AI system (e.g., "HireVue Video Screening")</td>
+            </tr>
+            <tr>
+                <td>vendor</td>
+                <td>string</td>
+                <td><span class="required">Required</span></td>
+                <td>Vendor/provider name</td>
+            </tr>
+            <tr>
+                <td>decision_type</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>"screening", "ranking", "recommendation"</td>
+            </tr>
+            <tr>
+                <td>bias_audit_date</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>ISO date of last bias audit (YYYY-MM-DD)</td>
+            </tr>
+        </table>
+
+        <h4>Example Request:</h4>
+        <div class="code-block">
+            <pre>
+POST /api/webhook/ai-system
+X-API-Key: im_live_your_key_here
+Content-Type: application/json
+
+{
+  "system_name": "HireVue Video Screening v3.2",
+  "vendor": "HireVue Inc",
+  "decision_type": "screening",
+  "bias_audit_date": "2024-11-20"
+}
+            </pre>
+        </div>
+
+        <h4>Example Response:</h4>
+        <div class="code-block">
+            <pre>
+{
+  "message": "AI system recorded",
+  "ai_system_id": "ai_sys_f9g8h7i6j5",
+  "recorded_timestamp": "2026-01-08T10:30:00Z"
+}
+            </pre>
+        </div>
+    </div>
+
+    <!-- Record Hiring Decision -->
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/webhook/hiring-decision</span>
+        <p style="margin-top: 15px;"><strong>Description:</strong> Log a hiring decision for a candidate. Call this for every hire/reject.</p>
+
+        <h4>Authentication:</h4>
+        <p><span class="required">Required:</span> X-API-Key header</p>
+
+        <h4>Request Body:</h4>
+        <table class="param-table">
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>candidate_id</td>
+                <td>string</td>
+                <td><span class="required">Required</span></td>
+                <td>Candidate email or ID (will be SHA-256 hashed)</td>
+            </tr>
+            <tr>
+                <td>decision_type</td>
+                <td>string</td>
+                <td><span class="required">Required</span></td>
+                <td>"hired", "rejected", "withdrew", "pending"</td>
+            </tr>
+            <tr>
+                <td>human_involvement</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>"full_review", "partial_review", "ai_only"</td>
+            </tr>
+            <tr>
+                <td>rationale</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>Why this decision was made (critical for legal defense!)</td>
+            </tr>
+        </table>
+
+        <h4>Example Request:</h4>
+        <div class="code-block">
+            <pre>
+POST /api/webhook/hiring-decision
+X-API-Key: im_live_your_key_here
+Content-Type: application/json
+
+{
+  "candidate_id": "john.doe@email.com",
+  "decision_type": "rejected",
+  "human_involvement": "full_review",
+  "rationale": "Required 5 years Python experience, candidate has 2 years"
+}
+            </pre>
+        </div>
+
+        <h4>Example Response:</h4>
+        <div class="code-block">
+            <pre>
+{
+  "message": "Decision logged successfully",
+  "decision_id": "decision_k9l8m7n6o5",
+  "candidate_hash": "5e884898da28047151d0e56f8dc6292773603d0d...",
+  "timestamp": "2026-01-08T14:22:00Z"
+}
+
+Note: Candidate ID is hashed for privacy. Original not stored.
+            </pre>
+        </div>
+    </div>
+
+    <!-- Generate Audit Pack -->
+    <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/api/audit-pack/generate</span>
+        <p style="margin-top: 15px;"><strong>Description:</strong> Generate complete compliance audit pack. Use this when legally challenged.</p>
+
+        <h4>Authentication:</h4>
+        <p><span class="required">Required:</span> X-API-Key header</p>
+
+        <h4>Request Body:</h4>
+        <table class="param-table">
+            <tr>
+                <th>Parameter</th>
+                <th>Type</th>
+                <th>Required</th>
+                <th>Description</th>
+            </tr>
+            <tr>
+                <td>candidate_id</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>Filter for specific candidate (email/ID)</td>
+            </tr>
+            <tr>
+                <td>start_date</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>Filter from date (ISO format)</td>
+            </tr>
+            <tr>
+                <td>end_date</td>
+                <td>string</td>
+                <td><span class="optional">Optional</span></td>
+                <td>Filter to date (ISO format)</td>
+            </tr>
+        </table>
+
+        <h4>Example Request:</h4>
+        <div class="code-block">
+            <pre>
+POST /api/audit-pack/generate
+X-API-Key: im_live_your_key_here
+Content-Type: application/json
+
+{
+  "candidate_id": "sarah.martinez@email.com"
+}
+            </pre>
+        </div>
+
+        <h4>Example Response:</h4>
+        <div class="code-block">
+            <pre>
+{
+  "company": {
+    "company_id": "comp_a1b2c3d4",
+    "company_name": "TechCorp Inc"
+  },
+  "evidence": {
+    "ai_systems": [
+      {
+        "system_name": "HireVue Video Screening v3.2",
+        "vendor": "HireVue Inc",
+        "registered_timestamp": "2025-01-15T09:30:00Z",
+        "bias_audit_date": "2024-11-20",
+        "audit_result": "No disparate impact found"
+      }
+    ],
+    "decisions": [
+      {
+        "decision_type": "rejected",
+        "timestamp": "2025-01-20T14:22:00Z",
+        "human_review": "full_review",
+        "reviewer": "Sarah Chen, Senior Recruiter",
+        "rationale": "Required 5yr Python, candidate has 2yr"
+      }
+    ],
+    "disclosures": [
+      {
+        "disclosure_type": "ai_usage_notice",
+        "delivered_at": "2025-01-10T08:15:00Z",
+        "method": "email",
+        "confirmed": true
+      }
+    ]
+  },
+  "summary": {
+    "total_ai_systems": 1,
+    "total_decisions": 1,
+    "total_disclosures": 1,
+    "compliance_status": "DEFENSIBLE"
+  }
+}
+            </pre>
+        </div>
+    </div>
+
+    <h2>Error Codes</h2>
+    <table class="param-table">
+        <tr>
+            <th>Status Code</th>
+            <th>Meaning</th>
+            <th>Common Causes</th>
+        </tr>
+        <tr>
+            <td>200</td>
+            <td>Success</td>
+            <td>Request completed successfully</td>
+        </tr>
+        <tr>
+            <td>400</td>
+            <td>Bad Request</td>
+            <td>Missing required parameters, invalid format</td>
+        </tr>
+        <tr>
+            <td>401</td>
+            <td>Unauthorized</td>
+            <td>Missing or invalid API key</td>
+        </tr>
+        <tr>
+            <td>403</td>
+            <td>Forbidden</td>
+            <td>API key valid but lacks permission</td>
+        </tr>
+        <tr>
+            <td>429</td>
+            <td>Too Many Requests</td>
+            <td>Rate limit exceeded (1000 req/hour)</td>
+        </tr>
+        <tr>
+            <td>500</td>
+            <td>Server Error</td>
+            <td>Internal error (contact support)</td>
+        </tr>
+    </table>
+
+    <h2>Code Examples</h2>
+
+    <h3>Python</h3>
+    <div class="code-block">
+        <pre>
+import requests
+
+API_KEY = "im_live_your_api_key_here"
+BASE_URL = "https://institutional-memory-api.onrender.com/api"
+HEADERS = {
+    "Content-Type": "application/json",
+    "X-API-Key": API_KEY
+}
+
+# Record AI system
+response = requests.post(
+    f"{BASE_URL}/webhook/ai-system",
+    headers=HEADERS,
+    json={
+        "system_name": "HireVue Video",
+        "vendor": "HireVue Inc"
+    }
+)
+print(response.json())
+
+# Log hiring decision
+response = requests.post(
+    f"{BASE_URL}/webhook/hiring-decision",
+    headers=HEADERS,
+    json={
+        "candidate_id": "candidate@email.com",
+        "decision_type": "rejected",
+        "human_involvement": "full_review",
+        "rationale": "Skills mismatch"
+    }
+)
+print(response.json())
+        </pre>
+    </div>
+
+    <h3>Node.js</h3>
+    <div class="code-block">
+        <pre>
+const axios = require('axios');
+
+const API_KEY = 'im_live_your_api_key_here';
+const BASE_URL = 'https://institutional-memory-api.onrender.com/api';
+const headers = {
+  'Content-Type': 'application/json',
+  'X-API-Key': API_KEY
+};
+
+// Record AI system
+async function recordAISystem() {
+  const response = await axios.post(
+    `${BASE_URL}/webhook/ai-system`,
+    {
+      system_name: 'HireVue Video',
+      vendor: 'HireVue Inc'
+    },
+    { headers }
+  );
+  console.log(response.data);
+}
+
+// Log hiring decision
+async function logDecision() {
+  const response = await axios.post(
+    `${BASE_URL}/webhook/hiring-decision`,
+    {
+      candidate_id: 'candidate@email.com',
+      decision_type: 'rejected',
+      human_involvement: 'full_review',
+      rationale: 'Skills mismatch'
+    },
+    { headers }
+  );
+  console.log(response.data);
+}
+        </pre>
+    </div>
+
+    <h2>Rate Limits</h2>
+    <ul>
+        <li><strong>Default:</strong> 1000 requests per hour per API key</li>
+        <li><strong>Burst:</strong> 100 requests per minute</li>
+        <li><strong>Enterprise:</strong> Custom limits available</li>
+    </ul>
+    <p>When rate limited, you'll receive a 429 error. Retry after 60 seconds.</p>
+
+    <h2>Webhook Integration</h2>
+    <p>Our API uses a <strong>webhook pattern</strong>. Your ATS calls our webhooks when events happen:</p>
+    <ul>
+        <li>New AI tool configured → POST /webhook/ai-system</li>
+        <li>Candidate screened → POST /webhook/hiring-decision</li>
+        <li>Disclosure sent to candidate → POST /webhook/disclosure</li>
+        <li>Legal challenge arrives → POST /audit-pack/generate</li>
+    </ul>
+
+    <h2>Support</h2>
+    <p><strong>Questions?</strong> Contact us at <a href="mailto:support@yourdomain.com">support@yourdomain.com</a></p>
+    <p><strong>Bugs?</strong> Report at <a href="mailto:bugs@yourdomain.com">bugs@yourdomain.com</a></p>
+    <p><strong>Feature Requests?</strong> Email <a href="mailto:product@yourdomain.com">product@yourdomain.com</a></p>
+
+    <hr style="margin: 40px 0;">
+    <p style="text-align: center; color: #666;">
+        <a href="/" style="color: #667eea;">← Return to Home</a> •
+        <a href="/faq" style="color: #667eea;">FAQ</a> •
+        <a href="/terms-of-service" style="color: #667eea;">Terms</a> •
+        <a href="/privacy-policy" style="color: #667eea;">Privacy</a>
     </p>
 </body>
 </html>
