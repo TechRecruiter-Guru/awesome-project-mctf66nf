@@ -500,7 +500,7 @@ def root():
             <a href="/docs">API Docs</a>
             <a href="/faq">FAQ</a>
             <a href="#pricing">Pricing</a>
-            <a href="mailto:sales@defensiblehiringai.com">Contact Sales</a>
+            <a href="/request-demo">Request Access</a>
         </nav>
         <h1>🛡️ Defensible Hiring AI</h1>
         <p style="font-size: 1.3em; margin-bottom: 10px;"><strong>Make Your AI Hiring Legally Defensible in 60 Seconds</strong></p>
@@ -761,7 +761,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
             <div class="pricing-grid">
                 <div class="pricing-card">
                     <h3>Starter</h3>
-                    <div class="price">$499<span style="font-size: 0.4em;">/mo</span></div>
+                    <div class="price">$749<span style="font-size: 0.4em;">/mo</span></div>
                     <p>Perfect for small ATS platforms</p>
                     <ul class="features">
                         <li>Up to 1,000 decisions/month</li>
@@ -769,12 +769,12 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                         <li>Audit pack generation</li>
                         <li>Email support</li>
                     </ul>
-                    <a href="mailto:sales@defensiblehiringai.com?subject=Starter Plan Inquiry" class="cta-button">Get Started</a>
+                    <a href="/request-demo" class="cta-button">Apply for Access</a>
                 </div>
 
                 <div class="pricing-card featured">
                     <h3>Professional</h3>
-                    <div class="price">$1,499<span style="font-size: 0.4em;">/mo</span></div>
+                    <div class="price">$1,999<span style="font-size: 0.4em;">/mo</span></div>
                     <p>Most popular for growing companies</p>
                     <ul class="features">
                         <li>Up to 10,000 decisions/month</li>
@@ -783,7 +783,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                         <li>Compliance dashboard</li>
                         <li>Multi-tenant support</li>
                     </ul>
-                    <a href="mailto:sales@defensiblehiringai.com?subject=Professional Plan Inquiry" class="cta-button">Start Free Trial</a>
+                    <a href="/request-demo" class="cta-button">Apply for Access</a>
                 </div>
 
                 <div class="pricing-card">
@@ -797,19 +797,37 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                         <li>SLA guarantees</li>
                         <li>Revenue sharing available</li>
                     </ul>
-                    <a href="mailto:sales@defensiblehiringai.com?subject=Enterprise Plan Inquiry" class="cta-button">Contact Sales</a>
+                    <a href="/request-demo" class="cta-button">Request Consultation</a>
                 </div>
+            </div>
+
+            <div style="background: #f8f9fa; padding: 40px; border-radius: 15px; margin-top: 40px; text-align: center;">
+                <h3 style="color: #667eea; margin-bottom: 20px;">💳 Payment Options</h3>
+                <p style="margin-bottom: 25px; color: #666;">We accept PayPal and Venmo for your convenience.</p>
+                <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
+                    <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">💵 PayPal</h4>
+                        <p style="font-family: monospace; font-size: 1.1em; color: #333; margin: 0;">CGTPA.JP@GMAIL.COM</p>
+                    </div>
+                    <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
+                        <h4 style="color: #667eea; margin-bottom: 15px;">📱 Venmo</h4>
+                        <p style="margin: 0;"><a href="https://venmo.com/code?user_id=3601436252309200316&created=1767963331" style="color: #667eea; text-decoration: none; font-weight: 600;">@YourVenmo →</a></p>
+                    </div>
+                </div>
+                <p style="margin-top: 25px; font-size: 0.95em; color: #666;">
+                    <em>After approval, we'll send payment instructions and API credentials within 24 hours.</em>
+                </p>
             </div>
         </div>
     </div>
 
     <div class="hero" style="padding: 60px 20px;">
         <h2>🚀 Ready to Protect Your Customers?</h2>
-        <p>Integrate Institutional Memory in 1 hour. Protect every hire from day one.</p>
-        <a href="mailto:sales@defensiblehiringai.com?subject=API Integration Request" class="cta-button" style="font-size: 1.3em; padding: 20px 50px;">Schedule Integration Call</a>
+        <p>We work with qualified companies who need AI hiring compliance NOW.</p>
+        <a href="/request-demo" class="cta-button" style="font-size: 1.3em; padding: 20px 50px;">Request Access</a>
         <p style="margin-top: 30px; opacity: 0.9;">
-            <strong>API Documentation:</strong> <a href="/api/health" style="color: white;">/api/health</a> •
-            Questions? sales@defensiblehiringai.com
+            <strong>Response Time:</strong> 24 hours for qualified requests •
+            <strong>Questions?</strong> See <a href="/faq" style="color: white;">FAQ</a>
         </p>
     </div>
 
@@ -1471,7 +1489,7 @@ def faq():
     <div class="faq-item">
         <div class="faq-question">Q: Do you offer a free trial?</div>
         <div class="faq-answer">
-            <strong>A:</strong> Yes! 14-day free trial, no credit card required. You get full access to all features to test integration and generate sample audit packs.
+            <strong>A:</strong> No. We work with qualified companies who need compliance NOW, not those still exploring. After your demo request is approved, payment is required before receiving API credentials. This ensures we only work with serious clients who value defensible hiring practices.
         </div>
     </div>
 
@@ -1717,8 +1735,8 @@ def docs():
             <strong>For enterprise customers and integration partners only.</strong>
         </p>
 
-        <a href="mailto:sales@defensiblehiringai.com?subject=Documentation Access Request&body=Company:%0D%0ARole:%0D%0AUse Case:%0D%0A" class="cta-button">Request Documentation Access</a>
-        <a href="mailto:sales@defensiblehiringai.com?subject=Schedule Demo" class="cta-button secondary">Schedule Live Demo</a>
+        <a href="/request-demo" class="cta-button">Request Documentation Access</a>
+        <a href="/request-demo" class="cta-button secondary">Request Live Demo</a>
     </div>
 
     <div class="info-box">
@@ -1912,7 +1930,7 @@ def get_started():
             <li>How many candidates do you screen per month?</li>
             <li>What AI tools do you currently use? (ATS, video screening, etc.)</li>
         </ul>
-        <a href="mailto:sales@defensiblehiringai.com?subject=Schedule Demo" class="cta-button">Schedule Your Demo</a>
+        <a href="/request-demo" class="cta-button">Request Demo Access</a>
     </div>
 
     <div class="step">
@@ -2106,7 +2124,7 @@ def get_started():
         <p style="font-size: 1.1em; margin-bottom: 30px;">
             Join companies in NYC, California, and Illinois who are protecting themselves from AI hiring lawsuits.
         </p>
-        <a href="mailto:sales@defensiblehiringai.com?subject=Get Started Request" class="cta-button" style="background: white; color: #667eea; font-size: 1.2em; padding: 18px 40px;">Schedule Your Demo</a>
+        <a href="/request-demo" class="cta-button" style="background: white; color: #667eea; font-size: 1.2em; padding: 18px 40px;">Request Access</a>
         <p style="margin-top: 20px; opacity: 0.9;">
             Questions? Email sales@defensiblehiringai.com or call us at [your phone]
         </p>
@@ -2118,6 +2136,381 @@ def get_started():
         <a href="/faq" style="color: #667eea;">FAQ</a> •
         <a href="/docs" style="color: #667eea;">API Documentation</a>
     </p>
+</body>
+</html>
+    """, 200
+
+
+# ==================== PREMIUM CONTACT FORMS ====================
+# Forms replace mailto: links - positioned as "apply to work with us"
+
+@app.route('/request-demo', methods=['GET', 'POST'])
+def request_demo():
+    """Premium demo request form - positioned as exclusive"""
+    if request.method == 'POST':
+        # Store form submission (simple file storage for now)
+        import json
+        from datetime import datetime
+
+        submission = {
+            'type': 'demo_request',
+            'timestamp': datetime.utcnow().isoformat(),
+            'company_name': request.form.get('company_name'),
+            'contact_name': request.form.get('contact_name'),
+            'email': request.form.get('email'),
+            'role': request.form.get('role'),
+            'company_size': request.form.get('company_size'),
+            'jurisdiction': request.form.get('jurisdiction'),
+            'urgency': request.form.get('urgency'),
+            'message': request.form.get('message')
+        }
+
+        # Save to file (you can replace with email or database later)
+        try:
+            with open('form_submissions.jsonl', 'a') as f:
+                f.write(json.dumps(submission) + '\n')
+        except:
+            pass  # Fail silently if file write fails
+
+        # Return success page
+        return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo Request Received - Defensible Hiring AI</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .success-container {
+            background: white;
+            padding: 60px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+            max-width: 600px;
+            margin: 20px;
+        }
+        .checkmark {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #28a745;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+        .checkmark svg {
+            width: 50px;
+            height: 50px;
+            fill: white;
+        }
+        h1 { color: #667eea; margin-bottom: 20px; }
+        p { font-size: 1.1em; color: #555; margin: 15px 0; }
+        .next-steps {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 10px;
+            margin: 30px 0;
+            text-align: left;
+        }
+        .next-steps h3 { color: #667eea; margin-top: 0; }
+        .next-steps ol { padding-left: 20px; }
+        .next-steps li { margin: 10px 0; }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+    <div class="success-container">
+        <div class="checkmark">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+        </div>
+        <h1>Demo Request Received</h1>
+        <p><strong>Thank you for your interest in Defensible Hiring AI.</strong></p>
+        <p>We've received your demo request and will review it within 24 hours.</p>
+
+        <div class="next-steps">
+            <h3>What Happens Next:</h3>
+            <ol>
+                <li><strong>Review (24 hours):</strong> We'll review your request to ensure we're a good fit for your compliance needs.</li>
+                <li><strong>Calendar Invite:</strong> If qualified, we'll send you a calendar invite with available demo slots.</li>
+                <li><strong>Demo Call (15-30 min):</strong> We'll show you how our API creates instant audit trails and protects your company from AI hiring lawsuits.</li>
+                <li><strong>Implementation Plan:</strong> If you decide to move forward, we'll send technical docs to your engineering team.</li>
+            </ol>
+        </div>
+
+        <p><em>Check your email (including spam folder) for our response.</em></p>
+
+        <a href="/" class="back-link">← Return to Home</a>
+    </div>
+</body>
+</html>
+        """, 200
+
+    # GET request - show form
+    return """
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Request Demo - Defensible Hiring AI</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+        .form-container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .form-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e9ecef;
+        }
+        .form-header h1 {
+            color: #667eea;
+            font-size: 2em;
+            margin-bottom: 10px;
+        }
+        .form-header p {
+            color: #666;
+            font-size: 1.1em;
+        }
+        .qualification-badge {
+            display: inline-block;
+            background: #fff3cd;
+            color: #856404;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin-top: 15px;
+        }
+        .form-section {
+            margin-bottom: 35px;
+        }
+        .form-section h3 {
+            color: #667eea;
+            font-size: 1.1em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .form-section h3::before {
+            content: '';
+            display: inline-block;
+            width: 6px;
+            height: 24px;
+            background: #667eea;
+            margin-right: 12px;
+            border-radius: 3px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+        }
+        label .required {
+            color: #dc3545;
+            font-weight: 700;
+        }
+        input[type="text"],
+        input[type="email"],
+        select,
+        textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        select {
+            cursor: pointer;
+            background: white;
+        }
+        .form-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        .submit-btn {
+            width: 100%;
+            padding: 18px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 25px;
+            color: #667eea;
+            text-decoration: none;
+        }
+        .back-link:hover { text-decoration: underline; }
+        .help-text {
+            font-size: 0.9em;
+            color: #666;
+            margin-top: 6px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <div class="form-header">
+            <h1>Request Demo Access</h1>
+            <p>We work with companies legally required to comply with AI hiring regulations.</p>
+            <div class="qualification-badge">⚡ Response within 24 hours</div>
+        </div>
+
+        <form method="POST" action="/request-demo">
+            <div class="form-section">
+                <h3>Company Information</h3>
+
+                <div class="form-group">
+                    <label>Company Name <span class="required">*</span></label>
+                    <input type="text" name="company_name" required placeholder="Acme Corporation">
+                </div>
+
+                <div class="form-group">
+                    <label>Company Size <span class="required">*</span></label>
+                    <select name="company_size" required>
+                        <option value="">Select company size</option>
+                        <option value="1-50">1-50 employees</option>
+                        <option value="51-200">51-200 employees</option>
+                        <option value="201-1000">201-1,000 employees</option>
+                        <option value="1001-5000">1,001-5,000 employees</option>
+                        <option value="5000+">5,000+ employees</option>
+                    </select>
+                    <div class="help-text">Helps us understand your hiring volume</div>
+                </div>
+
+                <div class="form-group">
+                    <label>Compliance Jurisdiction <span class="required">*</span></label>
+                    <select name="jurisdiction" required>
+                        <option value="">Where do you hire?</option>
+                        <option value="NYC">NYC (Local Law 144 - MANDATORY)</option>
+                        <option value="California">California (AB 2013 - MANDATORY)</option>
+                        <option value="Illinois">Illinois (AI Video Act - MANDATORY)</option>
+                        <option value="Colorado">Colorado (AI Act - Effective Feb 2026)</option>
+                        <option value="Multi-State">Multi-State (Interstate commerce)</option>
+                        <option value="EU">European Union (EU AI Act)</option>
+                        <option value="Other">Other / Not Sure</option>
+                    </select>
+                    <div class="help-text">This determines your compliance urgency</div>
+                </div>
+            </div>
+
+            <div class="form-section">
+                <h3>Your Information</h3>
+
+                <div class="form-group">
+                    <label>Your Name <span class="required">*</span></label>
+                    <input type="text" name="contact_name" required placeholder="Sarah Johnson">
+                </div>
+
+                <div class="form-group">
+                    <label>Your Role <span class="required">*</span></label>
+                    <select name="role" required>
+                        <option value="">Select your role</option>
+                        <option value="Chief People Officer">Chief People Officer / CPO</option>
+                        <option value="VP HR">VP of HR / VP of People</option>
+                        <option value="General Counsel">General Counsel / Chief Legal Officer</option>
+                        <option value="Compliance Officer">Compliance Officer / Risk Manager</option>
+                        <option value="CTO">CTO / VP Engineering</option>
+                        <option value="Talent Acquisition">VP of Talent Acquisition</option>
+                        <option value="Other Executive">Other Executive</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Work Email <span class="required">*</span></label>
+                    <input type="email" name="email" required placeholder="sarah@company.com">
+                    <div class="help-text">We'll send the calendar invite here</div>
+                </div>
+            </div>
+
+            <div class="form-card">
+                <div class="form-group">
+                    <label>Urgency Level <span class="required">*</span></label>
+                    <select name="urgency" required>
+                        <option value="">How urgent is this?</option>
+                        <option value="Critical">🚨 Critical - We're being audited or sued</option>
+                        <option value="High">⚡ High - Need compliance within 30 days</option>
+                        <option value="Medium">📅 Medium - Planning for next quarter</option>
+                        <option value="Low">💡 Low - Exploring options</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Additional Context (Optional)</label>
+                    <textarea name="message" placeholder="Tell us about your current AI hiring tools (ATS, resume screeners, video interviews) or specific compliance concerns..."></textarea>
+                </div>
+            </div>
+
+            <button type="submit" class="submit-btn">Submit Demo Request →</button>
+
+            <a href="/" class="back-link">← Return to Home</a>
+        </form>
+    </div>
 </body>
 </html>
     """, 200
