@@ -35,12 +35,15 @@ We built an API that creates instant audit trails:
 Integration: 1 hour with your ATS
 Cost: $749/month (0.1% of one lawsuit)
 
-Want to see a 5-minute demo of the audit pack?
+If you need this capability, submit a demo request:
+→ defensiblehiringai.com/request-demo
+
+We review requests within 24 hours and prioritize NYC companies (LL144 is already in effect).
 
 Best,
 [Your Name]
 Defensible Hiring AI
-sales@defensiblehiringai.com | defensiblehiringai.com
+defensiblehiringai.com
 
 P.S. First LL144 lawsuit filed last month. Companies with records settled for $0. Those without? Still in court.
 ```
@@ -76,14 +79,17 @@ We built Defensible Hiring AI to solve exactly this:
 
 Cost: $749/month = insurance for every hire.
 
-Want a 10-minute walkthrough of how it works?
+If this is relevant to your compliance needs, submit a demo request here:
+→ defensiblehiringai.com/request-demo
+
+We review all requests within 24 hours and work with qualified companies only.
 
 Best,
 [Your Name]
 Founder, Defensible Hiring AI
-sales@defensiblehiringai.com
+defensiblehiringai.com
 
-P.S. We're offering 50% off the first 3 months to early adopters (this month only).
+P.S. Companies with existing documentation win compliance challenges. Those without? They settle for $500K+.
 ```
 
 ---
@@ -105,12 +111,13 @@ You've probably noticed: NYC Local Law 144 is forcing every employer to prove AI
 
 The integration takes 1 hour. The peace of mind is permanent.
 
-Want to see a quick demo?
+If you're interested in seeing how this works for [Company], apply here:
+→ defensiblehiringai.com/request-demo
 
 Best,
 [Your Name]
 Defensible Hiring AI
-sales@defensiblehiringai.com
+defensiblehiringai.com
 ```
 
 ---
@@ -146,12 +153,15 @@ We built an API that creates instant compliance documentation:
 Integration: 1 hour with your ATS
 Cost: $749/month (less than 1 hour of employment lawyer fees)
 
-Want to see how it works?
+If [Company] needs this, submit a demo request:
+→ defensiblehiringai.com/request-demo
+
+We prioritize California companies (AB 2013 creates private right of action = high lawsuit risk).
 
 Best,
 [Your Name]
 Defensible Hiring AI
-sales@defensiblehiringai.com
+defensiblehiringai.com
 
 P.S. California courts favor plaintiffs in employment cases. Documentation is your only defense.
 ```
@@ -272,19 +282,19 @@ Hi [First Name],
 
 Last email, I promise!
 
-If AI hiring compliance isn't a priority right now, totally understand.
+If AI hiring compliance isn't a priority right now, I understand.
 
-But if you ever need to:
+But when you need to:
 → Prove your AI systems were bias-tested
 → Show the EEOC your hiring records
 → Defend against discrimination claims
 
-We're here: sales@defensiblehiringai.com
+You can submit a demo request here: defensiblehiringai.com/request-demo
 
 Best,
 [Your Name]
 
-P.S. Offering 50% off first 3 months this month only.
+P.S. We're currently working with 12 companies in NYC/CA/IL. Limited capacity for new clients.
 ```
 
 ---
