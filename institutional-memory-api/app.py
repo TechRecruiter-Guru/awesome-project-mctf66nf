@@ -2314,17 +2314,33 @@ def get_started():
 
 @app.route('/sample-audit-pack.pdf', methods=['GET'])
 def sample_audit_pack():
-    """Serve sample audit pack (for now as text, you can convert to PDF later)"""
+    """Serve sample audit pack PDF"""
     from flask import send_file
     import os
 
-    # For now, serve the markdown file - you can convert to PDF later
-    file_path = os.path.join(os.path.dirname(__file__), '..', 'SAMPLE_AUDIT_PACK_CONTENT.md')
+    # Serve the generated PDF
+    pdf_path = os.path.join(os.path.dirname(__file__), 'static', 'sample-audit-pack.pdf')
 
-    if os.path.exists(file_path):
-        return send_file(file_path, as_attachment=True, download_name='Defensible-Hiring-AI-Sample-Audit-Pack.pdf', mimetype='application/pdf')
+    if os.path.exists(pdf_path):
+        return send_file(
+            pdf_path,
+            mimetype='application/pdf',
+            as_attachment=False,  # Display in browser, not force download
+            download_name='Defensible-Hiring-AI-Sample-Audit-Pack.pdf'
+        )
     else:
-        return "Sample audit pack coming soon! Contact sales@defensiblehiringai.com for a preview.", 404
+        # If PDF doesn't exist, generate it on the fly
+        try:
+            from generate_audit_pack import generate_sample_audit_pack_pdf
+            pdf_path = generate_sample_audit_pack_pdf()
+            return send_file(
+                pdf_path,
+                mimetype='application/pdf',
+                as_attachment=False,
+                download_name='Defensible-Hiring-AI-Sample-Audit-Pack.pdf'
+            )
+        except Exception as e:
+            return f"PDF generation error: {str(e)}. Contact support@defensiblehiringai.com", 500
 
 
 @app.route('/request-demo', methods=['GET', 'POST'])
