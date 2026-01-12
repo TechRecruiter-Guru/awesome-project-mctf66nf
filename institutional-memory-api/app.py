@@ -2933,6 +2933,540 @@ def generate_audit_pack(company):
     return jsonify(audit_pack), 200
 
 
+# ==================== DEMO AUDIT PACK GENERATOR ====================
+@app.route('/demo-audit-generator', methods=['GET', 'POST'])
+def demo_audit_generator():
+    """Live demo generator - shows output without revealing technical moat"""
+
+    if request.method == 'POST':
+        # Get form data
+        company_name = request.form.get('company_name', 'Demo Company')
+        ai_tools = request.form.getlist('ai_tools')  # Multiple checkboxes
+        jurisdiction = request.form.get('jurisdiction', 'NYC Local Law 144')
+        num_hires = int(request.form.get('num_hires', 50))
+        industry = request.form.get('industry', 'Technology')
+
+        # Generate custom PDF
+        try:
+            from generate_audit_pack import generate_custom_audit_pack_pdf
+            import time
+
+            # Simulate 60-second generation (actually faster, but we want to show "working")
+            time.sleep(2)  # Small delay for dramatic effect
+
+            pdf_path, pdf_filename = generate_custom_audit_pack_pdf(
+                company_name=company_name,
+                ai_tools=ai_tools,
+                jurisdiction=jurisdiction,
+                num_hires=num_hires,
+                industry=industry
+            )
+
+            # Return success page with download link
+            return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Demo Audit Pack Generated - Defensible Hiring AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }}
+        .container {{
+            max-width: 800px;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }}
+        h1 {{
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 20px;
+        }}
+        .success-icon {{
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounceIn 0.6s;
+        }}
+        @keyframes bounceIn {{
+            0% {{ transform: scale(0); }}
+            50% {{ transform: scale(1.2); }}
+            100% {{ transform: scale(1); }}
+        }}
+        .download-button {{
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 20px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            margin: 30px 0;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }}
+        .download-button:hover {{
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }}
+        .info-box {{
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }}
+        .info-box h3 {{
+            color: #667eea;
+            margin-bottom: 15px;
+        }}
+        .info-box ul {{
+            list-style: none;
+            padding-left: 0;
+        }}
+        .info-box li {{
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }}
+        .info-box li:before {{
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #28a745;
+            font-weight: bold;
+        }}
+        .warning-box {{
+            background: #fff3cd;
+            border-left: 4px solid #ffa500;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: left;
+        }}
+        .cta-box {{
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }}
+        .cta-button {{
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-weight: 600;
+            margin-top: 15px;
+        }}
+        .cta-button:hover {{
+            background: #218838;
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>Your Demo Audit Pack is Ready!</h1>
+        <p style="font-size: 1.2em; color: #666; margin-bottom: 20px;">
+            Generated in 60 seconds for <strong>{company_name}</strong>
+        </p>
+
+        <a href="/static/{pdf_filename}" class="download-button" download>
+            📥 Download Your Demo Audit Pack
+        </a>
+
+        <div class="warning-box">
+            <strong>⚠️ Important:</strong> This is a demo using sample data. In production,
+            all data is automatically captured from your live ATS—no manual entry required.
+        </div>
+
+        <div class="info-box">
+            <h3>What You Just Saw:</h3>
+            <ul>
+                <li>Professional PDF generated in 60 seconds</li>
+                <li>Your company name: {company_name}</li>
+                <li>Your AI tools: {', '.join(ai_tools)}</li>
+                <li>Jurisdiction: {jurisdiction}</li>
+                <li>Sample hiring decisions: {num_hires}</li>
+                <li>Court-ready format with timestamps and documentation</li>
+            </ul>
+        </div>
+
+        <div class="info-box">
+            <h3>What Production Version Does (That You Didn't See):</h3>
+            <ul>
+                <li>Automatically captures REAL hiring decisions from your ATS</li>
+                <li>No manual data entry—fully automated integration</li>
+                <li>Live timestamps for every candidate interaction</li>
+                <li>Cryptographically signed for legal authenticity</li>
+                <li>Generates audit packs instantly when regulators ask</li>
+                <li>Protects your $500K+ lawsuit exposure</li>
+            </ul>
+        </div>
+
+        <div class="cta-box">
+            <h2 style="color: #667eea; margin-bottom: 15px;">Ready for Live Integration?</h2>
+            <p style="margin-bottom: 20px;">
+                Get compliant in 48 hours with our founding customer rate: <strong>$499/mo</strong> (locked for life)
+            </p>
+            <a href="/request-demo" class="cta-button">
+                Request Live Demo & Integration →
+            </a>
+        </div>
+
+        <p style="margin-top: 30px; color: #999;">
+            <a href="/demo-audit-generator" style="color: #667eea;">← Generate Another Demo</a> •
+            <a href="/" style="color: #667eea;">Return Home</a>
+        </p>
+    </div>
+</body>
+</html>
+            """
+
+        except Exception as e:
+            return f"Error generating demo: {str(e)}", 500
+
+    # GET request - show form
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Demo Audit Pack in 60 Seconds - Defensible Hiring AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        .hero-banner h2 {
+            font-size: 1.8em;
+            margin-bottom: 15px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        input[type="text"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        input[type="text"]:focus,
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .checkbox-group {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+        }
+        .checkbox-item {
+            margin-bottom: 12px;
+        }
+        .checkbox-item label {
+            display: inline;
+            font-weight: normal;
+            margin-left: 8px;
+        }
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 18px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1.3em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .info-box h3 {
+            color: #2196F3;
+            margin-bottom: 10px;
+        }
+        .protection-notice {
+            background: #fff3cd;
+            border-left: 4px solid #ffa500;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 30px;
+        }
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        #loading {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #loading.active {
+            display: flex;
+        }
+        .spinner {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #667eea;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .loading-text {
+            color: white;
+            font-size: 1.5em;
+            margin-top: 20px;
+            text-align: center;
+        }
+        .loading-steps {
+            color: #ccc;
+            margin-top: 15px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ Generate Demo Audit Pack</h1>
+        <p class="subtitle">See how we generate court-ready documentation in 60 seconds</p>
+
+        <div class="hero-banner">
+            <h2>Live Demo: No Technical Knowledge Required</h2>
+            <p>Enter your company details below and we'll generate a professional compliance audit pack—just like you'd get with live ATS integration.</p>
+        </div>
+
+        <div class="protection-notice">
+            <strong>🛡️ Moat Protection Built-In:</strong> This demo shows the OUTPUT (PDF) without revealing
+            our technical moat (live ATS integration). Competitors see a PDF generator—not the real-time
+            capture system that makes this valuable.
+        </div>
+
+        <div class="info-box">
+            <h3>What This Demo Shows:</h3>
+            <p>✓ Professional court-ready PDF format<br>
+            ✓ Your company name and details<br>
+            ✓ Selected AI tools documented<br>
+            ✓ Sample hiring decisions with timestamps<br>
+            ✓ Compliance checklist<br><br>
+            <strong>What it DOESN'T show:</strong> How we automatically capture live data from your ATS
+            (that's the secret sauce!)
+            </p>
+        </div>
+
+        <form method="POST" id="demoForm">
+            <div class="form-group">
+                <label for="company_name">Company Name *</label>
+                <input type="text" id="company_name" name="company_name"
+                       placeholder="e.g., Acme Corporation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="industry">Industry *</label>
+                <select id="industry" name="industry" required>
+                    <option value="Technology">Technology</option>
+                    <option value="Finance">Finance</option>
+                    <option value="Healthcare">Healthcare</option>
+                    <option value="Retail">Retail</option>
+                    <option value="Manufacturing">Manufacturing</option>
+                    <option value="Professional Services">Professional Services</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Which AI Tools Do You Use? *</label>
+                <div class="checkbox-group">
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="greenhouse" name="ai_tools" value="greenhouse">
+                        <label for="greenhouse">Greenhouse (ATS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="lever" name="ai_tools" value="lever">
+                        <label for="lever">Lever (ATS)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="workday" name="ai_tools" value="workday">
+                        <label for="workday">Workday Recruiting</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="hirevue" name="ai_tools" value="hirevue">
+                        <label for="hirevue">HireVue (Video Interviews)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="criteria" name="ai_tools" value="criteria">
+                        <label for="criteria">Criteria Corp (Assessments)</label>
+                    </div>
+                    <div class="checkbox-item">
+                        <input type="checkbox" id="bamboohr" name="ai_tools" value="bamboohr">
+                        <label for="bamboohr">BambooHR</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="jurisdiction">Compliance Jurisdiction *</label>
+                <select id="jurisdiction" name="jurisdiction" required>
+                    <option value="NYC Local Law 144">NYC Local Law 144</option>
+                    <option value="California AB 2291">California AB 2291</option>
+                    <option value="Illinois AI Video Act">Illinois AI Video Interview Act</option>
+                    <option value="Multiple Jurisdictions">Multiple Jurisdictions</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="num_hires">Approximate Hires Per Year *</label>
+                <select id="num_hires" name="num_hires" required>
+                    <option value="10">1-25 hires</option>
+                    <option value="50" selected>25-100 hires</option>
+                    <option value="100">100-250 hires</option>
+                    <option value="250">250-500 hires</option>
+                    <option value="500">500+ hires</option>
+                </select>
+            </div>
+
+            <button type="submit" class="submit-button">
+                ⚡ Generate My Demo Audit Pack (60 seconds)
+            </button>
+        </form>
+
+        <div class="back-link">
+            <a href="/">← Return to Home</a> •
+            <a href="/request-demo">Request Live Integration →</a>
+        </div>
+    </div>
+
+    <div id="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Generating Your Court-Ready Audit Pack...</div>
+        <div class="loading-steps">
+            <p id="step1">✓ Registering AI systems...</p>
+            <p id="step2" style="display:none;">✓ Generating sample hiring decisions...</p>
+            <p id="step3" style="display:none;">✓ Running compliance checks...</p>
+            <p id="step4" style="display:none;">✓ Creating professional PDF...</p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            // Show loading overlay
+            document.getElementById('loading').classList.add('active');
+
+            // Animate steps
+            setTimeout(() => {
+                document.getElementById('step2').style.display = 'block';
+            }, 1000);
+            setTimeout(() => {
+                document.getElementById('step3').style.display = 'block';
+            }, 2000);
+            setTimeout(() => {
+                document.getElementById('step4').style.display = 'block';
+            }, 3000);
+        });
+
+        // Require at least one AI tool to be selected
+        document.getElementById('demoForm').addEventListener('submit', function(e) {
+            const checkboxes = document.querySelectorAll('input[name="ai_tools"]:checked');
+            if (checkboxes.length === 0) {
+                e.preventDefault();
+                alert('Please select at least one AI tool you use.');
+                document.getElementById('loading').classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
+    """
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5001))
     app.run(debug=True, host='0.0.0.0', port=port)

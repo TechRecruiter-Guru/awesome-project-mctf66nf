@@ -12,6 +12,213 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from datetime import datetime
 import os
 
+def generate_custom_audit_pack_pdf(company_name, ai_tools, jurisdiction, num_hires, industry="Technology"):
+    """Generate a custom audit pack PDF with user-provided parameters"""
+
+    # Get the directory of this script
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Create unique filename based on timestamp
+    timestamp = datetime.now().strftime("%Y%m%d%H%M%S")
+    pdf_filename = f'demo-audit-pack-{timestamp}.pdf'
+    pdf_path = os.path.join(script_dir, 'static', pdf_filename)
+
+    # Create static directory if it doesn't exist
+    os.makedirs(os.path.join(script_dir, 'static'), exist_ok=True)
+
+    # Create PDF
+    doc = SimpleDocTemplate(pdf_path, pagesize=letter,
+                           rightMargin=72, leftMargin=72,
+                           topMargin=72, bottomMargin=18)
+
+    # Container for the 'Flowable' objects
+    elements = []
+
+    # Define styles
+    styles = getSampleStyleSheet()
+    styles.add(ParagraphStyle(name='CenterHeading', parent=styles['Heading1'], alignment=TA_CENTER))
+    styles.add(ParagraphStyle(name='Subheading', parent=styles['Heading2'], textColor=colors.HexColor('#667eea')))
+
+    # Title Page
+    elements.append(Spacer(1, 1*inch))
+
+    title = Paragraph(f"<b>DEMO AUDIT PACK</b>", styles['CenterHeading'])
+    elements.append(title)
+    elements.append(Spacer(1, 0.2*inch))
+
+    subtitle = Paragraph(f"{jurisdiction} AI Hiring Compliance Documentation", styles['CenterHeading'])
+    elements.append(subtitle)
+    elements.append(Spacer(1, 0.5*inch))
+
+    # Metadata
+    metadata = [
+        ["<b>Generated:</b>", datetime.now().strftime("%B %d, %Y at %H:%M UTC")],
+        ["<b>Company:</b>", company_name],
+        ["<b>Industry:</b>", industry],
+        ["<b>Request ID:</b>", f"demo-{timestamp}"],
+        ["<b>Sample Hires:</b>", str(num_hires)],
+        ["<b>Jurisdiction:</b>", jurisdiction],
+        ["<b>Status:</b>", "<b>⚠️ DEMO - Sample Data Only</b>"]
+    ]
+
+    metadata_table = Table(metadata, colWidths=[2*inch, 4*inch])
+    metadata_table.setStyle(TableStyle([
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 0), (-1, -1), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, -1), 8),
+    ]))
+    elements.append(metadata_table)
+    elements.append(Spacer(1, 0.5*inch))
+
+    # Important Demo Notice
+    demo_notice = """<b>⚠️ IMPORTANT: THIS IS A DEMO USING SAMPLE DATA</b><br/><br/>
+    This audit pack demonstrates the format and completeness of documentation you would receive
+    with live ATS integration. In production, all data is automatically captured from your
+    actual hiring decisions—no manual entry required.<br/><br/>
+    <b>Production version captures:</b> Real timestamps, actual candidate IDs, live hiring decisions,
+    automated disclosures, and real-time compliance tracking."""
+
+    elements.append(Paragraph(demo_notice, styles['BodyText']))
+    elements.append(Spacer(1, 0.3*inch))
+
+    # AI Systems Registered
+    ai_systems_heading = Paragraph("<b>📊 AI SYSTEMS IN USE</b>", styles['Subheading'])
+    elements.append(ai_systems_heading)
+    elements.append(Spacer(1, 0.2*inch))
+
+    # Build AI systems table from selected tools
+    ai_systems_data = [['<b>AI System</b>', '<b>Vendor</b>', '<b>Type</b>', '<b>Status</b>']]
+
+    tool_mapping = {
+        'greenhouse': ['Resume Screening AI', 'Greenhouse', 'Resume Screening', '✅ Active'],
+        'hirevue': ['Video Interview Analyzer', 'HireVue', 'Video Analysis', '✅ Active'],
+        'criteria': ['Skill Assessment Engine', 'Criteria Corp', 'Assessment', '✅ Active'],
+        'lever': ['ATS Integration', 'Lever', 'Full ATS', '✅ Active'],
+        'workday': ['Recruiting Platform', 'Workday', 'Full ATS', '✅ Active'],
+        'bamboohr': ['Applicant Tracking', 'BambooHR', 'ATS', '✅ Active'],
+    }
+
+    for tool in ai_tools:
+        if tool.lower() in tool_mapping:
+            ai_systems_data.append(tool_mapping[tool.lower()])
+
+    ai_systems_table = Table(ai_systems_data, colWidths=[2*inch, 1.5*inch, 1.5*inch, 1.5*inch])
+    ai_systems_table.setStyle(TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.HexColor('#667eea')),
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),
+        ('ALIGN', (0, 0), (-1, -1), 'LEFT'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),
+        ('FONTSIZE', (0, 0), (-1, 0), 10),
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),
+        ('BACKGROUND', (0, 1), (-1, -1), colors.beige),
+        ('GRID', (0, 0), (-1, -1), 1, colors.grey),
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),
+        ('FONTSIZE', (0, 1), (-1, -1), 9),
+    ]))
+    elements.append(ai_systems_table)
+    elements.append(Spacer(1, 0.3*inch))
+
+    # Sample decisions based on num_hires
+    decisions_heading = Paragraph("<b>📋 SAMPLE HIRING DECISIONS</b>", styles['Subheading'])
+    elements.append(decisions_heading)
+    elements.append(Spacer(1, 0.1*inch))
+
+    decisions_subtitle = Paragraph(f"<i>Sample - Showing 5 of {num_hires} hiring decisions</i>", styles['BodyText'])
+    elements.append(decisions_subtitle)
+    elements.append(Spacer(1, 0.2*inch))
+
+    # Generate sample decisions
+    sample_decisions = [
+        {
+            'role': 'Software Engineer',
+            'decision': 'REJECTED',
+            'ai_score': 42,
+            'human_override': 'NO',
+            'justification': 'Resume did not meet minimum qualifications'
+        },
+        {
+            'role': 'Product Manager',
+            'decision': 'ADVANCED',
+            'ai_score': 78,
+            'human_override': 'NO',
+            'justification': 'Strong interview performance'
+        },
+        {
+            'role': 'Data Analyst',
+            'decision': 'HIRED',
+            'ai_score': 89,
+            'human_override': 'NO',
+            'justification': 'Excellent technical fit'
+        },
+        {
+            'role': 'UX Designer',
+            'decision': 'ADVANCED',
+            'ai_score': 58,
+            'human_override': 'YES',
+            'justification': 'Portfolio demonstrated exceptional skills despite low AI score due to resume formatting'
+        },
+        {
+            'role': 'Sales Representative',
+            'decision': 'REJECTED',
+            'ai_score': 51,
+            'human_override': 'NO',
+            'justification': 'Confirmed via human review'
+        }
+    ]
+
+    for i, decision in enumerate(sample_decisions[:5], 1):
+        decision_text = f"""<b>Decision #{i}</b><br/>
+        <b>Timestamp:</b> {datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")}<br/>
+        <b>Candidate ID:</b> hash-demo{i:04d} (SHA-256 hashed)<br/>
+        <b>Role:</b> {decision['role']}<br/>
+        <b>Decision:</b> {decision['decision']}<br/>
+        <b>AI Score:</b> {decision['ai_score']}/100<br/>
+        <b>Human Override:</b> {decision['human_override']}<br/>
+        <b>Disclosure Sent:</b> ✅ Yes<br/>
+        <b>Final Justification:</b> {decision['justification']}"""
+        elements.append(Paragraph(decision_text, styles['BodyText']))
+        elements.append(Spacer(1, 0.25*inch))
+
+    elements.append(PageBreak())
+
+    # Compliance Checklist
+    checklist_heading = Paragraph("<b>✅ COMPLIANCE CHECKLIST</b>", styles['Subheading'])
+    elements.append(checklist_heading)
+    elements.append(Spacer(1, 0.2*inch))
+
+    checklist = f"""☑ All AI systems registered with deployment dates<br/>
+    ☑ Bias audits conducted annually by third party<br/>
+    ☑ Bias audit results posted publicly<br/>
+    ☑ Disclosures sent to 100% of candidates ({num_hires}/{num_hires})<br/>
+    ☑ All hiring decisions logged with timestamps<br/>
+    ☑ Human decision maker identified for each decision<br/>
+    ☑ AI recommendations vs. final decisions tracked<br/>
+    ☑ Human override justifications documented<br/>
+    ☑ 7-year retention policy implemented<br/>
+    ☑ Data security (AES-256 encryption)<br/>
+    ☑ Audit pack generation capability functional<br/><br/>
+    <b>DEMO STATUS: ✅ Format matches production court-ready documentation</b>"""
+    elements.append(Paragraph(checklist, styles['BodyText']))
+
+    elements.append(Spacer(1, 0.5*inch))
+
+    # Footer
+    footer = Paragraph(f"<i>Generated in 60 seconds for {company_name}</i>",
+                      ParagraphStyle(name='Footer', parent=styles['BodyText'], alignment=TA_CENTER))
+    elements.append(footer)
+    elements.append(Spacer(1, 0.2*inch))
+
+    cta = Paragraph("<b>Ready for live integration?</b><br/>Visit defensiblehiringai.com/request-demo",
+                   ParagraphStyle(name='CTA', parent=styles['BodyText'], alignment=TA_CENTER))
+    elements.append(cta)
+
+    # Build PDF
+    doc.build(elements)
+
+    return pdf_path, pdf_filename
+
+
 def generate_sample_audit_pack_pdf():
     """Generate a professional sample audit pack PDF"""
 
