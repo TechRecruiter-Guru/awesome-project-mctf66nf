@@ -962,7 +962,7 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
 
             <div style="display: flex; gap: 40px; align-items: center; flex-wrap: wrap;">
                 <div style="flex-shrink: 0;">
-                    <img src="/static/john-polhill.png" alt="John Polhill III - Founder" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 4px solid white;">
+                    <img src="/static/john-polhill-founder.jpg" alt="John Polhill III - Founder" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 4px solid white;">
                 </div>
 
                 <div style="flex: 1; min-width: 300px;">
