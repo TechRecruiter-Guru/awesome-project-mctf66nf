@@ -12,8 +12,12 @@ from reportlab.lib.enums import TA_CENTER, TA_LEFT
 from datetime import datetime
 import os
 
-def generate_custom_audit_pack_pdf(company_name, ai_tools, jurisdiction, num_hires, industry="Technology"):
-    """Generate a custom audit pack PDF with user-provided parameters"""
+def generate_custom_audit_pack_pdf(company_name, ai_tools, jurisdiction, num_hires, industry="Technology", candidate_name=""):
+    """Generate a custom audit pack PDF with user-provided parameters
+
+    If candidate_name is provided, generates a CANDIDATE-SPECIFIC JOURNEY document
+    showing complete forensic trail for lawsuit defense
+    """
 
     # Get the directory of this script
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -38,28 +42,59 @@ def generate_custom_audit_pack_pdf(company_name, ai_tools, jurisdiction, num_hir
     styles = getSampleStyleSheet()
     styles.add(ParagraphStyle(name='CenterHeading', parent=styles['Heading1'], alignment=TA_CENTER))
     styles.add(ParagraphStyle(name='Subheading', parent=styles['Heading2'], textColor=colors.HexColor('#667eea')))
+    styles.add(ParagraphStyle(name='Alert', parent=styles['Heading3'], textColor=colors.HexColor('#dc3545')))
 
     # Title Page
-    elements.append(Spacer(1, 1*inch))
+    elements.append(Spacer(1, 0.5*inch))
 
-    title = Paragraph(f"<b>DEMO AUDIT PACK</b>", styles['CenterHeading'])
-    elements.append(title)
-    elements.append(Spacer(1, 0.2*inch))
+    # If candidate-specific, make it look like forensic investigation
+    if candidate_name:
+        title = Paragraph(f"<b>CANDIDATE JOURNEY FORENSIC REPORT</b>", styles['CenterHeading'])
+        elements.append(title)
+        elements.append(Spacer(1, 0.1*inch))
 
-    subtitle = Paragraph(f"{jurisdiction} AI Hiring Compliance Documentation", styles['CenterHeading'])
-    elements.append(subtitle)
+        alert = Paragraph(f"<b>🔍 LEGAL DEFENSE DOCUMENTATION</b>", styles['Alert'])
+        elements.append(alert)
+        elements.append(Spacer(1, 0.2*inch))
+
+        subtitle = Paragraph(f"Complete Hiring Journey for: <b>{candidate_name}</b>", styles['CenterHeading'])
+        elements.append(subtitle)
+    else:
+        title = Paragraph(f"<b>DEMO AUDIT PACK</b>", styles['CenterHeading'])
+        elements.append(title)
+        elements.append(Spacer(1, 0.2*inch))
+
+        subtitle = Paragraph(f"{jurisdiction} AI Hiring Compliance Documentation", styles['CenterHeading'])
+        elements.append(subtitle)
+
     elements.append(Spacer(1, 0.5*inch))
 
     # Metadata
-    metadata = [
-        ["<b>Generated:</b>", datetime.now().strftime("%B %d, %Y at %H:%M UTC")],
-        ["<b>Company:</b>", company_name],
-        ["<b>Industry:</b>", industry],
-        ["<b>Request ID:</b>", f"demo-{timestamp}"],
-        ["<b>Sample Hires:</b>", str(num_hires)],
-        ["<b>Jurisdiction:</b>", jurisdiction],
-        ["<b>Status:</b>", "<b>⚠️ DEMO - Sample Data Only</b>"]
-    ]
+    if candidate_name:
+        # Candidate-specific metadata
+        import hashlib
+        candidate_hash = hashlib.sha256(candidate_name.encode()).hexdigest()[:16]
+
+        metadata = [
+            ["<b>Generated:</b>", datetime.now().strftime("%B %d, %Y at %H:%M:%S UTC")],
+            ["<b>Company:</b>", company_name],
+            ["<b>Candidate Name:</b>", candidate_name],
+            ["<b>Candidate ID (Hashed):</b>", f"hash-{candidate_hash}"],
+            ["<b>Report Type:</b>", "Forensic Journey Investigation"],
+            ["<b>Jurisdiction:</b>", jurisdiction],
+            ["<b>Status:</b>", "<b>⚠️ DEMO - Sample Data for Illustration</b>"]
+        ]
+    else:
+        # Company-wide metadata
+        metadata = [
+            ["<b>Generated:</b>", datetime.now().strftime("%B %d, %Y at %H:%M UTC")],
+            ["<b>Company:</b>", company_name],
+            ["<b>Industry:</b>", industry],
+            ["<b>Request ID:</b>", f"demo-{timestamp}"],
+            ["<b>Sample Hires:</b>", str(num_hires)],
+            ["<b>Jurisdiction:</b>", jurisdiction],
+            ["<b>Status:</b>", "<b>⚠️ DEMO - Sample Data Only</b>"]
+        ]
 
     metadata_table = Table(metadata, colWidths=[2*inch, 4*inch])
     metadata_table.setStyle(TableStyle([
@@ -119,93 +154,227 @@ def generate_custom_audit_pack_pdf(company_name, ai_tools, jurisdiction, num_hir
     elements.append(ai_systems_table)
     elements.append(Spacer(1, 0.3*inch))
 
-    # Sample decisions based on num_hires
-    decisions_heading = Paragraph("<b>📋 SAMPLE HIRING DECISIONS</b>", styles['Subheading'])
-    elements.append(decisions_heading)
-    elements.append(Spacer(1, 0.1*inch))
-
-    decisions_subtitle = Paragraph(f"<i>Sample - Showing 5 of {num_hires} hiring decisions</i>", styles['BodyText'])
-    elements.append(decisions_subtitle)
-    elements.append(Spacer(1, 0.2*inch))
-
-    # Generate sample decisions
-    sample_decisions = [
-        {
-            'role': 'Software Engineer',
-            'decision': 'REJECTED',
-            'ai_score': 42,
-            'human_override': 'NO',
-            'justification': 'Resume did not meet minimum qualifications'
-        },
-        {
-            'role': 'Product Manager',
-            'decision': 'ADVANCED',
-            'ai_score': 78,
-            'human_override': 'NO',
-            'justification': 'Strong interview performance'
-        },
-        {
-            'role': 'Data Analyst',
-            'decision': 'HIRED',
-            'ai_score': 89,
-            'human_override': 'NO',
-            'justification': 'Excellent technical fit'
-        },
-        {
-            'role': 'UX Designer',
-            'decision': 'ADVANCED',
-            'ai_score': 58,
-            'human_override': 'YES',
-            'justification': 'Portfolio demonstrated exceptional skills despite low AI score due to resume formatting'
-        },
-        {
-            'role': 'Sales Representative',
-            'decision': 'REJECTED',
-            'ai_score': 51,
-            'human_override': 'NO',
-            'justification': 'Confirmed via human review'
-        }
-    ]
-
-    for i, decision in enumerate(sample_decisions[:5], 1):
-        decision_text = f"""<b>Decision #{i}</b><br/>
-        <b>Timestamp:</b> {datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")}<br/>
-        <b>Candidate ID:</b> hash-demo{i:04d} (SHA-256 hashed)<br/>
-        <b>Role:</b> {decision['role']}<br/>
-        <b>Decision:</b> {decision['decision']}<br/>
-        <b>AI Score:</b> {decision['ai_score']}/100<br/>
-        <b>Human Override:</b> {decision['human_override']}<br/>
-        <b>Disclosure Sent:</b> ✅ Yes<br/>
-        <b>Final Justification:</b> {decision['justification']}"""
-        elements.append(Paragraph(decision_text, styles['BodyText']))
-        elements.append(Spacer(1, 0.25*inch))
-
     elements.append(PageBreak())
 
-    # Compliance Checklist
-    checklist_heading = Paragraph("<b>✅ COMPLIANCE CHECKLIST</b>", styles['Subheading'])
-    elements.append(checklist_heading)
-    elements.append(Spacer(1, 0.2*inch))
+    # If candidate-specific, show COMPLETE CANDIDATE JOURNEY
+    if candidate_name:
+        journey_heading = Paragraph(f"<b>🔍 COMPLETE HIRING JOURNEY: {candidate_name}</b>", styles['Subheading'])
+        elements.append(journey_heading)
+        elements.append(Spacer(1, 0.2*inch))
 
-    checklist = f"""☑ All AI systems registered with deployment dates<br/>
-    ☑ Bias audits conducted annually by third party<br/>
-    ☑ Bias audit results posted publicly<br/>
-    ☑ Disclosures sent to 100% of candidates ({num_hires}/{num_hires})<br/>
-    ☑ All hiring decisions logged with timestamps<br/>
-    ☑ Human decision maker identified for each decision<br/>
-    ☑ AI recommendations vs. final decisions tracked<br/>
-    ☑ Human override justifications documented<br/>
-    ☑ 7-year retention policy implemented<br/>
-    ☑ Data security (AES-256 encryption)<br/>
-    ☑ Audit pack generation capability functional<br/><br/>
-    <b>DEMO STATUS: ✅ Format matches production court-ready documentation</b>"""
-    elements.append(Paragraph(checklist, styles['BodyText']))
+        lawsuit_context = Paragraph("""<b>LAWSUIT DEFENSE CONTEXT:</b><br/>
+        This report provides a complete forensic trail of all interactions with this candidate,
+        from initial application through final decision. All timestamps are immutable and
+        cryptographically signed for court admissibility.""", styles['BodyText'])
+        elements.append(lawsuit_context)
+        elements.append(Spacer(1, 0.3*inch))
 
-    elements.append(Spacer(1, 0.5*inch))
+        # TIMELINE OF EVENTS
+        timeline_heading = Paragraph("<b>⏱️ CHRONOLOGICAL TIMELINE</b>", styles['Subheading'])
+        elements.append(timeline_heading)
+        elements.append(Spacer(1, 0.2*inch))
+
+        # Event 1: Application Received
+        event1 = f"""<b>📥 EVENT 1: Application Received</b><br/>
+        <b>Timestamp:</b> March 15, 2025 at 09:23:41 UTC<br/>
+        <b>Source:</b> Company career page (careers.{company_name.lower().replace(' ', '')}.com)<br/>
+        <b>Position Applied:</b> Software Engineer - Backend<br/>
+        <b>Resume Received:</b> ✅ Yes (PDF, 2.3 MB)<br/>
+        <b>Cover Letter:</b> ✅ Yes<br/>
+        <b>Application ID:</b> APP-20250315-0923<br/>
+        <b>Status:</b> Application received and entered into ATS"""
+        elements.append(Paragraph(event1, styles['BodyText']))
+        elements.append(Spacer(1, 0.25*inch))
+
+        # Event 2: AI Disclosure Sent
+        event2 = f"""<b>📧 EVENT 2: AI Disclosure Sent (COMPLIANCE REQUIREMENT)</b><br/>
+        <b>Timestamp:</b> March 15, 2025 at 09:24:18 UTC (37 seconds after application)<br/>
+        <b>Disclosure Type:</b> {jurisdiction} Automated AI Hiring Notice<br/>
+        <b>Sent To:</b> {candidate_name} (email on file)<br/>
+        <b>Email Delivered:</b> ✅ Confirmed delivery<br/>
+        <b>Disclosure Content:</b> "We use AI systems (Greenhouse Resume Screening, HireVue Video Analysis)
+        to evaluate candidates. For more info, visit [compliance page]"<br/>
+        <b>Evidence:</b> Email delivery receipt preserved<br/>
+        <b>Compliance Status:</b> ✅ COMPLIANT - Disclosure sent BEFORE AI screening"""
+        elements.append(Paragraph(event2, styles['BodyText']))
+        elements.append(Spacer(1, 0.25*inch))
+
+        # Event 3: AI Resume Screening
+        ai_tools_used = ', '.join([tool_mapping[t.lower()][1] for t in ai_tools if t.lower() in tool_mapping][:2]) or "Greenhouse"
+        event3 = f"""<b>🤖 EVENT 3: AI Resume Screening</b><br/>
+        <b>Timestamp:</b> March 15, 2025 at 10:15:33 UTC<br/>
+        <b>AI System:</b> {ai_tools_used} Resume Screening AI<br/>
+        <b>AI Analysis Duration:</b> 2.3 seconds<br/>
+        <b>AI Score:</b> 42/100 (Below hiring threshold of 65)<br/>
+        <b>AI Recommendation:</b> REJECT<br/>
+        <b>Scoring Factors:</b><br/>
+        &nbsp;&nbsp;• Years of experience: 18/25 (3 years vs. 5 years required)<br/>
+        &nbsp;&nbsp;• Technical skills match: 12/25 (missing Python, Kubernetes)<br/>
+        &nbsp;&nbsp;• Education: 8/25 (no CS degree)<br/>
+        &nbsp;&nbsp;• Resume formatting: 4/25 (non-standard format)<br/>
+        <b>AI Bias Audit Status:</b> Last audited December 1, 2025 (PASS)"""
+        elements.append(Paragraph(event3, styles['BodyText']))
+        elements.append(Spacer(1, 0.25*inch))
+
+        # Event 4: Human Review
+        event4 = f"""<b>👤 EVENT 4: Human Review</b><br/>
+        <b>Timestamp:</b> March 15, 2025 at 14:42:19 UTC<br/>
+        <b>Reviewer:</b> John Smith, Engineering Manager<br/>
+        <b>Review Duration:</b> 3 minutes 47 seconds<br/>
+        <b>Human Decision:</b> AGREE WITH AI REJECTION<br/>
+        <b>Override AI?:</b> ❌ NO<br/>
+        <b>Justification:</b> "Reviewed resume manually. Candidate has only 3 years experience in
+        unrelated technologies (Java/C++). Our stack is Python/Go. No cloud experience (AWS/GCP).
+        Resume shows no relevant backend system design experience. AI score accurate - not qualified
+        for senior backend role."<br/>
+        <b>Final Decision:</b> REJECTED"""
+        elements.append(Paragraph(event4, styles['BodyText']))
+        elements.append(Spacer(1, 0.25*inch))
+
+        # Event 5: Rejection Email Sent
+        event5 = f"""<b>📧 EVENT 5: Rejection Notification Sent</b><br/>
+        <b>Timestamp:</b> March 15, 2025 at 14:45:01 UTC<br/>
+        <b>Notification Type:</b> Standard rejection email<br/>
+        <b>Sent To:</b> {candidate_name}<br/>
+        <b>Email Delivered:</b> ✅ Confirmed delivery<br/>
+        <b>Message:</b> "Thank you for applying. After careful review, we've decided to move
+        forward with other candidates whose experience more closely matches our requirements."<br/>
+        <b>Right to Request Explanation:</b> ✅ Included in email"""
+        elements.append(Paragraph(event5, styles['BodyText']))
+        elements.append(Spacer(1, 0.3*inch))
+
+        elements.append(PageBreak())
+
+        # LEGAL DEFENSE SUMMARY
+        defense_heading = Paragraph("<b>⚖️ LEGAL DEFENSE SUMMARY</b>", styles['Subheading'])
+        elements.append(defense_heading)
+        elements.append(Spacer(1, 0.2*inch))
+
+        defense_summary = f"""<b>DEFENSIBILITY ASSESSMENT: ✅ FULLY DEFENSIBLE</b><br/><br/>
+
+        <b>1. Disclosure Compliance:</b><br/>
+        ✅ AI disclosure sent 37 seconds after application received<br/>
+        ✅ Disclosure sent BEFORE AI screening (compliance requirement)<br/>
+        ✅ Email delivery confirmed with receipt<br/><br/>
+
+        <b>2. AI System Compliance:</b><br/>
+        ✅ {ai_tools_used} undergoes annual bias audit (last: Dec 1, 2025)<br/>
+        ✅ Bias audit results posted publicly<br/>
+        ✅ All protected categories tested (race, gender, age): PASS<br/><br/>
+
+        <b>3. Human Oversight:</b><br/>
+        ✅ Human reviewer (John Smith) reviewed AI recommendation<br/>
+        ✅ Human provided independent justification<br/>
+        ✅ Decision based on legitimate job qualifications (experience, skills)<br/>
+        ✅ No protected characteristics mentioned in justification<br/><br/>
+
+        <b>4. Documentation Quality:</b><br/>
+        ✅ Complete timestamp trail (5 events logged)<br/>
+        ✅ All decisions justified with business reasons<br/>
+        ✅ Immutable audit trail preserved for 7 years<br/>
+        ✅ Cryptographically signed for authenticity<br/><br/>
+
+        <b>LAWSUIT RISK: LOW</b><br/>
+        If {candidate_name} files lawsuit, this documentation demonstrates:<br/>
+        • Full compliance with {jurisdiction}<br/>
+        • Legitimate, non-discriminatory hiring decision<br/>
+        • Proper AI disclosure and bias testing<br/>
+        • Human oversight with documented reasoning"""
+
+        elements.append(Paragraph(defense_summary, styles['BodyText']))
+
+    else:
+        # Original company-wide sample decisions
+        decisions_heading = Paragraph("<b>📋 SAMPLE HIRING DECISIONS</b>", styles['Subheading'])
+        elements.append(decisions_heading)
+        elements.append(Spacer(1, 0.1*inch))
+
+        decisions_subtitle = Paragraph(f"<i>Sample - Showing 5 of {num_hires} hiring decisions</i>", styles['BodyText'])
+        elements.append(decisions_subtitle)
+        elements.append(Spacer(1, 0.2*inch))
+
+        # Generate sample decisions (company-wide view)
+        sample_decisions = [
+            {
+                'role': 'Software Engineer',
+                'decision': 'REJECTED',
+                'ai_score': 42,
+                'human_override': 'NO',
+                'justification': 'Resume did not meet minimum qualifications'
+            },
+            {
+                'role': 'Product Manager',
+                'decision': 'ADVANCED',
+                'ai_score': 78,
+                'human_override': 'NO',
+                'justification': 'Strong interview performance'
+            },
+            {
+                'role': 'Data Analyst',
+                'decision': 'HIRED',
+                'ai_score': 89,
+                'human_override': 'NO',
+                'justification': 'Excellent technical fit'
+            },
+            {
+                'role': 'UX Designer',
+                'decision': 'ADVANCED',
+                'ai_score': 58,
+                'human_override': 'YES',
+                'justification': 'Portfolio demonstrated exceptional skills despite low AI score due to resume formatting'
+            },
+            {
+                'role': 'Sales Representative',
+                'decision': 'REJECTED',
+                'ai_score': 51,
+                'human_override': 'NO',
+                'justification': 'Confirmed via human review'
+            }
+        ]
+
+        for i, decision in enumerate(sample_decisions[:5], 1):
+            decision_text = f"""<b>Decision #{i}</b><br/>
+            <b>Timestamp:</b> {datetime.now().strftime("%Y-%m-%d %H:%M:%S UTC")}<br/>
+            <b>Candidate ID:</b> hash-demo{i:04d} (SHA-256 hashed)<br/>
+            <b>Role:</b> {decision['role']}<br/>
+            <b>Decision:</b> {decision['decision']}<br/>
+            <b>AI Score:</b> {decision['ai_score']}/100<br/>
+            <b>Human Override:</b> {decision['human_override']}<br/>
+            <b>Disclosure Sent:</b> ✅ Yes<br/>
+            <b>Final Justification:</b> {decision['justification']}"""
+            elements.append(Paragraph(decision_text, styles['BodyText']))
+            elements.append(Spacer(1, 0.25*inch))
+
+        elements.append(PageBreak())
+
+        # Compliance Checklist (company-wide)
+        checklist_heading = Paragraph("<b>✅ COMPLIANCE CHECKLIST</b>", styles['Subheading'])
+        elements.append(checklist_heading)
+        elements.append(Spacer(1, 0.2*inch))
+
+        checklist = f"""☑ All AI systems registered with deployment dates<br/>
+        ☑ Bias audits conducted annually by third party<br/>
+        ☑ Bias audit results posted publicly<br/>
+        ☑ Disclosures sent to 100% of candidates ({num_hires}/{num_hires})<br/>
+        ☑ All hiring decisions logged with timestamps<br/>
+        ☑ Human decision maker identified for each decision<br/>
+        ☑ AI recommendations vs. final decisions tracked<br/>
+        ☑ Human override justifications documented<br/>
+        ☑ 7-year retention policy implemented<br/>
+        ☑ Data security (AES-256 encryption)<br/>
+        ☑ Audit pack generation capability functional<br/><br/>
+        <b>DEMO STATUS: ✅ Format matches production court-ready documentation</b>"""
+        elements.append(Paragraph(checklist, styles['BodyText']))
+
+        elements.append(Spacer(1, 0.5*inch))
 
     # Footer
-    footer = Paragraph(f"<i>Generated in 60 seconds for {company_name}</i>",
-                      ParagraphStyle(name='Footer', parent=styles['BodyText'], alignment=TA_CENTER))
+    if candidate_name:
+        footer = Paragraph(f"<i>Forensic report generated in 60 seconds for {company_name} - Candidate: {candidate_name}</i>",
+                          ParagraphStyle(name='Footer', parent=styles['BodyText'], alignment=TA_CENTER))
+    else:
+        footer = Paragraph(f"<i>Generated in 60 seconds for {company_name}</i>",
+                          ParagraphStyle(name='Footer', parent=styles['BodyText'], alignment=TA_CENTER))
     elements.append(footer)
     elements.append(Spacer(1, 0.2*inch))
 

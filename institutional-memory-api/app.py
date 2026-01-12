@@ -2945,6 +2945,7 @@ def demo_audit_generator():
         jurisdiction = request.form.get('jurisdiction', 'NYC Local Law 144')
         num_hires = int(request.form.get('num_hires', 50))
         industry = request.form.get('industry', 'Technology')
+        candidate_name = request.form.get('candidate_name', '').strip()  # NEW: Candidate search
 
         # Generate custom PDF
         try:
@@ -2959,7 +2960,8 @@ def demo_audit_generator():
                 ai_tools=ai_tools,
                 jurisdiction=jurisdiction,
                 num_hires=num_hires,
-                industry=industry
+                industry=industry,
+                candidate_name=candidate_name  # NEW: Pass candidate name
             )
 
             # Return success page with download link
@@ -3080,13 +3082,13 @@ def demo_audit_generator():
 <body>
     <div class="container">
         <div class="success-icon">✅</div>
-        <h1>Your Demo Audit Pack is Ready!</h1>
+        {'<h1>🔍 Candidate Journey Report Ready!</h1>' if candidate_name else '<h1>Your Demo Audit Pack is Ready!</h1>'}
         <p style="font-size: 1.2em; color: #666; margin-bottom: 20px;">
-            Generated in 60 seconds for <strong>{company_name}</strong>
+            {'<strong>LAWSUIT DEFENSE MODE:</strong> Complete forensic trail for ' + candidate_name if candidate_name else 'Generated in 60 seconds for <strong>' + company_name + '</strong>'}
         </p>
 
         <a href="/static/{pdf_filename}" class="download-button" download>
-            📥 Download Your Demo Audit Pack
+            {'📥 Download Forensic Journey Report' if candidate_name else '📥 Download Your Demo Audit Pack'}
         </a>
 
         <div class="warning-box">
@@ -3095,13 +3097,15 @@ def demo_audit_generator():
         </div>
 
         <div class="info-box">
-            <h3>What You Just Saw:</h3>
+            {'<h3>🔍 What You Just Saw (Lawsuit Defense):</h3>' if candidate_name else '<h3>What You Just Saw:</h3>'}
             <ul>
-                <li>Professional PDF generated in 60 seconds</li>
-                <li>Your company name: {company_name}</li>
-                <li>Your AI tools: {', '.join(ai_tools)}</li>
-                <li>Jurisdiction: {jurisdiction}</li>
-                <li>Sample hiring decisions: {num_hires}</li>
+                {'<li><strong>CANDIDATE-SPECIFIC JOURNEY</strong> for lawsuit defense</li>' if candidate_name else ''}
+                {'<li>Candidate searched: ' + candidate_name + '</li>' if candidate_name else ''}
+                {'<li>Complete timeline: Application → AI Screening → Human Review → Decision</li>' if candidate_name else '<li>Professional PDF generated in 60 seconds</li>'}
+                {'<li>AI disclosure proof (sent 37 seconds after application)</li>' if candidate_name else '<li>Your company name: ' + company_name + '</li>'}
+                {'<li>Human decision justification documented</li>' if candidate_name else '<li>Your AI tools: ' + ', '.join(ai_tools) + '</li>'}
+                {'<li>Legal defensibility assessment included</li>' if candidate_name else '<li>Jurisdiction: ' + jurisdiction + '</li>'}
+                {'<li>Forensic-grade documentation for court</li>' if candidate_name else '<li>Sample hiring decisions: ' + str(num_hires) + '</li>'}
                 <li>Court-ready format with timestamps and documentation</li>
             </ul>
         </div>
@@ -3320,23 +3324,24 @@ def demo_audit_generator():
         <p class="subtitle">See how we generate court-ready documentation in 60 seconds</p>
 
         <div class="hero-banner">
-            <h2>Live Demo: No Technical Knowledge Required</h2>
-            <p>Enter your company details below and we'll generate a professional compliance audit pack—just like you'd get with live ATS integration.</p>
+            <h2>🔍 Two Demo Modes Available:</h2>
+            <p><strong>1. Company-Wide Audit:</strong> See overview of all hiring decisions<br>
+            <strong>2. Candidate Journey (LAWSUIT DEFENSE):</strong> Search specific candidate who sued you</p>
         </div>
 
-        <div class="protection-notice">
-            <strong>🛡️ Moat Protection Built-In:</strong> This demo shows the OUTPUT (PDF) without revealing
-            our technical moat (live ATS integration). Competitors see a PDF generator—not the real-time
-            capture system that makes this valuable.
+        <div style="background: #fff3cd; border-left: 4px solid #ffa500; padding: 20px; margin-bottom: 30px; border-radius: 5px;">
+            <strong>💡 PRO TIP:</strong> To see the <strong>LAWSUIT DEFENSE</strong> feature, enter a candidate name below.
+            This shows the complete forensic journey for that specific person—exactly what you need when someone sues you!
         </div>
 
         <div class="info-box">
             <h3>What This Demo Shows:</h3>
-            <p>✓ Professional court-ready PDF format<br>
-            ✓ Your company name and details<br>
-            ✓ Selected AI tools documented<br>
-            ✓ Sample hiring decisions with timestamps<br>
-            ✓ Compliance checklist<br><br>
+            <p><strong>Without candidate name:</strong> Company-wide compliance overview<br>
+            <strong>With candidate name:</strong> Complete hiring journey for lawsuit defense<br><br>
+            ✓ Professional court-ready PDF format<br>
+            ✓ Forensic timeline of all candidate interactions<br>
+            ✓ AI disclosure proof and bias audit results<br>
+            ✓ Human decision justifications<br><br>
             <strong>What it DOESN'T show:</strong> How we automatically capture live data from your ATS
             (that's the secret sauce!)
             </p>
@@ -3347,6 +3352,16 @@ def demo_audit_generator():
                 <label for="company_name">Company Name *</label>
                 <input type="text" id="company_name" name="company_name"
                        placeholder="e.g., Acme Corporation" required>
+            </div>
+
+            <div class="form-group">
+                <label for="candidate_name">🔍 Candidate Name (Optional - For Lawsuit Defense Demo)</label>
+                <input type="text" id="candidate_name" name="candidate_name"
+                       placeholder="e.g., Jane Doe (Leave blank for company-wide view)">
+                <small style="color: #666; display: block; margin-top: 5px;">
+                    💡 <strong>Enter a name to see LAWSUIT DEFENSE mode:</strong> Shows complete hiring journey
+                    for this candidate—exactly what you need when they sue you!
+                </small>
             </div>
 
             <div class="form-group">
