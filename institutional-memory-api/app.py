@@ -962,30 +962,25 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
 
             <div style="display: flex; gap: 40px; align-items: center; flex-wrap: wrap;">
                 <div style="flex-shrink: 0;">
-                    <div style="width: 150px; height: 150px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 3em; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                        ?
-                    </div>
-                    <p style="text-align: center; margin-top: 15px; color: #666; font-size: 0.9em;">
-                        <em>(Add your photo here)</em>
-                    </p>
+                    <img src="/static/john-polhill.png" alt="John Polhill III - Founder" style="width: 150px; height: 150px; border-radius: 50%; object-fit: cover; box-shadow: 0 10px 30px rgba(0,0,0,0.2); border: 4px solid white;">
                 </div>
 
                 <div style="flex: 1; min-width: 300px;">
-                    <h3 style="color: #333; font-size: 1.5em; margin-bottom: 15px;">Hi, I'm [Your Name]</h3>
+                    <h3 style="color: #333; font-size: 1.5em; margin-bottom: 15px;">Hi, I'm John Polhill III</h3>
                     <p style="color: #555; font-size: 1.05em; line-height: 1.8; margin-bottom: 15px;">
-                        I built Defensible Hiring AI after seeing too many companies get blindsided by AI hiring lawsuits they couldn't defend—simply because they didn't keep records.
+                        I built Defensible Hiring AI after seeing too many recent companies get blindsided by AI hiring lawsuits they couldn't defend—simply because they didn't keep records.
                     </p>
                     <p style="color: #555; font-size: 1.05em; line-height: 1.8; margin-bottom: 15px;">
-                        With background in <strong>[employment law / HR tech / compliance software]</strong>, I knew there had to be a better way than manual spreadsheets and hoping for the best.
+                        With a <strong>30-year background in ATS Development across Startup, SMB, and Fortune 10 companies' recruitment roles</strong>, I've personally been subjected to lawsuits and investigations due to companies' inability to track a candidate's journey through the hiring process. I saw firsthand how lack of documentation turns minor complaints into six-figure legal battles.
                     </p>
                     <p style="color: #555; font-size: 1.05em; line-height: 1.8; margin-bottom: 25px;">
-                        Now we're protecting companies in NYC, California, and Illinois from $500K+ lawsuits with <strong>instant, automated audit trails</strong>.
+                        Now we're protecting companies in NYC, California, and Illinois from $500K+ lawsuits with <strong>instant, automated audit trails</strong> that document every hiring decision from day one.
                     </p>
-                    <div style="display: flex; gap: 20px; align-items: center;">
-                        <a href="https://linkedin.com/in/yourprofile" style="display: inline-flex; align-items: center; gap: 8px; color: #667eea; text-decoration: none; font-weight: 600; padding: 10px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
+                    <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
+                        <a href="https://www.linkedin.com/in/john-polhill-iii/" style="display: inline-flex; align-items: center; gap: 8px; color: #667eea; text-decoration: none; font-weight: 600; padding: 10px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                             <span style="font-size: 1.2em;">in</span> Connect on LinkedIn
                         </a>
-                        <a href="mailto:founder@defensiblehiringai.com" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                        <a href="mailto:CGTPA.JP@GMAIL.COM" style="color: #667eea; text-decoration: none; font-weight: 600;">
                             📧 Email Me Directly
                         </a>
                     </div>
