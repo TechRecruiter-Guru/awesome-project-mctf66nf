@@ -26,3 +26,9 @@ out/
 *.sqlite
 *.sqlite3
 instance/
+
+# Generated demo PDFs (created on-the-fly, don't commit)
+institutional-memory-api/static/demo-audit-pack-*.pdf
+
+# Form submissions
+form_submissions.jsonl
