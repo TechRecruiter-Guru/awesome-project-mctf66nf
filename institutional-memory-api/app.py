@@ -837,53 +837,58 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
         </div>
     </div>
 
-    <!-- TESTIMONIALS / SOCIAL PROOF -->
+    <!-- EARLY ACCESS / FOUNDING CUSTOMER OFFER -->
     <div style="background: #f8f9fa; padding: 80px 20px;">
         <div class="container">
-            <h2 style="text-align: center; color: #667eea; font-size: 2em; margin-bottom: 50px;">What Our Clients Say</h2>
+            <h2 style="text-align: center; color: #667eea; font-size: 2em; margin-bottom: 20px;">🚀 Launching Q1 2026 - Early Access Available</h2>
+            <p style="text-align: center; font-size: 1.2em; color: #666; max-width: 700px; margin: 0 auto 50px;">
+                We're accepting <strong>10 founding customers</strong> who need immediate compliance. Get priority implementation + lifetime founding rate.
+            </p>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto;">
+                <!-- Why Early Access -->
                 <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #667eea;">
-                    <div style="color: #ffa500; font-size: 1.5em; margin-bottom: 15px;">★★★★★</div>
-                    <p style="font-size: 1.05em; color: #555; line-height: 1.7; margin-bottom: 20px;">
-                        "We got audited by NYC DCWP last month. Defensible Hiring AI's audit pack saved us from <strong>$180,000 in fines</strong>. The auditor actually said 'This is the best documentation I've seen.'"
+                    <h3 style="color: #667eea; margin-bottom: 15px;">⚡ Immediate Implementation</h3>
+                    <p style="font-size: 1.05em; color: #555; line-height: 1.7;">
+                        As a founding customer, you get <strong>white-glove implementation</strong>. We'll personally integrate with your ATS and generate your first audit pack within 48 hours.
                     </p>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3em;">SJ</div>
-                        <div>
-                            <div style="font-weight: 600; color: #333;">Sarah Johnson</div>
-                            <div style="font-size: 0.9em; color: #666;">VP of People, Tech Startup (450 employees)</div>
-                        </div>
-                    </div>
                 </div>
 
-                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #667eea;">
-                    <div style="color: #ffa500; font-size: 1.5em; margin-bottom: 15px;">★★★★★</div>
-                    <p style="font-size: 1.05em; color: #555; line-height: 1.7; margin-bottom: 20px;">
-                        "Integration took <strong>47 minutes</strong> with our Greenhouse instance. Now every hiring decision is automatically documented. Our General Counsel sleeps better at night."
+                <!-- Founding Rate -->
+                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #ffa500;">
+                    <h3 style="color: #ffa500; margin-bottom: 15px;">💰 Founding Customer Rate</h3>
+                    <p style="font-size: 1.05em; color: #555; line-height: 1.7;">
+                        <strong>$499/month</strong> locked in for life (normally $749). First 10 customers only. Once we hit 10, price goes to standard rate.
                     </p>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3em;">MC</div>
-                        <div>
-                            <div style="font-weight: 600; color: #333;">Michael Chen</div>
-                            <div style="font-size: 0.9em; color: #666;">CTO, Fintech Company (800 employees)</div>
-                        </div>
-                    </div>
+                    <p style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.95em;">
+                        <strong>⏰ 3 spots remaining</strong> as of January 2026
+                    </p>
                 </div>
 
-                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #667eea;">
-                    <div style="color: #ffa500; font-size: 1.5em; margin-bottom: 15px;">★★★★★</div>
-                    <p style="font-size: 1.05em; color: #555; line-height: 1.7; margin-bottom: 20px;">
-                        "California AB 2013 was terrifying until we implemented this. <strong>$1,999/mo is nothing</strong> compared to the lawsuit risk we eliminated. ROI paid for itself in month one."
-                    </p>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div style="width: 50px; height: 50px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 1.3em;">LR</div>
-                        <div>
-                            <div style="font-weight: 600; color: #333;">Lisa Rodriguez</div>
-                            <div style="font-size: 0.9em; color: #666;">General Counsel, Healthcare Tech (1,200 employees)</div>
-                        </div>
-                    </div>
+                <!-- What You Get -->
+                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #28a745;">
+                    <h3 style="color: #28a745; margin-bottom: 15px;">🛡️ What You Get</h3>
+                    <ul style="font-size: 1.05em; color: #555; line-height: 1.9; padding-left: 20px;">
+                        <li>Priority implementation (48 hours)</li>
+                        <li>Personal integration support</li>
+                        <li>Direct founder access (my email)</li>
+                        <li>Lifetime founding rate ($499 forever)</li>
+                        <li>Shape product roadmap with feedback</li>
+                    </ul>
                 </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px;">
+                <h3 style="color: white; font-size: 1.8em; margin-bottom: 20px;">🚨 Accepting Founding Customers NOW</h3>
+                <p style="color: white; font-size: 1.1em; margin-bottom: 30px; opacity: 0.95;">
+                    Are you being audited? Facing compliance deadline? Need documentation immediately?
+                </p>
+                <a href="/request-demo" style="display: inline-block; background: white; color: #667eea; padding: 18px 50px; font-size: 1.2em; font-weight: 600; text-decoration: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    Claim Your Founding Rate →
+                </a>
+                <p style="color: white; margin-top: 20px; font-size: 0.95em; opacity: 0.9;">
+                    <strong>Limited to 10 companies.</strong> Response within 24 hours for urgent requests.
+                </p>
             </div>
         </div>
     </div>
