@@ -106,13 +106,15 @@ def generate_custom_audit_pack_pdf(company_name, ai_tools, jurisdiction, num_hir
     elements.append(metadata_table)
     elements.append(Spacer(1, 0.5*inch))
 
-    # Important Demo Notice
+    # Important Demo Notice - EMPHASIZE ZERO-STORAGE
     demo_notice = """<b>⚠️ IMPORTANT: THIS IS A DEMO USING SAMPLE DATA</b><br/><br/>
     This audit pack demonstrates the format and completeness of documentation you would receive
     with live ATS integration. In production, all data is automatically captured from your
     actual hiring decisions—no manual entry required.<br/><br/>
-    <b>Production version captures:</b> Real timestamps, actual candidate IDs, live hiring decisions,
-    automated disclosures, and real-time compliance tracking."""
+    <b>🔒 ZERO-STORAGE ARCHITECTURE:</b> We DON'T store your candidate data (names, resumes, emails).
+    We only store audit trail events (timestamps, decisions, justifications). When you request an
+    audit pack, we fetch candidate data from YOUR ATS in real-time, generate this report, and
+    immediately delete it. <b>Your data stays in YOUR ATS where it belongs.</b>"""
 
     elements.append(Paragraph(demo_notice, styles['BodyText']))
     elements.append(Spacer(1, 0.3*inch))

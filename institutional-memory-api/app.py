@@ -628,6 +628,117 @@ def root():
         </div>
     </div>
 
+    <!-- ZERO-STORAGE ARCHITECTURE (KILLER DIFFERENTIATOR) -->
+    <div style="background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%); padding: 80px 20px;">
+        <div class="container" style="max-width: 1000px;">
+            <h2 style="text-align: center; color: #1b5e20; font-size: 2.5em; margin-bottom: 20px;">
+                🔒 Zero-Storage Architecture
+            </h2>
+            <p style="text-align: center; font-size: 1.3em; color: #2e7d32; margin-bottom: 50px;">
+                <strong>We DON'T store your candidate data. Ever.</strong>
+            </p>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 50px;">
+                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: #dc3545; margin-bottom: 20px; font-size: 1.5em;">❌ What We DON'T Store:</h3>
+                    <ul style="list-style: none; padding-left: 0; color: #555; font-size: 1.05em;">
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ❌ Candidate names, emails, phone numbers
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ❌ Resumes or CVs (no PDFs, no text)
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ❌ Interview recordings or transcripts
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ❌ Compensation data or salary history
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ❌ Internal notes or comments
+                        </li>
+                        <li style="padding: 12px 0;">
+                            ❌ Any personally identifiable information (PII)
+                        </li>
+                    </ul>
+                    <p style="margin-top: 25px; padding: 20px; background: #fff3cd; border-radius: 10px; color: #333;">
+                        <strong>If we get hacked:</strong> Attackers get timestamps and hashes. No resumes. No names. Nothing they can sell.
+                    </p>
+                </div>
+
+                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                    <h3 style="color: #28a745; margin-bottom: 20px; font-size: 1.5em;">✅ What We DO Store:</h3>
+                    <ul style="list-style: none; padding-left: 0; color: #555; font-size: 1.05em;">
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ✅ Timestamps (when events happened)
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ✅ Hashed IDs (anonymized candidate references)
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ✅ AI scores & recommendations
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ✅ Decision justifications & business reasons
+                        </li>
+                        <li style="padding: 12px 0; border-bottom: 1px solid #eee;">
+                            ✅ Compliance proof (disclosures sent, audits passed)
+                        </li>
+                        <li style="padding: 12px 0;">
+                            ✅ Links to YOUR ATS (where the real data lives)
+                        </li>
+                    </ul>
+                    <p style="margin-top: 25px; padding: 20px; background: #d4edda; border-radius: 10px; color: #155724;">
+                        <strong>Your candidate data stays in YOUR ATS.</strong> We just prove what you did with it.
+                    </p>
+                </div>
+            </div>
+
+            <div style="background: white; padding: 40px; border-radius: 15px; box-shadow: 0 10px 30px rgba(0,0,0,0.1);">
+                <h3 style="text-align: center; color: #667eea; margin-bottom: 30px; font-size: 1.8em;">
+                    🎯 How It Works
+                </h3>
+                <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 200px; text-align: center;">
+                        <div style="background: #667eea; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 1.5em; font-weight: bold;">1</div>
+                        <p style="color: #555; font-weight: 600;">Candidate applies to your ATS</p>
+                    </div>
+                    <div style="color: #667eea; font-size: 2em;">→</div>
+                    <div style="flex: 1; min-width: 200px; text-align: center;">
+                        <div style="background: #667eea; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 1.5em; font-weight: bold;">2</div>
+                        <p style="color: #555; font-weight: 600;">We log the EVENT (not the data)</p>
+                    </div>
+                    <div style="color: #667eea; font-size: 2em;">→</div>
+                    <div style="flex: 1; min-width: 200px; text-align: center;">
+                        <div style="background: #667eea; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 1.5em; font-weight: bold;">3</div>
+                        <p style="color: #555; font-weight: 600;">When sued, we fetch from YOUR ATS</p>
+                    </div>
+                    <div style="color: #667eea; font-size: 2em;">→</div>
+                    <div style="flex: 1; min-width: 200px; text-align: center;">
+                        <div style="background: #28a745; color: white; width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 1.5em; font-weight: bold;">4</div>
+                        <p style="color: #555; font-weight: 600;">Generate audit pack & delete</p>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 35px; font-size: 1.1em; color: #555;">
+                    <strong>Result:</strong> You get full lawsuit protection with <span style="color: #28a745; font-weight: 700;">ZERO data breach risk</span> from our side.
+                </p>
+            </div>
+
+            <div style="margin-top: 50px; text-align: center; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
+                <h3 style="font-size: 1.8em; margin-bottom: 20px;">💡 Why This Matters</h3>
+                <p style="font-size: 1.2em; margin-bottom: 30px; line-height: 1.8;">
+                    <strong>Other compliance tools?</strong> They copy your resumes, videos, and notes into their database.<br>
+                    <strong>If THEY get hacked</strong>, YOUR candidates' data is exposed.<br><br>
+                    <strong>We're different.</strong> We only store audit trails—<strong>timestamps, decisions, justifications.</strong><br>
+                    The actual candidate data? <strong>It stays in YOUR ATS where it belongs.</strong>
+                </p>
+                <a href="/demo-audit-generator" style="display: inline-block; background: white; color: #667eea; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.2em; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    See It In Action (60 seconds) →
+                </a>
+            </div>
+        </div>
+    </div>
+
     <div class="demo-section" id="demo">
         <div class="container">
             <h2>🎬 What Your Customers Get: The Complete Evidence Pack</h2>
@@ -1731,6 +1842,106 @@ def faq():
                 <li><strong>EEOC Requirements:</strong> Hiring record retention (Title VII)</li>
             </ul>
             See our <a href="/docs">compliance guide</a> for details.
+        </div>
+    </div>
+
+    <h2>🔒 Data Security & Privacy (ZERO-STORAGE)</h2>
+
+    <div class="faq-item" style="background: #e8f5e9; border-left: 4px solid #28a745;">
+        <div class="faq-question" style="color: #1b5e20; font-weight: 700;">Q: What candidate data do you store?</div>
+        <div class="faq-answer">
+            <strong>A: We DON'T store candidate data.</strong> This is our biggest differentiator.
+            <br><br>
+            <strong>❌ What we DON'T store:</strong>
+            <ul>
+                <li>Candidate names, emails, phone numbers</li>
+                <li>Resumes or CVs (no PDFs, no text)</li>
+                <li>Interview recordings or transcripts</li>
+                <li>Compensation data or salary history</li>
+                <li>Any personally identifiable information (PII)</li>
+            </ul>
+            <strong>✅ What we DO store:</strong>
+            <ul>
+                <li>Timestamps (when events happened)</li>
+                <li>Hashed candidate IDs (anonymized references)</li>
+                <li>AI scores & recommendations</li>
+                <li>Decision justifications</li>
+                <li>Links to records in YOUR ATS</li>
+            </ul>
+            <strong>Your candidate data stays in YOUR ATS (Greenhouse, Lever, Workday).</strong> We just prove what you did with it.
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: How do you generate audit packs without storing candidate data?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> When you request an audit pack, we:
+            <ol>
+                <li><strong>Fetch</strong> candidate data from YOUR ATS in real-time (using your API credentials)</li>
+                <li><strong>Combine</strong> it with our audit trail (timestamps, decisions, justifications)</li>
+                <li><strong>Generate</strong> the PDF report</li>
+                <li><strong>DELETE</strong> the fetched candidate data immediately</li>
+            </ol>
+            We store cryptographic references (hashes and ATS record IDs), not the actual data. This means:
+            <ul>
+                <li>✅ You get full lawsuit protection</li>
+                <li>✅ With ZERO data breach risk from our side</li>
+                <li>✅ Your ATS remains the single source of truth</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: What happens if you get hacked?</div>
+        <div class="faq-answer">
+            <strong>A:</strong> Even if someone breaches our system, they get:
+            <ul>
+                <li>Timestamps (when things happened)</li>
+                <li>Hashed candidate IDs (irreversible SHA-256 hashes)</li>
+                <li>Decision justifications ("Candidate lacked required Python experience")</li>
+                <li>AI scores (42/100, 78/100, etc.)</li>
+            </ul>
+            <strong>They DON'T get:</strong>
+            <ul>
+                <li>❌ Candidate names or contact info</li>
+                <li>❌ Resumes or personal documents</li>
+                <li>❌ Any data they can sell on the dark web</li>
+            </ul>
+            <p style="background: #d4edda; padding: 15px; border-radius: 8px; margin-top: 15px;">
+                <strong>Compare to other tools:</strong> If they get hacked, your full candidate database is exposed.
+                With us, your candidate data is SAFE in your ATS.
+            </p>
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Can your employees see our candidate data?</div>
+        <div class="faq-answer">
+            <strong>A: No.</strong> Our employees cannot see your candidate data by default.
+            <br><br>
+            <strong>Normal operations:</strong> Zero access. We don't store it.
+            <br><br>
+            <strong>Support requests:</strong> If you open a ticket asking us to debug an issue, we can request temporary access WITH YOUR WRITTEN APPROVAL. You get an email: "Support Engineer John Smith is requesting access to your tenant for 24 hours to debug [issue]." You click "Approve" or "Deny."
+            <br><br>
+            <strong>Every access is logged:</strong> If anyone at our company accesses your data, it's logged with timestamp, user ID, reason, and duration. You can review these logs anytime.
+            <br><br>
+            This is standard SOC 2 compliance (same model AWS, Google, Salesforce use).
+        </div>
+    </div>
+
+    <div class="faq-item">
+        <div class="faq-question">Q: Is this GDPR compliant?</div>
+        <div class="faq-answer">
+            <strong>A: Yes.</strong> Since we don't store candidate PII, we're not a "data controller" under GDPR—your ATS is.
+            <br><br>
+            <strong>GDPR benefits of zero-storage:</strong>
+            <ul>
+                <li><strong>Data deletion requests:</strong> Handled by your ATS, not us</li>
+                <li><strong>Data portability:</strong> Your ATS provides candidate data exports</li>
+                <li><strong>Breach notification:</strong> We notify within 72 hours, but no PII at risk</li>
+                <li><strong>Data minimization:</strong> We only store what's needed for audit trails</li>
+            </ul>
+            We can provide a Data Processing Agreement (DPA) for audit trail data we DO store.
         </div>
     </div>
 
@@ -3108,6 +3319,22 @@ def demo_audit_generator():
                 {'<li>Forensic-grade documentation for court</li>' if candidate_name else '<li>Sample hiring decisions: ' + str(num_hires) + '</li>'}
                 <li>Court-ready format with timestamps and documentation</li>
             </ul>
+        </div>
+
+        <div class="info-box" style="background: #e8f5e9; border-left: 4px solid #28a745;">
+            <h3 style="color: #1b5e20;">🔒 Zero-Storage Architecture (THE DIFFERENTIATOR):</h3>
+            <p style="margin-bottom: 15px;"><strong>We DON'T store your candidate data:</strong></p>
+            <ul>
+                <li>❌ No candidate names, emails, or resumes stored in our database</li>
+                <li>❌ No interview videos or compensation data</li>
+                <li>✅ Only audit trail events (timestamps, decisions, justifications)</li>
+                <li>✅ Your data stays in YOUR ATS (Greenhouse, Lever, Workday)</li>
+                <li>✅ We fetch it in real-time when you need an audit pack, then DELETE it</li>
+            </ul>
+            <p style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px; color: #1b5e20; font-weight: 600;">
+                <strong>If we get hacked:</strong> Attackers get timestamps and hashes—NO resumes, NO names, NO PII.
+                Your candidate data is SAFE in your ATS.
+            </p>
         </div>
 
         <div class="info-box">
