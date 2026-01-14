@@ -2153,7 +2153,7 @@ def docs():
             <li>Partner documentation portal</li>
         </ul>
         <p style="margin-top: 20px;">
-            <a href="mailto:partnerships@defensiblehiringai.com?subject=Partnership Inquiry" style="color: #667eea; font-weight: 600;">Contact our partnerships team →</a>
+            <a href="/partnership-inquiry" style="color: #667eea; font-weight: 600;">Contact our partnerships team →</a>
         </p>
     </div>
 
@@ -3704,6 +3704,310 @@ def demo_audit_generator():
             }
         });
     </script>
+</body>
+</html>
+    """
+
+
+# ==================== PARTNERSHIP INQUIRY FORM ====================
+@app.route('/partnership-inquiry', methods=['GET', 'POST'])
+def partnership_inquiry():
+    """Professional partnership inquiry form for ATS vendors and HR tech platforms"""
+
+    if request.method == 'POST':
+        # Get form data
+        company_name = request.form.get('company_name', '').strip()
+        contact_name = request.form.get('contact_name', '').strip()
+        email = request.form.get('email', '').strip()
+        company_type = request.form.get('company_type', '').strip()
+        message = request.form.get('message', '').strip()
+
+        # In production, you'd save this to a database or send via email
+        # For now, we'll just show a success message
+
+        return f"""
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Partnership Inquiry Received - Defensible Hiring AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * {{ margin: 0; padding: 0; box-sizing: border-box; }}
+        body {{
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }}
+        .container {{
+            max-width: 700px;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            text-align: center;
+        }}
+        h1 {{
+            color: #667eea;
+            font-size: 2.2em;
+            margin-bottom: 20px;
+        }}
+        .success-icon {{
+            font-size: 5em;
+            margin-bottom: 20px;
+            animation: bounceIn 0.6s;
+        }}
+        @keyframes bounceIn {{
+            0% {{ transform: scale(0); }}
+            50% {{ transform: scale(1.2); }}
+            100% {{ transform: scale(1); }}
+        }}
+        .info-box {{
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            margin: 30px 0;
+            text-align: left;
+        }}
+        .info-box h3 {{
+            color: #667eea;
+            margin-bottom: 10px;
+        }}
+        .back-button {{
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            text-decoration: none;
+            padding: 15px 35px;
+            border-radius: 50px;
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-top: 20px;
+            transition: transform 0.3s;
+        }}
+        .back-button:hover {{
+            transform: translateY(-3px);
+        }}
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="success-icon">✅</div>
+        <h1>Partnership Inquiry Received!</h1>
+        <p style="font-size: 1.2em; color: #555; margin: 20px 0;">
+            Thank you for your interest in partnering with Defensible Hiring AI.
+        </p>
+
+        <div class="info-box">
+            <h3>What Happens Next:</h3>
+            <ol style="color: #555; line-height: 2; margin-left: 20px;">
+                <li><strong>Our partnerships team will review your inquiry within 24 hours</strong></li>
+                <li>We'll email you at <strong>{email}</strong> to schedule a discovery call</li>
+                <li>We'll discuss integration options, revenue sharing, and co-marketing opportunities</li>
+                <li>If it's a good fit, we'll send partnership documentation and integration guides</li>
+            </ol>
+        </div>
+
+        <div class="info-box" style="background: #e8f5e9;">
+            <h3 style="color: #28a745;">💼 Partnership Benefits:</h3>
+            <ul style="color: #555; line-height: 2; margin-left: 20px;">
+                <li><strong>70/30 revenue share</strong> - You keep 70% of subscription revenue</li>
+                <li><strong>Complete integration support</strong> - We handle the heavy lifting</li>
+                <li><strong>Co-marketing opportunities</strong> - Joint case studies, webinars, content</li>
+                <li><strong>Partner documentation portal</strong> - White-label assets and API docs</li>
+            </ul>
+        </div>
+
+        <p style="color: #666; margin-top: 30px;">
+            Questions in the meantime? Email us at <a href="mailto:partnerships@defensiblehiringai.com" style="color: #667eea;">partnerships@defensiblehiringai.com</a>
+        </p>
+
+        <a href="/" class="back-button">← Back to Home</a>
+    </div>
+</body>
+</html>
+        """
+
+    # GET request - show the form
+    return """
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Partnership Inquiry - Defensible Hiring AI</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px 20px;
+            min-height: 100vh;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: white;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            font-size: 2.5em;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 1.2em;
+            margin-bottom: 40px;
+        }
+        .form-group {
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+            font-size: 1.05em;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 1em;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+        .submit-button {
+            width: 100%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 18px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+        }
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+        }
+        .info-box {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            border-left: 5px solid #667eea;
+        }
+        .info-box h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .info-box ul {
+            color: #555;
+            line-height: 1.8;
+            margin-left: 20px;
+        }
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+        .back-link a {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+        .required {
+            color: #d63031;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>💼 Partnership Inquiry</h1>
+        <p class="subtitle">Let's explore how we can work together</p>
+
+        <div class="info-box">
+            <h3>Partnership Benefits:</h3>
+            <ul>
+                <li><strong>70/30 revenue share</strong> - You keep 70% of subscription revenue</li>
+                <li><strong>Complete integration support</strong> - Full API documentation and developer support</li>
+                <li><strong>Co-marketing opportunities</strong> - Joint case studies, webinars, and content</li>
+                <li><strong>Partner documentation portal</strong> - White-label assets and technical resources</li>
+            </ul>
+        </div>
+
+        <form method="POST" action="/partnership-inquiry">
+            <div class="form-group">
+                <label for="company_name">Company Name <span class="required">*</span></label>
+                <input type="text" id="company_name" name="company_name" required
+                       placeholder="e.g., Acme ATS Solutions">
+            </div>
+
+            <div class="form-group">
+                <label for="contact_name">Your Name <span class="required">*</span></label>
+                <input type="text" id="contact_name" name="contact_name" required
+                       placeholder="e.g., Jane Smith">
+            </div>
+
+            <div class="form-group">
+                <label for="email">Work Email <span class="required">*</span></label>
+                <input type="email" id="email" name="email" required
+                       placeholder="e.g., jane@acmeats.com">
+            </div>
+
+            <div class="form-group">
+                <label for="company_type">Company Type <span class="required">*</span></label>
+                <select id="company_type" name="company_type" required>
+                    <option value="">-- Select One --</option>
+                    <option value="ats_vendor">ATS Vendor</option>
+                    <option value="hr_tech_platform">HR Tech Platform</option>
+                    <option value="recruiting_software">Recruiting Software</option>
+                    <option value="compliance_platform">Compliance Platform</option>
+                    <option value="ai_hiring_tool">AI Hiring Tool Provider</option>
+                    <option value="integration_platform">Integration Platform (Zapier, etc.)</option>
+                    <option value="other">Other</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="message">Tell Us About Your Integration Vision</label>
+                <textarea id="message" name="message"
+                          placeholder="What are you looking to build? How do you see our partnership working? Any specific questions?"></textarea>
+            </div>
+
+            <button type="submit" class="submit-button">Submit Partnership Inquiry →</button>
+        </form>
+
+        <div class="back-link">
+            <a href="/">← Back to Home</a>
+        </div>
+    </div>
 </body>
 </html>
     """
