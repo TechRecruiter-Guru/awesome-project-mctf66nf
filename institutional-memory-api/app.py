@@ -739,125 +739,41 @@ def root():
         </div>
     </div>
 
-    <div class="demo-section" id="demo">
+    <!-- YOUTUBE VIDEO SECTION -->
+    <div class="demo-section" id="demo" style="background: #f8f9fa; padding: 80px 20px;">
         <div class="container">
-            <h2>🎬 The Complete Evidence Pack</h2>
-            <p style="text-align: center; margin-bottom: 30px; font-size: 1.2em;">
-                From legal chaos to instant compliance in 60 seconds
+            <h2 style="text-align: center; color: #667eea; font-size: 2.5em; margin-bottom: 20px;">
+                🎬 See Defensible Hiring AI in Action
+            </h2>
+            <p style="text-align: center; margin-bottom: 50px; font-size: 1.3em; color: #555;">
+                Watch how we generate court-ready audit trails in 60 seconds
             </p>
 
-            <h3 style="text-align: center; color: #d63031; margin: 40px 0 20px 0;">📧 The Nightmare Scenario</h3>
-            <div class="demo-box" style="background: #fff3cd; color: #333; border-left: 5px solid #d63031;">
-                <pre style="color: #333;">
-<strong>Email from Candidate's Attorney:</strong>
-Subject: Notice of EEOC Complaint - AI Discrimination
-
-"My client, Sarah Martinez, applied for Senior Engineer on January 15, 2025.
-She was rejected by your AI screening system within 48 hours.
-
-We believe this constitutes algorithmic discrimination under NYC Local Law 144
-and California AB 2013. We are filing an EEOC complaint and demand:
-
-1. All AI systems used in her evaluation
-2. Complete decision rationale and timeline
-3. Proof of bias audits and AI disclosures
-4. Evidence of human oversight
-
-You have 30 days to respond or face discovery costs exceeding $200,000."
-                </pre>
-            </div>
-
-            <h3 style="text-align: center; color: #155724; margin: 40px 0 20px 0;">✅ Your Response: 60 Seconds Later</h3>
-            <p style="text-align: center; margin-bottom: 30px;">
-                With Institutional Memory, your legal team generates a complete Audit Evidence Pack instantly:
-            </p>
-
-            <div style="background: white; border: 3px solid #28a745; border-radius: 10px; padding: 30px; margin: 30px 0; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-                <h3 style="text-align: center; color: #155724;">📄 COMPLIANCE AUDIT PACK</h3>
-                <p style="text-align: center; color: #666; margin-bottom: 30px;">Generated: January 8, 2026 | Case: Martinez v. TechCorp | Status: <strong style="color: #28a745;">DEFENSIBLE</strong></p>
-
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h4 style="color: #667eea;">🤖 AI Systems - Complete Audit Trail</h4>
-                    <ul style="list-style: none; padding-left: 0;">
-                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
-                            <strong>HireVue Video Screening v3.2</strong><br>
-                            <span style="color: #666;">• Registered: Jan 15, 2025 09:30:00 UTC (Before candidate applied)</span><br>
-                            <span style="color: #666;">• NYC Bias Audit: Completed Nov 20, 2024 by Acme Auditors LLC</span><br>
-                            <span style="color: #666;">• Audit Results: No disparate impact found (80% rule compliant)</span>
-                        </li>
-                        <li style="padding: 10px 0;">
-                            <strong>Resume Parser AI v2.1</strong><br>
-                            <span style="color: #666;">• Registered: Dec 1, 2024 14:22:00 UTC</span><br>
-                            <span style="color: #666;">• Vendor: ResumeBot Inc | Bias Audit: Sep 2024</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h4 style="color: #667eea;">⚖️ Decision Record - Human Review Documented</h4>
-                    <ul style="list-style: none; padding-left: 0;">
-                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
-                            <strong>AI Screening Result:</strong> 72/100 (Passed threshold of 70)<br>
-                            <span style="color: #666;">Timestamp: Jan 17, 2025 10:15:22 UTC</span>
-                        </li>
-                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
-                            <strong>Human Review:</strong> Conducted by Sarah Chen, Senior Recruiter<br>
-                            <span style="color: #666;">Timestamp: Jan 17, 2025 14:30:00 UTC (4 hours after AI screen)</span><br>
-                            <span style="color: #666;">Decision: Rejected</span>
-                        </li>
-                        <li style="padding: 10px 0;">
-                            <strong>Documented Rationale:</strong><br>
-                            <span style="color: #666;">"Position requires 5+ years Python experience with Django framework. Candidate resume shows 2 years Python, no Django. Job description clearly stated this requirement. Decision based on objective skills gap, not AI recommendation."</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 20px 0;">
-                    <h4 style="color: #667eea;">📢 Disclosures - Complete Paper Trail</h4>
-                    <ul style="list-style: none; padding-left: 0;">
-                        <li style="padding: 10px 0; border-bottom: 1px solid #ddd;">
-                            <strong>AI Usage Notice Delivered:</strong> Jan 10, 2025 08:15:00 UTC<br>
-                            <span style="color: #666;">Method: Email to candidate@email.com (Confirmed opened)</span><br>
-                            <span style="color: #666;">Content: "TechCorp uses AI tools to assist in screening. Final decisions made by humans. Bias audits completed per NYC LL144."</span>
-                        </li>
-                        <li style="padding: 10px 0;">
-                            <strong>Job Posting Disclosure:</strong> Jan 5, 2025<br>
-                            <span style="color: #666;">Posted on careers page with AI usage disclosure before applications opened</span>
-                        </li>
-                    </ul>
-                </div>
-
-                <div style="background: #d4edda; padding: 20px; border-radius: 8px; margin: 20px 0; border: 2px solid #28a745;">
-                    <h4 style="color: #155724; text-align: center;">✅ LEGAL ASSESSMENT</h4>
-                    <p style="text-align: center; margin: 15px 0;">
-                        ✓ All AI systems properly registered and audited<br>
-                        ✓ Human review documented with legitimate rationale<br>
-                        ✓ Candidate disclosures delivered and confirmed<br>
-                        ✓ Regulatory compliance demonstrated (NYC LL144, CA AB2013)<br>
-                    </p>
-                    <p style="text-align: center; font-size: 1.3em; color: #155724; margin-top: 20px;">
-                        <strong>Company position: DEFENSIBLE</strong>
-                    </p>
+            <!-- YouTube Video Embed -->
+            <div style="max-width: 900px; margin: 0 auto;">
+                <div style="position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 15px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+                    <iframe
+                        style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"
+                        src="https://www.youtube.com/embed/fAjuEl3ppXo"
+                        title="Defensible Hiring AI Demo"
+                        frameborder="0"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowfullscreen>
+                    </iframe>
                 </div>
             </div>
 
-            <div style="text-align: center; margin: 40px 0;">
-                <div style="display: inline-block; background: #fff3cd; padding: 30px; border-radius: 10px; margin: 20px;">
-                    <h4 style="color: #d63031;">😰 Without Institutional Memory</h4>
-                    <p>• Scrambling through old emails<br>
-                    • Hunting for audit reports<br>
-                    • Reconstructing decisions from memory<br>
-                    • 6-12 months of discovery<br>
-                    • <strong>$200K+ legal costs</strong></p>
-                </div>
-                <div style="display: inline-block; background: #d4edda; padding: 30px; border-radius: 10px; margin: 20px;">
-                    <h4 style="color: #155724;">😎 With Institutional Memory</h4>
-                    <p>• Complete evidence in 60 seconds<br>
-                    • Every decision documented<br>
-                    • Immutable audit trail<br>
-                    • Case closed quickly<br>
-                    • <strong>$500K saved</strong></p>
-                </div>
+            <!-- CTA Below Video -->
+            <div style="text-align: center; margin-top: 50px;">
+                <p style="font-size: 1.2em; color: #555; margin-bottom: 30px;">
+                    Ready to protect your hiring decisions?
+                </p>
+                <a href="/demo-audit-generator" style="display: inline-block; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px 50px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.3em; box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3); transition: transform 0.3s;">
+                    Try the Live Demo Generator →
+                </a>
+                <p style="margin-top: 20px; color: #666;">
+                    Generate a sample audit pack in 60 seconds • No signup required
+                </p>
             </div>
         </div>
     </div>
