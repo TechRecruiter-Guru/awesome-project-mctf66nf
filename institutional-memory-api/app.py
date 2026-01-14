@@ -874,6 +874,19 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                     <h3>Starter</h3>
                     <div class="price">$749<span style="font-size: 0.4em;">/mo</span></div>
                     <p>Perfect for small ATS platforms</p>
+
+                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
+                        <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
+                            <strong style="color: #667eea;">💡 Just $0.75 per decision protected</strong><br>
+                            <span style="font-size: 0.85em; color: #666;">
+                                vs. $200K+ discovery costs<br>
+                                vs. $500K average lawsuit<br>
+                                vs. 6-12 months to build yourself
+                            </span>
+                        </p>
+                    </div>
+
                     <ul class="features">
                         <li>Up to 1,000 decisions/month</li>
                         <li>Full API access</li>
@@ -887,6 +900,19 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                     <h3>Professional</h3>
                     <div class="price">$1,999<span style="font-size: 0.4em;">/mo</span></div>
                     <p>Most popular for growing companies</p>
+
+                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
+                        <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
+                            <strong style="color: #667eea;">💡 Just $0.20 per decision protected</strong><br>
+                            <span style="font-size: 0.85em; color: #666;">
+                                vs. $200K+ discovery costs<br>
+                                vs. $500K average lawsuit<br>
+                                vs. 6-12 months to build yourself
+                            </span>
+                        </p>
+                    </div>
+
                     <ul class="features">
                         <li>Up to 10,000 decisions/month</li>
                         <li>Priority support</li>
@@ -901,6 +927,19 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                     <h3>Enterprise</h3>
                     <div class="price">Custom</div>
                     <p>For large ATS vendors</p>
+
+                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
+                        <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
+                            <strong style="color: #667eea;">💡 Pennies per decision at scale</strong><br>
+                            <span style="font-size: 0.85em; color: #666;">
+                                vs. $2M+ to build in-house<br>
+                                vs. $500K per lawsuit<br>
+                                vs. 12-18 months engineering time
+                            </span>
+                        </p>
+                    </div>
+
                     <ul class="features">
                         <li>Unlimited decisions</li>
                         <li>White-label options</li>
@@ -971,6 +1010,19 @@ You have 30 days to respond or face discovery costs exceeding $200,000."
                     <p style="font-size: 1.05em; color: #555; line-height: 1.7;">
                         <strong>$499/month</strong> locked in for life (normally $749). First 10 customers only. Once we hit 10, price goes to standard rate.
                     </p>
+
+                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #667eea;">
+                        <p style="font-size: 1em; color: #333; margin: 0; line-height: 1.6;">
+                            <strong style="color: #667eea;">💡 Just $0.50 per decision protected</strong><br>
+                            <span style="font-size: 0.9em; color: #666;">
+                                vs. $200K+ discovery costs<br>
+                                vs. $500K average lawsuit<br>
+                                vs. 6-12 months to build yourself
+                            </span>
+                        </p>
+                    </div>
+
                     <p style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.95em;">
                         <strong>⏰ 3 spots remaining</strong> as of January 2026
                     </p>
