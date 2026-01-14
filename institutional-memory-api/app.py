@@ -726,15 +726,12 @@ def root():
 
             <div style="margin-top: 50px; text-align: center; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px; color: white;">
                 <h3 style="font-size: 1.8em; margin-bottom: 20px;">💡 Why This Matters</h3>
-                <p style="font-size: 1.2em; margin-bottom: 30px; line-height: 1.8;">
+                <p style="font-size: 1.2em; margin-bottom: 0; line-height: 1.8;">
                     <strong>Other compliance tools?</strong> They copy your resumes, videos, and notes into their database.<br>
                     <strong>If THEY get hacked</strong>, YOUR candidates' data is exposed.<br><br>
                     <strong>We're different.</strong> We only store audit trails—<strong>timestamps, decisions, justifications.</strong><br>
                     The actual candidate data? <strong>It stays in YOUR ATS where it belongs.</strong>
                 </p>
-                <a href="/demo-audit-generator" style="display: inline-block; background: white; color: #667eea; padding: 18px 40px; border-radius: 50px; text-decoration: none; font-weight: 700; font-size: 1.2em; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    See It In Action (60 seconds) →
-                </a>
             </div>
         </div>
     </div>
@@ -1013,24 +1010,6 @@ def root():
                     <div style="font-weight: 600; color: #333;">SOC 2 Type II (In Progress)</div>
                 </div>
             </div>
-        </div>
-    </div>
-
-    <!-- DEMO VIDEO PLACEHOLDER -->
-    <div style="background: white; padding: 80px 20px;">
-        <div class="container" style="max-width: 900px; margin: 0 auto; text-align: center;">
-            <h2 style="color: #667eea; font-size: 2em; margin-bottom: 20px;">🎥 See It In Action</h2>
-            <p style="color: #666; font-size: 1.1em; margin-bottom: 40px;">
-                Watch how we generate a court-ready audit pack in 60 seconds.
-            </p>
-            <div style="background: #000; border-radius: 15px; padding: 100px 50px; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
-                <div style="color: white; font-size: 1.5em; margin-bottom: 20px;">▶️</div>
-                <div style="color: white; font-size: 1.2em;">2-Minute Demo Video</div>
-                <div style="color: #999; margin-top: 10px;">(Coming Soon - Recording This Week)</div>
-            </div>
-            <p style="margin-top: 30px; color: #666;">
-                <em>Can't wait? <a href="/request-demo" style="color: #667eea; font-weight: 600;">Request a live demo</a> and we'll show you in real-time.</em>
-            </p>
         </div>
     </div>
 
