@@ -741,7 +741,7 @@ def root():
 
     <div class="demo-section" id="demo">
         <div class="container">
-            <h2>🎬 What Your Customers Get: The Complete Evidence Pack</h2>
+            <h2>🎬 The Complete Evidence Pack</h2>
             <p style="text-align: center; margin-bottom: 30px; font-size: 1.2em;">
                 From legal chaos to instant compliance in 60 seconds
             </p>
