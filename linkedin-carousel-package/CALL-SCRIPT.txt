@@ -1,0 +1,359 @@
+═══════════════════════════════════════════════════════════════
+SALES CALL SCRIPT: AI COMPLIANCE AUDIT CLOSE
+15-Minute Discovery → Close → $3,000-5,000 Deal
+═══════════════════════════════════════════════════════════════
+
+GOAL: Get them to say YES to a 2-week compliance engagement TODAY
+
+KEY PSYCHOLOGY:
+- Position yourself as the expert doctor diagnosing a disease
+- They already have the disease (non-compliance)
+- You're offering the cure at 10% of the cost of surgery (lawsuit)
+
+═══════════════════════════════════════════════════════════════
+
+PART 1: OPENING (60 seconds)
+═══════════════════════════════════════════════════════════════
+
+YOU:
+"Hey [Name], thanks for jumping on. I know you're busy, so I'll keep this tight.
+
+Real quick - what made you reach out about the compliance audit?"
+
+[Let them talk. Listen for pain points: EEOC fear, legal pressure, vendor concerns]
+
+YOU:
+"Got it. So just to level set - are you currently using any AI screening tools? Like HireVue, MyInterview, Spark Hire, or anything built into your ATS?"
+
+[If YES → Continue. If NO → Ask about resume screening, automated rejections, anything algorithmic]
+
+═══════════════════════════════════════════════════════════════
+
+PART 2: DIAGNOSIS - Ask These 8 Questions (3 minutes)
+═══════════════════════════════════════════════════════════════
+
+YOU:
+"Perfect. Let me ask you 8 quick questions - same ones from my LinkedIn audit. This'll tell us exactly where your gaps are."
+
+[Ask each question. Track their answers. Count the NO's]
+
+1. "Have you completed a bias audit in the last 12 months?"
+2. "Do you notify candidates 10+ days before using AI screening?"
+3. "Is your bias audit publicly posted online?"
+4. "Do you offer alternative screening methods when candidates request them?"
+5. "Do you get written consent before AI video analysis?"
+6. "Can you explain exactly HOW your AI tool makes decisions?"
+7. "Do you have human review for every AI rejection?"
+8. "Have you tested your tool for age, race, and disability discrimination?"
+
+[After all 8 questions...]
+
+YOU:
+"Okay, so you answered NO to [X] out of 8. Let me tell you what that means..."
+
+═══════════════════════════════════════════════════════════════
+
+PART 3: THE FEAR INJECTION (2 minutes)
+═══════════════════════════════════════════════════════════════
+
+IF THEY SCORED 6-8 NO'S:
+───────────────────────────────────────────────────────────────
+YOU:
+"[Name], I'm going to be straight with you. You're in the red zone.
+
+If a candidate filed an EEOC complaint tomorrow, here's what happens:
+
+Day 1: EEOC opens an investigation
+Week 1: You're scrambling to find documentation that doesn't exist
+Week 2: You hire an employment lawyer at $500/hour
+Month 1-3: Discovery, depositions, stress
+Month 6-12: Settlement talks or trial prep
+
+Average cost: $75,000 in legal fees. And that's if you SETTLE.
+
+If it goes to trial and you lose? We're talking $200K-500K.
+
+All because you didn't spend $3,000 to get compliant upfront.
+
+Does that make sense?"
+
+IF THEY SCORED 3-5 NO'S:
+───────────────────────────────────────────────────────────────
+YOU:
+"[Name], you're in the yellow zone. Not critical, but you have significant gaps.
+
+The problem is, you don't know WHICH candidate is going to file a complaint.
+
+It could be the one you rejected yesterday. It could be one from 6 months ago.
+
+And when that complaint comes, the EEOC doesn't care that you 'didn't know.'
+
+They care about one thing: Can you prove your hiring process isn't discriminatory?
+
+Right now, you can't. And that's a $50K-100K risk sitting on your desk."
+
+IF THEY SCORED 0-2 NO'S:
+───────────────────────────────────────────────────────────────
+YOU:
+"[Name], you're actually doing better than 90% of companies.
+
+But here's the thing - compliance isn't binary. You're not 'compliant' or 'not compliant.'
+
+You're 'defensible' or 'indefensible.'
+
+Those 2 gaps you have? That's all an employment lawyer needs to build a case.
+
+Let me ask you this: if you got sued tomorrow, could you find all your documentation in 24 hours?
+
+[They'll say no]
+
+That's what I help with. Making you DEFENSIBLE, not just compliant."
+
+═══════════════════════════════════════════════════════════════
+
+PART 4: THE SOLUTION (2 minutes)
+═══════════════════════════════════════════════════════════════
+
+YOU:
+"Here's what I recommend.
+
+I do a 2-week Defensible Hiring Audit. Here's what that includes:
+
+Week 1: Full documentation audit
+- Review your AI tool contracts
+- Map your candidate workflow
+- Identify every compliance gap
+- Build your defensibility documentation
+
+Week 2: Implementation roadmap
+- Write your AI governance policy
+- Set up bias audit protocol (or connect you with auditor)
+- Create EEOC response templates
+- Train your team on new process
+
+At the end, you have a compliance binder that answers every EEOC question.
+
+If you get sued in 3 years, you pull out that binder and say:
+'We did our diligence. Here's the proof.'
+
+That binder is worth $500,000 in lawsuit protection.
+
+And it costs you $3,500.
+
+Make sense?"
+
+[PAUSE. Let them process.]
+
+═══════════════════════════════════════════════════════════════
+
+PART 5: HANDLE OBJECTIONS (3 minutes)
+═══════════════════════════════════════════════════════════════
+
+OBJECTION #1: "I need to talk to legal/my boss/the team"
+───────────────────────────────────────────────────────────────
+YOU:
+"Totally understand. What questions do you think they'll have?
+
+[Let them answer]
+
+Here's what I'd recommend: Let me send you a one-page summary - shows the gaps we found, the risks, and the cost to fix.
+
+You can forward that to [legal/boss/team] and they'll see exactly what we're talking about.
+
+I can also jump on a 10-minute call with them if that helps.
+
+But here's the thing - every day you wait is another day of exposure.
+
+If we start Monday, you're compliant by end of month.
+If we start in 2 weeks, you're exposed for 2 more weeks.
+
+Can we at least lock in the start date, and you confirm with your team over the weekend?"
+
+OBJECTION #2: "That's expensive"
+───────────────────────────────────────────────────────────────
+YOU:
+"I hear you. Let me reframe it:
+
+$3,500 = Compliance audit + defensibility documentation
+$75,000 = Average cost of defending ONE EEOC complaint
+
+If there's even a 5% chance of getting sued in the next 3 years, this is a no-brainer.
+
+But let me ask you this: how many candidates have you screened with AI in the last year?
+
+[They'll say a number, let's say 500]
+
+500 candidates. If even ONE of them files a complaint, you're looking at $50K minimum.
+
+So you're paying $7 per candidate to protect yourself from a $50,000 risk.
+
+Does that math work for you?"
+
+OBJECTION #3: "Can we do this in 6 months / next quarter?"
+───────────────────────────────────────────────────────────────
+YOU:
+"[Name], let me be honest with you.
+
+You CAN wait 6 months. Nothing's stopping you.
+
+But here's what happens in 6 months:
+
+Option A: Nothing happens. You roll the dice and win. Great.
+
+Option B: Someone files a complaint. Now you're defending a lawsuit WITHOUT documentation.
+
+Your lawyer asks: 'Why didn't you get compliant when you knew about the risk?'
+
+That's called 'willful negligence.' That's how a $50K settlement becomes a $200K judgment.
+
+I'm not trying to scare you. I'm trying to save you money.
+
+If you start now, you're protected by February.
+If you wait, you're rolling dice with $100K+ on the line.
+
+Which makes more sense?"
+
+OBJECTION #4: "Our vendor said they handle compliance"
+───────────────────────────────────────────────────────────────
+YOU:
+"Great question. I hear that a lot.
+
+Here's the reality: Your vendor provides the TOOL. You're the EMPLOYER.
+
+When an EEOC complaint gets filed, they don't sue HireVue. They sue YOU.
+
+HireVue isn't making hiring decisions. You are.
+
+So even if HireVue does their own bias audits, that doesn't cover YOUR usage.
+
+You need to show:
+- How YOU use the tool
+- How YOU review AI recommendations
+- How YOU ensure no discrimination
+
+That's what I help with. Vendor compliance doesn't equal employer compliance.
+
+Make sense?"
+
+═══════════════════════════════════════════════════════════════
+
+PART 6: THE CLOSE (2 minutes)
+═══════════════════════════════════════════════════════════════
+
+YOU:
+"So [Name], here's what I'm hearing:
+
+- You're using AI screening [list their tool]
+- You have [X] compliance gaps
+- You know this is a risk
+- You want to get it handled
+
+The question is: do you want to handle it NOW, or after you get sued?
+
+If we start Monday, I'll have your audit done by [DATE].
+
+You'll have your defensibility binder, your policies, your training materials.
+
+And you'll sleep better knowing you're protected.
+
+Cost is $3,500. I can take a card today, or invoice you if you need to run it through AP.
+
+What works better for you?"
+
+[SHUT UP. Wait for them to respond.]
+
+═══════════════════════════════════════════════════════════════
+
+CLOSING VARIATIONS:
+═══════════════════════════════════════════════════════════════
+
+THE ASSUMPTIVE CLOSE:
+"So let me get started - I'll need access to your ATS and your AI tool contracts. Can you send those over today or tomorrow?"
+
+THE CHOICE CLOSE:
+"Do you want to start Monday or Wednesday? Monday gets you compliant faster, but Wednesday gives you time to prep your team."
+
+THE TAKEAWAY CLOSE:
+"I'm booked for the next 3 weeks, but I can squeeze you in if we start Monday. After that, you'd be looking at mid-February. What makes more sense?"
+
+THE DIRECT CLOSE:
+"Look, you know you need this. I know you need this. Let's just get it done. Can I send you the agreement today?"
+
+═══════════════════════════════════════════════════════════════
+
+PART 7: AFTER THEY SAY YES
+═══════════════════════════════════════════════════════════════
+
+YOU:
+"Perfect. Here's what happens next:
+
+1. I'll send you the service agreement today - just needs a signature
+2. Payment: $3,500 via card, check, or wire (or $1,750 upfront + $1,750 on delivery)
+3. Kickoff call Monday at [TIME] - 30 minutes
+4. I'll need access to your ATS, AI tool, and any hiring docs you have
+5. You'll have your full audit report by [DATE]
+
+Sound good?"
+
+[Confirm everything. Send agreement immediately.]
+
+YOU:
+"One last thing - do you know anyone else in your network using AI screening who should probably do this too?
+
+I'm doing these audits all month, and I know most HR leaders don't even realize they're non-compliant.
+
+If you want to intro me, I'm happy to give them the same deal."
+
+[GET REFERRALS IMMEDIATELY]
+
+═══════════════════════════════════════════════════════════════
+
+PRICING OPTIONS:
+═══════════════════════════════════════════════════════════════
+
+BASIC AUDIT: $3,000
+- Gap analysis
+- Documentation review
+- Policy templates
+- 2-week delivery
+
+STANDARD AUDIT: $5,000
+- Everything in Basic
+- Custom AI governance policy
+- Team training (1-hour session)
+- EEOC response playbook
+- 1-week delivery
+
+PREMIUM AUDIT: $8,000
+- Everything in Standard
+- Bias audit coordination (with auditor)
+- Quarterly compliance check-ins (3 months)
+- Unlimited email support
+- Same-week delivery
+
+OFFER THE MIDDLE (Standard) FIRST.
+If they balk, drop to Basic.
+If they're a big company, upsell to Premium.
+
+═══════════════════════════════════════════════════════════════
+
+POST-CALL CHECKLIST:
+═══════════════════════════════════════════════════════════════
+
+✅ Send service agreement within 1 hour
+✅ Follow up if no signature within 24 hours
+✅ Update War Room with deal status
+✅ Block calendar for their project
+✅ Send confirmation email with next steps
+✅ Ask for referrals (LinkedIn connections)
+
+═══════════════════════════════════════════════════════════════
+
+REMEMBER:
+- You're not selling. You're diagnosing and prescribing.
+- They already have the problem. You're offering the solution.
+- Cost of doing nothing: $50K-500K
+- Cost of working with you: $3K-5K
+- Simple math.
+
+═══════════════════════════════════════════════════════════════

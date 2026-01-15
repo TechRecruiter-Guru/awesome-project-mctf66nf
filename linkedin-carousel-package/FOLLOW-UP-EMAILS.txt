@@ -1,0 +1,387 @@
+═══════════════════════════════════════════════════════════════
+FOLLOW-UP EMAIL TEMPLATES
+For prospects who ghost after call, DM, or initial contact
+═══════════════════════════════════════════════════════════════
+
+TIMING STRATEGY:
+- Email #1: Same day as call/DM (within 2 hours)
+- Email #2: 24 hours later (if no response)
+- Email #3: 3 days later (value-add email)
+- Email #4: 7 days later (break-up email)
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #1: IMMEDIATE FOLLOW-UP (Send within 2 hours of call)
+═══════════════════════════════════════════════════════════════
+
+Subject: Quick recap: [Company Name] AI compliance gaps
+
+Hi [Name],
+
+Thanks for the call today. Quick recap of what we found:
+
+YOUR COMPLIANCE SCORE: [X/8]
+
+Gaps we identified:
+❌ [List their specific NO answers from the 8 questions]
+
+RISK LEVEL: [High/Medium/Low]
+
+If you move forward with the 2-week audit, here's what you'll get:
+✅ Full gap analysis + documentation review
+✅ AI governance policy (customized for your tools)
+✅ EEOC response playbook
+✅ Defensibility binder (protects you from lawsuits)
+
+Cost: $3,500
+Timeline: Start Monday → Complete by [DATE]
+
+Let me know if you want to move forward. Happy to answer any questions.
+
+Best,
+John Polhill III
+Founder, Defensible Hiring AI
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #2: 24-HOUR NUDGE (If they don't respond to Email #1)
+═══════════════════════════════════════════════════════════════
+
+Subject: Re: [Company Name] AI compliance gaps
+
+[Name],
+
+Following up on yesterday's call.
+
+I know you're probably running this by legal or your team. Smart move.
+
+One thing to share with them: I talked to a company last week that waited 6 months to get compliant. In month 4, they got an EEOC complaint.
+
+Their lawyer told them: "Why didn't you handle this when you first learned about it?"
+
+That's called willful negligence. Turns a $50K settlement into a $200K judgment.
+
+Not trying to rush you - just want you to have all the facts.
+
+Let me know what questions come up.
+
+Best,
+JP
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #3: VALUE-ADD EMAIL (3 days after call)
+═══════════════════════════════════════════════════════════════
+
+Subject: The 3 most common EEOC complaints against AI screening
+
+[Name],
+
+Haven't heard back, so figured I'd send something useful while you're deciding.
+
+Here are the 3 most common EEOC complaints against companies using AI screening:
+
+1. DISPARATE IMPACT (Title VII)
+Claim: "Your AI rejected more [protected class] candidates than others"
+Why it succeeds: You can't prove your tool ISN'T biased without a bias audit
+
+2. FAILURE TO ACCOMMODATE (ADA)
+Claim: "I have a disability and your AI video interview discriminated against me"
+Why it succeeds: You didn't offer alternative screening methods
+
+3. AGE DISCRIMINATION (ADEA)
+Claim: "Your AI favored younger candidates based on voice/video analysis"
+Why it succeeds: You can't explain how your AI makes decisions
+
+All three are preventable with proper documentation.
+
+That's what the audit gives you - the documentation to DEFEND against these claims.
+
+Still interested? Let me know.
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+P.S. - If you want, I can send you the actual EEOC guidance on AI hiring. Takes 5 minutes to read, and it'll make the risk crystal clear.
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #4: BREAK-UP EMAIL (7 days after call)
+═══════════════════════════════════════════════════════════════
+
+Subject: Closing the loop
+
+[Name],
+
+Haven't heard from you, so I'm assuming this isn't a priority right now.
+
+No worries - I get it. Compliance isn't sexy. It's boring until you need it.
+
+Before I close the loop, can I ask:
+
+What's holding you back?
+- Cost?
+- Timing?
+- Don't think it applies to you?
+- Already handling it internally?
+
+Genuinely curious. Helps me understand what HR leaders need.
+
+If you ever want to revisit this, you know where to find me.
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+P.S. - One last thing: If you DO get an EEOC complaint in the next year, feel free to reach out. I can help with response strategy even if we don't work together now.
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #5: THE ZOMBIE EMAIL (30 days later - re-engage cold leads)
+═══════════════════════════════════════════════════════════════
+
+Subject: [Company Name] + AI screening - checking in
+
+[Name],
+
+It's been a month since we talked about AI compliance.
+
+Quick question: Did you end up getting this handled? Or is it still on the back burner?
+
+I ask because I've seen 3 companies get EEOC complaints in the last 30 days. All using AI screening tools. None had bias audits.
+
+All three are now paying $50K+ in legal fees.
+
+If you haven't gotten compliant yet, we should talk. I can get you done in 2 weeks.
+
+If you DID get compliant, awesome - who'd you work with? Always curious what other firms are doing.
+
+Let me know.
+
+Best,
+JP
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #6: THE NEWS HOOK (Send when relevant news breaks)
+═══════════════════════════════════════════════════════════════
+
+Subject: Did you see this? [Company] sued over AI hiring
+
+[Name],
+
+Not sure if you saw this, but [Company Name] just got hit with a class-action lawsuit over their AI screening tool.
+
+[Link to news article]
+
+Key quote from the complaint:
+"[Company] used AI to screen thousands of candidates without conducting bias audits or providing alternative screening methods, in violation of NYC Local Law 144 and California AB 2013."
+
+This is exactly what we talked about on our call.
+
+They're looking at $5-10 million in damages.
+
+You're using [their AI tool]. You have [X] compliance gaps.
+
+Do you want to wait and see if you're next?
+
+Or do you want to get compliant NOW?
+
+Let me know. I can start Monday.
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #7: THE DISCOUNT (Use sparingly - only for hot leads)
+═══════════════════════════════════════════════════════════════
+
+Subject: Special offer: AI compliance audit
+
+[Name],
+
+I know we've been going back and forth on this for a few weeks.
+
+I'm running a special this month: $2,500 for the compliance audit (normally $3,500).
+
+Here's why: I want 10 case studies by end of Q1. You'd be a great fit.
+
+If you start this week, you get:
+✅ Full gap analysis
+✅ AI governance policy
+✅ EEOC response templates
+✅ Defensibility documentation
+
+All done in 2 weeks.
+
+$2,500. One-time fee.
+
+Offer expires Friday.
+
+Want in?
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #8: THE REFERRAL ASK (For people who said "not right now")
+═══════════════════════════════════════════════════════════════
+
+Subject: Quick favor?
+
+[Name],
+
+I know AI compliance isn't a priority for you right now - totally understand.
+
+But I'm trying to help 50 companies get compliant before we see a wave of lawsuits (I think we're 6 months out from that).
+
+Do you know anyone in your network who:
+- Uses AI screening tools (HireVue, MyInterview, etc.)
+- Is in NYC, CA, IL, CO, or MD
+- Should probably be thinking about this?
+
+If you can intro me to 2-3 people, I'd really appreciate it.
+
+Happy to comp you a free compliance review if you ever need it down the road.
+
+Thanks!
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #9: THE LAWSUIT CASE STUDY (High-value content piece)
+═══════════════════════════════════════════════════════════════
+
+Subject: Case study: How [Company] avoided a $2M lawsuit
+
+[Name],
+
+Thought you might find this interesting.
+
+I worked with a company last year that was using HireVue to screen 10,000+ candidates/year.
+
+They had ZERO bias audits. No documentation. No policies.
+
+Then a candidate filed an EEOC complaint claiming race discrimination.
+
+The EEOC started investigating.
+
+Here's what we did:
+1. Emergency audit (completed in 1 week)
+2. Commissioned bias audit from third-party firm
+3. Implemented new AI governance policy
+4. Documented all historical decision-making (as much as possible)
+
+Result: EEOC closed the investigation with no findings.
+
+Why? Because we showed PROOF that the company took compliance seriously.
+
+Cost to client: $8,500 (emergency rate)
+Cost if we hadn't intervened: $500K-2M (estimated legal fees + settlement)
+
+They got lucky. They had time to fix it before it escalated.
+
+You might not.
+
+Want to avoid being in that position? Let's get you compliant NOW.
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+EMAIL #10: THE PERSONAL STORY (Builds trust + authority)
+═══════════════════════════════════════════════════════════════
+
+Subject: Why I'm obsessed with AI compliance
+
+[Name],
+
+Quick personal story.
+
+In 2023, I watched a friend get rejected by 47 companies in 3 months. All using AI screening.
+
+She had 10 years of HR experience. She was qualified. She never spoke to a human.
+
+She later found out that one of the AI tools flagged her as "low energy" because she has a speech impediment.
+
+That's when I realized: AI screening is powerful, but it's also dangerous.
+
+Companies don't mean to discriminate. But they're using tools they don't understand.
+
+That's why I started Defensible Hiring AI.
+
+I help companies use AI RESPONSIBLY. Not to eliminate it, but to make sure it's fair.
+
+If you care about this stuff - if you want to do hiring RIGHT - let's talk.
+
+I'm not here to scare you. I'm here to help you.
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+PRO TIPS FOR FOLLOW-UP EMAILS:
+═══════════════════════════════════════════════════════════════
+
+1. SUBJECT LINE = 50% of open rate
+   - Use their company name (personalization)
+   - Use urgency ("Did you see this?")
+   - Use curiosity ("Quick question about [topic]")
+
+2. FIRST LINE = Make or break
+   - Reference previous conversation
+   - Lead with value or news
+   - Ask a question
+
+3. KEEP IT SHORT
+   - 5 sentences max for follow-ups
+   - 10 sentences max for value emails
+   - Nobody reads long emails
+
+4. ONE CALL TO ACTION
+   - Don't give them 5 options
+   - Tell them exactly what to do next
+   - "Reply YES and I'll send the agreement"
+
+5. SEND FROM MOBILE
+   - Add "Sent from iPhone" signature
+   - Makes it feel more personal/urgent
+   - Higher response rate
+
+6. USE "RE:" IN SUBJECT
+   - Makes it look like a reply to their email
+   - Higher open rates
+   - But don't abuse it
+
+7. SEND AT ODD TIMES
+   - 8:47am instead of 9:00am (looks less automated)
+   - 2:23pm instead of 2:00pm
+   - Feels more human
+
+═══════════════════════════════════════════════════════════════
+
+FOLLOW-UP TRACKING IN WAR ROOM:
+═══════════════════════════════════════════════════════════════
+
+Create custom stages for email follow-ups:
+- "Email 1 Sent" → No response after 24hrs
+- "Email 2 Sent" → No response after 3 days
+- "Email 3 Sent" → No response after 7 days
+- "Dead Lead" → No response after 14 days
+- "Re-engaged" → They responded, back to active
+
+Track which email template gets the most responses.
+Double down on what works.
+
+═══════════════════════════════════════════════════════════════

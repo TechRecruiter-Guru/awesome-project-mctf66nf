@@ -1,0 +1,232 @@
+═══════════════════════════════════════════════════════════════
+LINKEDIN DM TEMPLATES
+Send to EVERYONE who likes, comments, or shares your post
+═══════════════════════════════════════════════════════════════
+
+RULE: Send DM within 2 hours of engagement (while you're top of mind)
+
+═══════════════════════════════════════════════════════════════
+
+DM #1: FOR PEOPLE WHO LIKED THE POST
+═══════════════════════════════════════════════════════════════
+
+Hey [First Name] - saw you checked out the AI compliance audit.
+
+Quick question: does [Company Name] use any AI screening tools (HireVue, MyInterview, etc)?
+
+Most companies I audit are missing 6-8 compliance requirements and don't even know it. Takes about 10 minutes to review your setup.
+
+Want me to send you a quick gap analysis checklist?
+
+- JP
+
+═══════════════════════════════════════════════════════════════
+
+DM #2: FOR PEOPLE WHO COMMENTED (Positive/Concerned)
+═══════════════════════════════════════════════════════════════
+
+[First Name] - thanks for the comment on the compliance post!
+
+Since you're already thinking about this, want to do a quick 10-min audit call this week?
+
+I can tell you exactly where your gaps are and what it costs to fix vs. what it costs if you get sued.
+
+Most companies I work with are non-compliant in 8-12 areas. Takes 2 weeks to fix, prevents years of legal headaches.
+
+What's your calendar look like tomorrow or Thursday?
+
+- JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+DM #3: FOR PEOPLE WHO COMMENTED (Defensive/Skeptical)
+═══════════════════════════════════════════════════════════════
+
+Hey [First Name] - saw your comment.
+
+I get it - compliance feels like overkill until you see the first lawsuit.
+
+I worked with a company last month that thought they were fine. They'd been using HireVue for 2 years.
+
+Then an EEOC complaint landed. $75K in legal fees later, they wished they'd spent $3K upfront to get compliant.
+
+Not trying to fearmonger - just offering to help you avoid that scenario.
+
+Want me to send you the actual NYC Local Law 144 requirements? Takes 2 min to read, then you can decide if it's relevant.
+
+- JP
+
+═══════════════════════════════════════════════════════════════
+
+DM #4: FOR HR/TALENT LEADERS (Based on their title)
+═══════════════════════════════════════════════════════════════
+
+[First Name] - saw you're the [VP of Talent/Director of HR] at [Company].
+
+Quick question: if your team is using AI screening tools, who owns compliance?
+
+In most orgs I work with, it falls in a gap:
+- Legal says "Talk to HR"
+- HR says "Talk to IT"
+- IT says "The vendor handles it"
+
+Meanwhile nobody's done a bias audit in 18 months.
+
+I help talent teams get ahead of this - usually takes 2 weeks, costs less than one legal consultation.
+
+Worth a 15-min call this week?
+
+- JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+DM #5: FOR PEOPLE WHO SHARED THE POST (Hot leads!)
+═══════════════════════════════════════════════════════════════
+
+[First Name] - really appreciate you sharing the compliance audit!
+
+Since this is clearly relevant to your world, want to talk specifics?
+
+I'm doing free 15-min gap analysis calls this week for companies using AI screening. I'll tell you exactly:
+
+✅ Which regulations apply to you
+✅ Where your biggest risks are
+✅ What it costs to fix (usually $3-5K)
+✅ What it costs if you don't (easily $50K+)
+
+No pressure - if you're already compliant, I'll tell you that too.
+
+What's your calendar look like tomorrow afternoon?
+
+- JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+DM #6: FOR VENDOR/TOOL EMPLOYEES (Recruitment tech companies)
+═══════════════════════════════════════════════════════════════
+
+Hey [First Name] - saw you work at [HireVue/MyInterview/etc].
+
+Not trying to bash your product - AI screening is the future.
+
+But I'm seeing companies get hit with EEOC complaints because they don't understand HOW to use these tools compliantly.
+
+The vendor gives them the tech, but nobody teaches them:
+- When bias audits are required
+- How to notify candidates
+- How to document decision-making
+
+I help your customers stay compliant (which keeps them as your customers).
+
+Any chance you have a partnerships person I could connect with? Might be a win-win.
+
+- JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+DM #7: FOLLOW-UP (If they don't respond within 24 hours)
+═══════════════════════════════════════════════════════════════
+
+[First Name] - following up on my message yesterday.
+
+I know you're busy. If AI compliance isn't a priority right now, totally understand.
+
+But if you DO use AI screening tools and haven't done a bias audit, you're at risk.
+
+One EEOC complaint = $50K+ in legal fees.
+Getting compliant = $3-5K and 2 weeks.
+
+Simple math.
+
+Let me know if you want to chat this week.
+
+- JP
+
+═══════════════════════════════════════════════════════════════
+
+DM #8: BREAK-UP MESSAGE (If they don't respond after 2 follow-ups)
+═══════════════════════════════════════════════════════════════
+
+[First Name] - last message from me, promise!
+
+If you're not interested in the compliance audit, no worries.
+
+But if you ARE using AI screening and haven't gotten compliant yet, can I ask what's holding you back?
+
+- Don't think it applies to you?
+- Already have it handled internally?
+- Just not a priority right now?
+
+Genuinely curious - helps me understand what HR leaders need.
+
+Either way, if you ever need help with this stuff, you know where to find me.
+
+- JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+RESPONSE HANDLING GUIDE:
+═══════════════════════════════════════════════════════════════
+
+IF THEY SAY: "We don't use AI screening"
+YOUR RESPONSE:
+"Got it! Out of curiosity, what do you use for early-stage screening?
+(Asking because some tools have AI built in and companies don't realize it -
+Workday, Greenhouse, etc. have AI modules that trigger compliance rules)"
+
+---
+
+IF THEY SAY: "We're already compliant"
+YOUR RESPONSE:
+"That's great - you're ahead of 90% of companies!
+Can I ask who did your bias audit? And when was your last one?
+(NYC requires annual audits, so even if you did one in 2024, you need a new one for 2025)"
+
+---
+
+IF THEY SAY: "Our vendor handles compliance"
+YOUR RESPONSE:
+"I hear that a lot! But just FYI - the vendor gives you the tool,
+but YOU'RE the employer, so YOU'RE legally liable.
+HireVue can't get sued for your hiring decisions - you can.
+Worth confirming who actually owns the bias audit."
+
+---
+
+IF THEY SAY: "How much does this cost?"
+YOUR RESPONSE:
+"Depends on your volume and which tools you're using, but typically:
+- Compliance audit + documentation: $3-5K
+- Ongoing monitoring: $500-1K/month
+VS. One EEOC lawsuit: $50-500K in legal fees
+Want me to send you a detailed breakdown?"
+
+---
+
+IF THEY SAY: "Can you send me more info?"
+YOUR RESPONSE:
+"Absolutely! What specifically would be most helpful?
+- Breakdown of laws by state?
+- Case studies of companies that got sued?
+- Sample bias audit report?
+Or easier - want to hop on a 10-min call and I'll just walk you through it?"
+
+═══════════════════════════════════════════════════════════════
+
+PRO TIPS:
+═══════════════════════════════════════════════════════════════
+
+1. PERSONALIZE - Mention their company, role, or something from their profile
+2. BE FAST - Reply within 5 minutes if possible (shows you're responsive)
+3. USE THEIR NAME - But only once (overuse feels salesy)
+4. KEEP IT SHORT - 3-4 sentences max on first DM
+5. ASK QUESTIONS - Makes it conversational, not pitchy
+6. PROVIDE VALUE FIRST - Offer to send something free before asking for a call
+7. TIME YOUR DMs - Send during work hours (9am-5pm their timezone)
+
+═══════════════════════════════════════════════════════════════

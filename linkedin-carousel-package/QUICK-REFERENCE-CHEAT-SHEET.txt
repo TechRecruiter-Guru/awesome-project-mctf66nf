@@ -1,0 +1,135 @@
+═══════════════════════════════════════════════════════════════
+⚡ QUICK REFERENCE CHEAT SHEET
+Print this or keep on your phone - Use during execution
+═══════════════════════════════════════════════════════════════
+
+📱 DM SCRIPT (Copy/Paste):
+═══════════════════════════════════════════════════════════════
+
+Hey [Name] - saw you checked out the AI compliance audit.
+
+Quick question: does [Company] use any AI screening tools?
+
+Most companies I audit are missing 6-8 compliance requirements.
+
+Want me to send you a quick gap analysis?
+
+═══════════════════════════════════════════════════════════════
+
+📞 CALL OPENING (First 60 seconds):
+═══════════════════════════════════════════════════════════════
+
+"Thanks for jumping on. What made you reach out about the compliance audit?"
+
+[LISTEN]
+
+"Got it. Are you currently using any AI screening tools?"
+
+[If YES → Ask 8 questions]
+
+═══════════════════════════════════════════════════════════════
+
+❓ THE 8 QUESTIONS (Diagnosis Phase):
+═══════════════════════════════════════════════════════════════
+
+1. Bias audit in last 12 months?
+2. Notify candidates 10+ days before AI screening?
+3. Bias audit publicly posted?
+4. Offer alternative screening methods?
+5. Get written consent before AI video?
+6. Can you explain HOW your AI decides?
+7. Human review for all AI rejections?
+8. Tested for age/race/disability discrimination?
+
+[Count their NO's]
+
+═══════════════════════════════════════════════════════════════
+
+💰 THE CLOSE (Say this exactly):
+═══════════════════════════════════════════════════════════════
+
+"You scored [X/8]. That's high risk.
+
+One EEOC complaint = $50K+ in legal fees.
+
+I do a 2-week audit for $3,500. You get a defensibility binder that protects you from lawsuits.
+
+Do you want to start Monday or Wednesday?"
+
+[SHUT UP. WAIT FOR ANSWER.]
+
+═══════════════════════════════════════════════════════════════
+
+🛡️ OBJECTION HANDLERS (Quick Rebuttals):
+═══════════════════════════════════════════════════════════════
+
+"I need to talk to my boss"
+→ "What questions will they have? I can send you a 1-page summary to forward."
+
+"That's expensive"
+→ "$3,500 vs $50K in legal fees. If there's even a 5% chance of getting sued, this is a no-brainer."
+
+"Can we do this next quarter?"
+→ "You CAN wait. But if someone files a complaint, that's called willful negligence. Turns $50K into $200K."
+
+"Our vendor handles compliance"
+→ "They provide the tool. YOU'RE the employer. When EEOC sues, they sue YOU, not the vendor."
+
+═══════════════════════════════════════════════════════════════
+
+📧 FOLLOW-UP EMAIL (Same day as call):
+═══════════════════════════════════════════════════════════════
+
+Subject: Quick recap: [Company] AI compliance gaps
+
+Hi [Name],
+
+Thanks for the call today. Quick recap:
+
+YOUR SCORE: [X/8]
+RISK LEVEL: [High/Medium/Low]
+
+Audit includes:
+✅ Gap analysis + documentation
+✅ AI governance policy
+✅ EEOC response playbook
+✅ Defensibility binder
+
+Cost: $3,500
+Timeline: 2 weeks
+
+Let me know if you want to move forward.
+
+Best,
+JP
+JP@DEFENSIBLEHIRINGAI.COM
+
+═══════════════════════════════════════════════════════════════
+
+⏰ TIMING CHECKLIST:
+═══════════════════════════════════════════════════════════════
+
+8:00am → POST carousel
+8:00am-12:00pm → ENGAGE (reply to comments)
+12:00pm-5:00pm → SEND DMs (everyone who engaged)
+5:00pm-8:00pm → BOOK calls for next day
+Next day → RUN calls + CLOSE deals
+
+═══════════════════════════════════════════════════════════════
+
+💪 CONFIDENCE BOOSTERS (Read before calls):
+═══════════════════════════════════════════════════════════════
+
+✅ You're the expert. They need you.
+✅ They already have the problem. You're the cure.
+✅ $3,500 is CHEAP compared to $50K lawsuit.
+✅ Every "no" gets you closer to "yes".
+✅ You're helping them avoid disaster.
+
+═══════════════════════════════════════════════════════════════
+
+🎯 SUCCESS = 2 DEALS = $6,000 = RENT PAID
+
+YOU'VE GOT THIS. 🚀
+
+═══════════════════════════════════════════════════════════════
