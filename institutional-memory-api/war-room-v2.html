@@ -195,7 +195,7 @@
 
         .add-lead-form {
             display: grid;
-            grid-template-columns: 2fr 2fr 1.5fr 1fr 1fr;
+            grid-template-columns: 1.5fr 1.5fr 2fr 1.2fr 0.8fr 1fr;
             gap: 15px;
             margin-bottom: 30px;
         }
@@ -447,13 +447,14 @@
                 <div class="add-lead-form">
                     <input type="text" id="leadName" placeholder="Name">
                     <input type="text" id="leadCompany" placeholder="Company">
+                    <input type="url" id="leadUrl" placeholder="LinkedIn/Website URL (optional)">
                     <select id="leadStage">
                         <option value="Outreach">Outreach</option>
                         <option value="Demo">Demo Scheduled</option>
                         <option value="Closing">Closing</option>
                         <option value="Cash">CLOSED! 💰</option>
                     </select>
-                    <input type="number" id="leadValue" placeholder="Value ($)" value="499">
+                    <input type="number" id="leadValue" placeholder="$" value="499">
                     <button onclick="addLead()">Add Lead</button>
                 </div>
 
@@ -462,6 +463,7 @@
                         <tr>
                             <th>Name</th>
                             <th>Company</th>
+                            <th>URL</th>
                             <th>Stage</th>
                             <th>Value</th>
                             <th>Added By</th>
@@ -764,6 +766,7 @@ JP@DEFENSIBLEHIRINGAI.COM`}
         async function addLead() {
             const name = document.getElementById('leadName').value;
             const company = document.getElementById('leadCompany').value;
+            const url = document.getElementById('leadUrl').value;
             const stage = document.getElementById('leadStage').value;
             const value = document.getElementById('leadValue').value;
 
@@ -777,7 +780,7 @@ JP@DEFENSIBLEHIRINGAI.COM`}
                     method: 'POST',
                     headers: {'Content-Type': 'application/json'},
                     body: JSON.stringify({
-                        name, company, stage, value, added_by: currentUsername
+                        name, company, url, stage, value, added_by: currentUsername
                     })
                 });
 
@@ -785,6 +788,7 @@ JP@DEFENSIBLEHIRINGAI.COM`}
                 if (data.success) {
                     document.getElementById('leadName').value = '';
                     document.getElementById('leadCompany').value = '';
+                    document.getElementById('leadUrl').value = '';
                     document.getElementById('leadValue').value = '499';
                     loadPipeline();
                     updateProgress();
@@ -805,6 +809,7 @@ JP@DEFENSIBLEHIRINGAI.COM`}
                         <tr>
                             <td>${lead.name}</td>
                             <td>${lead.company}</td>
+                            <td>${lead.url ? `<a href="${lead.url}" target="_blank" style="color: #2ecc71; text-decoration: none;">🔗 View</a>` : '-'}</td>
                             <td><span class="stage-badge stage-${lead.stage.toLowerCase()}">${lead.stage}</span></td>
                             <td>$${lead.value}</td>
                             <td style="color: #2ecc71;">${lead.added_by}</td>

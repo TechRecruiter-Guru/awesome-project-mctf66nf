@@ -2541,7 +2541,8 @@ def api_add_lead():
             company=data['company'],
             stage=data['stage'],
             value=int(data['value']),
-            added_by=data['added_by']
+            added_by=data['added_by'],
+            url=data.get('url')
         )
         return jsonify({'success': True, 'lead_id': lead_id}), 201
     except Exception as e:

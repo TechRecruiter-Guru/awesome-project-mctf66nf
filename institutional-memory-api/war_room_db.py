@@ -23,6 +23,7 @@ def init_db():
             company TEXT NOT NULL,
             stage TEXT NOT NULL,
             value INTEGER NOT NULL,
+            url TEXT,
             added_by TEXT NOT NULL,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
             updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -67,15 +68,15 @@ def get_all_leads():
     conn.close()
     return leads
 
-def add_lead(name, company, stage, value, added_by):
+def add_lead(name, company, stage, value, added_by, url=None):
     """Add a new lead"""
     conn = sqlite3.connect(DB_PATH)
     cursor = conn.cursor()
 
     cursor.execute('''
-        INSERT INTO leads (name, company, stage, value, added_by)
-        VALUES (?, ?, ?, ?, ?)
-    ''', (name, company, stage, value, added_by))
+        INSERT INTO leads (name, company, stage, value, url, added_by)
+        VALUES (?, ?, ?, ?, ?, ?)
+    ''', (name, company, stage, value, url, added_by))
 
     lead_id = cursor.lastrowid
 
