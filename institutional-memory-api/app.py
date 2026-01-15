@@ -870,7 +870,7 @@ def root():
                 <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
                     <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
                         <h4 style="color: #667eea; margin-bottom: 15px;">💵 PayPal</h4>
-                        <p style="font-family: monospace; font-size: 1.1em; color: #333; margin: 0;">CGTPA.JP@GMAIL.COM</p>
+                        <p style="font-family: monospace; font-size: 1.1em; color: #333; margin: 0;">JP@DEFENSIBLEHIRINGAI.COM</p>
                     </div>
                     <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
                         <h4 style="color: #667eea; margin-bottom: 15px;">📱 Venmo</h4>
@@ -1038,7 +1038,7 @@ def root():
                         <a href="https://www.linkedin.com/in/john-polhill-iii/" style="display: inline-flex; align-items: center; gap: 8px; color: #667eea; text-decoration: none; font-weight: 600; padding: 10px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                             <span style="font-size: 1.2em;">in</span> Connect on LinkedIn
                         </a>
-                        <a href="mailto:CGTPA.JP@GMAIL.COM" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                        <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM" style="color: #667eea; text-decoration: none; font-weight: 600;">
                             📧 Email Me Directly
                         </a>
                     </div>
