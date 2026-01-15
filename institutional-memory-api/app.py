@@ -2501,6 +2501,21 @@ def sample_audit_pack():
             return f"PDF generation error: {str(e)}. Contact support@defensiblehiringai.com", 500
 
 
+# ==================== WAR ROOM DASHBOARD ====================
+@app.route('/war-room', methods=['GET'])
+@app.route('/war-room.html', methods=['GET'])
+def war_room():
+    """Revenue War Room Dashboard - 7-Day Sprint Tool"""
+    import os
+    war_room_path = os.path.join(os.path.dirname(__file__), 'war-room.html')
+
+    try:
+        with open(war_room_path, 'r', encoding='utf-8') as f:
+            return f.read()
+    except FileNotFoundError:
+        return "War Room dashboard not found. Contact support.", 404
+
+
 @app.route('/request-demo', methods=['GET', 'POST'])
 def request_demo():
     """Premium demo request form - positioned as exclusive"""
