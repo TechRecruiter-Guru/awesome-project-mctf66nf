@@ -2505,15 +2505,106 @@ def sample_audit_pack():
 @app.route('/war-room', methods=['GET'])
 @app.route('/war-room.html', methods=['GET'])
 def war_room():
-    """Revenue War Room Dashboard - 7-Day Sprint Tool"""
+    """Revenue War Room Dashboard - 7-Day Sprint Tool (Multi-User)"""
     import os
-    war_room_path = os.path.join(os.path.dirname(__file__), 'war-room.html')
+    war_room_path = os.path.join(os.path.dirname(__file__), 'war-room-v2.html')
 
     try:
         with open(war_room_path, 'r', encoding='utf-8') as f:
             return f.read()
     except FileNotFoundError:
         return "War Room dashboard not found. Contact support.", 404
+
+
+# ==================== WAR ROOM API ENDPOINTS ====================
+from war_room_db import (
+    get_all_leads, add_lead, update_lead_stage, delete_lead,
+    log_activity, get_today_stats, get_contributors, get_revenue_stats
+)
+
+@app.route('/api/war-room/leads', methods=['GET'])
+def api_get_leads():
+    """Get all leads"""
+    try:
+        leads = get_all_leads()
+        return jsonify({'success': True, 'leads': leads}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/leads', methods=['POST'])
+def api_add_lead():
+    """Add a new lead"""
+    try:
+        data = request.get_json()
+        lead_id = add_lead(
+            name=data['name'],
+            company=data['company'],
+            stage=data['stage'],
+            value=int(data['value']),
+            added_by=data['added_by']
+        )
+        return jsonify({'success': True, 'lead_id': lead_id}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/leads/<int:lead_id>', methods=['PUT'])
+def api_update_lead(lead_id):
+    """Update lead stage"""
+    try:
+        data = request.get_json()
+        update_lead_stage(lead_id, data['stage'])
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/leads/<int:lead_id>', methods=['DELETE'])
+def api_delete_lead(lead_id):
+    """Delete a lead"""
+    try:
+        delete_lead(lead_id)
+        return jsonify({'success': True}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/activity', methods=['POST'])
+def api_log_activity():
+    """Log an activity (linkedin, email, demo)"""
+    try:
+        data = request.get_json()
+        log_activity(
+            activity_type=data['activity_type'],
+            username=data['username']
+        )
+        return jsonify({'success': True}), 201
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/stats', methods=['GET'])
+def api_get_stats():
+    """Get today's stats"""
+    try:
+        stats = get_today_stats()
+        return jsonify({'success': True, 'stats': stats}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/contributors', methods=['GET'])
+def api_get_contributors():
+    """Get contributor leaderboard"""
+    try:
+        contributors = get_contributors()
+        return jsonify({'success': True, 'contributors': contributors}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
+
+@app.route('/api/war-room/revenue', methods=['GET'])
+def api_get_revenue():
+    """Get revenue stats"""
+    try:
+        revenue = get_revenue_stats()
+        return jsonify({'success': True, 'revenue': revenue}), 200
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/request-demo', methods=['GET', 'POST'])

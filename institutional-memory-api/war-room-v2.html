@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Defensible Hiring AI - Revenue War Room (Multi-User)</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .war-room { max-width: 1400px; margin: 0 auto; }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%);
+            border: 2px solid #ff6b35;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .header h1 { color: #ff6b35; font-size: 2.5em; margin-bottom: 10px; }
+        .header h2 { color: #2ecc71; font-size: 1.3em; margin-bottom: 20px; }
+
+        .username-display {
+            background: #1a1a1a;
+            border: 2px solid #2ecc71;
+            padding: 10px 20px;
+            border-radius: 50px;
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #2ecc71;
+            font-weight: 700;
+        }
+
+        .countdown-timer {
+            font-size: 3em;
+            color: #ff6b35;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 107, 53, 0.5);
+        }
+
+        .progress-container {
+            background: #1a1a1a;
+            border-radius: 50px;
+            height: 60px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #333;
+            margin-bottom: 15px;
+        }
+
+        .progress-bar {
+            background: linear-gradient(90deg, #2ecc71 0%, #27ae60 100%);
+            height: 100%;
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 50px;
+            box-shadow: 0 0 20px rgba(46, 204, 113, 0.5);
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #fff;
+            z-index: 10;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .deals-needed { font-size: 1.2em; color: #888; }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #333;
+            padding-bottom: 10px;
+        }
+
+        .tab {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            color: #888;
+            padding: 15px 30px;
+            border-radius: 10px 10px 0 0;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab:hover { background: #2a2a2a; border-color: #ff6b35; }
+        .tab.active { background: #ff6b35; color: #fff; border-color: #ff6b35; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* Message Toolbox (keeping existing styles) */
+        .state-selector {
+            margin-bottom: 30px;
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .state-btn {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            color: #888;
+            padding: 12px 25px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .state-btn:hover { border-color: #ff6b35; color: #ff6b35; }
+        .state-btn.active { background: #ff6b35; border-color: #ff6b35; color: #fff; }
+
+        .template-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 20px;
+        }
+
+        .template-card {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 25px;
+            transition: all 0.3s;
+        }
+
+        .template-card:hover {
+            border-color: #ff6b35;
+            box-shadow: 0 5px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .template-card h3 { color: #ff6b35; margin-bottom: 10px; font-size: 1.2em; }
+        .template-card .meta { color: #666; font-size: 0.9em; margin-bottom: 15px; }
+
+        .template-content {
+            background: #0f0f0f;
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 0.95em;
+            line-height: 1.6;
+            margin-bottom: 15px;
+            max-height: 200px;
+            overflow-y: auto;
+            border: 1px solid #333;
+        }
+
+        .copy-btn {
+            background: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: #27ae60;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.4);
+        }
+
+        .copy-btn.copied { background: #ff6b35; }
+
+        /* Pipeline Tracker */
+        .pipeline-section {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .add-lead-form {
+            display: grid;
+            grid-template-columns: 2fr 2fr 1.5fr 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .add-lead-form input, .add-lead-form select {
+            background: #0f0f0f;
+            border: 2px solid #333;
+            color: #e0e0e0;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 1em;
+        }
+
+        .add-lead-form button {
+            background: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .pipeline-table { width: 100%; border-collapse: collapse; }
+
+        .pipeline-table th {
+            background: #ff6b35;
+            color: #fff;
+            padding: 15px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .pipeline-table td { padding: 15px; border-bottom: 1px solid #333; }
+        .pipeline-table tr:hover { background: #2a2a2a; }
+
+        .stage-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .stage-outreach { background: #3498db; color: #fff; }
+        .stage-demo { background: #f39c12; color: #fff; }
+        .stage-closing { background: #9b59b6; color: #fff; }
+        .stage-cash { background: #2ecc71; color: #fff; }
+
+        .delete-btn {
+            background: #e74c3c;
+            color: #fff;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.85em;
+        }
+
+        /* Daily Stats */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .stat-card h3 {
+            color: #888;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .stat-card .number {
+            color: #2ecc71;
+            font-size: 3em;
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .stat-card.orange .number { color: #ff6b35; }
+
+        /* Contributors Leaderboard */
+        .contributor-card {
+            background: #1a1a1a;
+            border: 2px solid #333;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .contributor-card.top {
+            border-color: #ffd700;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2a2a1a 100%);
+        }
+
+        .contributor-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .contributor-stats {
+            display: flex;
+            gap: 20px;
+        }
+
+        .contributor-stat {
+            text-align: center;
+        }
+
+        .contributor-stat-value {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #2ecc71;
+        }
+
+        .contributor-stat-label {
+            font-size: 0.8em;
+            color: #888;
+        }
+
+        /* Username Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: #1a1a1a;
+            border: 2px solid #ff6b35;
+            border-radius: 15px;
+            padding: 40px;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        .modal-content h2 {
+            color: #ff6b35;
+            margin-bottom: 20px;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 15px;
+            background: #0f0f0f;
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+
+        .modal-content button {
+            background: #2ecc71;
+            color: #fff;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1em;
+            cursor: pointer;
+        }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: #1a1a1a; }
+        ::-webkit-scrollbar-thumb { background: #ff6b35; border-radius: 5px; }
+    </style>
+</head>
+<body>
+    <!-- Username Modal -->
+    <div class="modal" id="usernameModal">
+        <div class="modal-content">
+            <h2>👋 Welcome to the War Room!</h2>
+            <p style="color: #888; margin-bottom: 30px;">Enter your name to track your contributions:</p>
+            <input type="text" id="usernameInput" placeholder="Your Name (e.g., JP, Sarah, Mike)" autofocus>
+            <button onclick="setUsername()">Start Contributing →</button>
+        </div>
+    </div>
+
+    <div class="war-room" id="warRoom" style="display: none;">
+        <!-- Header with Countdown and Progress -->
+        <div class="header">
+            <h1>🎯 REVENUE WAR ROOM</h1>
+            <h2>Defensible Hiring AI - 7-Day Sprint</h2>
+            <div class="username-display">👤 <span id="currentUsername"></span></div>
+
+            <div class="countdown-timer" id="countdown">Loading...</div>
+
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+                <div class="progress-text">
+                    <span id="currentRevenue">$0</span> / $3,000
+                </div>
+            </div>
+
+            <div class="deals-needed">
+                <span id="dealsNeeded">6.0</span> deals needed @ $499/mo
+            </div>
+        </div>
+
+        <!-- Tabs -->
+        <div class="tabs">
+            <div class="tab active" onclick="switchTab('toolbox')">📋 Message Toolbox</div>
+            <div class="tab" onclick="switchTab('pipeline')">🚀 Pipeline</div>
+            <div class="tab" onclick="switchTab('stats')">📊 Daily Stats</div>
+            <div class="tab" onclick="switchTab('contributors')">🏆 Contributors</div>
+        </div>
+
+        <!-- Message Toolbox Tab -->
+        <div class="tab-content active" id="toolbox">
+            <div class="state-selector">
+                <button class="state-btn active" onclick="filterState('all')">🌎 ALL</button>
+                <button class="state-btn" onclick="filterState('nyc')">🗽 NYC</button>
+                <button class="state-btn" onclick="filterState('california')">☀️ California</button>
+                <button class="state-btn" onclick="filterState('illinois')">🌾 Illinois</button>
+                <button class="state-btn" onclick="filterState('colorado')">⛰️ Colorado</button>
+                <button class="state-btn" onclick="filterState('maryland')">🦀 Maryland</button>
+                <button class="state-btn" onclick="filterState('general')">📍 General</button>
+            </div>
+
+            <div class="template-grid" id="templateGrid">
+                <!-- Templates will be injected here -->
+            </div>
+        </div>
+
+        <!-- Pipeline Tab -->
+        <div class="tab-content" id="pipeline">
+            <div class="pipeline-section">
+                <h2 style="color: #ff6b35; margin-bottom: 20px;">Add New Lead</h2>
+                <div class="add-lead-form">
+                    <input type="text" id="leadName" placeholder="Name">
+                    <input type="text" id="leadCompany" placeholder="Company">
+                    <select id="leadStage">
+                        <option value="Outreach">Outreach</option>
+                        <option value="Demo">Demo Scheduled</option>
+                        <option value="Closing">Closing</option>
+                        <option value="Cash">CLOSED! 💰</option>
+                    </select>
+                    <input type="number" id="leadValue" placeholder="Value ($)" value="499">
+                    <button onclick="addLead()">Add Lead</button>
+                </div>
+
+                <table class="pipeline-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Company</th>
+                            <th>Stage</th>
+                            <th>Value</th>
+                            <th>Added By</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="pipelineBody">
+                        <!-- Leads will be injected here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Daily Stats Tab -->
+        <div class="tab-content" id="stats">
+            <div class="stats-grid">
+                <div class="stat-card orange">
+                    <h3>LinkedIn Requests Sent</h3>
+                    <div class="number" id="linkedinCount">0</div>
+                    <button onclick="incrementStat('linkedin')" style="background: #ff6b35; color: #fff; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 700;">+1</button>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Cold Emails Sent</h3>
+                    <div class="number" id="emailCount">0</div>
+                    <button onclick="incrementStat('email')" style="background: #2ecc71; color: #fff; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 700;">+1</button>
+                </div>
+
+                <div class="stat-card orange">
+                    <h3>Demos Booked</h3>
+                    <div class="number" id="demoCount">0</div>
+                    <button onclick="incrementStat('demo')" style="background: #ff6b35; color: #fff; border: none; padding: 10px 20px; border-radius: 50px; cursor: pointer; font-weight: 700;">+1</button>
+                </div>
+
+                <div class="stat-card">
+                    <h3>Deals Closed</h3>
+                    <div class="number" id="dealsCount">0</div>
+                    <p style="color: #666; font-size: 0.85em; margin-top: 10px;">(Auto-tracked from Pipeline)</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Contributors Tab -->
+        <div class="tab-content" id="contributors">
+            <h2 style="color: #ff6b35; margin-bottom: 30px; text-align: center;">🏆 Contributor Leaderboard</h2>
+            <div id="contributorsGrid">
+                <!-- Contributors will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Templates database (keeping from original)
+        const templates = [
+            {state: 'nyc', type: 'LinkedIn Connection', title: 'NYC Local Law 144 - Compliance Gap', chars: '297',
+             content: `Hi [First Name] - Quick question: Is [Company] compliant with NYC Local Law 144? If a rejected candidate sues claiming AI discrimination, can you produce their complete audit trail in 60 seconds? Most NYC companies can't - that's a $200K+ discovery problem. Worth connecting?`},
+            {state: 'nyc', type: 'Cold Email Subject', title: 'NYC Local Law 144 compliance gap', chars: '35',
+             content: `NYC Local Law 144 compliance gap`},
+            {state: 'nyc', type: 'Cold Email Body', title: 'NYC Compliance Email', chars: '~700',
+             content: `Hi [First Name],
+
+NYC Local Law 144 has been enforced since July 2023, and I'm seeing a critical compliance gap at companies using AI hiring tools:
+
+The law requires:
+✅ AI disclosure sent BEFORE screening
+✅ Annual bias audits
+✅ Public posting of audit results
+
+But here's what the law DOESN'T tell you:
+❌ When a rejected candidate sues, you need to produce their complete hiring journey in 60 seconds
+
+Most companies using HireVue/Pymetrics can't do this. That's why discovery costs average $200K+.
+
+I built Defensible Hiring AI specifically for NYC companies: Enter the candidate's name, get a court-ready forensic timeline showing:
+• When AI disclosure was sent (compliance requirement)
+• What the AI scored
+• What the human decided
+• Complete timestamp trail proving no discrimination
+
+Zero data storage - we fetch from YOUR ATS, generate the report, delete immediately.
+
+Would a 15-minute demo make sense?
+
+Best,
+John Polhill III
+Founder, Defensible Hiring AI
+CGTPA.JP@gmail.com`},
+            {state: 'california', type: 'LinkedIn Connection', title: 'California AB 2013 - Audit Trail', chars: '293',
+             content: `Hi [First Name] - Is [Company] ready for California's AI hiring regulations? AB 2013 requires audit trails for AI decisions. If a candidate sues, can you produce their complete hiring journey in 60 seconds? Most can't - that's a $500K lawsuit risk. Worth connecting?`},
+            {state: 'california', type: 'Cold Email Subject', title: 'California AB 2013 audit trail requirement', chars: '43',
+             content: `California AB 2013 audit trail requirement`},
+            {state: 'california', type: 'Cold Email Body', title: 'California Compliance Email', chars: '~650',
+             content: `Hi [First Name],
+
+California AB 2013 mandates documentation for AI hiring decisions, and SB 1162 adds pay transparency requirements.
+
+The compliance gap I'm seeing:
+Most companies using AI screening (HireVue, Pymetrics) can document WHAT their AI does, but not WHEN/HOW specific decisions were made.
+
+When a rejected candidate sues, courts ask:
+• Show us EXACTLY what happened with THIS candidate
+• When was AI disclosure sent?
+• What did the AI score? What did the human decide?
+• Why was THIS person rejected?
+
+If you can't produce this in 60 seconds, discovery costs start at $200K+.
+
+I built Defensible Hiring AI for California companies: Zero-storage audit trail system that generates court-ready forensic timelines when someone sues.
+
+We DON'T store candidate PII - we fetch from YOUR ATS in real-time, generate the audit pack, delete immediately.
+
+Would a 15-minute demo make sense?
+
+Best,
+John Polhill III
+Founder, Defensible Hiring AI
+CGTPA.JP@gmail.com`},
+            {state: 'illinois', type: 'LinkedIn Connection', title: 'Illinois AI Video Interview Act', chars: '298',
+             content: `Hi [First Name] - Is [Company] compliant with Illinois AI Video Interview Act? If you use AI for video screening and a candidate sues, can you prove disclosure compliance in 60 seconds? Most Illinois companies can't - that's a major lawsuit risk. Worth connecting?`},
+            {state: 'colorado', type: 'LinkedIn Connection', title: 'Colorado AI Transparency Laws', chars: '289',
+             content: `Hi [First Name] - Colorado requires transparency in AI hiring decisions. If a rejected candidate requests their AI evaluation data, can you provide it in 60 seconds? Most companies can't - that's a compliance violation and lawsuit risk. Worth connecting?`},
+            {state: 'maryland', type: 'LinkedIn Connection', title: 'Maryland AI Fairness Act', chars: '294',
+             content: `Hi [First Name] - Maryland's AI Fairness Act requires documentation of AI hiring decisions. If a candidate sues claiming discrimination, can you produce their complete audit trail in 60 seconds? Most Maryland companies can't - that's a $500K problem. Worth connecting?`},
+            {state: 'general', type: 'LinkedIn Connection', title: 'General - AI Hiring Lawsuit Risk', chars: '285',
+             content: `Hi [First Name] - AI hiring lawsuits are spreading nationwide. If a rejected candidate sued tomorrow claiming AI discrimination, could [Company] produce their complete hiring journey in 60 seconds? Most can't - that's why lawsuits average $500K. Worth connecting?`},
+            {state: 'general', type: 'LinkedIn Follow-Up', title: 'After Connection Accepted', chars: '~400',
+             content: `Hi [First Name],
+
+Thanks for connecting! I wanted to follow up on my question about AI hiring audit trails.
+
+The gap I'm seeing: Most companies using AI screening tools (HireVue, Pymetrics, etc.) can't produce a candidate's complete hiring journey in under 60 seconds when they get sued.
+
+That's the difference between a $20K settlement and a $500K lawsuit.
+
+I built Defensible Hiring AI to solve this - zero-storage audit trail system that generates court-ready forensic timelines instantly.
+
+Would a quick 15-minute demo make sense? I can show you exactly what you'd get when a rejected candidate sues.
+
+Let me know!
+
+John Polhill III
+Founder, Defensible Hiring AI`},
+            {state: 'general', type: 'Demo Booking', title: 'Scheduling Demo Call', chars: '~300',
+             content: `Hi [First Name],
+
+Great! I can show you how Defensible Hiring AI generates court-ready audit trails in 60 seconds.
+
+Here's my calendar link: [YOUR CALENDLY LINK]
+
+Pick any 15-minute slot that works for you.
+
+During the demo, I'll show you:
+✅ Live candidate journey generation
+✅ Zero-storage architecture (we don't store your PII)
+✅ How it integrates with your ATS
+
+Looking forward to it!
+
+John Polhill III
+Founder, Defensible Hiring AI
+CGTPA.JP@gmail.com`}
+        ];
+
+        let currentUsername = '';
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkUsername();
+        });
+
+        function checkUsername() {
+            const stored = localStorage.getItem('warroom_username');
+            if (stored) {
+                currentUsername = stored;
+                document.getElementById('currentUsername').textContent = currentUsername;
+                document.getElementById('usernameModal').style.display = 'none';
+                document.getElementById('warRoom').style.display = 'block';
+                initializeApp();
+            }
+        }
+
+        function setUsername() {
+            const input = document.getElementById('usernameInput').value.trim();
+            if (input) {
+                currentUsername = input;
+                localStorage.setItem('warroom_username', currentUsername);
+                document.getElementById('currentUsername').textContent = currentUsername;
+                document.getElementById('usernameModal').style.display = 'none';
+                document.getElementById('warRoom').style.display = 'block';
+                initializeApp();
+            } else {
+                alert('Please enter your name');
+            }
+        }
+
+        function initializeApp() {
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+            loadStats();
+            loadPipeline();
+            loadContributors();
+            updateProgress();
+            renderTemplates('all');
+
+            // Auto-refresh every 5 seconds for real-time sync
+            setInterval(() => {
+                loadPipeline();
+                loadStats();
+                loadContributors();
+                updateProgress();
+            }, 5000);
+        }
+
+        // Countdown Timer
+        function updateCountdown() {
+            const targetDate = new Date('2026-01-24T23:59:59').getTime();
+            const now = new Date().getTime();
+            const distance = targetDate - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('countdown').innerHTML = `${days}d ${hours}h ${minutes}m ${seconds}s`;
+
+            if (distance < 0) {
+                document.getElementById('countdown').innerHTML = "TIME'S UP!";
+            }
+        }
+
+        // Progress Bar (using API)
+        async function updateProgress() {
+            try {
+                const response = await fetch('/api/war-room/revenue');
+                const data = await response.json();
+                if (data.success) {
+                    const { total_revenue, deals_needed } = data.revenue;
+                    const percentage = (total_revenue / 3000) * 100;
+                    document.getElementById('progressBar').style.width = percentage + '%';
+                    document.getElementById('currentRevenue').textContent = '$' + total_revenue;
+                    document.getElementById('dealsNeeded').textContent = deals_needed;
+                }
+            } catch (error) {
+                console.error('Error updating progress:', error);
+            }
+        }
+
+        // Tab Switching
+        function switchTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+        }
+
+        // State Filter
+        function filterState(state) {
+            const btns = document.querySelectorAll('.state-btn');
+            btns.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            renderTemplates(state);
+        }
+
+        // Render Templates
+        function renderTemplates(state) {
+            const grid = document.getElementById('templateGrid');
+            const filtered = state === 'all' ? templates : templates.filter(t => t.state === state);
+
+            grid.innerHTML = filtered.map((template, index) => `
+                <div class="template-card">
+                    <h3>${template.title}</h3>
+                    <div class="meta">${template.type} • ${template.chars} chars</div>
+                    <div class="template-content">${template.content.replace(/\n/g, '<br>')}</div>
+                    <button class="copy-btn" onclick="copyTemplate(${index}, this)">
+                        📋 Copy to Clipboard
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Copy to Clipboard
+        function copyTemplate(index, button) {
+            const template = templates[index];
+            navigator.clipboard.writeText(template.content).then(() => {
+                button.textContent = '✅ Copied!';
+                button.classList.add('copied');
+                setTimeout(() => {
+                    button.textContent = '📋 Copy to Clipboard';
+                    button.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        // Pipeline Management (using API)
+        async function addLead() {
+            const name = document.getElementById('leadName').value;
+            const company = document.getElementById('leadCompany').value;
+            const stage = document.getElementById('leadStage').value;
+            const value = document.getElementById('leadValue').value;
+
+            if (!name || !company) {
+                alert('Please enter name and company');
+                return;
+            }
+
+            try {
+                const response = await fetch('/api/war-room/leads', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        name, company, stage, value, added_by: currentUsername
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('leadName').value = '';
+                    document.getElementById('leadCompany').value = '';
+                    document.getElementById('leadValue').value = '499';
+                    loadPipeline();
+                    updateProgress();
+                }
+            } catch (error) {
+                console.error('Error adding lead:', error);
+                alert('Error adding lead');
+            }
+        }
+
+        async function loadPipeline() {
+            try {
+                const response = await fetch('/api/war-room/leads');
+                const data = await response.json();
+                if (data.success) {
+                    const tbody = document.getElementById('pipelineBody');
+                    tbody.innerHTML = data.leads.map(lead => `
+                        <tr>
+                            <td>${lead.name}</td>
+                            <td>${lead.company}</td>
+                            <td><span class="stage-badge stage-${lead.stage.toLowerCase()}">${lead.stage}</span></td>
+                            <td>$${lead.value}</td>
+                            <td style="color: #2ecc71;">${lead.added_by}</td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteLead(${lead.id})">Delete</button>
+                            </td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading pipeline:', error);
+            }
+        }
+
+        async function deleteLead(leadId) {
+            if (!confirm('Delete this lead?')) return;
+
+            try {
+                const response = await fetch(`/api/war-room/leads/${leadId}`, {
+                    method: 'DELETE'
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    loadPipeline();
+                    updateProgress();
+                }
+            } catch (error) {
+                console.error('Error deleting lead:', error);
+            }
+        }
+
+        // Stats Management (using API)
+        async function incrementStat(stat) {
+            try {
+                const response = await fetch('/api/war-room/activity', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        activity_type: stat,
+                        username: currentUsername
+                    })
+                });
+
+                const data = await response.json();
+                if (data.success) {
+                    loadStats();
+                    loadContributors();
+                }
+            } catch (error) {
+                console.error('Error logging activity:', error);
+            }
+        }
+
+        async function loadStats() {
+            try {
+                const response = await fetch('/api/war-room/stats');
+                const data = await response.json();
+                if (data.success) {
+                    document.getElementById('linkedinCount').textContent = data.stats.linkedin;
+                    document.getElementById('emailCount').textContent = data.stats.email;
+                    document.getElementById('demoCount').textContent = data.stats.demo;
+                    document.getElementById('dealsCount').textContent = data.stats.deals;
+                }
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+
+        // Contributors Leaderboard
+        async function loadContributors() {
+            try {
+                const response = await fetch('/api/war-room/contributors');
+                const data = await response.json();
+                if (data.success) {
+                    const grid = document.getElementById('contributorsGrid');
+
+                    if (data.contributors.length === 0) {
+                        grid.innerHTML = '<p style="text-align: center; color: #666;">No contributors yet. Be the first!</p>';
+                        return;
+                    }
+
+                    grid.innerHTML = data.contributors.map((contrib, index) => `
+                        <div class="contributor-card ${index === 0 ? 'top' : ''}">
+                            <div>
+                                <div class="contributor-name">
+                                    ${index === 0 ? '🥇 ' : index === 1 ? '🥈 ' : index === 2 ? '🥉 ' : ''}
+                                    ${contrib.username}
+                                </div>
+                            </div>
+                            <div class="contributor-stats">
+                                <div class="contributor-stat">
+                                    <div class="contributor-stat-value">${contrib.linkedin_sent}</div>
+                                    <div class="contributor-stat-label">LinkedIn</div>
+                                </div>
+                                <div class="contributor-stat">
+                                    <div class="contributor-stat-value">${contrib.emails_sent}</div>
+                                    <div class="contributor-stat-label">Emails</div>
+                                </div>
+                                <div class="contributor-stat">
+                                    <div class="contributor-stat-value">${contrib.demos_booked}</div>
+                                    <div class="contributor-stat-label">Demos</div>
+                                </div>
+                                <div class="contributor-stat">
+                                    <div class="contributor-stat-value" style="color: #ffd700;">${contrib.deals_closed}</div>
+                                    <div class="contributor-stat-label">Deals</div>
+                                </div>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('Error loading contributors:', error);
+            }
+        }
+    </script>
+</body>
+</html>
