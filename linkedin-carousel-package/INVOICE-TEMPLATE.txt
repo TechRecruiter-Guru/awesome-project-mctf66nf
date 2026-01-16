@@ -1,0 +1,164 @@
+═══════════════════════════════════════════════════════════════
+INVOICE TEMPLATE - Copy/Paste and Customize
+═══════════════════════════════════════════════════════════════
+
+────────────────────────────────────────────────────────────────
+
+                    DEFENSIBLE HIRING AI
+                 AI Compliance Consulting Services
+
+────────────────────────────────────────────────────────────────
+
+INVOICE #: [001, 002, 003, etc.]
+DATE: [Today's Date]
+DUE DATE: Upon Acceptance
+
+BILL TO:
+[Company Name]
+[Contact Name]
+[Title]
+[Email]
+
+────────────────────────────────────────────────────────────────
+
+SERVICE DESCRIPTION:
+
+AI Hiring Compliance Audit & Implementation
+
+This engagement includes:
+
+✓ Comprehensive compliance gap analysis (NYC Local Law 144,
+  CA AB 2013, IL HB 2557, and federal EEOC guidelines)
+
+✓ Documentation review of current AI screening tools and processes
+
+✓ Custom AI governance policy tailored to your organization
+
+✓ EEOC response playbook and template documentation
+
+✓ Defensibility binder with all required audit materials
+
+✓ Implementation roadmap with step-by-step compliance checklist
+
+✓ Email support throughout 2-week engagement
+
+────────────────────────────────────────────────────────────────
+
+TIMELINE:
+
+Start Date: [Next Monday's Date]
+Completion Date: [2 weeks from start]
+Kickoff Call: [Date/Time - 30 minutes]
+
+────────────────────────────────────────────────────────────────
+
+INVESTMENT:
+
+Professional Services                                     $3,500.00
+                                                         ──────────
+TOTAL DUE                                                $3,500.00
+
+────────────────────────────────────────────────────────────────
+
+PAYMENT OPTIONS:
+
+1. CREDIT CARD (Fastest - Start Monday)
+   Pay via: [Your Stripe/PayPal Payment Link]
+
+2. WIRE TRANSFER
+   Bank: [Your Bank Name]
+   Account Name: Defensible Hiring AI / John Polhill III
+   Account Number: [Your Account #]
+   Routing Number: [Your Routing #]
+
+3. CHECK
+   Payable to: "Defensible Hiring AI"
+   Mail to: [Your Business Address]
+
+4. COMPANY CHECK/ACH
+   W9 available upon request
+
+────────────────────────────────────────────────────────────────
+
+PAYMENT TERMS:
+
+Payment due upon acceptance of engagement.
+Work begins upon receipt of payment and signed agreement.
+
+────────────────────────────────────────────────────────────────
+
+NEXT STEPS:
+
+1. Reply to this email to confirm acceptance
+2. Submit payment via your preferred method above
+3. I'll send you the service agreement for signature
+4. We'll schedule our kickoff call for Monday
+5. Please prepare access to:
+   - Your ATS (Workday, Greenhouse, Lever, etc.)
+   - Your AI screening tool contracts/documentation
+   - Any existing hiring policies or procedures
+
+────────────────────────────────────────────────────────────────
+
+QUESTIONS?
+
+John Polhill III
+Founder, Defensible Hiring AI
+JP@DEFENSIBLEHIRINGAI.COM
+[Your Phone Number if you want to include it]
+
+────────────────────────────────────────────────────────────────
+
+Thank you for choosing Defensible Hiring AI. Looking forward to
+helping [Company Name] build a compliant, defensible hiring process.
+
+Best,
+JP
+
+────────────────────────────────────────────────────────────────
+
+═══════════════════════════════════════════════════════════════
+ALTERNATIVE: PAYMENT PLAN OPTION (If they balk at $3,500 upfront)
+═══════════════════════════════════════════════════════════════
+
+INVESTMENT:
+
+Deposit (Due Today)                                      $1,750.00
+Final Payment (Due Upon Delivery)                        $1,750.00
+                                                         ──────────
+TOTAL                                                    $3,500.00
+
+This allows them to split payment but you get half upfront.
+
+═══════════════════════════════════════════════════════════════
+
+DISCOUNT VERSION (For fast close or budget-conscious clients):
+═══════════════════════════════════════════════════════════════
+
+SERVICE DESCRIPTION:
+
+AI Hiring Compliance Audit (Basic Package)
+
+This engagement includes:
+
+✓ Compliance gap analysis (all applicable regulations)
+✓ Documentation review of current AI screening processes
+✓ Standard AI governance policy templates
+✓ Basic EEOC response guidelines
+✓ Email support during engagement
+
+INVESTMENT:
+
+Professional Services                                     $2,500.00
+                                                         ──────────
+TOTAL DUE                                                $2,500.00
+
+Use this if they say "$3,500 is too much" - still profitable.
+
+═══════════════════════════════════════════════════════════════
+
+PRO TIP: Send invoice within 1 hour of call ending.
+
+Speed = credibility. Shows you're organized and ready to go.
+
+═══════════════════════════════════════════════════════════════
