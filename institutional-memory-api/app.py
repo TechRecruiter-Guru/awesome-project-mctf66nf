@@ -777,91 +777,127 @@ def root():
 
     <div class="pricing" id="pricing">
         <div class="container">
-            <h2>💰 Pricing: Pay Per Protected Hire</h2>
+            <h2>💰 Pricing: Fixed-Fee Compliance Audits</h2>
             <p style="text-align: center; margin-bottom: 20px;">
-                Integrate once. Protect every hire. Scale as you grow.
+                One-time investment. Complete compliance. No ongoing fees.
             </p>
 
             <div class="pricing-grid">
                 <div class="pricing-card">
-                    <h3>Starter</h3>
-                    <div class="price">$749<span style="font-size: 0.4em;">/mo</span></div>
-                    <p>Perfect for small ATS platforms</p>
+                    <h3>Basic Audit</h3>
+                    <div class="price">$2,500</div>
+                    <p>Perfect for small companies with single AI tool</p>
 
-                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <!-- VALUE BREAKDOWN -->
                     <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
                         <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Just $0.75 per decision protected</strong><br>
+                            <strong style="color: #667eea;">💡 5% of one lawsuit cost</strong><br>
                             <span style="font-size: 0.85em; color: #666;">
-                                vs. $200K+ discovery costs<br>
-                                vs. $500K average lawsuit<br>
-                                vs. 6-12 months to build yourself
+                                vs. $50K+ legal defense<br>
+                                vs. $500K settlement risk<br>
+                                Done in 2 weeks
                             </span>
                         </p>
                     </div>
 
                     <ul class="features">
-                        <li>Up to 1,000 decisions/month</li>
-                        <li>Full API access</li>
-                        <li>Audit pack generation</li>
-                        <li>Email support</li>
+                        <li>Compliance gap analysis (8 questions)</li>
+                        <li>Documentation review</li>
+                        <li>Standard policy templates</li>
+                        <li>Implementation checklist</li>
+                        <li>Email support (2 weeks)</li>
                     </ul>
-                    <a href="/request-demo" class="cta-button">Apply for Access</a>
+                    <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM?subject=Basic Audit Inquiry" class="cta-button">Get Started</a>
                 </div>
 
                 <div class="pricing-card featured">
-                    <h3>Professional</h3>
-                    <div class="price">$1,999<span style="font-size: 0.4em;">/mo</span></div>
-                    <p>Most popular for growing companies</p>
+                    <h3>Standard Audit</h3>
+                    <div class="price">$3,500</div>
+                    <p style="margin-bottom: 5px;">Most popular for growing companies</p>
+                    <p style="font-size: 0.85em; color: #667eea; margin: 0;">⭐ Recommended</p>
 
-                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <!-- VALUE BREAKDOWN -->
                     <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
                         <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Just $0.20 per decision protected</strong><br>
+                            <strong style="color: #667eea;">💡 7% of one lawsuit cost</strong><br>
                             <span style="font-size: 0.85em; color: #666;">
-                                vs. $200K+ discovery costs<br>
-                                vs. $500K average lawsuit<br>
-                                vs. 6-12 months to build yourself
+                                vs. $50K+ legal defense<br>
+                                vs. $500K settlement risk<br>
+                                Custom policies included
                             </span>
                         </p>
                     </div>
 
                     <ul class="features">
-                        <li>Up to 10,000 decisions/month</li>
-                        <li>Priority support</li>
-                        <li>Custom integrations</li>
-                        <li>Compliance dashboard</li>
-                        <li>Multi-tenant support</li>
+                        <li><strong>Everything in Basic, PLUS:</strong></li>
+                        <li>Custom AI governance policy</li>
+                        <li>EEOC response playbook</li>
+                        <li>1-hour team training session</li>
+                        <li>Defensibility binder (organized docs)</li>
+                        <li>Priority email support</li>
                     </ul>
-                    <a href="/request-demo" class="cta-button">Apply for Access</a>
+                    <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM?subject=Standard Audit Inquiry" class="cta-button">Get Started</a>
                 </div>
 
                 <div class="pricing-card">
-                    <h3>Enterprise</h3>
-                    <div class="price">Custom</div>
-                    <p>For large ATS vendors</p>
+                    <h3>Premium Audit</h3>
+                    <div class="price">$5,000</div>
+                    <p>For large companies with urgent needs</p>
 
-                    <!-- UNIT ECONOMICS BREAKDOWN -->
+                    <!-- VALUE BREAKDOWN -->
                     <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
                         <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Pennies per decision at scale</strong><br>
+                            <strong style="color: #667eea;">💡 10% of one lawsuit cost</strong><br>
                             <span style="font-size: 0.85em; color: #666;">
-                                vs. $2M+ to build in-house<br>
-                                vs. $500K per lawsuit<br>
-                                vs. 12-18 months engineering time
+                                vs. $50K+ legal defense<br>
+                                vs. $500K settlement risk<br>
+                                Done in 1 week + ongoing support
                             </span>
                         </p>
                     </div>
 
                     <ul class="features">
-                        <li>Unlimited decisions</li>
-                        <li>White-label options</li>
-                        <li>Dedicated support</li>
-                        <li>SLA guarantees</li>
-                        <li>Revenue sharing available</li>
+                        <li><strong>Everything in Standard, PLUS:</strong></li>
+                        <li>Bias audit coordination (3rd party)</li>
+                        <li>Quarterly compliance check-ins (3 months)</li>
+                        <li>Priority phone support</li>
+                        <li>Updates when regulations change</li>
+                        <li>Expedited delivery (1 week)</li>
                     </ul>
-                    <a href="/request-demo" class="cta-button">Request Consultation</a>
+                    <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM?subject=Premium Audit Inquiry" class="cta-button">Get Started</a>
                 </div>
+            </div>
+
+            <!-- OPTIONAL ADD-ONS -->
+            <div style="background: #fff; padding: 40px; border-radius: 15px; margin-top: 40px; border: 2px solid #e0e0e0;">
+                <h3 style="color: #667eea; margin-bottom: 20px; text-align: center;">📦 Optional Add-Ons</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px;">
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #667eea;">
+                        <h4 style="color: #667eea; margin-bottom: 10px;">🔄 Ongoing Monitoring</h4>
+                        <div style="font-size: 1.5em; font-weight: bold; color: #333; margin-bottom: 10px;">$500<span style="font-size: 0.6em; color: #666;">/month</span></div>
+                        <ul style="list-style: none; padding: 0; margin: 15px 0; color: #666; font-size: 0.95em;">
+                            <li style="margin: 8px 0;">✓ Quarterly policy reviews</li>
+                            <li style="margin: 8px 0;">✓ Updates when laws change</li>
+                            <li style="margin: 8px 0;">✓ Monthly compliance newsletter</li>
+                            <li style="margin: 8px 0;">✓ Unlimited email support</li>
+                            <li style="margin: 8px 0;">✓ Annual re-audit</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fff5f5; padding: 25px; border-radius: 12px; border-left: 4px solid #e74c3c;">
+                        <h4 style="color: #e74c3c; margin-bottom: 10px;">🚨 Emergency EEOC Response</h4>
+                        <div style="font-size: 1.5em; font-weight: bold; color: #333; margin-bottom: 10px;">$1,500<span style="font-size: 0.6em; color: #666;">/one-time</span></div>
+                        <ul style="list-style: none; padding: 0; margin: 15px 0; color: #666; font-size: 0.95em;">
+                            <li style="margin: 8px 0;">✓ Active complaint response</li>
+                            <li style="margin: 8px 0;">✓ Documentation preparation</li>
+                            <li style="margin: 8px 0;">✓ Expert witness coordination</li>
+                            <li style="margin: 8px 0;">✓ Response strategy consultation</li>
+                            <li style="margin: 8px 0;">✓ 48-hour turnaround</li>
+                        </ul>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 25px; color: #666; font-size: 0.95em;">
+                    <em>Add-ons can be purchased during or after your initial audit.</em>
+                </p>
             </div>
 
             <div style="background: #f8f9fa; padding: 40px; border-radius: 15px; margin-top: 40px; text-align: center;">
@@ -878,7 +914,7 @@ def root():
                     </div>
                 </div>
                 <p style="margin-top: 25px; font-size: 0.95em; color: #666;">
-                    <em>After approval, we'll send payment instructions and API credentials within 24 hours.</em>
+                    <em>After payment, we'll send your service agreement and schedule your kickoff call within 24 hours.</em>
                 </p>
             </div>
         </div>
