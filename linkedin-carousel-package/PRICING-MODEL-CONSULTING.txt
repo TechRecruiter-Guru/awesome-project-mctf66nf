@@ -1,0 +1,260 @@
+═══════════════════════════════════════════════════════════════
+✅ UPDATED PRICING MODEL - CONSULTING SERVICE
+Fixed-Fee Audits (NOT Pay-Per-Hire SaaS)
+═══════════════════════════════════════════════════════════════
+
+OLD (WRONG) - Pay Per Protected Hire:
+❌ $749/mo Starter (up to 1,000 decisions/month)
+❌ $1,999/mo Professional (up to 10,000 decisions/month)
+❌ Custom Enterprise (unlimited decisions)
+❌ Implied SaaS platform with ongoing subscriptions
+
+PROBLEM:
+- Conflicts with consulting service model
+- Requires vendor onboarding (slow approval)
+- Requires data storage (security reviews needed)
+- Monthly fees harder to approve than one-time
+
+═══════════════════════════════════════════════════════════════
+
+NEW (CORRECT) - Fixed-Fee Compliance Audits:
+═══════════════════════════════════════════════════════════════
+
+💼 BASIC AUDIT - $2,500 (one-time)
+───────────────────────────────────────────────────────────────
+Perfect for: Small companies (100-500 employees), single AI tool
+
+What they get:
+✓ Compliance gap analysis (8-question audit)
+✓ Documentation review
+✓ Standard policy templates
+✓ Implementation checklist
+✓ Email support during 2-week engagement
+
+Timeline: 2 weeks
+Value messaging: "5% of one lawsuit cost vs. $50K+ legal defense"
+
+───────────────────────────────────────────────────────────────
+
+⭐ STANDARD AUDIT - $3,500 (one-time) - MOST POPULAR
+───────────────────────────────────────────────────────────────
+Perfect for: Mid-size companies (500-2,000 employees), multiple tools
+
+What they get:
+✓ Everything in Basic, PLUS:
+✓ Custom AI governance policy (tailored to their tools)
+✓ EEOC response playbook (specific scenarios)
+✓ 1-hour live training session for HR team
+✓ Defensibility binder (all documentation organized)
+✓ Priority email support
+
+Timeline: 2 weeks
+Value messaging: "7% of one lawsuit cost vs. $50K+ legal defense"
+
+This is your PRIMARY offering - recommend this first.
+
+───────────────────────────────────────────────────────────────
+
+🚀 PREMIUM AUDIT - $5,000 (one-time)
+───────────────────────────────────────────────────────────────
+Perfect for: Large companies (2,000+ employees), urgent needs
+
+What they get:
+✓ Everything in Standard, PLUS:
+✓ Bias audit coordination (connect to 3rd-party auditor)
+✓ Quarterly compliance check-ins (3 months included)
+✓ Priority phone support (not just email)
+✓ Updates when regulations change
+✓ Expedited delivery (1 week instead of 2)
+
+Timeline: 1 week (expedited)
+Value messaging: "10% of one lawsuit cost vs. $50K+ legal defense"
+
+═══════════════════════════════════════════════════════════════
+
+📦 OPTIONAL ADD-ONS (Upsells)
+═══════════════════════════════════════════════════════════════
+
+🔄 ONGOING MONITORING - $500/month
+───────────────────────────────────────────────────────────────
+For clients who want continued support after initial audit
+
+Includes:
+✓ Quarterly policy reviews
+✓ Updates when laws change (NYC, CA, IL, CO, MD)
+✓ Monthly compliance newsletter
+✓ Unlimited email support
+✓ Annual re-audit (full compliance check)
+
+Upsell timing: Offer at end of Standard/Premium audit delivery
+Close rate: ~30% of clients opt for this after audit
+
+───────────────────────────────────────────────────────────────
+
+🚨 EMERGENCY EEOC RESPONSE - $1,500 (one-time)
+───────────────────────────────────────────────────────────────
+For clients facing active EEOC complaints
+
+Includes:
+✓ Active complaint response strategy
+✓ Documentation preparation for EEOC
+✓ Expert witness coordination
+✓ Response consultation (what to say, what NOT to say)
+✓ 48-hour turnaround (emergency priority)
+
+Upsell timing: Only offer when they mention active complaint
+Close rate: 100% (if they have active complaint, they NEED this)
+
+═══════════════════════════════════════════════════════════════
+
+💳 PAYMENT OPTIONS
+═══════════════════════════════════════════════════════════════
+
+ACCEPTED:
+✓ PayPal: JP@DEFENSIBLEHIRINGAI.COM
+✓ Venmo: @YourVenmo
+✓ Company credit card (invoice via PayPal/Stripe)
+✓ Wire transfer (for larger clients)
+✓ Company check (slower, but some prefer this)
+✓ ACH/direct deposit
+
+PAYMENT TERMS:
+- Basic/Standard: Full payment upfront ($2,500 or $3,500)
+- Premium: 50% upfront, 50% on delivery (if needed)
+- Ongoing Monitoring: Monthly recurring ($500/mo)
+- Emergency Response: Full payment before work starts ($1,500)
+
+AFTER PAYMENT:
+1. Send service agreement for signature
+2. Schedule kickoff call within 24 hours
+3. Request access to their AI tool contracts/documentation
+4. Begin work immediately
+
+═══════════════════════════════════════════════════════════════
+
+🎯 YOUR SALES PITCH (Updated)
+═══════════════════════════════════════════════════════════════
+
+WHEN THEY ASK ABOUT PRICING:
+
+"We're not a software platform - we're compliance consultants.
+
+Here's how it works:
+
+We audit your AI screening setup in 2 weeks. You get:
+✅ Full compliance gap analysis
+✅ Custom AI governance policy
+✅ EEOC response playbook
+✅ Training for your team
+✅ All documentation you need to be defensible
+
+INVESTMENT: $3,500 one-time fee.
+
+No monthly subscriptions. No per-hire charges. No ongoing fees.
+You own everything. We don't store your data. Done in 2 weeks.
+
+If you want ongoing support after that, we offer a $500/month
+monitoring package. But most clients just take the audit and
+manage it themselves.
+
+Want to start Monday?"
+
+───────────────────────────────────────────────────────────────
+
+IF THEY SAY "TOO EXPENSIVE":
+
+"I hear you. Let me reframe it:
+
+$3,500 = Compliance audit + defensibility documentation
+$50,000 = Average cost of defending ONE EEOC complaint
+
+If there's even a 10% chance of getting sued in the next 3 years,
+this is a no-brainer.
+
+But if budget is tight, I can do the Basic audit for $2,500.
+You won't get the custom policy or training, but you'll at least
+know where your gaps are.
+
+What makes more sense?"
+
+───────────────────────────────────────────────────────────────
+
+IF THEY SAY "NEED TO CHECK BUDGET":
+
+"Totally understand. Quick question: do you have discretionary
+budget for professional services, or does this need to go through
+procurement?
+
+Because $3,500 is usually under the threshold for vendor onboarding.
+Most of my clients just expense it as a consulting fee.
+
+If you can approve it this week, we can start Monday and have you
+compliant by end of month.
+
+Sound good?"
+
+═══════════════════════════════════════════════════════════════
+
+📊 REVENUE PROJECTIONS
+═══════════════════════════════════════════════════════════════
+
+NEXT 6 DAYS (Rent money):
+- 2 clients @ $3,500 = $7,000
+- Pay rent ($3,000) ✅
+- Buffer ($4,000) ✅
+
+NEXT 30 DAYS:
+- 8 clients @ $3,500 = $28,000
+- 2 upgrade to Ongoing Monitoring @ $500/mo = +$1,000/mo
+
+NEXT 90 DAYS:
+- 20 clients @ $3,500 = $70,000
+- 6 on Ongoing Monitoring @ $500/mo = +$3,000/mo
+- 2 Emergency EEOC Response @ $1,500 = +$3,000
+
+MONTHLY RECURRING TARGET:
+- Close 5 new audits/month @ $3,500 = $17,500
+- Maintain 10 monitoring clients @ $500 = $5,000/mo
+- Total monthly revenue = $22,500
+
+═══════════════════════════════════════════════════════════════
+
+✅ KEY ADVANTAGES OF THIS PRICING MODEL:
+═══════════════════════════════════════════════════════════════
+
+VS. SaaS SUBSCRIPTION:
+✓ Faster approval (one-time = discretionary, monthly = procurement)
+✓ No vendor onboarding (no security reviews, no IT approval)
+✓ Higher immediate revenue ($3,500 now vs. $99/mo over time)
+✓ No churn risk (they already paid)
+✓ Simpler delivery (no software to maintain)
+
+VS. HOURLY CONSULTING:
+✓ More predictable revenue ($3,500 guaranteed, not $150/hr × unknown hours)
+✓ Easier to sell (fixed scope, not open-ended)
+✓ Higher perceived value ("compliance audit" vs. "hours worked")
+✓ Scales better (repeatable process, not custom each time)
+
+═══════════════════════════════════════════════════════════════
+
+🚀 NEXT STEPS:
+═══════════════════════════════════════════════════════════════
+
+1. ✅ Pricing model updated on website (app.py)
+2. ✅ LinkedIn carousel ready (mentions consulting, not SaaS)
+3. ✅ Call script ready (CALL-SCRIPT.txt)
+4. ✅ Invoice template ready (INVOICE-TEMPLATE.txt)
+
+NOW: POST CAROUSEL AND START OUTREACH
+
+00:00-05:00 → POST CAROUSEL to LinkedIn
+05:00-20:00 → Find 50 target buyers
+20:00-40:00 → Send 50 connection requests
+40:00-50:00 → DM 20 existing connections
+50:00-60:00 → Prep for responses
+
+GOAL: 2 deals @ $3,500 = $7,000 = RENT PAID ✅
+
+LET'S GO! 🚀💰
+
+═══════════════════════════════════════════════════════════════
