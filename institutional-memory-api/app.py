@@ -602,10 +602,6 @@ def root():
                         <span style="color: #666; font-size: 0.95em;">Your customers need compliance tools</span>
                     </div>
                 </div>
-                <p style="margin-top: 30px; font-size: 1.1em;">
-                    <strong>Don't know if you're covered?</strong>
-                    <a href="mailto:compliance@defensiblehiringai.com?subject=Am I Required to Comply?" style="color: #667eea; text-decoration: underline;">Ask our compliance team →</a>
-                </p>
             </div>
         </div>
     </div>
@@ -1117,7 +1113,7 @@ def root():
             </div>
 
             <p style="text-align: center; margin-top: 25px; font-size: 0.95em; color: #666;">
-                <em>For questions about how our documentation services work, contact <a href="mailto:CGTPA.JP@GMAIL.COM" style="color: #667eea; text-decoration: underline;">CGTPA.JP@GMAIL.COM</a></em>
+                <em>For questions about how our documentation services work, contact <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM" style="color: #667eea; text-decoration: underline;">JP@DEFENSIBLEHIRINGAI.COM</a></em>
             </p>
         </div>
     </div>
