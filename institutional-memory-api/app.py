@@ -1047,6 +1047,81 @@ def root():
         </p>
     </div>
 
+    <!-- LEGAL DISCLAIMER -->
+    <div style="background: #fff9e6; border-top: 3px solid #f39c12; border-bottom: 3px solid #f39c12; padding: 50px 20px; margin-top: 60px;">
+        <div class="container" style="max-width: 1000px; margin: 0 auto;">
+            <h3 style="color: #d68910; text-align: center; font-size: 1.5em; margin-bottom: 25px;">⚖️ Important Legal Disclaimer</h3>
+
+            <div style="background: white; padding: 35px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); line-height: 1.8; color: #555;">
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    <strong style="color: #333;">NOT LEGAL ADVICE:</strong> Defensible Hiring AI provides <strong>technical documentation and audit trail recovery services</strong> for AI hiring screening tools. We are <strong>NOT attorneys</strong> and do not provide legal advice, legal representation, or compliance consulting services.
+                </p>
+
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    <strong style="color: #333;">OUR SERVICE:</strong> Our Institutional Memory API and audit trail recovery services help you <strong>document and organize technical records</strong> related to your AI screening tools (HireVue, MyInterview, Spark Hire, etc.). We create documentation packages that help you respond to inquiries, but we do not interpret laws, provide compliance opinions, or advise on legal strategy.
+                </p>
+
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    <strong style="color: #333;">CONSULT YOUR ATTORNEY:</strong> All companies using AI hiring tools should consult with qualified employment law attorneys regarding:
+                </p>
+                <ul style="margin: 15px 0 20px 40px; font-size: 1.05em;">
+                    <li style="margin-bottom: 10px;">Compliance with federal, state, and local AI hiring regulations (NYC Local Law 144, CA AB 2013, IL HB 2557, etc.)</li>
+                    <li style="margin-bottom: 10px;">EEOC guidance interpretation and application to your specific situation</li>
+                    <li style="margin-bottom: 10px;">Response strategies for complaints, investigations, or audits</li>
+                    <li style="margin-bottom: 10px;">Legal requirements for bias audits, candidate notifications, and record retention</li>
+                </ul>
+
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    <strong style="color: #333;">WHAT WE DO vs. WHAT LAWYERS DO:</strong>
+                </p>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px;">
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; border-left: 4px solid #4caf50;">
+                        <h4 style="color: #2e7d32; margin-bottom: 12px; font-size: 1.1em;">✅ We Provide:</h4>
+                        <ul style="list-style: none; padding: 0; font-size: 0.95em; color: #555;">
+                            <li style="margin: 8px 0;">• Technical documentation services</li>
+                            <li style="margin: 8px 0;">• Audit trail recovery and organization</li>
+                            <li style="margin: 8px 0;">• Documentation templates and frameworks</li>
+                            <li style="margin: 8px 0;">• Technical record-keeping systems</li>
+                            <li style="margin: 8px 0;">• Response preparation assistance</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fff3e0; padding: 20px; border-radius: 8px; border-left: 4px solid #ff9800;">
+                        <h4 style="color: #e65100; margin-bottom: 12px; font-size: 1.1em;">⚖️ Your Attorney Provides:</h4>
+                        <ul style="list-style: none; padding: 0; font-size: 0.95em; color: #555;">
+                            <li style="margin: 8px 0;">• Legal advice and representation</li>
+                            <li style="margin: 8px 0;">• Compliance opinions and interpretations</li>
+                            <li style="margin: 8px 0;">• Legal strategy for EEOC responses</li>
+                            <li style="margin: 8px 0;">• Defense in litigation or investigations</li>
+                            <li style="margin: 8px 0;">• Regulatory compliance guidance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    <strong style="color: #333;">NO ATTORNEY-CLIENT RELATIONSHIP:</strong> Use of our services does not create an attorney-client relationship. Nothing on this website, in our documentation, or in our communications should be construed as legal advice. Any information we provide about laws, regulations, or compliance requirements is for <strong>general informational purposes only</strong> and should be independently verified with your legal counsel.
+                </p>
+
+                <p style="margin-bottom: 20px; font-size: 1.05em;">
+                    <strong style="color: #333;">YOUR RESPONSIBILITY:</strong> You are solely responsible for ensuring your AI hiring practices comply with all applicable federal, state, and local laws. Our documentation services are designed to help you maintain organized records, but compliance decisions must be made in consultation with qualified legal professionals.
+                </p>
+
+                <p style="margin-bottom: 0; font-size: 1.05em;">
+                    <strong style="color: #333;">NO WARRANTY OR GUARANTEE:</strong> We make no representations or warranties that our documentation services will prevent regulatory action, satisfy compliance requirements, or guarantee any particular outcome in legal proceedings. All results depend on your specific circumstances and the decisions you make with guidance from your legal team.
+                </p>
+
+                <div style="margin-top: 30px; padding: 20px; background: #f5f5f5; border-radius: 8px; border-left: 4px solid #667eea;">
+                    <p style="margin: 0; font-size: 1em; color: #333;">
+                        <strong>📌 BOTTOM LINE:</strong> We help you recover and organize your AI hiring audit trails. Your lawyers help you comply with the law and defend against claims. <strong>Use both.</strong> Our service complements legal counsel—it doesn't replace it.
+                    </p>
+                </div>
+            </div>
+
+            <p style="text-align: center; margin-top: 25px; font-size: 0.95em; color: #666;">
+                <em>For questions about how our documentation services work, contact <a href="mailto:CGTPA.JP@GMAIL.COM" style="color: #667eea; text-decoration: underline;">CGTPA.JP@GMAIL.COM</a></em>
+            </p>
+        </div>
+    </div>
+
     <footer style="background: #2c3e50; color: white; padding: 40px 20px; text-align: center;">
         <div style="max-width: 1200px; margin: 0 auto;">
             <p style="margin-bottom: 20px;">© 2026 Defensible Hiring AI. All rights reserved.</p>
