@@ -941,65 +941,19 @@ def root():
         <div class="container">
             <h2 style="text-align: center; color: #667eea; font-size: 2em; margin-bottom: 20px;">✅ Available Now - Limited Spots This Month</h2>
             <p style="text-align: center; font-size: 1.2em; color: #666; max-width: 700px; margin: 0 auto 50px;">
-                We're accepting <strong>5 new clients in January 2026</strong> for audit trail recovery. Get your documentation package delivered in 2 weeks.
+                We're accepting <strong>5 new clients in January 2026</strong> for audit trail recovery. Get your documentation package delivered <strong style="color: #e74c3c;">WITHIN 48 HOURS!</strong>
             </p>
 
-            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto;">
-                <!-- Why Early Access -->
-                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #667eea;">
-                    <h3 style="color: #667eea; margin-bottom: 15px;">⚡ Immediate Implementation</h3>
-                    <p style="font-size: 1.05em; color: #555; line-height: 1.7;">
-                        As a founding customer, you get <strong>white-glove implementation</strong>. We'll personally integrate with your ATS and generate your first audit pack within 48 hours.
-                    </p>
-                </div>
-
-                <!-- Founding Rate -->
-                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #ffa500;">
-                    <h3 style="color: #ffa500; margin-bottom: 15px;">💰 Founding Customer Rate</h3>
-                    <p style="font-size: 1.05em; color: #555; line-height: 1.7;">
-                        <strong>$499/month</strong> locked in for life (normally $749). First 10 customers only. Once we hit 10, price goes to standard rate.
-                    </p>
-
-                    <!-- UNIT ECONOMICS BREAKDOWN -->
-                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #667eea;">
-                        <p style="font-size: 1em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Just $0.50 per decision protected</strong><br>
-                            <span style="font-size: 0.9em; color: #666;">
-                                vs. $200K+ discovery costs<br>
-                                vs. $500K average lawsuit<br>
-                                vs. 6-12 months to build yourself
-                            </span>
-                        </p>
-                    </div>
-
-                    <p style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 0.95em;">
-                        <strong>⏰ 3 spots remaining</strong> as of January 2026
-                    </p>
-                </div>
-
-                <!-- What You Get -->
-                <div style="background: white; padding: 35px; border-radius: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.08); border-left: 5px solid #28a745;">
-                    <h3 style="color: #28a745; margin-bottom: 15px;">🛡️ What You Get</h3>
-                    <ul style="font-size: 1.05em; color: #555; line-height: 1.9; padding-left: 20px;">
-                        <li>Priority implementation (48 hours)</li>
-                        <li>Personal integration support</li>
-                        <li>Direct founder access (my email)</li>
-                        <li>Lifetime founding rate ($499 forever)</li>
-                        <li>Shape product roadmap with feedback</li>
-                    </ul>
-                </div>
-            </div>
-
-            <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 15px;">
-                <h3 style="color: white; font-size: 1.8em; margin-bottom: 20px;">🚨 Accepting Founding Customers NOW</h3>
+            <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 15px;">
+                <h3 style="color: white; font-size: 1.8em; margin-bottom: 20px;">🚨 I NEED Audit Trail Recovery IMMEDIATELY</h3>
                 <p style="color: white; font-size: 1.1em; margin-bottom: 30px; opacity: 0.95;">
-                    Are you being audited? Facing compliance deadline? Need documentation immediately?
+                    Facing EEOC complaint? Internal audit found gaps? Missing documentation for AI screening tools?
                 </p>
-                <a href="/request-demo" style="display: inline-block; background: white; color: #667eea; padding: 18px 50px; font-size: 1.2em; font-weight: 600; text-decoration: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    Claim Your Founding Rate →
+                <a href="mailto:CGTPA.JP@GMAIL.COM?subject=URGENT%20-%20Need%20Audit%20Trail%20Recovery%20IMMEDIATELY&body=Hi%20JP%2C%0D%0A%0D%0AI%20need%20audit%20trail%20recovery%20URGENTLY.%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Screening%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20etc.)%0D%0A%0D%0AURGENT%20SITUATION%3A%0D%0A%5B%20%5D%20Active%20EEOC%20complaint%0D%0A%5B%20%5D%20Candidate%20threatening%20lawsuit%0D%0A%5B%20%5D%20Internal%20audit%20found%20documentation%20gaps%0D%0A%5B%20%5D%20Regulator%20inquiry%0D%0A%5B%20%5D%20Other%3A%20______________%0D%0A%0D%0AHow%20soon%20can%20you%20deliver%3F%0D%0A%0D%0APhone%3A%20" style="display: inline-block; background: white; color: #e74c3c; padding: 18px 50px; font-size: 1.2em; font-weight: 600; text-decoration: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
+                    Contact Me NOW →
                 </a>
                 <p style="color: white; margin-top: 20px; font-size: 0.95em; opacity: 0.9;">
-                    <strong>Limited to 10 companies.</strong> Response within 24 hours for urgent requests.
+                    <strong>48-hour turnaround available.</strong> Response within 2 hours for urgent requests.
                 </p>
             </div>
         </div>
