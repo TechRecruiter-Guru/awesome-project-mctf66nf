@@ -777,94 +777,94 @@ def root():
 
     <div class="pricing" id="pricing">
         <div class="container">
-            <h2>💰 Pricing: Fixed-Fee Compliance Audits</h2>
+            <h2>💰 Pricing: AI Hiring Audit Trail Recovery</h2>
             <p style="text-align: center; margin-bottom: 20px;">
-                One-time investment. Complete compliance. No ongoing fees.
+                One-time fee. Complete documentation package. Delivered in 2 weeks.
             </p>
 
             <div class="pricing-grid">
                 <div class="pricing-card">
-                    <h3>Basic Audit</h3>
+                    <h3>Basic Recovery</h3>
                     <div class="price">$2,500</div>
-                    <p>Perfect for small companies with single AI tool</p>
+                    <p>Perfect for single AI screening tool (HireVue, MyInterview, etc.)</p>
 
                     <!-- VALUE BREAKDOWN -->
                     <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
                         <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 5% of one lawsuit cost</strong><br>
+                            <strong style="color: #667eea;">💡 Recover missing audit trails</strong><br>
                             <span style="font-size: 0.85em; color: #666;">
-                                vs. $50K+ legal defense<br>
-                                vs. $500K settlement risk<br>
-                                Done in 2 weeks
+                                Complete documentation package<br>
+                                Defensible in EEOC investigations<br>
+                                Delivered in 2 weeks
                             </span>
                         </p>
                     </div>
 
                     <ul class="features">
-                        <li>Compliance gap analysis (8 questions)</li>
-                        <li>Documentation review</li>
-                        <li>Standard policy templates</li>
-                        <li>Implementation checklist</li>
+                        <li>AI screening tool audit trail analysis</li>
+                        <li>Documentation gap assessment</li>
+                        <li>Standard audit trail templates</li>
+                        <li>EEOC response documentation</li>
                         <li>Email support (2 weeks)</li>
                     </ul>
-                    <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM?subject=Basic Audit Inquiry" class="cta-button">Get Started</a>
+                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Basic%20Recovery%20-%20AI%20Audit%20Trail&body=Hi%20JP%2C%0D%0A%0D%0AI'm%20interested%20in%20the%20Basic%20Recovery%20package%20($2%2C500).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20etc.)%0D%0ANumber%20of%20Candidates%20Screened%2FYear%3A%20%0D%0A%0D%0AWhen%20can%20we%20start%3F" class="cta-button">Get Started</a>
                 </div>
 
                 <div class="pricing-card featured">
-                    <h3>Standard Audit</h3>
+                    <h3>Standard Recovery</h3>
                     <div class="price">$3,500</div>
-                    <p style="margin-bottom: 5px;">Most popular for growing companies</p>
+                    <p style="margin-bottom: 5px;">Most popular - Multiple AI tools + complete documentation</p>
                     <p style="font-size: 0.85em; color: #667eea; margin: 0;">⭐ Recommended</p>
 
                     <!-- VALUE BREAKDOWN -->
                     <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
                         <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 7% of one lawsuit cost</strong><br>
+                            <strong style="color: #667eea;">💡 Complete audit trail recovery</strong><br>
                             <span style="font-size: 0.85em; color: #666;">
-                                vs. $50K+ legal defense<br>
-                                vs. $500K settlement risk<br>
-                                Custom policies included
+                                Custom documentation for your tools<br>
+                                Defensibility binder included<br>
+                                Team training on maintaining trails
                             </span>
                         </p>
                     </div>
 
                     <ul class="features">
                         <li><strong>Everything in Basic, PLUS:</strong></li>
-                        <li>Custom AI governance policy</li>
-                        <li>EEOC response playbook</li>
-                        <li>1-hour team training session</li>
-                        <li>Defensibility binder (organized docs)</li>
-                        <li>Priority email support</li>
+                        <li>Custom audit trail documentation</li>
+                        <li>EEOC investigation response kit</li>
+                        <li>1-hour documentation training</li>
+                        <li>Complete defensibility binder</li>
+                        <li>Priority support</li>
                     </ul>
-                    <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM?subject=Standard Audit Inquiry" class="cta-button">Get Started</a>
+                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Standard%20Recovery%20-%20AI%20Audit%20Trail&body=Hi%20JP%2C%0D%0A%0D%0AI'm%20interested%20in%20the%20Standard%20Recovery%20package%20($3%2C500).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20Spark%20Hire%2C%20etc.)%0D%0ANumber%20of%20Candidates%20Screened%2FYear%3A%20%0D%0AUrgency%3A%20(Active%20complaint%3F%20Preventive%3F)%0D%0A%0D%0ACan%20we%20start%20this%20week%3F" class="cta-button">Get Started</a>
                 </div>
 
                 <div class="pricing-card">
-                    <h3>Premium Audit</h3>
+                    <h3>Premium Recovery</h3>
                     <div class="price">$5,000</div>
-                    <p>For large companies with urgent needs</p>
+                    <p>Urgent/Active EEOC complaints - Expedited delivery</p>
 
                     <!-- VALUE BREAKDOWN -->
                     <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
                         <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 10% of one lawsuit cost</strong><br>
+                            <strong style="color: #667eea;">💡 Emergency audit trail recovery</strong><br>
                             <span style="font-size: 0.85em; color: #666;">
-                                vs. $50K+ legal defense<br>
-                                vs. $500K settlement risk<br>
-                                Done in 1 week + ongoing support
+                                Complete package in 1 week<br>
+                                EEOC response ready<br>
+                                Ongoing support included
                             </span>
                         </p>
                     </div>
 
                     <ul class="features">
                         <li><strong>Everything in Standard, PLUS:</strong></li>
-                        <li>Bias audit coordination (3rd party)</li>
-                        <li>Quarterly compliance check-ins (3 months)</li>
-                        <li>Priority phone support</li>
-                        <li>Updates when regulations change</li>
                         <li>Expedited delivery (1 week)</li>
+                        <li>EEOC complaint response coordination</li>
+                        <li>Quarterly documentation reviews (3 months)</li>
+                        <li>Priority phone + email support</li>
+                        <li>Updates as tools/regulations change</li>
                     </ul>
-                    <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM?subject=Premium Audit Inquiry" class="cta-button">Get Started</a>
+                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=URGENT%20-%20Premium%20Recovery&body=Hi%20JP%2C%0D%0A%0D%0AI%20need%20URGENT%20audit%20trail%20recovery%20($5%2C000%20Premium).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20%0D%0A%0D%0AURGENT%20SITUATION%3A%0D%0A%5B%20%5D%20Active%20EEOC%20complaint%0D%0A%5B%20%5D%20Candidate%20threatening%20lawsuit%0D%0A%5B%20%5D%20Internal%20audit%20found%20gaps%0D%0A%5B%20%5D%20Other%3A%20______________%0D%0A%0D%0ACan%20you%20start%20TODAY%3F" class="cta-button">Get Started</a>
                 </div>
             </div>
 
@@ -906,7 +906,7 @@ def root():
                 <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
                     <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
                         <h4 style="color: #667eea; margin-bottom: 15px;">💵 PayPal</h4>
-                        <p style="font-family: monospace; font-size: 1.1em; color: #333; margin: 0;">JP@DEFENSIBLEHIRINGAI.COM</p>
+                        <p style="font-family: monospace; font-size: 1.1em; color: #333; margin: 0;">CGTPA.JP@GMAIL.COM</p>
                     </div>
                     <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
                         <h4 style="color: #667eea; margin-bottom: 15px;">📱 Venmo</h4>
@@ -939,9 +939,9 @@ def root():
     <!-- EARLY ACCESS / FOUNDING CUSTOMER OFFER -->
     <div style="background: #f8f9fa; padding: 80px 20px;">
         <div class="container">
-            <h2 style="text-align: center; color: #667eea; font-size: 2em; margin-bottom: 20px;">🚀 Launching Q1 2026 - Early Access Available</h2>
+            <h2 style="text-align: center; color: #667eea; font-size: 2em; margin-bottom: 20px;">✅ Available Now - Limited Spots This Month</h2>
             <p style="text-align: center; font-size: 1.2em; color: #666; max-width: 700px; margin: 0 auto 50px;">
-                We're accepting <strong>10 founding customers</strong> who need immediate compliance. Get priority implementation + lifetime founding rate.
+                We're accepting <strong>5 new clients in January 2026</strong> for audit trail recovery. Get your documentation package delivered in 2 weeks.
             </p>
 
             <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; max-width: 1100px; margin: 0 auto;">
@@ -1074,7 +1074,7 @@ def root():
                         <a href="https://www.linkedin.com/in/john-polhill-iii/" style="display: inline-flex; align-items: center; gap: 8px; color: #667eea; text-decoration: none; font-weight: 600; padding: 10px 20px; background: white; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
                             <span style="font-size: 1.2em;">in</span> Connect on LinkedIn
                         </a>
-                        <a href="mailto:JP@DEFENSIBLEHIRINGAI.COM" style="color: #667eea; text-decoration: none; font-weight: 600;">
+                        <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Audit%20Trail%20Recovery%20Inquiry&body=Hi%20JP%2C%0D%0A%0D%0AI'd%20like%20to%20discuss%20audit%20trail%20recovery%20for%20our%20AI%20screening%20tools.%0D%0A%0D%0ACompany%3A%20%0D%0ATools%20we%20use%3A%20%0D%0A%0D%0AWhen%20can%20we%20talk%3F" style="color: #667eea; text-decoration: none; font-weight: 600;">
                             📧 Email Me Directly
                         </a>
                     </div>
