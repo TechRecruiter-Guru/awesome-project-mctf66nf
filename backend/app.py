@@ -10,7 +10,14 @@ app = Flask(__name__)
 CORS(app)
 
 # Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
+# Use PostgreSQL in production (Supabase), SQLite for local development
+DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///ats.db')
+
+# Fix for Render/Heroku postgres:// -> postgresql://
+if DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 

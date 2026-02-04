@@ -8,6 +8,11 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.0
+      - key: DATABASE_URL
+        sync: false
+        # REQUIRED: PostgreSQL connection string from Supabase
+        # Example: postgresql://postgres:password@db.xxxxx.supabase.co:5432/postgres
+        # Get from: Supabase Dashboard → Settings → Database → Connection string
       - key: GITHUB_TOKEN
         sync: false
         # Optional: Add GitHub token for higher API rate limits
