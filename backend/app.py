@@ -11,11 +11,24 @@ CORS(app)
 
 # Database configuration
 # Use PostgreSQL in production (Supabase), SQLite for local development
-DATABASE_URL = os.environ.get('DATABASE_URL', 'sqlite:///ats.db')
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+# Fallback: If DATABASE_URL is not set or invalid, use hardcoded Supabase connection
+# TODO: Remove this once DATABASE_URL is properly set in Render
+if not DATABASE_URL or DATABASE_URL == 'sqlite:///ats.db':
+    # Hardcoded Supabase connection for emergency deployment
+    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:Muses480%21@aws-0-us-west-2.pooler.supabase.com:6543/postgres'
+    print("⚠️  Using hardcoded DATABASE_URL - please set DATABASE_URL in environment!")
 
 # Fix for Render/Heroku postgres:// -> postgresql://
 if DATABASE_URL.startswith('postgres://'):
     DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+
+# Additional cleanup: fix common typos in DATABASE_URL
+if 'postgrespostgresql://' in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.replace('postgrespostgresql://', 'postgresql://')
+if ':5432/' in DATABASE_URL and 'pooler' in DATABASE_URL:
+    DATABASE_URL = DATABASE_URL.replace(':5432/', ':6543/')
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
