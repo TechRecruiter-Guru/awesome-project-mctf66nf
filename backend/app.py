@@ -17,7 +17,8 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 # TODO: Remove this once DATABASE_URL is properly set in Render
 if not DATABASE_URL or DATABASE_URL == 'sqlite:///ats.db':
     # Hardcoded Supabase connection for emergency deployment
-    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:AtsDatabase2024@aws-0-us-west-2.pooler.supabase.com:6543/postgres?sslmode=require'
+    # Using direct connection instead of pooler to avoid encoding issues
+    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:AtsDatabase2024@db.pctnqtdbcyayyqbqfcfx.supabase.co:5432/postgres?sslmode=require'
     print("⚠️  Using hardcoded DATABASE_URL - please set DATABASE_URL in environment!")
 
 # Fix for Render/Heroku postgres:// -> postgresql://
@@ -32,6 +33,13 @@ if ':5432/' in DATABASE_URL and 'pooler' in DATABASE_URL:
 
 app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+    'connect_args': {
+        'options': '-c client_encoding=utf8'
+    },
+    'pool_pre_ping': True,
+    'pool_recycle': 300,
+}
 db = SQLAlchemy(app)
 
 # ==================== DATA MODELS ====================
