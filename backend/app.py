@@ -17,7 +17,7 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 # TODO: Remove this once DATABASE_URL is properly set in Render
 if not DATABASE_URL or DATABASE_URL == 'sqlite:///ats.db':
     # Hardcoded Supabase connection for emergency deployment
-    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:AtsDatabase2024@aws-0-us-west-2.pooler.supabase.com:6543/postgres'
+    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:AtsDatabase2024@aws-0-us-west-2.pooler.supabase.com:6543/postgres?sslmode=require'
     print("⚠️  Using hardcoded DATABASE_URL - please set DATABASE_URL in environment!")
 
 # Fix for Render/Heroku postgres:// -> postgresql://
