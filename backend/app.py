@@ -9,10 +9,48 @@ import re
 app = Flask(__name__)
 CORS(app)
 
-# Database configuration
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///ats.db'
+# ==================== DATABASE CONFIGURATION ====================
+# PostgreSQL (Supabase) for production, SQLite fallback for local dev
+DATABASE_URL = os.environ.get('DATABASE_URL')
+
+if not DATABASE_URL or DATABASE_URL == 'sqlite:///ats.db':
+    # Check for Supabase-specific env vars as alternative
+    SUPABASE_DB_URL = os.environ.get('SUPABASE_DB_URL')
+    if SUPABASE_DB_URL:
+        DATABASE_URL = SUPABASE_DB_URL
+    else:
+        # Local development fallback
+        DATABASE_URL = 'sqlite:///ats.db'
+        print("INFO: No DATABASE_URL set. Using SQLite for local development.")
+        print("      Set DATABASE_URL env var for PostgreSQL (Supabase) in production.")
+
+# Fix Render/Heroku postgres:// -> postgresql:// (required by SQLAlchemy 1.4+)
+if DATABASE_URL and DATABASE_URL.startswith('postgres://'):
+    DATABASE_URL = DATABASE_URL.replace('postgres://', 'postgresql://', 1)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Production-ready connection pooling (only for PostgreSQL)
+if DATABASE_URL and 'postgresql' in DATABASE_URL:
+    app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
+        'connect_args': {
+            'connect_timeout': 10,
+            'options': '-c statement_timeout=30000'
+        },
+        'pool_pre_ping': True,
+        'pool_recycle': 300,
+        'pool_size': 5,
+        'max_overflow': 10
+    }
+    print(f"DATABASE: Connected to PostgreSQL")
+else:
+    print(f"DATABASE: Using SQLite (local development mode)")
+
 db = SQLAlchemy(app)
+
+# Track whether tables have been initialized
+_tables_initialized = False
 
 # ==================== DATA MODELS ====================
 
@@ -303,20 +341,66 @@ class SavedSearch(db.Model):
         }
 
 
-# Create tables
-with app.app_context():
-    db.create_all()
+# ==================== LAZY TABLE INITIALIZATION ====================
+# Instead of blocking startup with db.create_all(), we initialize on first request
+# This prevents boot timeouts on Render/Railway/Heroku
+
+def ensure_tables():
+    """Create tables if they haven't been created yet (lazy initialization)"""
+    global _tables_initialized
+    if not _tables_initialized:
+        try:
+            db.create_all()
+            _tables_initialized = True
+            print("DATABASE: Tables initialized successfully")
+        except Exception as e:
+            print(f"DATABASE: Table initialization error (may already exist): {e}")
+            _tables_initialized = True  # Don't retry on every request
+
+@app.before_request
+def before_request():
+    """Ensure database tables exist before handling any request"""
+    ensure_tables()
 
 
 # ==================== API ENDPOINTS ====================
 
 @app.route('/api/health', methods=['GET'])
 def health_check():
+    """Health check endpoint - also reports database status"""
+    db_status = "connected"
+    db_type = "postgresql" if 'postgresql' in (app.config.get('SQLALCHEMY_DATABASE_URI') or '') else "sqlite"
+    try:
+        db.session.execute(db.text('SELECT 1'))
+        db_status = "connected"
+    except Exception as e:
+        db_status = f"error: {str(e)}"
+
     return jsonify({
         "status": "healthy",
         "message": "AI/ML ATS API is running",
-        "version": "1.0.0"
+        "version": "2.0.0",
+        "database": db_type,
+        "database_status": db_status,
+        "tables_initialized": _tables_initialized
     })
+
+
+@app.route('/api/init-db', methods=['POST'])
+def init_database():
+    """Manually trigger database table creation (useful after fresh deploy)"""
+    try:
+        db.create_all()
+        return jsonify({
+            "success": True,
+            "message": "Database tables created successfully",
+            "database": app.config.get('SQLALCHEMY_DATABASE_URI', '').split('@')[-1] if 'postgresql' in (app.config.get('SQLALCHEMY_DATABASE_URI') or '') else 'sqlite'
+        })
+    except Exception as e:
+        return jsonify({
+            "success": False,
+            "error": str(e)
+        }), 500
 
 
 # ==================== CANDIDATES ====================
@@ -539,10 +623,10 @@ def enrich_from_arxiv(candidate_id):
                     candidate_id=candidate_id,
                     title=result.title,
                     authors=', '.join([author.name for author in result.authors]),
-                    journal='arXiv',
+                    venue='arXiv',
                     year=result.published.year,
-                    citations=0,  # arXiv API doesn't provide citations
-                    url=result.entry_id,
+                    citation_count=0,  # arXiv API doesn't provide citations
+                    paper_url=result.entry_id,
                     arxiv_id=arxiv_id,
                     abstract=result.summary[:500] if result.summary else None  # Truncate abstract
                 )
@@ -713,10 +797,10 @@ def enrich_from_scholar(candidate_id):
                     candidate_id=candidate_id,
                     title=pub_filled['bib']['title'],
                     authors=pub_filled['bib'].get('author', ''),
-                    journal=pub_filled['bib'].get('venue', 'Unknown'),
+                    venue=pub_filled['bib'].get('venue', 'Unknown'),
                     year=int(pub_filled['bib'].get('pub_year', 0)) if pub_filled['bib'].get('pub_year') else None,
-                    citations=pub_filled.get('num_citations', 0),
-                    url=pub_filled.get('pub_url', pub_filled.get('eprint_url', ''))
+                    citation_count=pub_filled.get('num_citations', 0),
+                    paper_url=pub_filled.get('pub_url', pub_filled.get('eprint_url', ''))
                 )
                 db.session.add(publication)
                 papers_added += 1
@@ -724,7 +808,7 @@ def enrich_from_scholar(candidate_id):
                 papers_data.append({
                     'title': publication.title,
                     'year': publication.year,
-                    'citations': publication.citations
+                    'citations': publication.citation_count
                 })
 
         db.session.commit()
@@ -872,7 +956,7 @@ def calculate_research_impact_score(candidate_id):
     # Publications in NeurIPS, ICML, CVPR, etc.
     conference_pubs = 0
     for pub in candidate.publications:
-        venue = pub.journal.upper() if pub.journal else ''
+        venue = pub.venue.upper() if pub.venue else ''
         for conf in TOP_CONFERENCES:
             if conf in venue:
                 conference_pubs += 1
@@ -1047,11 +1131,11 @@ def analyze_conference_publications():
     top_conference_papers = []
 
     for pub in all_publications:
-        venue = pub.journal.upper() if pub.journal else ''
+        venue_name = pub.venue.upper() if pub.venue else ''
 
         # Check if it's a top conference
         for conf in TOP_CONFERENCES:
-            if conf in venue:
+            if conf in venue_name:
                 # Track conference stats
                 if conf not in conference_stats:
                     conference_stats[conf] = 0
@@ -1064,7 +1148,7 @@ def analyze_conference_publications():
                     'title': pub.title,
                     'conference': conf,
                     'year': pub.year,
-                    'citations': pub.citations,
+                    'citations': pub.citation_count,
                     'candidate_name': f"{candidate.first_name} {candidate.last_name}" if candidate else 'Unknown',
                     'candidate_id': pub.candidate_id
                 })
@@ -2293,4 +2377,5 @@ def submit_public_application():
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
-    app.run(debug=True, host='0.0.0.0', port=port)
+    is_dev = 'sqlite' in (app.config.get('SQLALCHEMY_DATABASE_URI') or '')
+    app.run(debug=is_dev, host='0.0.0.0', port=port)
