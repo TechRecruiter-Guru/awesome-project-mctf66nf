@@ -17,9 +17,10 @@ DATABASE_URL = os.environ.get('DATABASE_URL')
 # TODO: Remove this once DATABASE_URL is properly set in Render
 if not DATABASE_URL or DATABASE_URL == 'sqlite:///ats.db':
     # Hardcoded Supabase connection for emergency deployment
-    # Using direct connection instead of pooler to avoid encoding issues
-    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:AtsDatabase2024@db.pctnqtdbcyayyqbqfcfx.supabase.co:5432/postgres?sslmode=require'
-    print("⚠️  Using hardcoded DATABASE_URL - please set DATABASE_URL in environment!")
+    # Using CONNECTION POOLER (port 6543) instead of direct connection (port 5432)
+    # Pooler is more reliable on cloud platforms and avoids IPv6 issues
+    DATABASE_URL = 'postgresql://postgres.pctnqtdbcyayyqbqfcfx:AtsDatabase2024@aws-0-us-west-2.pooler.supabase.com:6543/postgres'
+    print("⚠️  Using hardcoded DATABASE_URL (pooler) - please set DATABASE_URL in environment!")
 
 # Fix for Render/Heroku postgres:// -> postgresql://
 if DATABASE_URL.startswith('postgres://'):
@@ -35,12 +36,18 @@ app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_ENGINE_OPTIONS'] = {
     'connect_args': {
-        'options': '-c client_encoding=utf8'
+        'connect_timeout': 10  # Fail fast if connection takes > 10 seconds
     },
     'pool_pre_ping': True,
     'pool_recycle': 300,
+    'pool_size': 5,
+    'max_overflow': 10
 }
+
+# Initialize SQLAlchemy with lazy connection
 db = SQLAlchemy(app)
+
+print(f"✅ Flask app initialized with DATABASE_URL: {DATABASE_URL[:50]}...")
 
 # ==================== DATA MODELS ====================
 
