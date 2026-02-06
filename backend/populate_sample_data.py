@@ -5,8 +5,13 @@ Run this to populate the database with realistic candidates and jobs
 
 import requests
 import json
+import sys
+import os
 
-API_URL = "http://localhost:5000"
+# Support both local and remote deployment
+# Usage: python populate_sample_data.py [URL]
+# Example: python populate_sample_data.py https://ats-recruiting-backend.onrender.com
+API_URL = sys.argv[1] if len(sys.argv) > 1 else os.environ.get('ATS_API_URL', 'http://localhost:5000')
 
 # Sample Candidates
 candidates = [
