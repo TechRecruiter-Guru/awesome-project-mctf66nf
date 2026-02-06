@@ -2375,6 +2375,148 @@ def submit_public_application():
         return jsonify({"error": str(e)}), 500
 
 
+# ==================== SEED DATA ENDPOINT ====================
+
+@app.route('/api/seed-data', methods=['POST'])
+def seed_sample_data():
+    """One-click seed: populate database with sample candidates, jobs, and publications"""
+
+    # Check if data already exists
+    if Candidate.query.count() > 0:
+        return jsonify({
+            "message": "Database already has data. Delete existing data first or use /api/stats to check.",
+            "candidates": Candidate.query.count(),
+            "jobs": Job.query.count()
+        }), 409
+
+    try:
+        # Sample Candidates
+        candidates_data = [
+            {"first_name": "Yann", "last_name": "LeCun", "email": "yann.lecun@example.edu",
+             "primary_expertise": "Computer Vision", "google_scholar_url": "https://scholar.google.com/citations?user=WLN3QrAAAAAJ",
+             "h_index": 150, "citation_count": 300000, "years_experience": 35,
+             "location": "New York, NY", "github_url": "https://github.com/ylecun", "status": "new"},
+            {"first_name": "Fei-Fei", "last_name": "Li", "email": "feifei@example.edu",
+             "primary_expertise": "Computer Vision", "google_scholar_url": "https://scholar.google.com/citations?user=rDfyQnIAAAAJ",
+             "h_index": 120, "citation_count": 180000, "years_experience": 20,
+             "location": "Stanford, CA", "status": "reviewing"},
+            {"first_name": "Yoshua", "last_name": "Bengio", "email": "yoshua.bengio@example.ca",
+             "primary_expertise": "Deep Learning", "google_scholar_url": "https://scholar.google.com/citations?user=kukA0LcAAAAJ",
+             "h_index": 175, "citation_count": 400000, "years_experience": 30,
+             "location": "Montreal, Canada", "status": "new"},
+            {"first_name": "Andrew", "last_name": "Ng", "email": "andrew.ng@example.edu",
+             "primary_expertise": "Machine Learning", "google_scholar_url": "https://scholar.google.com/citations?user=mG4imMEAAAAJ",
+             "h_index": 140, "citation_count": 250000, "years_experience": 25,
+             "location": "Palo Alto, CA", "github_url": "https://github.com/andrewng", "status": "interviewing"},
+            {"first_name": "Emily", "last_name": "Chen", "email": "emily.chen@example.edu",
+             "primary_expertise": "Natural Language Processing", "h_index": 45, "citation_count": 12000,
+             "years_experience": 8, "location": "Seattle, WA", "github_url": "https://github.com/emilychen",
+             "linkedin_url": "https://linkedin.com/in/emilychen", "status": "new"},
+            {"first_name": "Marcus", "last_name": "Rodriguez", "email": "marcus.r@example.edu",
+             "primary_expertise": "Reinforcement Learning", "arxiv_author_id": "marcus-rodriguez",
+             "h_index": 35, "citation_count": 8500, "years_experience": 6,
+             "location": "Austin, TX", "github_url": "https://github.com/marcusr", "status": "reviewing"}
+        ]
+
+        created_candidates = []
+        for c in candidates_data:
+            candidate = Candidate(**c)
+            db.session.add(candidate)
+            created_candidates.append(c['first_name'] + ' ' + c['last_name'])
+
+        db.session.flush()  # Get IDs assigned
+
+        # Sample Jobs
+        jobs_data = [
+            {"title": "Senior Research Scientist - Computer Vision", "company": "Meta AI Research",
+             "location": "Menlo Park, CA", "job_type": "full-time",
+             "description": "Lead research in computer vision and multimodal learning.",
+             "requirements": "PhD in CS, 5+ years research, publications at CVPR/ICCV/ECCV/NeurIPS",
+             "required_expertise": "Computer Vision", "education_required": "PhD",
+             "research_focus": "Multimodal Learning and Visual Understanding",
+             "salary_min": 250000, "salary_max": 450000, "confidential": False},
+            {"title": "AI Research Scientist", "company": "Stealth AI Startup",
+             "location": "San Francisco, CA", "job_type": "full-time",
+             "description": "Join a well-funded stealth startup working on breakthrough AI technology.",
+             "requirements": "PhD in CS/ML, publications at NeurIPS/ICML/ICLR, experience with LLMs",
+             "required_expertise": "Deep Learning", "education_required": "PhD",
+             "research_focus": "Large Language Models",
+             "salary_min": 300000, "salary_max": 500000, "confidential": True},
+            {"title": "ML Research Lead - NLP", "company": "Leading Tech Company",
+             "location": "Remote", "job_type": "full-time",
+             "description": "Lead NLP research team. Build state-of-the-art language models.",
+             "requirements": "PhD preferred, 10+ years experience, proven track record",
+             "required_expertise": "Natural Language Processing", "education_required": "PhD",
+             "research_focus": "Language Models and Generation",
+             "salary_min": 280000, "salary_max": 480000, "confidential": True},
+            {"title": "Research Scientist - Reinforcement Learning", "company": "DeepMind",
+             "location": "London, UK", "job_type": "full-time",
+             "description": "Push the boundaries of RL research with world-class team.",
+             "requirements": "PhD in CS/ML, strong RL background, publications at top venues",
+             "required_expertise": "Reinforcement Learning", "education_required": "PhD",
+             "research_focus": "Multi-agent RL and Game Playing",
+             "salary_min": 180000, "salary_max": 320000, "confidential": False},
+            {"title": "Principal ML Engineer", "company": "Confidential - Series C Startup",
+             "location": "New York, NY", "job_type": "full-time",
+             "description": "Join as founding ML team member. $150M+ in funding.",
+             "requirements": "MS/PhD, 5+ years ML experience, production ML systems",
+             "required_expertise": "MLOps", "education_required": "Masters",
+             "research_focus": "Production ML Systems",
+             "salary_min": 220000, "salary_max": 380000, "confidential": True},
+            {"title": "AI Research Scientist - Multimodal", "company": "OpenAI",
+             "location": "San Francisco, CA", "job_type": "full-time",
+             "description": "Work on next generation multimodal models combining vision and language.",
+             "requirements": "PhD, strong publication record, experience with large-scale models",
+             "required_expertise": "Deep Learning", "education_required": "PhD",
+             "research_focus": "Multimodal AI",
+             "salary_min": 300000, "salary_max": 500000, "confidential": False}
+        ]
+
+        created_jobs = []
+        for j in jobs_data:
+            job = Job(**j)
+            db.session.add(job)
+            created_jobs.append(j['title'])
+
+        db.session.flush()
+
+        # Sample Publications (linked to candidates by order)
+        candidates_list = Candidate.query.order_by(Candidate.id).all()
+        pubs_data = [
+            {"candidate_id": candidates_list[0].id, "title": "Gradient-Based Learning Applied to Document Recognition",
+             "authors": "Y. LeCun, L. Bottou, Y. Bengio, P. Haffner", "venue": "Proceedings of the IEEE",
+             "year": 1998, "citation_count": 45000, "research_area": "Computer Vision"},
+            {"candidate_id": candidates_list[1].id, "title": "ImageNet: A Large-Scale Hierarchical Image Database",
+             "authors": "J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, L. Fei-Fei", "venue": "CVPR 2009",
+             "year": 2009, "citation_count": 75000, "research_area": "Computer Vision"},
+            {"candidate_id": candidates_list[2].id, "title": "Learning Long-Term Dependencies with Gradient Descent is Difficult",
+             "authors": "Y. Bengio, P. Simard, P. Frasconi", "venue": "IEEE Transactions on Neural Networks",
+             "year": 1994, "citation_count": 15000, "research_area": "Deep Learning"},
+            {"candidate_id": candidates_list[4].id, "title": "Attention-Based Neural Machine Translation",
+             "authors": "E. Chen, M. Rodriguez", "venue": "ACL 2020",
+             "year": 2020, "arxiv_id": "2004.12345", "citation_count": 2500, "research_area": "Natural Language Processing"}
+        ]
+
+        for p in pubs_data:
+            pub = Publication(**p)
+            db.session.add(pub)
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": "Sample data loaded successfully!",
+            "candidates_created": created_candidates,
+            "jobs_created": created_jobs,
+            "publications_created": len(pubs_data),
+            "stealth_jobs": 3
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     is_dev = 'sqlite' in (app.config.get('SQLALCHEMY_DATABASE_URI') or '')
