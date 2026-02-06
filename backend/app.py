@@ -332,8 +332,11 @@ class SavedSearch(db.Model):
 
 
 # Create tables
-with app.app_context():
-    db.create_all()
+# NOTE: Tables are NOT auto-created on startup to avoid boot timeout
+# Run this manually in Render Shell after deployment:
+#   python -c "from app import db; db.create_all()"
+# with app.app_context():
+#     db.create_all()
 
 
 # ==================== API ENDPOINTS ====================
