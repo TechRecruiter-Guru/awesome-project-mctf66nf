@@ -2,7 +2,7 @@
   "name": "awesome-project-mctf66nf-frontend",
   "version": "1.0.0",
   "description": "Frontend for awesome-project-mctf66nf",
-  "homepage": "/recruiter",
+  "homepage": ".",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

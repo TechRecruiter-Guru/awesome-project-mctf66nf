@@ -1348,7 +1348,7 @@ function AboutView() {
 
 function AppWithRouter() {
   return (
-    <Router basename="/recruiter">
+    <Router>
       <Routes>
         <Route path="/apply/:jobId" element={<CandidateLandingPage />} />
         <Route path="/*" element={<App />} />
