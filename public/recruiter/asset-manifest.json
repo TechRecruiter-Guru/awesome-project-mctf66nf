@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/recruiter/static/css/main.a1276785.css",
+    "main.js": "/recruiter/static/js/main.25e89611.js",
+    "index.html": "/recruiter/index.html",
+    "main.a1276785.css.map": "/recruiter/static/css/main.a1276785.css.map",
+    "main.25e89611.js.map": "/recruiter/static/js/main.25e89611.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a1276785.css",
+    "static/js/main.25e89611.js"
+  ]
+}
