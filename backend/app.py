@@ -85,6 +85,24 @@ class Candidate(db.Model):
     h_index = db.Column(db.Integer)
     citation_count = db.Column(db.Integer)
 
+    # Expanded Sourcing - Where Physical AI / Robotics talent actually lives
+    huggingface_url = db.Column(db.String(300))       # HuggingFace profile - models, datasets, spaces
+    semantic_scholar_id = db.Column(db.String(100))    # Semantic Scholar author ID
+    papers_with_code_url = db.Column(db.String(300))   # Papers With Code profile
+    kaggle_url = db.Column(db.String(300))             # Kaggle profile - competitions, notebooks
+    devpost_url = db.Column(db.String(300))            # Devpost - hackathon projects
+
+    # Hugging Face Metrics
+    hf_models_count = db.Column(db.Integer, default=0)
+    hf_datasets_count = db.Column(db.Integer, default=0)
+    hf_spaces_count = db.Column(db.Integer, default=0)
+    hf_likes = db.Column(db.Integer, default=0)
+
+    # Semantic Scholar Metrics
+    s2_paper_count = db.Column(db.Integer, default=0)
+    s2_citation_count = db.Column(db.Integer, default=0)
+    s2_h_index = db.Column(db.Integer, default=0)
+
     # AI/ML Specific
     primary_expertise = db.Column(db.String(200))  # e.g., "Computer Vision", "NLP", "Reinforcement Learning"
     skills = db.Column(db.Text)  # JSON array of skills
@@ -126,6 +144,18 @@ class Candidate(db.Model):
             'orcid_id': self.orcid_id,
             'h_index': self.h_index,
             'citation_count': self.citation_count,
+            'huggingface_url': self.huggingface_url,
+            'semantic_scholar_id': self.semantic_scholar_id,
+            'papers_with_code_url': self.papers_with_code_url,
+            'kaggle_url': self.kaggle_url,
+            'devpost_url': self.devpost_url,
+            'hf_models_count': self.hf_models_count,
+            'hf_datasets_count': self.hf_datasets_count,
+            'hf_spaces_count': self.hf_spaces_count,
+            'hf_likes': self.hf_likes,
+            's2_paper_count': self.s2_paper_count,
+            's2_citation_count': self.s2_citation_count,
+            's2_h_index': self.s2_h_index,
             'primary_expertise': self.primary_expertise,
             'skills': self.skills,
             'years_experience': self.years_experience,
@@ -835,6 +865,369 @@ def enrich_from_scholar(candidate_id):
         return jsonify({"error": f"Failed to fetch from Google Scholar: {str(e)}"}), 500
 
 
+# ==================== EXPANDED SOURCING: HUGGING FACE ====================
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/huggingface', methods=['POST'])
+def enrich_from_huggingface(candidate_id):
+    """Auto-enrich candidate from Hugging Face - models, datasets, spaces"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    if not candidate.huggingface_url:
+        return jsonify({"error": "No Hugging Face URL provided for this candidate"}), 400
+
+    try:
+        # Extract username from URL: https://huggingface.co/username
+        username = candidate.huggingface_url.rstrip('/').split('/')[-1]
+
+        headers = {'User-Agent': 'ATS-Recruiter/2.0'}
+
+        # Fetch user info
+        user_resp = requests.get(f'https://huggingface.co/api/users/{username}/overview', headers=headers, timeout=10)
+
+        models = []
+        datasets = []
+        spaces = []
+
+        # Fetch models by this user
+        models_resp = requests.get(f'https://huggingface.co/api/models?author={username}&limit=100', headers=headers, timeout=10)
+        if models_resp.status_code == 200:
+            models = models_resp.json()
+
+        # Fetch datasets by this user
+        datasets_resp = requests.get(f'https://huggingface.co/api/datasets?author={username}&limit=100', headers=headers, timeout=10)
+        if datasets_resp.status_code == 200:
+            datasets = datasets_resp.json()
+
+        # Fetch spaces by this user
+        spaces_resp = requests.get(f'https://huggingface.co/api/spaces?author={username}&limit=100', headers=headers, timeout=10)
+        if spaces_resp.status_code == 200:
+            spaces = spaces_resp.json()
+
+        # Calculate total likes across all artifacts
+        total_likes = sum(m.get('likes', 0) for m in models) + \
+                      sum(d.get('likes', 0) for d in datasets) + \
+                      sum(s.get('likes', 0) for s in spaces)
+
+        # Update candidate metrics
+        candidate.hf_models_count = len(models)
+        candidate.hf_datasets_count = len(datasets)
+        candidate.hf_spaces_count = len(spaces)
+        candidate.hf_likes = total_likes
+
+        # Extract tags/skills from models (pipeline_tag, library_name)
+        hf_skills = set()
+        for m in models:
+            if m.get('pipeline_tag'):
+                hf_skills.add(m['pipeline_tag'].replace('-', ' '))
+            if m.get('library_name'):
+                hf_skills.add(m['library_name'])
+            for tag in m.get('tags', []):
+                if tag in ['pytorch', 'tensorflow', 'jax', 'transformers', 'diffusers',
+                           'reinforcement-learning', 'robotics', 'computer-vision',
+                           'object-detection', 'image-segmentation', 'depth-estimation']:
+                    hf_skills.add(tag.replace('-', ' '))
+
+        # Merge HF skills into candidate skills
+        if hf_skills:
+            existing = candidate.skills.split(', ') if candidate.skills else []
+            combined = list(set(existing + list(hf_skills)))
+            candidate.skills = ', '.join(combined)
+
+        # Extract top models info for response
+        top_models = sorted(models, key=lambda m: m.get('downloads', 0), reverse=True)[:5]
+        top_model_names = [{'id': m.get('modelId', ''), 'downloads': m.get('downloads', 0),
+                            'likes': m.get('likes', 0), 'pipeline': m.get('pipeline_tag', '')}
+                           for m in top_models]
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Enriched from Hugging Face: {username} — {len(models)} models, {len(datasets)} datasets, {len(spaces)} spaces",
+            "data": {
+                "username": username,
+                "models_count": len(models),
+                "datasets_count": len(datasets),
+                "spaces_count": len(spaces),
+                "total_likes": total_likes,
+                "skills_found": list(hf_skills),
+                "top_models": top_model_names
+            }
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to enrich from Hugging Face: {str(e)}"}), 500
+
+
+# ==================== EXPANDED SOURCING: SEMANTIC SCHOLAR ====================
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/semantic-scholar', methods=['POST'])
+def enrich_from_semantic_scholar(candidate_id):
+    """Auto-enrich candidate from Semantic Scholar - free API, covers ICRA/IROS/RSS/CoRL"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    try:
+        headers = {'User-Agent': 'ATS-Recruiter/2.0'}
+        s2_api_key = os.environ.get('SEMANTIC_SCHOLAR_API_KEY')
+        if s2_api_key:
+            headers['x-api-key'] = s2_api_key
+
+        author_id = candidate.semantic_scholar_id
+        author_data = None
+
+        if author_id:
+            # Direct lookup by Semantic Scholar ID
+            resp = requests.get(
+                f'https://api.semanticscholar.org/graph/v1/author/{author_id}?fields=name,hIndex,citationCount,paperCount,affiliations,homepage,papers.title,papers.year,papers.citationCount,papers.venue,papers.externalIds,papers.url',
+                headers=headers, timeout=15
+            )
+            if resp.status_code == 200:
+                author_data = resp.json()
+        else:
+            # Search by name
+            search_name = f"{candidate.first_name} {candidate.last_name}"
+            search_resp = requests.get(
+                f'https://api.semanticscholar.org/graph/v1/author/search?query={search_name}&limit=5&fields=name,hIndex,citationCount,paperCount,affiliations',
+                headers=headers, timeout=15
+            )
+            if search_resp.status_code == 200:
+                results = search_resp.json().get('data', [])
+                if results:
+                    # Use the first match
+                    best = results[0]
+                    author_id = best['authorId']
+                    candidate.semantic_scholar_id = author_id
+
+                    # Now fetch full details
+                    resp = requests.get(
+                        f'https://api.semanticscholar.org/graph/v1/author/{author_id}?fields=name,hIndex,citationCount,paperCount,affiliations,homepage,papers.title,papers.year,papers.citationCount,papers.venue,papers.externalIds,papers.url',
+                        headers=headers, timeout=15
+                    )
+                    if resp.status_code == 200:
+                        author_data = resp.json()
+
+        if not author_data:
+            return jsonify({"error": "Author not found on Semantic Scholar"}), 404
+
+        # Update candidate metrics
+        candidate.s2_paper_count = author_data.get('paperCount', 0)
+        candidate.s2_citation_count = author_data.get('citationCount', 0)
+        candidate.s2_h_index = author_data.get('hIndex', 0)
+
+        # Update main metrics if they're better than existing
+        s2_h = author_data.get('hIndex', 0) or 0
+        s2_cite = author_data.get('citationCount', 0) or 0
+        if s2_h > (candidate.h_index or 0):
+            candidate.h_index = s2_h
+        if s2_cite > (candidate.citation_count or 0):
+            candidate.citation_count = s2_cite
+
+        # Update affiliation
+        affiliations = author_data.get('affiliations', [])
+        if affiliations and not candidate.company:
+            candidate.company = affiliations[0]
+
+        # Import publications — especially robotics conference papers
+        papers = author_data.get('papers', [])
+        papers_added = 0
+        robotics_papers = 0
+        papers_data = []
+
+        for paper in papers[:30]:  # Process top 30
+            if not paper.get('title'):
+                continue
+
+            # Check if already exists
+            existing = Publication.query.filter_by(
+                candidate_id=candidate_id,
+                title=paper['title']
+            ).first()
+
+            if not existing:
+                venue = paper.get('venue', '') or ''
+                ext_ids = paper.get('externalIds', {}) or {}
+
+                pub = Publication(
+                    candidate_id=candidate_id,
+                    title=paper['title'],
+                    venue=venue,
+                    year=paper.get('year'),
+                    citation_count=paper.get('citationCount', 0),
+                    paper_url=paper.get('url', ''),
+                    arxiv_id=ext_ids.get('ArXiv', ''),
+                    doi=ext_ids.get('DOI', '')
+                )
+                db.session.add(pub)
+                papers_added += 1
+
+                # Track robotics conference papers
+                venue_upper = venue.upper()
+                if any(c in venue_upper for c in ['ICRA', 'IROS', 'RSS', 'CORL', 'HUMANOID', 'ROBOT']):
+                    robotics_papers += 1
+
+                papers_data.append({
+                    'title': paper['title'],
+                    'venue': venue,
+                    'year': paper.get('year'),
+                    'citations': paper.get('citationCount', 0)
+                })
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Enriched from Semantic Scholar: {candidate.s2_paper_count} papers, h-index {candidate.s2_h_index}, {candidate.s2_citation_count} citations",
+            "data": {
+                "author_id": author_id,
+                "paper_count": candidate.s2_paper_count,
+                "citation_count": candidate.s2_citation_count,
+                "h_index": candidate.s2_h_index,
+                "affiliations": affiliations,
+                "papers_added": papers_added,
+                "robotics_conference_papers": robotics_papers,
+                "papers": papers_data[:10]
+            }
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to enrich from Semantic Scholar: {str(e)}"}), 500
+
+
+# ==================== EXPANDED SOURCING: PAPERS WITH CODE ====================
+
+@app.route('/api/candidates/<int:candidate_id>/enrich/papers-with-code', methods=['POST'])
+def enrich_from_papers_with_code(candidate_id):
+    """Find candidate's papers that have code implementations on Papers With Code"""
+    candidate = Candidate.query.get_or_404(candidate_id)
+
+    try:
+        headers = {'User-Agent': 'ATS-Recruiter/2.0'}
+
+        # Search Papers With Code by candidate name
+        search_name = f"{candidate.first_name} {candidate.last_name}"
+
+        # Papers With Code API - search papers
+        resp = requests.get(
+            f'https://paperswithcode.com/api/v1/papers/?q={search_name}',
+            headers=headers, timeout=15
+        )
+
+        if resp.status_code != 200:
+            return jsonify({"error": f"Papers With Code API error: {resp.status_code}"}), 500
+
+        data = resp.json()
+        results = data.get('results', [])
+
+        papers_found = 0
+        papers_with_repos = 0
+        papers_data = []
+        tasks_found = set()
+
+        for paper in results[:20]:
+            title = paper.get('title', '')
+            paper_url = paper.get('url_abs', '') or paper.get('url_pdf', '')
+            arxiv_id = paper.get('arxiv_id', '')
+
+            # Check if this paper is by our candidate (author matching)
+            authors = paper.get('authors', [])
+            author_names = [a.lower() for a in authors] if authors else []
+            candidate_name_lower = search_name.lower()
+
+            # Flexible name matching
+            is_author = any(candidate_name_lower in a or
+                           candidate.last_name.lower() in a
+                           for a in author_names) if author_names else True
+
+            if not is_author:
+                continue
+
+            papers_found += 1
+
+            # Fetch code repositories for this paper
+            paper_id = paper.get('id', '')
+            repos = []
+            if paper_id:
+                repo_resp = requests.get(
+                    f'https://paperswithcode.com/api/v1/papers/{paper_id}/repositories/',
+                    headers=headers, timeout=10
+                )
+                if repo_resp.status_code == 200:
+                    repo_data = repo_resp.json()
+                    repos = repo_data.get('results', [])
+                    if repos:
+                        papers_with_repos += 1
+
+            # Fetch tasks/benchmarks this paper addresses
+            if paper_id:
+                task_resp = requests.get(
+                    f'https://paperswithcode.com/api/v1/papers/{paper_id}/tasks/',
+                    headers=headers, timeout=10
+                )
+                if task_resp.status_code == 200:
+                    task_data = task_resp.json()
+                    for task in task_data.get('results', []):
+                        task_name = task.get('name', '')
+                        if task_name:
+                            tasks_found.add(task_name)
+
+            # Add to existing publications if not already there
+            if title:
+                existing = Publication.query.filter_by(
+                    candidate_id=candidate_id,
+                    title=title
+                ).first()
+
+                if not existing:
+                    pub = Publication(
+                        candidate_id=candidate_id,
+                        title=title,
+                        authors=', '.join(authors) if authors else '',
+                        venue=paper.get('conference', '') or 'Papers With Code',
+                        year=int(paper.get('published', '0000')[:4]) if paper.get('published') else None,
+                        paper_url=paper_url,
+                        arxiv_id=arxiv_id
+                    )
+                    db.session.add(pub)
+
+            papers_data.append({
+                'title': title,
+                'arxiv_id': arxiv_id,
+                'has_code': len(repos) > 0,
+                'repo_count': len(repos),
+                'top_repo': repos[0].get('url', '') if repos else None,
+                'stars': repos[0].get('stars', 0) if repos else 0,
+                'tasks': [t.get('name', '') for t in task_data.get('results', [])] if paper_id else []
+            })
+
+        # Extract robotics/physical AI related tasks as skills
+        robotics_tasks = [t for t in tasks_found if any(kw in t.lower() for kw in
+                         ['robot', 'navigation', 'slam', 'object detection', 'depth estimation',
+                          'point cloud', 'pose estimation', 'motion', 'autonomous', 'segmentation',
+                          'visual', '3d', 'lidar', 'manipulation', 'grasping'])]
+
+        if robotics_tasks:
+            existing = candidate.skills.split(', ') if candidate.skills else []
+            combined = list(set(existing + robotics_tasks))
+            candidate.skills = ', '.join(combined)
+
+        db.session.commit()
+
+        return jsonify({
+            "success": True,
+            "message": f"Found {papers_found} papers, {papers_with_repos} with code implementations",
+            "data": {
+                "papers_found": papers_found,
+                "papers_with_code": papers_with_repos,
+                "tasks": list(tasks_found),
+                "robotics_tasks": robotics_tasks,
+                "papers": papers_data[:10]
+            }
+        })
+
+    except Exception as e:
+        return jsonify({"error": f"Failed to search Papers With Code: {str(e)}"}), 500
+
+
 # ==================== PHASE 3: AI/ML FEATURES ====================
 
 # Top AI/ML conferences for tracking
@@ -844,16 +1237,19 @@ TOP_CONFERENCES = [
     'ICRA', 'IROS', 'RSS', 'CoRL'
 ]
 
-# AI/ML skills taxonomy
+# AI/ML + Physical AI skills taxonomy
 AI_ML_SKILLS = {
-    'deep_learning': ['deep learning', 'neural network', 'cnn', 'rnn', 'lstm', 'transformer', 'gpt', 'bert', 'attention'],
-    'computer_vision': ['computer vision', 'image processing', 'object detection', 'segmentation', 'yolo', 'rcnn', 'opencv'],
+    'deep_learning': ['deep learning', 'neural network', 'cnn', 'rnn', 'lstm', 'transformer', 'gpt', 'bert', 'attention', 'diffusion'],
+    'computer_vision': ['computer vision', 'image processing', 'object detection', 'segmentation', 'yolo', 'rcnn', 'opencv', 'depth estimation', 'point cloud', '3d reconstruction', 'stereo vision'],
     'nlp': ['nlp', 'natural language processing', 'text mining', 'language model', 'tokenization', 'embedding'],
-    'reinforcement_learning': ['reinforcement learning', 'rl', 'policy gradient', 'q-learning', 'dqn', 'ppo', 'actor-critic'],
-    'robotics': ['robotics', 'robot', 'manipulation', 'navigation', 'slam', 'ros', 'motion planning'],
-    'ml_frameworks': ['pytorch', 'tensorflow', 'keras', 'jax', 'scikit-learn', 'pandas', 'numpy'],
-    'programming': ['python', 'c++', 'java', 'javascript', 'go', 'rust', 'cuda'],
-    'ml_ops': ['docker', 'kubernetes', 'mlflow', 'wandb', 'aws', 'gcp', 'azure']
+    'reinforcement_learning': ['reinforcement learning', 'rl', 'policy gradient', 'q-learning', 'dqn', 'ppo', 'actor-critic', 'sac', 'sim-to-real', 'domain randomization', 'isaac gym'],
+    'robotics': ['robotics', 'robot', 'manipulation', 'navigation', 'slam', 'ros', 'ros2', 'motion planning', 'humanoid', 'bipedal', 'quadruped', 'legged', 'locomotion', 'grasping', 'dexterous'],
+    'autonomous_systems': ['autonomous', 'self-driving', 'lidar', 'sensor fusion', 'kalman filter', 'path planning', 'trajectory optimization', 'multi-robot', 'swarm'],
+    'simulation': ['mujoco', 'isaac sim', 'gazebo', 'carla', 'pybullet', 'drake', 'unity', 'unreal'],
+    'ml_frameworks': ['pytorch', 'tensorflow', 'keras', 'jax', 'scikit-learn', 'pandas', 'numpy', 'huggingface', 'transformers', 'diffusers'],
+    'programming': ['python', 'c++', 'java', 'javascript', 'go', 'rust', 'cuda', 'tensorrt', 'onnx'],
+    'edge_ai': ['jetson', 'edge ai', 'embedded', 'real-time', 'tensorrt', 'onnx', 'quantization', 'pruning', 'model compression'],
+    'ml_ops': ['docker', 'kubernetes', 'mlflow', 'wandb', 'aws', 'gcp', 'azure', 'weights & biases']
 }
 
 
@@ -927,6 +1323,7 @@ def calculate_research_impact_score(candidate_id):
         'publication_score': 0,
         'github_score': 0,
         'conference_score': 0,
+        'huggingface_score': 0,
         'total_score': 0
     }
 
@@ -963,13 +1360,21 @@ def calculate_research_impact_score(candidate_id):
                 break
     score_breakdown['conference_score'] = min(conference_pubs * 3, 15)
 
-    # Calculate total (out of 100)
+    # Hugging Face Builder Score (0-10 points)
+    # Models (0-5), Datasets+Spaces (0-3), Likes (0-2)
+    hf_model_pts = min((candidate.hf_models_count or 0) * 1.0, 5)
+    hf_other_pts = min(((candidate.hf_datasets_count or 0) + (candidate.hf_spaces_count or 0)) * 0.5, 3)
+    hf_likes_pts = min((candidate.hf_likes or 0) / 50, 2)
+    score_breakdown['huggingface_score'] = round(hf_model_pts + hf_other_pts + hf_likes_pts, 2)
+
+    # Calculate total (out of 110 — normalized to show builders get credit)
     score_breakdown['total_score'] = round(sum([
         score_breakdown['h_index_score'],
         score_breakdown['citation_score'],
         score_breakdown['publication_score'],
         score_breakdown['github_score'],
-        score_breakdown['conference_score']
+        score_breakdown['conference_score'],
+        score_breakdown['huggingface_score']
     ]), 2)
 
     # Determine tier
@@ -997,7 +1402,11 @@ def calculate_research_impact_score(candidate_id):
             "publications": pub_count,
             "github_followers": candidate.github_followers,
             "github_repos": candidate.github_repos,
-            "top_conference_pubs": conference_pubs
+            "top_conference_pubs": conference_pubs,
+            "hf_models": candidate.hf_models_count,
+            "hf_datasets": candidate.hf_datasets_count,
+            "hf_spaces": candidate.hf_spaces_count,
+            "hf_likes": candidate.hf_likes
         }
     })
 
@@ -2334,6 +2743,15 @@ def submit_public_application():
             candidate.years_experience = data.get('years_experience')
         if data.get('primary_expertise'):
             candidate.primary_expertise = data.get('primary_expertise')
+        # Expanded sourcing fields
+        if data.get('huggingface_url'):
+            candidate.huggingface_url = data.get('huggingface_url')
+        if data.get('kaggle_url'):
+            candidate.kaggle_url = data.get('kaggle_url')
+        if data.get('papers_with_code_url'):
+            candidate.papers_with_code_url = data.get('papers_with_code_url')
+        if data.get('devpost_url'):
+            candidate.devpost_url = data.get('devpost_url')
     else:
         # Create new candidate
         candidate = Candidate(
@@ -2348,6 +2766,10 @@ def submit_public_application():
             resume_url=data.get('resume_url'),
             years_experience=data.get('years_experience'),
             primary_expertise=data.get('primary_expertise'),
+            huggingface_url=data.get('huggingface_url'),
+            kaggle_url=data.get('kaggle_url'),
+            papers_with_code_url=data.get('papers_with_code_url'),
+            devpost_url=data.get('devpost_url'),
             status='new'
         )
         db.session.add(candidate)
@@ -2390,32 +2812,83 @@ def seed_sample_data():
         }), 409
 
     try:
-        # Sample Candidates
+        # Sample Candidates — Physical AI, Robotics, Autonomous Systems talent
         candidates_data = [
-            {"first_name": "Yann", "last_name": "LeCun", "email": "yann.lecun@example.edu",
-             "primary_expertise": "Computer Vision", "google_scholar_url": "https://scholar.google.com/citations?user=WLN3QrAAAAAJ",
-             "h_index": 150, "citation_count": 300000, "years_experience": 35,
-             "location": "New York, NY", "github_url": "https://github.com/ylecun", "status": "new"},
-            {"first_name": "Fei-Fei", "last_name": "Li", "email": "feifei@example.edu",
-             "primary_expertise": "Computer Vision", "google_scholar_url": "https://scholar.google.com/citations?user=rDfyQnIAAAAJ",
-             "h_index": 120, "citation_count": 180000, "years_experience": 20,
-             "location": "Stanford, CA", "status": "reviewing"},
-            {"first_name": "Yoshua", "last_name": "Bengio", "email": "yoshua.bengio@example.ca",
-             "primary_expertise": "Deep Learning", "google_scholar_url": "https://scholar.google.com/citations?user=kukA0LcAAAAJ",
-             "h_index": 175, "citation_count": 400000, "years_experience": 30,
-             "location": "Montreal, Canada", "status": "new"},
-            {"first_name": "Andrew", "last_name": "Ng", "email": "andrew.ng@example.edu",
-             "primary_expertise": "Machine Learning", "google_scholar_url": "https://scholar.google.com/citations?user=mG4imMEAAAAJ",
-             "h_index": 140, "citation_count": 250000, "years_experience": 25,
-             "location": "Palo Alto, CA", "github_url": "https://github.com/andrewng", "status": "interviewing"},
-            {"first_name": "Emily", "last_name": "Chen", "email": "emily.chen@example.edu",
-             "primary_expertise": "Natural Language Processing", "h_index": 45, "citation_count": 12000,
-             "years_experience": 8, "location": "Seattle, WA", "github_url": "https://github.com/emilychen",
-             "linkedin_url": "https://linkedin.com/in/emilychen", "status": "new"},
-            {"first_name": "Marcus", "last_name": "Rodriguez", "email": "marcus.r@example.edu",
-             "primary_expertise": "Reinforcement Learning", "arxiv_author_id": "marcus-rodriguez",
-             "h_index": 35, "citation_count": 8500, "years_experience": 6,
-             "location": "Austin, TX", "github_url": "https://github.com/marcusr", "status": "reviewing"}
+            {"first_name": "Anika", "last_name": "Patel", "email": "anika.patel@example.edu",
+             "primary_expertise": "Humanoid Robotics", "h_index": 28, "citation_count": 4200,
+             "years_experience": 7, "location": "Pittsburgh, PA",
+             "github_url": "https://github.com/anikapatel",
+             "huggingface_url": "https://huggingface.co/anikapatel",
+             "bio": "Humanoid locomotion researcher. Built bipedal walking controllers using deep RL. Published at ICRA, IROS, and CoRL. Open-sourced a ROS2 whole-body control stack with 800+ GitHub stars.",
+             "skills": "Python, C++, ROS/ROS2, PyTorch, SLAM Algorithms, Motion Planning, Reinforcement Learning, MuJoCo, Isaac Sim",
+             "status": "new"},
+            {"first_name": "Jin", "last_name": "Nakamura", "email": "jin.nakamura@example.edu",
+             "primary_expertise": "Computer Vision & SLAM",
+             "h_index": 18, "citation_count": 2800, "years_experience": 5,
+             "location": "San Francisco, CA",
+             "github_url": "https://github.com/jinnakamura",
+             "huggingface_url": "https://huggingface.co/jinnakamura",
+             "bio": "Perception engineer focused on real-time 3D scene understanding for autonomous systems. Created a visual SLAM pipeline that runs at 60fps on edge devices. Active contributor to Open3D.",
+             "skills": "Python, C++, CUDA, OpenCV, LIDAR Processing, Point Cloud Processing, Depth Estimation, TensorRT, ONNX, Docker",
+             "status": "reviewing"},
+            {"first_name": "Sofia", "last_name": "Andersen", "email": "sofia.andersen@example.edu",
+             "primary_expertise": "Autonomous Vehicles",
+             "h_index": 35, "citation_count": 7600, "years_experience": 9,
+             "location": "Munich, Germany",
+             "github_url": "https://github.com/sofiaandersen",
+             "google_scholar_url": "https://scholar.google.com/citations?user=example123",
+             "bio": "AV perception lead. Developed multi-sensor fusion architecture combining LiDAR, camera, and radar for L4 autonomy. 12 papers at CVPR/ICRA/IROS. Previously at Waymo, now advising 2 robotics startups.",
+             "skills": "Python, C++, PyTorch, TensorFlow, Sensor Fusion, LIDAR Processing, CARLA, Object Detection, Kalman Filters, ROS/ROS2",
+             "status": "interviewing"},
+            {"first_name": "Kwame", "last_name": "Osei", "email": "kwame.osei@example.edu",
+             "primary_expertise": "Reinforcement Learning",
+             "h_index": 12, "citation_count": 1500, "years_experience": 4,
+             "location": "Austin, TX",
+             "github_url": "https://github.com/kwameosei",
+             "huggingface_url": "https://huggingface.co/kwameosei",
+             "arxiv_author_id": "kwame_osei",
+             "bio": "Deep RL researcher building sim-to-real transfer for robotic manipulation. Published at CoRL and RSS. Created an open-source dexterous hand manipulation benchmark with 2k+ downloads on HuggingFace.",
+             "skills": "Python, PyTorch, JAX, Isaac Gym, MuJoCo, Robotic Manipulation, Sim-to-Real, PPO, SAC, Docker, Kubernetes",
+             "hf_models_count": 4, "hf_datasets_count": 2, "hf_spaces_count": 1, "hf_likes": 85,
+             "status": "new"},
+            {"first_name": "Mei", "last_name": "Zhang", "email": "mei.zhang@example.edu",
+             "primary_expertise": "Robot Control & Dynamics",
+             "h_index": 42, "citation_count": 9800, "years_experience": 11,
+             "location": "Boston, MA",
+             "github_url": "https://github.com/meizhang",
+             "google_scholar_url": "https://scholar.google.com/citations?user=example456",
+             "orcid_id": "0000-0002-1234-5678",
+             "bio": "Control theory meets learning. Built the locomotion stack for a quadruped robot that won the DARPA SubT challenge. 20+ papers at ICRA/IROS/RSS. Co-created the Legged Gym framework.",
+             "skills": "Python, C++, MATLAB, Control Theory, Dynamics Simulation, Gazebo, Isaac Sim, ROS/ROS2, Motion Planning, Real-time Systems",
+             "status": "reviewing"},
+            {"first_name": "Diego", "last_name": "Ramirez", "email": "diego.ramirez@example.edu",
+             "primary_expertise": "Edge AI & Embedded Systems",
+             "h_index": 8, "citation_count": 650, "years_experience": 3,
+             "location": "Remote (Mexico City)",
+             "github_url": "https://github.com/diegoramirez",
+             "huggingface_url": "https://huggingface.co/diegoramirez",
+             "kaggle_url": "https://kaggle.com/diegoramirez",
+             "bio": "Edge AI specialist. Deployed real-time object detection models on NVIDIA Jetson for warehouse robots. Kaggle competitions master. Published 3 HuggingFace models for robotics perception optimized for edge deployment.",
+             "skills": "Python, C++, TensorRT, ONNX, CUDA, YOLO, Docker, Linux, Real-time Systems, Edge AI, NVIDIA Jetson, Raspberry Pi",
+             "hf_models_count": 3, "hf_datasets_count": 1, "hf_spaces_count": 2, "hf_likes": 42,
+             "status": "new"},
+            {"first_name": "Priya", "last_name": "Sharma", "email": "priya.sharma@example.edu",
+             "primary_expertise": "Perception & Sensor Fusion",
+             "h_index": 22, "citation_count": 3100, "years_experience": 6,
+             "location": "Seattle, WA",
+             "github_url": "https://github.com/priyasharma",
+             "bio": "Built perception pipelines for 3 autonomous robot platforms. Specializes in multi-modal sensor fusion (LiDAR + stereo + IMU). Created ROS2 packages downloaded 15k+ times. Active RSS/ICRA reviewer.",
+             "skills": "Python, C++, ROS/ROS2, Sensor Fusion, LIDAR Processing, Kalman Filters, Particle Filters, OpenCV, PCL, Docker, Git/GitHub",
+             "status": "new"},
+            {"first_name": "Alex", "last_name": "Kowalski", "email": "alex.kowalski@example.edu",
+             "primary_expertise": "Motion Planning & Navigation",
+             "h_index": 15, "citation_count": 1900, "years_experience": 5,
+             "location": "Boulder, CO",
+             "github_url": "https://github.com/alexkowalski",
+             "arxiv_author_id": "alex_kowalski",
+             "bio": "Motion planning researcher. Developed a real-time trajectory optimization framework for multi-robot coordination. Open-sourced a path planning library (RRT*, A*, PRM) with 1.2k GitHub stars. 2 best paper nominations at IROS.",
+             "skills": "Python, C++, ROS/ROS2, Path Planning (RRT, A*), Motion Planning, Optimization, Gazebo, OMPL, Multi-robot Systems, Linux",
+             "status": "reviewing"}
         ]
 
         created_candidates = []
@@ -2426,50 +2899,64 @@ def seed_sample_data():
 
         db.session.flush()  # Get IDs assigned
 
-        # Sample Jobs
+        # Sample Jobs — Physical AI, Robotics, Autonomous Systems
         jobs_data = [
-            {"title": "Senior Research Scientist - Computer Vision", "company": "Meta AI Research",
-             "location": "Menlo Park, CA", "job_type": "full-time",
-             "description": "Lead research in computer vision and multimodal learning.",
-             "requirements": "PhD in CS, 5+ years research, publications at CVPR/ICCV/ECCV/NeurIPS",
-             "required_expertise": "Computer Vision", "education_required": "PhD",
-             "research_focus": "Multimodal Learning and Visual Understanding",
-             "salary_min": 250000, "salary_max": 450000, "confidential": False},
-            {"title": "AI Research Scientist", "company": "Stealth AI Startup",
+            {"title": "Humanoid Roboticist", "company": "Figure AI",
+             "location": "Sunnyvale, CA", "job_type": "full-time",
+             "description": "Design and implement whole-body control for our humanoid robot. You'll work on locomotion, manipulation, and human-robot interaction using deep RL and model-based control.",
+             "requirements": "MS/PhD in Robotics/ME/CS, experience with bipedal locomotion, published at ICRA/IROS/RSS/CoRL, hands-on with real robot hardware",
+             "required_expertise": "Humanoid Robotics", "education_required": "Masters",
+             "research_focus": "Bipedal Locomotion and Whole-Body Control",
+             "salary_min": 220000, "salary_max": 400000, "confidential": False},
+            {"title": "Perception Engineer", "company": "Stealth Robotics Startup",
              "location": "San Francisco, CA", "job_type": "full-time",
-             "description": "Join a well-funded stealth startup working on breakthrough AI technology.",
-             "requirements": "PhD in CS/ML, publications at NeurIPS/ICML/ICLR, experience with LLMs",
-             "required_expertise": "Deep Learning", "education_required": "PhD",
-             "research_focus": "Large Language Models",
-             "salary_min": 300000, "salary_max": 500000, "confidential": True},
-            {"title": "ML Research Lead - NLP", "company": "Leading Tech Company",
-             "location": "Remote", "job_type": "full-time",
-             "description": "Lead NLP research team. Build state-of-the-art language models.",
-             "requirements": "PhD preferred, 10+ years experience, proven track record",
-             "required_expertise": "Natural Language Processing", "education_required": "PhD",
-             "research_focus": "Language Models and Generation",
-             "salary_min": 280000, "salary_max": 480000, "confidential": True},
-            {"title": "Research Scientist - Reinforcement Learning", "company": "DeepMind",
-             "location": "London, UK", "job_type": "full-time",
-             "description": "Push the boundaries of RL research with world-class team.",
-             "requirements": "PhD in CS/ML, strong RL background, publications at top venues",
-             "required_expertise": "Reinforcement Learning", "education_required": "PhD",
-             "research_focus": "Multi-agent RL and Game Playing",
-             "salary_min": 180000, "salary_max": 320000, "confidential": False},
-            {"title": "Principal ML Engineer", "company": "Confidential - Series C Startup",
-             "location": "New York, NY", "job_type": "full-time",
-             "description": "Join as founding ML team member. $150M+ in funding.",
-             "requirements": "MS/PhD, 5+ years ML experience, production ML systems",
-             "required_expertise": "MLOps", "education_required": "Masters",
-             "research_focus": "Production ML Systems",
-             "salary_min": 220000, "salary_max": 380000, "confidential": True},
-            {"title": "AI Research Scientist - Multimodal", "company": "OpenAI",
-             "location": "San Francisco, CA", "job_type": "full-time",
-             "description": "Work on next generation multimodal models combining vision and language.",
-             "requirements": "PhD, strong publication record, experience with large-scale models",
-             "required_expertise": "Deep Learning", "education_required": "PhD",
-             "research_focus": "Multimodal AI",
-             "salary_min": 300000, "salary_max": 500000, "confidential": False}
+             "description": "Build the perception stack for next-gen autonomous robots. Multi-sensor fusion (LiDAR, stereo, radar), real-time 3D scene understanding, and object tracking. $80M Series B.",
+             "requirements": "3+ years in robotics perception, C++/Python, experience with ROS2, real-time constraints, CUDA/TensorRT",
+             "required_expertise": "Perception & Sensor Fusion", "education_required": "Masters",
+             "research_focus": "3D Scene Understanding and Sensor Fusion",
+             "salary_min": 200000, "salary_max": 350000, "confidential": True},
+            {"title": "Reinforcement Learning Engineer", "company": "NVIDIA Robotics",
+             "location": "Santa Clara, CA (Hybrid)", "job_type": "full-time",
+             "description": "Develop sim-to-real RL pipelines using Isaac Sim/Gym for robotic manipulation and locomotion. Push the frontier of what robots can learn in simulation and transfer to the real world.",
+             "requirements": "Strong RL background (PPO, SAC, model-based), experience with Isaac Gym or MuJoCo, publications preferred, PyTorch",
+             "required_expertise": "Reinforcement Learning", "education_required": "Masters",
+             "research_focus": "Sim-to-Real Transfer for Robotic Manipulation",
+             "salary_min": 250000, "salary_max": 420000, "confidential": False},
+            {"title": "SLAM Engineer", "company": "Confidential - Autonomous Delivery",
+             "location": "Pittsburgh, PA", "job_type": "full-time",
+             "description": "Build robust visual-inertial SLAM for outdoor autonomous delivery robots. Must work in rain, snow, and GPS-denied environments. Founding robotics team.",
+             "requirements": "Deep SLAM experience (ORB-SLAM, VINS-Mono, or similar), C++, real-time systems, published work preferred",
+             "required_expertise": "Computer Vision & SLAM", "education_required": "Masters",
+             "research_focus": "Visual SLAM for Outdoor Autonomy",
+             "salary_min": 180000, "salary_max": 300000, "confidential": True},
+            {"title": "Motion Planning Engineer", "company": "Boston Dynamics",
+             "location": "Waltham, MA", "job_type": "full-time",
+             "description": "Design and implement motion planning algorithms for legged robots navigating complex, unstructured environments. Work with Spot and Atlas platforms.",
+             "requirements": "MS/PhD, strong C++, experience with trajectory optimization, OMPL or custom planners, ROS",
+             "required_expertise": "Motion Planning & Navigation", "education_required": "Masters",
+             "research_focus": "Trajectory Optimization for Legged Robots",
+             "salary_min": 200000, "salary_max": 380000, "confidential": False},
+            {"title": "Autonomous Systems Engineer", "company": "Confidential - Defense/Space",
+             "location": "Remote (US Clearance Required)", "job_type": "full-time",
+             "description": "Build autonomous navigation and decision-making systems for unmanned vehicles operating in contested environments. Multi-robot coordination and edge AI deployment.",
+             "requirements": "5+ years autonomous systems, C++/Python, ROS2, real-time embedded, US citizenship required",
+             "required_expertise": "Autonomous Navigation", "education_required": "Masters",
+             "research_focus": "Multi-Robot Coordination and Autonomous Decision Making",
+             "salary_min": 190000, "salary_max": 320000, "confidential": True},
+            {"title": "Computer Vision Engineer (Robotics)", "company": "Agility Robotics",
+             "location": "Corvallis, OR (Hybrid)", "job_type": "full-time",
+             "description": "Build real-time vision systems for Digit, our bipedal humanoid. Object detection, semantic segmentation, and spatial reasoning for warehouse environments.",
+             "requirements": "3+ years CV experience, YOLO/segmentation models, deployment on edge (Jetson/TensorRT), ROS2",
+             "required_expertise": "Computer Vision & SLAM", "education_required": "Bachelors",
+             "research_focus": "Real-time Vision for Humanoid Robots",
+             "salary_min": 170000, "salary_max": 280000, "confidential": False},
+            {"title": "Embedded AI Engineer", "company": "Stealth Humanoid Startup",
+             "location": "Bay Area, CA", "job_type": "full-time",
+             "description": "Deploy ML models on custom robot hardware. Optimize perception and control models for real-time inference on resource-constrained platforms. $200M+ funding.",
+             "requirements": "C++/CUDA, TensorRT/ONNX, edge deployment experience, understanding of robot control loops",
+             "required_expertise": "Edge AI & Embedded Systems", "education_required": "Bachelors",
+             "research_focus": "On-Device ML for Robotics",
+             "salary_min": 180000, "salary_max": 300000, "confidential": True}
         ]
 
         created_jobs = []
@@ -2480,21 +2967,45 @@ def seed_sample_data():
 
         db.session.flush()
 
-        # Sample Publications (linked to candidates by order)
+        # Sample Publications — Robotics conference papers
         candidates_list = Candidate.query.order_by(Candidate.id).all()
         pubs_data = [
-            {"candidate_id": candidates_list[0].id, "title": "Gradient-Based Learning Applied to Document Recognition",
-             "authors": "Y. LeCun, L. Bottou, Y. Bengio, P. Haffner", "venue": "Proceedings of the IEEE",
-             "year": 1998, "citation_count": 45000, "research_area": "Computer Vision"},
-            {"candidate_id": candidates_list[1].id, "title": "ImageNet: A Large-Scale Hierarchical Image Database",
-             "authors": "J. Deng, W. Dong, R. Socher, L.-J. Li, K. Li, L. Fei-Fei", "venue": "CVPR 2009",
-             "year": 2009, "citation_count": 75000, "research_area": "Computer Vision"},
-            {"candidate_id": candidates_list[2].id, "title": "Learning Long-Term Dependencies with Gradient Descent is Difficult",
-             "authors": "Y. Bengio, P. Simard, P. Frasconi", "venue": "IEEE Transactions on Neural Networks",
-             "year": 1994, "citation_count": 15000, "research_area": "Deep Learning"},
-            {"candidate_id": candidates_list[4].id, "title": "Attention-Based Neural Machine Translation",
-             "authors": "E. Chen, M. Rodriguez", "venue": "ACL 2020",
-             "year": 2020, "arxiv_id": "2004.12345", "citation_count": 2500, "research_area": "Natural Language Processing"}
+            # Anika Patel - Humanoid Robotics
+            {"candidate_id": candidates_list[0].id, "title": "Deep Reinforcement Learning for Bipedal Locomotion on Uneven Terrain",
+             "authors": "A. Patel, J. Hwang, S. Kim", "venue": "ICRA 2024",
+             "year": 2024, "citation_count": 45, "research_area": "Humanoid Robotics",
+             "abstract": "We present a deep RL framework for robust bipedal walking that transfers from simulation to a real humanoid robot, achieving stable locomotion over uneven terrain."},
+            {"candidate_id": candidates_list[0].id, "title": "Whole-Body Control for Humanoid Manipulation Using Hierarchical RL",
+             "authors": "A. Patel, M. Zhang", "venue": "CoRL 2023",
+             "year": 2023, "citation_count": 72, "research_area": "Humanoid Robotics"},
+            # Jin Nakamura - SLAM
+            {"candidate_id": candidates_list[1].id, "title": "Real-Time Visual SLAM on Edge Devices for Mobile Robots",
+             "authors": "J. Nakamura, L. Chen, R. Patel", "venue": "IROS 2024",
+             "year": 2024, "citation_count": 28, "research_area": "Computer Vision & SLAM",
+             "abstract": "A lightweight visual SLAM pipeline achieving 60fps on NVIDIA Jetson Orin with comparable accuracy to desktop methods."},
+            # Sofia Andersen - AV Perception
+            {"candidate_id": candidates_list[2].id, "title": "Multi-Modal Sensor Fusion for Robust Autonomous Driving in Adverse Weather",
+             "authors": "S. Andersen, T. Mueller, K. Yamamoto", "venue": "CVPR 2023",
+             "year": 2023, "citation_count": 156, "research_area": "Autonomous Vehicles"},
+            {"candidate_id": candidates_list[2].id, "title": "LiDAR-Camera Fusion with Learned Uncertainty for 3D Object Detection",
+             "authors": "S. Andersen, R. Gupta", "venue": "ICRA 2024",
+             "year": 2024, "citation_count": 38, "research_area": "Autonomous Vehicles"},
+            # Kwame Osei - RL Manipulation
+            {"candidate_id": candidates_list[3].id, "title": "Sim-to-Real Transfer for Dexterous Robotic Manipulation via Domain Randomization",
+             "authors": "K. Osei, P. Sharma, A. Kowalski", "venue": "RSS 2024",
+             "year": 2024, "citation_count": 31, "research_area": "Reinforcement Learning",
+             "abstract": "We demonstrate sim-to-real transfer for a 16-DOF dexterous hand using massive domain randomization in Isaac Gym."},
+            # Mei Zhang - Control
+            {"candidate_id": candidates_list[4].id, "title": "Adaptive Model Predictive Control for Legged Robot Locomotion",
+             "authors": "M. Zhang, J. Di Carlo, S. Kim", "venue": "RSS 2022",
+             "year": 2022, "citation_count": 210, "research_area": "Robot Control & Dynamics"},
+            {"candidate_id": candidates_list[4].id, "title": "Learning Agile Locomotion via Adversarial Training in Simulation",
+             "authors": "M. Zhang, A. Patel", "venue": "ICRA 2023",
+             "year": 2023, "citation_count": 95, "research_area": "Robot Control & Dynamics"},
+            # Alex Kowalski - Motion Planning
+            {"candidate_id": candidates_list[7].id, "title": "Real-Time Multi-Robot Trajectory Optimization in Dynamic Environments",
+             "authors": "A. Kowalski, M. Zhang, P. Sharma", "venue": "IROS 2023",
+             "year": 2023, "citation_count": 52, "research_area": "Motion Planning & Navigation"}
         ]
 
         for p in pubs_data:
@@ -2509,7 +3020,7 @@ def seed_sample_data():
             "candidates_created": created_candidates,
             "jobs_created": created_jobs,
             "publications_created": len(pubs_data),
-            "stealth_jobs": 3
+            "stealth_jobs": 4
         }), 201
 
     except Exception as e:

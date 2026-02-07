@@ -313,6 +313,10 @@ function JobDetailPage({ jobId, onBack }) {
     linkedin_url: '',
     github_url: '',
     portfolio_url: '',
+    huggingface_url: '',
+    kaggle_url: '',
+    papers_with_code_url: '',
+    devpost_url: '',
     years_experience: '',
     primary_expertise: '',
     position: '',
@@ -518,6 +522,43 @@ function JobDetailPage({ jobId, onBack }) {
             <div className="form-group">
               <label>Portfolio URL</label>
               <input type="url" name="portfolio_url" value={formData.portfolio_url} onChange={handleInputChange} placeholder="https://yourportfolio.com" />
+            </div>
+
+            {/* Projects, Papers & Code — where Physical AI talent actually lives */}
+            <div style={{
+              backgroundColor: '#f8fafc',
+              borderRadius: '10px',
+              padding: '20px',
+              marginTop: '16px',
+              marginBottom: '16px',
+              border: '1px solid #e2e8f0'
+            }}>
+              <h3 style={{ margin: '0 0 4px 0', fontSize: '16px', color: '#0f1724' }}>
+                Projects, Papers & Code
+              </h3>
+              <p style={{ color: '#6b7280', margin: '0 0 14px 0', fontSize: '12px' }}>
+                Share links to your work — GitHub repos, research papers, models, competitions, or hackathon projects. No resume required! College projects, research, and personal work all count.
+              </p>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Hugging Face</label>
+                  <input type="url" name="huggingface_url" value={formData.huggingface_url} onChange={handleInputChange} placeholder="https://huggingface.co/yourusername" />
+                </div>
+                <div className="form-group">
+                  <label>Kaggle</label>
+                  <input type="url" name="kaggle_url" value={formData.kaggle_url} onChange={handleInputChange} placeholder="https://kaggle.com/yourusername" />
+                </div>
+              </div>
+              <div className="form-row">
+                <div className="form-group">
+                  <label>Papers With Code</label>
+                  <input type="url" name="papers_with_code_url" value={formData.papers_with_code_url} onChange={handleInputChange} placeholder="https://paperswithcode.com/author/your-name" />
+                </div>
+                <div className="form-group">
+                  <label>Devpost (Hackathons)</label>
+                  <input type="url" name="devpost_url" value={formData.devpost_url} onChange={handleInputChange} placeholder="https://devpost.com/yourusername" />
+                </div>
+              </div>
             </div>
 
             {/* ==================== PROFESSIONAL PAIP HIRING INTELLIGENCE INTAKE ==================== */}
@@ -1724,6 +1765,16 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                     💻 GitHub
                   </a>
                 )}
+                {candidate.huggingface_url && (
+                  <a href={candidate.huggingface_url} target="_blank" rel="noopener noreferrer">
+                    🤗 Hugging Face
+                  </a>
+                )}
+                {candidate.kaggle_url && (
+                  <a href={candidate.kaggle_url} target="_blank" rel="noopener noreferrer">
+                    📊 Kaggle
+                  </a>
+                )}
               </div>
 
               <div className="research-stats">
@@ -1732,6 +1783,11 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                 {candidate.h_index && <span>H-index: {candidate.h_index}</span>}
                 {candidate.citation_count && <span>Citations: {candidate.citation_count}</span>}
                 {candidate.publication_count > 0 && <span>Publications: {candidate.publication_count}</span>}
+                {candidate.hf_models_count > 0 && <span>🤗 {candidate.hf_models_count} models</span>}
+                {candidate.hf_datasets_count > 0 && <span>📦 {candidate.hf_datasets_count} datasets</span>}
+                {candidate.hf_spaces_count > 0 && <span>🚀 {candidate.hf_spaces_count} spaces</span>}
+                {candidate.hf_likes > 0 && <span>❤️ {candidate.hf_likes} HF likes</span>}
+                {candidate.s2_paper_count > 0 && <span>📑 {candidate.s2_paper_count} S2 papers</span>}
               </div>
               {/* Impact Score Display */}
               {impactScores[candidate.id] && (
@@ -1785,6 +1841,29 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                       {enriching[`${candidate.id}-scholar`] ? '...' : '🎓 Scholar'}
                     </button>
                   )}
+                  {candidate.huggingface_url && (
+                    <button
+                      onClick={() => enrichCandidate(candidate.id, 'huggingface')}
+                      disabled={enriching[`${candidate.id}-huggingface`]}
+                      style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#ff9d00', color: '#1a1a1a', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600' }}
+                    >
+                      {enriching[`${candidate.id}-huggingface`] ? '...' : '🤗 Hugging Face'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => enrichCandidate(candidate.id, 'semantic-scholar')}
+                    disabled={enriching[`${candidate.id}-semantic-scholar`]}
+                    style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#1857b6', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    {enriching[`${candidate.id}-semantic-scholar`] ? '...' : '🔬 Semantic Scholar'}
+                  </button>
+                  <button
+                    onClick={() => enrichCandidate(candidate.id, 'papers-with-code')}
+                    disabled={enriching[`${candidate.id}-papers-with-code`]}
+                    style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#21cbce', color: '#0a2c2d', border: 'none', borderRadius: '4px', cursor: 'pointer', fontWeight: '600' }}
+                  >
+                    {enriching[`${candidate.id}-papers-with-code`] ? '...' : '📝 Papers+Code'}
+                  </button>
                   <button
                     onClick={() => extractSkills(candidate.id)}
                     disabled={enriching[`${candidate.id}-skills`]}
