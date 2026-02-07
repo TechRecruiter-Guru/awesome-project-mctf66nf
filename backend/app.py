@@ -381,11 +381,38 @@ def ensure_tables():
     if not _tables_initialized:
         try:
             db.create_all()
+            # Auto-migrate: add new columns to existing tables
+            _run_migrations()
             _tables_initialized = True
             print("DATABASE: Tables initialized successfully")
         except Exception as e:
             print(f"DATABASE: Table initialization error (may already exist): {e}")
             _tables_initialized = True  # Don't retry on every request
+
+
+def _run_migrations():
+    """Add missing columns to existing tables (SQLAlchemy create_all won't do this)"""
+    new_columns = [
+        ("candidate", "huggingface_url", "VARCHAR(300)"),
+        ("candidate", "semantic_scholar_id", "VARCHAR(100)"),
+        ("candidate", "papers_with_code_url", "VARCHAR(300)"),
+        ("candidate", "kaggle_url", "VARCHAR(300)"),
+        ("candidate", "devpost_url", "VARCHAR(300)"),
+        ("candidate", "hf_models_count", "INTEGER DEFAULT 0"),
+        ("candidate", "hf_datasets_count", "INTEGER DEFAULT 0"),
+        ("candidate", "hf_spaces_count", "INTEGER DEFAULT 0"),
+        ("candidate", "hf_likes", "INTEGER DEFAULT 0"),
+        ("candidate", "s2_paper_count", "INTEGER DEFAULT 0"),
+        ("candidate", "s2_citation_count", "INTEGER DEFAULT 0"),
+        ("candidate", "s2_h_index", "INTEGER DEFAULT 0"),
+    ]
+    for table, column, col_type in new_columns:
+        try:
+            db.session.execute(db.text(f"ALTER TABLE {table} ADD COLUMN {column} {col_type}"))
+            db.session.commit()
+            print(f"MIGRATION: Added {table}.{column}")
+        except Exception:
+            db.session.rollback()  # Column already exists, skip
 
 @app.before_request
 def before_request():
