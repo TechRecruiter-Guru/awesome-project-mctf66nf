@@ -6,20 +6,6 @@ const nextConfig = {
       bodySizeLimit: '10mb',
     },
   },
-  async rewrites() {
-    return {
-      afterFiles: [
-        {
-          source: '/recruiter',
-          destination: '/recruiter/index.html',
-        },
-        {
-          source: '/recruiter/apply/:jobId',
-          destination: '/recruiter/index.html',
-        },
-      ],
-    };
-  },
 };
 
 export default nextConfig;
