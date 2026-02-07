@@ -1717,6 +1717,14 @@ def create_application():
     if not data or 'candidate_id' not in data or 'job_id' not in data:
         return jsonify({"error": "Candidate ID and Job ID are required"}), 400
 
+    # Prevent duplicate applications
+    existing = Application.query.filter_by(
+        candidate_id=data['candidate_id'],
+        job_id=data['job_id']
+    ).first()
+    if existing:
+        return jsonify({"error": "This candidate has already applied for this position"}), 409
+
     application = Application(
         candidate_id=data['candidate_id'],
         job_id=data['job_id'],

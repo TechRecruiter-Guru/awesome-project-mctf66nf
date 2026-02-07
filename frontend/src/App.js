@@ -1944,6 +1944,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
   const [editJob, setEditJob] = useState({});
   const [matchResults, setMatchResults] = useState({});
   const [matching, setMatching] = useState({});
+  const [addingToPipeline, setAddingToPipeline] = useState({});
 
   // Match candidates to a job
   const matchCandidates = async (jobId) => {
@@ -1958,6 +1959,33 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
       alert(`❌ Error: ${err.response?.data?.error || err.message}`);
     } finally {
       setMatching(prev => ({ ...prev, [jobId]: false }));
+    }
+  };
+
+  // Move matched candidate straight to applicant pipeline
+  const addToPipeline = async (jobId, match) => {
+    const key = `${jobId}-${match.candidate_id}`;
+    setAddingToPipeline(prev => ({ ...prev, [key]: true }));
+    try {
+      await axios.post(`${API_URL}/api/applications`, {
+        candidate_id: match.candidate_id,
+        job_id: jobId,
+        status: 'screening',
+        source: 'ai_match',
+        overall_score: Math.round(match.match_score),
+        notes: `AI Match Score: ${match.match_score}% | Expertise: ${match.primary_expertise || 'N/A'} | ${match.score_breakdown ? Object.entries(match.score_breakdown).map(([k,v]) => `${k}: ${v}`).join(', ') : ''}`
+      });
+      setAddingToPipeline(prev => ({ ...prev, [key]: 'done' }));
+      alert(`✅ ${match.candidate_name} added to pipeline for this role!`);
+    } catch (err) {
+      const msg = err.response?.data?.error || err.message;
+      if (msg.includes('already')) {
+        setAddingToPipeline(prev => ({ ...prev, [key]: 'exists' }));
+        alert(`${match.candidate_name} is already an applicant for this job.`);
+      } else {
+        setAddingToPipeline(prev => ({ ...prev, [key]: false }));
+        alert(`❌ Error: ${msg}`);
+      }
     }
   };
 
@@ -2266,6 +2294,29 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
                                 {match.citations && `Citations: ${match.citations}`}
                               </div>
                             )}
+                            <button
+                              onClick={() => addToPipeline(job.id, match)}
+                              disabled={addingToPipeline[`${job.id}-${match.candidate_id}`]}
+                              style={{
+                                marginTop: '8px',
+                                fontSize: '0.75rem',
+                                padding: '6px 12px',
+                                background: addingToPipeline[`${job.id}-${match.candidate_id}`] === 'done' ? '#059669'
+                                  : addingToPipeline[`${job.id}-${match.candidate_id}`] === 'exists' ? '#6b7280'
+                                  : '#7c3aed',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '4px',
+                                cursor: addingToPipeline[`${job.id}-${match.candidate_id}`] ? 'default' : 'pointer',
+                                width: '100%',
+                                fontWeight: '600'
+                              }}
+                            >
+                              {addingToPipeline[`${job.id}-${match.candidate_id}`] === 'done' ? '✓ In Pipeline'
+                                : addingToPipeline[`${job.id}-${match.candidate_id}`] === 'exists' ? 'Already Applied'
+                                : addingToPipeline[`${job.id}-${match.candidate_id}`] === true ? '...'
+                                : '→ Move to Pipeline'}
+                            </button>
                           </div>
                         ))}
                       </div>
