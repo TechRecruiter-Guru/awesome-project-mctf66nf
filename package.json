@@ -8,7 +8,7 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build:frontend": "cd frontend && npm install && npm run build && mkdir -p ../public/recruiter && cp -r build/* ../public/recruiter/",
+    "build:frontend": "cd frontend && npm install && REACT_APP_API_URL=https://new-paip-ats.onrender.com npm run build && mkdir -p ../public/recruiter && cp -r build/* ../public/recruiter/",
     "build": "npm run build:frontend && next build",
     "start": "next start",
     "lint": "next lint"
