@@ -1523,13 +1523,14 @@ function DashboardView({ stats }) {
       </div>
 
       <div className="unique-features">
-        <h3>🌟 Unique ATS Features</h3>
+        <h3>🌟 Physical AI Hiring Intelligence</h3>
         <ul>
-          <li>📄 <strong>Research Paper Tracking</strong> - Track publications from arXiv, Google Scholar</li>
-          <li>🎓 <strong>Academic Profiles</strong> - H-index, citations, ORCID integration</li>
-          <li>🔬 <strong>Research Focus Areas</strong> - Computer Vision, NLP, RL, etc.</li>
-          <li>📚 <strong>Publication History</strong> - Link candidates to their research papers</li>
-          <li>🏆 <strong>Research Scoring</strong> - Evaluate candidates based on research impact</li>
+          <li>🤗 <strong>Hugging Face Enrichment</strong> - Models, datasets, spaces — find builders not on LinkedIn</li>
+          <li>🔬 <strong>Semantic Scholar</strong> - ICRA, IROS, RSS, CoRL papers with free API</li>
+          <li>📝 <strong>Papers With Code</strong> - Find who implements robotics papers, not just publishes</li>
+          <li>🎯 <strong>AI Match + Pipeline</strong> - Match candidates to jobs, move to pipeline with one click</li>
+          <li>🏆 <strong>Impact Scoring</strong> - H-index, citations, GitHub, Hugging Face combined score</li>
+          <li>📄 <strong>No Resume Required</strong> - Projects, papers, and code tell the real story</li>
         </ul>
       </div>
     </div>
@@ -1545,6 +1546,7 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     primary_expertise: '',
     google_scholar_url: '',
     github_url: '',
+    huggingface_url: '',
     orcid_id: ''
   });
   const [schedulingInterviewFor, setSchedulingInterviewFor] = useState(null);
@@ -1556,6 +1558,27 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
   });
   const [enriching, setEnriching] = useState({});
   const [impactScores, setImpactScores] = useState({});
+  const [pipelineJob, setPipelineJob] = useState({});
+  const [addingToPipeline, setAddingToPipeline] = useState({});
+  const [availableJobs, setAvailableJobs] = useState([]);
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [expertiseFilter, setExpertiseFilter] = useState('all');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [quickNote, setQuickNote] = useState({});
+  const [savingNote, setSavingNote] = useState({});
+
+  // Fetch open jobs for "Move to Pipeline" dropdown
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/jobs`);
+        setAvailableJobs((response.data.jobs || []).filter(j => j.status === 'open'));
+      } catch (err) {
+        console.error('Error fetching jobs for pipeline:', err);
+      }
+    };
+    fetchJobs();
+  }, []);
 
   // Enrich candidate from various sources
   const enrichCandidate = async (candidateId, source) => {
@@ -1595,11 +1618,96 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
     }
   };
 
+  // Move candidate to pipeline for a specific job
+  const addCandidateToPipeline = async (candidateId, candidateName) => {
+    const jobId = pipelineJob[candidateId];
+    if (!jobId) {
+      alert('Please select a job first');
+      return;
+    }
+    const key = `candidate-${candidateId}`;
+    setAddingToPipeline(prev => ({ ...prev, [key]: true }));
+    try {
+      const job = availableJobs.find(j => j.id === parseInt(jobId));
+      await axios.post(`${API_URL}/api/applications`, {
+        candidate_id: candidateId,
+        job_id: parseInt(jobId),
+        status: 'screening',
+        source: 'recruiter_sourced',
+        notes: `Recruiter-sourced candidate moved to pipeline for ${job?.title || 'role'}`
+      });
+      setAddingToPipeline(prev => ({ ...prev, [key]: 'done' }));
+      alert(`✅ ${candidateName} added to pipeline for ${job?.title}!`);
+    } catch (err) {
+      const msg = err.response?.data?.error || err.message;
+      if (msg.includes('already')) {
+        setAddingToPipeline(prev => ({ ...prev, [key]: 'exists' }));
+        alert(`${candidateName} is already an applicant for this job.`);
+      } else {
+        setAddingToPipeline(prev => ({ ...prev, [key]: false }));
+        alert(`❌ Error: ${msg}`);
+      }
+    }
+  };
+
+  // Inline status update
+  const updateCandidateStatus = async (candidateId, newStatus) => {
+    try {
+      await axios.put(`${API_URL}/api/candidates/${candidateId}`, { status: newStatus });
+      onRefresh();
+    } catch (err) {
+      alert('Error updating status: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  // Quick note save
+  const saveQuickNote = async (candidateId) => {
+    const note = quickNote[candidateId];
+    if (!note || !note.trim()) return;
+    setSavingNote(prev => ({ ...prev, [candidateId]: true }));
+    try {
+      await axios.put(`${API_URL}/api/candidates/${candidateId}`, { notes: note });
+      setSavingNote(prev => ({ ...prev, [candidateId]: false }));
+      onRefresh();
+    } catch (err) {
+      setSavingNote(prev => ({ ...prev, [candidateId]: false }));
+      alert('Error saving note: ' + (err.response?.data?.error || err.message));
+    }
+  };
+
+  // Days since candidate was added
+  const daysSince = (dateStr) => {
+    const diff = Date.now() - new Date(dateStr).getTime();
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    if (days === 0) return 'Today';
+    if (days === 1) return '1 day ago';
+    return `${days} days ago`;
+  };
+
+  // Filter candidates
+  const filteredCandidates = candidates.filter(c => {
+    if (statusFilter !== 'all' && c.status !== statusFilter) return false;
+    if (expertiseFilter !== 'all' && c.primary_expertise !== expertiseFilter) return false;
+    if (searchQuery) {
+      const q = searchQuery.toLowerCase();
+      const matchesSearch = (c.full_name || '').toLowerCase().includes(q) ||
+        (c.email || '').toLowerCase().includes(q) ||
+        (c.skills || '').toLowerCase().includes(q) ||
+        (c.bio || '').toLowerCase().includes(q) ||
+        (c.location || '').toLowerCase().includes(q);
+      if (!matchesSearch) return false;
+    }
+    return true;
+  });
+
+  // Get unique expertise values for filter
+  const expertiseValues = [...new Set(candidates.map(c => c.primary_expertise).filter(Boolean))];
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       await axios.post(`${API_URL}/api/candidates`, newCandidate);
-      setNewCandidate({ first_name: '', last_name: '', email: '', primary_expertise: '', google_scholar_url: '', github_url: '', orcid_id: '' });
+      setNewCandidate({ first_name: '', last_name: '', email: '', primary_expertise: '', google_scholar_url: '', github_url: '', huggingface_url: '', orcid_id: '' });
       setShowForm(false);
       onRefresh();
     } catch (err) {
@@ -1627,10 +1735,47 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
   return (
     <div className="candidates-view">
       <div className="view-header">
-        <h2>AI/ML Candidates</h2>
+        <h2>Hiring Intelligence Signals</h2>
         <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Cancel' : '+ Add Candidate'}
         </button>
+      </div>
+
+      {/* Filters & Search */}
+      <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap', marginBottom: '16px', alignItems: 'center' }}>
+        <input
+          type="text"
+          placeholder="Search name, skills, location, bio..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          style={{ flex: '1', minWidth: '200px', padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '0.85rem' }}
+        />
+        <select
+          value={statusFilter}
+          onChange={(e) => setStatusFilter(e.target.value)}
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '0.85rem' }}
+        >
+          <option value="all">All Statuses</option>
+          <option value="new">New</option>
+          <option value="reviewing">Reviewing</option>
+          <option value="interviewing">Interviewing</option>
+          <option value="offer">Offer</option>
+          <option value="hired">Hired</option>
+          <option value="rejected">Rejected</option>
+        </select>
+        <select
+          value={expertiseFilter}
+          onChange={(e) => setExpertiseFilter(e.target.value)}
+          style={{ padding: '8px 12px', borderRadius: '6px', border: '1px solid #d1d5db', fontSize: '0.85rem' }}
+        >
+          <option value="all">All Expertise</option>
+          {expertiseValues.map(exp => (
+            <option key={exp} value={exp}>{exp}</option>
+          ))}
+        </select>
+        <span style={{ fontSize: '0.8rem', color: '#6b7280' }}>
+          {filteredCandidates.length} of {candidates.length}
+        </span>
       </div>
 
       {showForm && (
@@ -1688,6 +1833,12 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
           />
           <input
             type="url"
+            placeholder="Hugging Face URL"
+            value={newCandidate.huggingface_url}
+            onChange={(e) => setNewCandidate({ ...newCandidate, huggingface_url: e.target.value })}
+          />
+          <input
+            type="url"
             placeholder="Google Scholar URL"
             value={newCandidate.google_scholar_url}
             onChange={(e) => setNewCandidate({ ...newCandidate, google_scholar_url: e.target.value })}
@@ -1704,17 +1855,32 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
 
       {loading ? (
         <div className="loading">Loading candidates...</div>
-      ) : candidates.length === 0 ? (
+      ) : filteredCandidates.length === 0 ? (
         <div className="empty-state">
-          <p>No candidates yet. Add your first AI/ML candidate!</p>
+          <p>{candidates.length === 0 ? 'No candidates yet. Add your first candidate!' : 'No candidates match your filters.'}</p>
         </div>
       ) : (
         <div className="candidates-list">
-          {candidates.map((candidate) => (
+          {filteredCandidates.map((candidate) => (
             <div key={candidate.id} className="candidate-card">
               <div className="candidate-header">
-                <h3>{candidate.full_name}</h3>
-                <span className={`status-badge ${candidate.status}`}>{candidate.status}</span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                  <h3 style={{ margin: 0 }}>{candidate.full_name}</h3>
+                  <span style={{ fontSize: '0.7rem', color: '#9ca3af' }}>{daysSince(candidate.created_at)}</span>
+                </div>
+                <select
+                  value={candidate.status}
+                  onChange={(e) => updateCandidateStatus(candidate.id, e.target.value)}
+                  className={`status-badge ${candidate.status}`}
+                  style={{ cursor: 'pointer', border: '1px solid transparent', borderRadius: '4px', fontSize: '0.75rem', fontWeight: '600', padding: '4px 8px' }}
+                >
+                  <option value="new">new</option>
+                  <option value="reviewing">reviewing</option>
+                  <option value="interviewing">interviewing</option>
+                  <option value="offer">offer</option>
+                  <option value="hired">hired</option>
+                  <option value="rejected">rejected</option>
+                </select>
               </div>
               <p className="email">{candidate.email}</p>
 
@@ -1743,11 +1909,11 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
 
               {candidate.skills && (
                 <div style={{ marginTop: '8px', marginBottom: '8px' }}>
-                  <strong style={{ fontSize: '0.85rem', color: '#666' }}>Languages:</strong>
+                  <strong style={{ fontSize: '0.85rem', color: '#666' }}>Skills & Tools:</strong>
                   <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '4px' }}>
-                    {candidate.skills.split(',').map((skill, i) => (
-                      <span key={i} style={{ fontSize: '0.8rem', padding: '3px 8px', background: '#2563eb', color: 'white', borderRadius: '4px' }}>
-                        💻 {skill.trim()}
+                    {candidate.skills.split(',').slice(0, 12).map((skill, i) => (
+                      <span key={i} style={{ fontSize: '0.75rem', padding: '3px 8px', background: '#2563eb', color: 'white', borderRadius: '4px' }}>
+                        {skill.trim()}
                       </span>
                     ))}
                   </div>
@@ -1876,6 +2042,75 @@ function CandidatesView({ candidates, loading, onDelete, showForm, setShowForm, 
                     style={{ fontSize: '0.75rem', padding: '4px 8px', background: '#059669', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
                   >
                     📊 Impact Score
+                  </button>
+                </div>
+              </div>
+
+              {/* Move to Pipeline */}
+              <div style={{ background: '#f0f9ff', padding: '12px', borderRadius: '8px', marginTop: '12px' }}>
+                <div style={{ fontSize: '0.85rem', fontWeight: '600', marginBottom: '8px', color: '#1e40af' }}>
+                  → Move to Pipeline
+                </div>
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center' }}>
+                  <select
+                    value={pipelineJob[candidate.id] || ''}
+                    onChange={(e) => setPipelineJob(prev => ({ ...prev, [candidate.id]: e.target.value }))}
+                    style={{ flex: 1, padding: '6px 10px', borderRadius: '4px', border: '1px solid #d1d5db', fontSize: '0.8rem' }}
+                  >
+                    <option value="">Select a job...</option>
+                    {availableJobs.map(job => (
+                      <option key={job.id} value={job.id}>
+                        {job.title} {job.confidential ? '(Confidential)' : `— ${job.company}`}
+                      </option>
+                    ))}
+                  </select>
+                  <button
+                    onClick={() => addCandidateToPipeline(candidate.id, candidate.full_name)}
+                    disabled={!pipelineJob[candidate.id] || addingToPipeline[`candidate-${candidate.id}`]}
+                    style={{
+                      padding: '6px 14px',
+                      fontSize: '0.8rem',
+                      background: addingToPipeline[`candidate-${candidate.id}`] === 'done' ? '#059669'
+                        : addingToPipeline[`candidate-${candidate.id}`] === 'exists' ? '#6b7280'
+                        : '#7c3aed',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '4px',
+                      cursor: !pipelineJob[candidate.id] || addingToPipeline[`candidate-${candidate.id}`] ? 'default' : 'pointer',
+                      fontWeight: '600',
+                      whiteSpace: 'nowrap'
+                    }}
+                  >
+                    {addingToPipeline[`candidate-${candidate.id}`] === 'done' ? '✓ Added'
+                      : addingToPipeline[`candidate-${candidate.id}`] === 'exists' ? 'Already Applied'
+                      : addingToPipeline[`candidate-${candidate.id}`] === true ? '...'
+                      : 'Add'}
+                  </button>
+                </div>
+              </div>
+
+              {/* Quick Notes */}
+              <div style={{ marginTop: '12px' }}>
+                {candidate.notes && (
+                  <div style={{ fontSize: '0.8rem', color: '#4b5563', background: '#fffbeb', padding: '8px 10px', borderRadius: '6px', marginBottom: '6px', borderLeft: '3px solid #f59e0b' }}>
+                    📝 {candidate.notes}
+                  </div>
+                )}
+                <div style={{ display: 'flex', gap: '6px' }}>
+                  <input
+                    type="text"
+                    placeholder="Quick note..."
+                    value={quickNote[candidate.id] || ''}
+                    onChange={(e) => setQuickNote(prev => ({ ...prev, [candidate.id]: e.target.value }))}
+                    onKeyDown={(e) => { if (e.key === 'Enter') saveQuickNote(candidate.id); }}
+                    style={{ flex: 1, padding: '6px 10px', borderRadius: '4px', border: '1px solid #d1d5db', fontSize: '0.8rem' }}
+                  />
+                  <button
+                    onClick={() => saveQuickNote(candidate.id)}
+                    disabled={savingNote[candidate.id] || !quickNote[candidate.id]}
+                    style={{ padding: '6px 10px', fontSize: '0.75rem', background: '#475569', color: 'white', border: 'none', borderRadius: '4px', cursor: 'pointer' }}
+                  >
+                    {savingNote[candidate.id] ? '...' : 'Save'}
                   </button>
                 </div>
               </div>
