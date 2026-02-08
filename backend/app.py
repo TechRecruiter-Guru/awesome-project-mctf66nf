@@ -371,6 +371,98 @@ class SavedSearch(db.Model):
         }
 
 
+class CandidateLink(db.Model):
+    """Work artifact links submitted by candidates"""
+    id = db.Column(db.Integer, primary_key=True)
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=False)
+    link_type = db.Column(db.String(50), nullable=False)  # github, portfolio, paper, linkedin, other
+    url = db.Column(db.String(500), nullable=False)
+    title = db.Column(db.String(300))
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'candidate_id': self.candidate_id,
+            'link_type': self.link_type,
+            'url': self.url,
+            'title': self.title,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+class HiringIntelligenceSubmission(db.Model):
+    """Compiled Hiring Intelligence Submission document — the AI hiring manager report"""
+    id = db.Column(db.Integer, primary_key=True)
+    application_id = db.Column(db.Integer, db.ForeignKey('application.id'), nullable=False)
+    submission_data = db.Column(db.Text)  # JSON string with full intelligence document
+    status = db.Column(db.String(50), default='pending')  # pending, generated, reviewed, advanced, rejected
+    missing_signal = db.Column(db.String(200))
+    recruiter_notes = db.Column(db.Text)
+    passed_to_screen = db.Column(db.Boolean)
+    passed_to_interview = db.Column(db.Boolean)
+    received_offer = db.Column(db.Boolean)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    generated_at = db.Column(db.DateTime, default=datetime.utcnow)
+    reviewed_at = db.Column(db.DateTime)
+    # AI Analysis Fields
+    extracted_skills = db.Column(db.Text)  # JSON array of technical skills
+    key_phrases = db.Column(db.Text)  # JSON array of {phrase, context, importance}
+    ai_assessment = db.Column(db.Text)  # JSON object with strengths, gaps, recommendation
+    artifact_analysis = db.Column(db.Text)  # JSON array of {url, summary, quality, relevance}
+    ai_analyzed = db.Column(db.Boolean, default=False)
+    ai_analyzed_at = db.Column(db.DateTime)
+
+    def to_dict(self):
+        application = Application.query.get(self.application_id)
+        return {
+            'id': self.id,
+            'application_id': self.application_id,
+            'candidate_name': f"{application.candidate.first_name} {application.candidate.last_name}" if application and application.candidate else None,
+            'job_title': application.job.title if application and application.job else None,
+            'submission_data': self.submission_data,
+            'status': self.status,
+            'missing_signal': self.missing_signal,
+            'recruiter_notes': self.recruiter_notes,
+            'passed_to_screen': self.passed_to_screen,
+            'passed_to_interview': self.passed_to_interview,
+            'received_offer': self.received_offer,
+            'created_at': self.created_at.isoformat() if self.created_at else None,
+            'generated_at': self.generated_at.isoformat() if self.generated_at else None,
+            'reviewed_at': self.reviewed_at.isoformat() if self.reviewed_at else None,
+            'extracted_skills': self.extracted_skills,
+            'key_phrases': self.key_phrases,
+            'ai_assessment': self.ai_assessment,
+            'artifact_analysis': self.artifact_analysis,
+            'ai_analyzed': self.ai_analyzed,
+            'ai_analyzed_at': self.ai_analyzed_at.isoformat() if self.ai_analyzed_at else None
+        }
+
+
+# Physical AI role-specific hiring intelligence questions
+PHYSICAL_AI_ROLE_QUESTIONS = {
+    "Robotics Engineer": {"label": "Robotics Systems Intelligence", "question": "When integrating perception, control, and actuation, what is the earliest indicator you monitor to detect system-wide instability\u2014and how do you intervene before the issue compounds?"},
+    "Humanoid Roboticist": {"label": "Embodied Dynamics Insight", "question": "Describe a time when human biomechanics understanding guided a breakthrough in humanoid stability, manipulation, or locomotion. Which non-obvious signal shaped your approach?"},
+    "Autonomous Vehicle Engineer": {"label": "Autonomy Arbitration Intelligence", "question": "When an AV faces conflicting inputs (e.g., perception noise vs motion planning constraints), how do you determine which subsystem receives priority? Share your decision logic and the signals that drove it."},
+    "Computer Vision Engineer (Robotics)": {"label": "CV-for-Robotics Intelligence", "question": "What is the most critical vision failure mode you design against in physical environments, and which early signal reveals it before overall performance degrades?"},
+    "Perception Engineer": {"label": "Perception Systems Insight", "question": "How do you distinguish true environmental features from sensor artifacts in complex scenes? Describe the signal or test that helps you decide."},
+    "Motion Planning Engineer": {"label": "Trajectory Intelligence", "question": "When your planner yields a feasible but suboptimal trajectory, what is the first constraint you interrogate to unlock a more efficient or safer path?"},
+    "SLAM Engineer": {"label": "Spatial Intelligence Diagnostic", "question": "In SLAM drift scenarios, what is your go-to method for isolating root cause\u2014and which cue tells you whether the issue is map quality, loop closure, or sensor bias?"},
+    "Autonomous Systems Engineer": {"label": "System Autonomy Insight", "question": "How do you architect decision-making when subsystems report uncertain or contradictory outputs? Describe the governing principle and an example."},
+    "Robot Control Engineer": {"label": "Control Loop Judgment", "question": "When tuning controllers, what early signal indicates imminent stability loss\u2014and what immediate corrective pattern do you apply?"},
+    "Reinforcement Learning Engineer": {"label": "RL Signal Intelligence", "question": "When training an RL agent, what hidden metric or behavioral cue do you monitor that predicts long-term policy success before reward curves show it?"},
+    "Computer Vision Engineer": {"label": "Vision Modeling Insight", "question": "When a vision model misclassifies or misses detections, what visual or dataset signal do you check first to determine whether the root cause is labeling noise, domain shift, or architecture limits?"},
+    "Deep Learning Engineer": {"label": "Model Behavior Intelligence", "question": "Which model behavior (beyond accuracy) reveals deeper problems\u2014something you watch early to detect future failure\u2014and how do you act on it?"},
+    "ML Systems Engineer": {"label": "Systems-Level ML Intelligence", "question": "When scaling ML pipelines, which system bottleneck do you diagnose first\u2014and which early indicator tells you the pipeline will fail under production load?"},
+    "AI/ML Engineer": {"label": "AI Solutioning Insight", "question": "When balancing performance, latency, and cost, which constraint becomes your anchor\u2014and how do you determine and enforce that anchor in architecture or process?"},
+    "Sensor Fusion Engineer": {"label": "Fusion Signal Intelligence", "question": "When sensor streams diverge, what earliest cue tells you which modality is unreliable, and how do you reconcile conflicting estimates in real time?"},
+    "Embedded AI Engineer": {"label": "On-Device Intelligence Insight", "question": "When deploying models at the edge, which signal first tells you the hardware-software interface will be the limiting factor\u2014and how do you mitigate it?"},
+    "Robotics Software Engineer": {"label": "Software Integration Intelligence", "question": "When debugging heterogeneous robotic stacks, what cross-component signal do you examine first to determine whether the root cause is software logic, timing, or hardware interaction?"},
+    "Machine Learning Engineer": {"label": "ML Insight Diagnostic", "question": "What is your highest-leverage early indicator that a training pipeline is learning the wrong patterns\u2014even before validation metrics degrade?"},
+    "Deep Learning Researcher": {"label": "Research Intelligence Signal", "question": "What subtle model behavior\u2014beyond raw accuracy\u2014signals that a research direction has deep potential and deserves further investment?"}
+}
+
+
 # ==================== LAZY TABLE INITIALIZATION ====================
 # Instead of blocking startup with db.create_all(), we initialize on first request
 # This prevents boot timeouts on Render/Railway/Heroku
@@ -2830,6 +2922,173 @@ def submit_public_application():
     except Exception as e:
         db.session.rollback()
         return jsonify({"error": str(e)}), 500
+
+
+# ==================== HIRING INTELLIGENCE SUBMISSIONS ====================
+
+@app.route('/api/intelligence-submissions', methods=['GET'])
+def get_intelligence_submissions():
+    """Get all hiring intelligence submissions"""
+    try:
+        status = request.args.get('status')
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        if 'hiring_intelligence_submission' not in inspector.get_table_names():
+            return jsonify({'submissions': [], 'total': 0, 'message': 'Intelligence submissions table not created yet'})
+
+        query = HiringIntelligenceSubmission.query
+        if status:
+            query = query.filter_by(status=status)
+
+        submissions = query.order_by(HiringIntelligenceSubmission.id.desc()).all()
+        return jsonify({'submissions': [s.to_dict() for s in submissions], 'total': len(submissions)})
+    except Exception as e:
+        return jsonify({'submissions': [], 'total': 0, 'error': str(e)}), 200
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>', methods=['GET'])
+def get_intelligence_submission(submission_id):
+    """Get a single hiring intelligence submission"""
+    submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+    return jsonify(submission.to_dict())
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>', methods=['PUT'])
+def update_intelligence_submission(submission_id):
+    """Update a hiring intelligence submission (recruiter feedback)"""
+    submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+    data = request.get_json()
+    for field in ['status', 'missing_signal', 'recruiter_notes', 'passed_to_screen', 'passed_to_interview', 'received_offer']:
+        if field in data:
+            setattr(submission, field, data[field])
+    if data.get('status') == 'reviewed' and not submission.reviewed_at:
+        submission.reviewed_at = datetime.utcnow()
+    db.session.commit()
+    return jsonify(submission.to_dict())
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>', methods=['DELETE'])
+def delete_intelligence_submission(submission_id):
+    """Delete a hiring intelligence submission"""
+    submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+    db.session.delete(submission)
+    db.session.commit()
+    return jsonify({"message": "Submission deleted successfully"})
+
+
+@app.route('/api/intelligence-submissions/<int:submission_id>/analyze', methods=['POST'])
+def analyze_intelligence_submission(submission_id):
+    """AI-powered analysis using Claude API — generates the hiring manager report"""
+    import json as json_module
+
+    try:
+        submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
+        submission_data = json_module.loads(submission.submission_data) if submission.submission_data else {}
+
+        application = Application.query.get(submission.application_id)
+        if not application:
+            return jsonify({"error": "Application not found"}), 404
+
+        job = application.job
+        candidate = application.candidate
+
+        work_links = submission_data.get('work_links', [])
+        intelligence_response = submission_data.get('intelligence_response', {})
+        position = submission_data.get('position', job.title if job else '')
+
+        api_key = os.environ.get('ANTHROPIC_API_KEY')
+        if not api_key:
+            return jsonify({"error": "ANTHROPIC_API_KEY not configured. Set it in Render environment variables."}), 500
+
+        try:
+            from anthropic import Anthropic
+            import httpx
+        except ImportError:
+            return jsonify({"error": "Anthropic SDK not installed. Add 'anthropic' to requirements.txt"}), 500
+
+        http_client = httpx.Client(timeout=60.0, follow_redirects=True)
+        client = Anthropic(api_key=api_key, http_client=http_client)
+
+        analysis_prompt = f"""You are an expert technical recruiter and hiring manager for Physical AI roles (robotics, autonomous systems, computer vision, etc.).
+
+Analyze this hiring intelligence submission and provide structured insights:
+
+**CANDIDATE:** {candidate.first_name} {candidate.last_name}
+**POSITION:** {position}
+
+**WORK ARTIFACTS:**
+{json_module.dumps(work_links, indent=2) if work_links else "None provided"}
+
+**INTELLIGENCE RESPONSE:**
+Question: {intelligence_response.get('question_text', 'N/A')}
+Response: {intelligence_response.get('response_text', 'N/A')}
+
+**CANDIDATE BACKGROUND:**
+- Years Experience: {candidate.years_experience if candidate.years_experience else 'Not specified'}
+- Primary Expertise: {candidate.primary_expertise if candidate.primary_expertise else 'Not specified'}
+- Location: {candidate.location if candidate.location else 'Not specified'}
+
+---
+
+Provide a comprehensive analysis in the following JSON format:
+
+{{
+  "extracted_skills": ["skill1", "skill2", "skill3"],
+  "key_phrases": [{{"phrase": "the exact phrase", "context": "why it matters", "importance": "high/medium/low"}}],
+  "artifact_analysis": [{{"url": "the URL", "type": "github/linkedin/portfolio/paper/other", "summary": "2-3 sentence summary", "quality_indicators": "what stands out", "relevance": "high/medium/low"}}],
+  "ai_assessment": {{
+    "strengths": ["Strength 1 with evidence", "Strength 2 with evidence", "Strength 3 with evidence"],
+    "potential_gaps": ["Gap or concern 1", "Gap or concern 2"],
+    "technical_depth": "Junior/Mid/Senior/Staff - with brief justification",
+    "systems_thinking": "Strong/Moderate/Limited - with evidence",
+    "recommendation": "HIGHLY RECOMMEND/RECOMMEND/CONSIDER/RECOMMEND WITH CAUTION - with reasoning",
+    "next_steps": "Suggested interview focus areas or screening questions"
+  }}
+}}
+
+Focus on:
+1. Technical skills (languages, frameworks, tools, methodologies)
+2. Physical AI-specific expertise (robotics, perception, control, planning)
+3. Systems-level thinking vs pure implementation
+4. Evidence of production experience, not just academic
+5. Judgment and decision-making patterns in intelligence response
+6. Code quality and documentation practices (if GitHub links provided)
+
+Return ONLY the JSON, no additional text."""
+
+        message = client.messages.create(
+            model="claude-sonnet-4-20250514",
+            max_tokens=4000,
+            messages=[{"role": "user", "content": analysis_prompt}]
+        )
+
+        response_text = message.content[0].text
+
+        try:
+            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            if json_match:
+                analysis_result = json_module.loads(json_match.group())
+            else:
+                analysis_result = json_module.loads(response_text)
+        except Exception:
+            return jsonify({"error": "Failed to parse AI analysis response", "raw_response": response_text}), 500
+
+        submission.extracted_skills = json_module.dumps(analysis_result.get('extracted_skills', []))
+        submission.key_phrases = json_module.dumps(analysis_result.get('key_phrases', []))
+        submission.ai_assessment = json_module.dumps(analysis_result.get('ai_assessment', {}))
+        submission.artifact_analysis = json_module.dumps(analysis_result.get('artifact_analysis', []))
+        submission.ai_analyzed = True
+        submission.ai_analyzed_at = datetime.utcnow()
+
+        db.session.commit()
+
+        return jsonify({"message": "AI analysis completed successfully", "submission": submission.to_dict()})
+
+    except Exception as e:
+        import traceback
+        print(f"AI analysis error: {traceback.format_exc()}")
+        db.session.rollback()
+        return jsonify({"error": f"AI analysis failed: {str(e)}"}), 500
 
 
 # ==================== SEED DATA ENDPOINT ====================
