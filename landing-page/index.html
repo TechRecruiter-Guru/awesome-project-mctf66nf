@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PAIP ATS — The #1 Hiring Intelligence Platform for Physical AI & Robotics</title>
+<meta name="description" content="No resumes. Projects, Papers & Code. The only ATS built for Physical AI, Robotics, Autonomous Systems & Humanoid talent. AI-powered hiring intelligence reports replace resume screening.">
+<meta name="keywords" content="Physical AI ATS, robotics recruiting, hiring intelligence, autonomous systems talent, humanoid robotics hiring, AI talent platform">
+<meta property="og:title" content="PAIP ATS — Hiring Intelligence for Physical AI & Robotics">
+<meta property="og:description" content="No resumes. Projects, Papers & Code. AI-powered hiring intelligence for the companies building the future.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --bg-primary: #0a0a0f;
+  --bg-secondary: #12121a;
+  --bg-card: #1a1a2e;
+  --bg-card-hover: #222240;
+  --text-primary: #f0f0f5;
+  --text-secondary: #a0a0b8;
+  --text-muted: #6a6a80;
+  --accent-purple: #7c3aed;
+  --accent-purple-light: #a78bfa;
+  --accent-blue: #3b82f6;
+  --accent-cyan: #06b6d4;
+  --accent-green: #10b981;
+  --accent-orange: #f59e0b;
+  --accent-pink: #ec4899;
+  --gradient-primary: linear-gradient(135deg, #7c3aed 0%, #3b82f6 50%, #06b6d4 100%);
+  --gradient-hero: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);
+  --gradient-card: linear-gradient(135deg, rgba(124,58,237,0.1) 0%, rgba(59,130,246,0.1) 100%);
+  --border-color: rgba(124,58,237,0.2);
+  --border-glow: rgba(124,58,237,0.4);
+  --radius: 12px;
+  --radius-lg: 20px;
+  --shadow: 0 4px 24px rgba(0,0,0,0.3);
+  --shadow-glow: 0 0 40px rgba(124,58,237,0.15);
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ===== AMBIENT BACKGROUND ===== */
+.ambient-bg {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.ambient-bg .orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(120px);
+  opacity: 0.12;
+  animation: float 20s ease-in-out infinite;
+}
+.ambient-bg .orb:nth-child(1) {
+  width: 600px; height: 600px;
+  background: var(--accent-purple);
+  top: -200px; left: -100px;
+}
+.ambient-bg .orb:nth-child(2) {
+  width: 500px; height: 500px;
+  background: var(--accent-blue);
+  top: 40%; right: -150px;
+  animation-delay: -7s;
+}
+.ambient-bg .orb:nth-child(3) {
+  width: 400px; height: 400px;
+  background: var(--accent-cyan);
+  bottom: -100px; left: 30%;
+  animation-delay: -14s;
+}
+@keyframes float {
+  0%, 100% { transform: translate(0, 0) scale(1); }
+  33% { transform: translate(30px, -40px) scale(1.05); }
+  66% { transform: translate(-20px, 20px) scale(0.95); }
+}
+
+/* ===== LAYOUT ===== */
+.container { max-width: 1200px; margin: 0 auto; padding: 0 24px; position: relative; z-index: 1; }
+section { padding: 100px 0; }
+
+/* ===== NAV ===== */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+  background: rgba(10,10,15,0.85);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-color);
+  padding: 16px 0;
+}
+nav .container {
+  display: flex; align-items: center; justify-content: space-between;
+}
+.nav-logo {
+  font-size: 1.4rem; font-weight: 800;
+  background: var(--gradient-hero);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  letter-spacing: -0.5px;
+}
+.nav-logo span { font-family: 'JetBrains Mono', monospace; font-weight: 600; }
+.nav-links { display: flex; gap: 32px; align-items: center; }
+.nav-links a {
+  color: var(--text-secondary); text-decoration: none; font-size: 0.9rem;
+  font-weight: 500; transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--text-primary); }
+.nav-cta {
+  background: var(--gradient-primary) !important;
+  color: #fff !important;
+  padding: 10px 24px !important;
+  border-radius: 8px;
+  font-weight: 600 !important;
+  transition: transform 0.2s, box-shadow 0.3s !important;
+}
+.nav-cta:hover { transform: translateY(-1px); box-shadow: var(--shadow-glow); }
+
+/* ===== HERO ===== */
+.hero {
+  padding: 160px 0 120px;
+  text-align: center;
+  position: relative;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: rgba(124,58,237,0.15);
+  border: 1px solid var(--border-color);
+  border-radius: 100px; padding: 8px 20px;
+  font-size: 0.85rem; color: var(--accent-purple-light);
+  font-weight: 500; margin-bottom: 32px;
+}
+.hero-badge .dot {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--accent-green);
+  animation: pulse 2s ease-in-out infinite;
+}
+@keyframes pulse {
+  0%, 100% { opacity: 1; } 50% { opacity: 0.4; }
+}
+.hero h1 {
+  font-size: clamp(2.8rem, 6vw, 4.5rem);
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: -2px;
+  margin-bottom: 24px;
+  max-width: 900px;
+  margin-left: auto; margin-right: auto;
+}
+.hero h1 .gradient-text {
+  background: var(--gradient-hero);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.hero .subtitle {
+  font-size: clamp(1.1rem, 2vw, 1.35rem);
+  color: var(--text-secondary);
+  max-width: 680px;
+  margin: 0 auto 48px;
+  line-height: 1.7;
+  font-weight: 400;
+}
+.hero-ctas {
+  display: flex; gap: 16px; justify-content: center; flex-wrap: wrap;
+}
+.btn-primary {
+  background: var(--gradient-primary);
+  color: #fff; border: none; padding: 16px 40px;
+  border-radius: 10px; font-size: 1.05rem; font-weight: 700;
+  cursor: pointer; transition: transform 0.2s, box-shadow 0.3s;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 32px rgba(124,58,237,0.4); }
+.btn-secondary {
+  background: transparent;
+  color: var(--text-primary); border: 1px solid var(--border-color);
+  padding: 16px 40px; border-radius: 10px; font-size: 1.05rem;
+  font-weight: 600; cursor: pointer; transition: all 0.3s;
+  text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-secondary:hover { border-color: var(--border-glow); background: rgba(124,58,237,0.08); }
+
+/* ===== SOCIAL PROOF ===== */
+.social-proof {
+  display: flex; align-items: center; justify-content: center;
+  gap: 40px; margin-top: 64px; flex-wrap: wrap;
+}
+.proof-stat { text-align: center; }
+.proof-stat .number {
+  font-size: 2rem; font-weight: 800;
+  background: var(--gradient-primary);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+}
+.proof-stat .label {
+  font-size: 0.8rem; color: var(--text-muted);
+  text-transform: uppercase; letter-spacing: 1.5px; font-weight: 500;
+}
+
+/* ===== NO RESUMES SECTION ===== */
+.no-resumes { background: var(--bg-secondary); }
+.section-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 0.8rem; text-transform: uppercase;
+  letter-spacing: 2px; color: var(--accent-purple-light);
+  font-weight: 600; margin-bottom: 16px;
+}
+.section-title {
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 800; letter-spacing: -1.5px;
+  margin-bottom: 20px; line-height: 1.15;
+}
+.section-subtitle {
+  font-size: 1.1rem; color: var(--text-secondary);
+  max-width: 600px; line-height: 1.7; margin-bottom: 48px;
+}
+.comparison-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 32px; max-width: 900px; margin: 0 auto;
+}
+.comparison-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  position: relative;
+  overflow: hidden;
+}
+.comparison-card.old {
+  opacity: 0.6;
+}
+.comparison-card.old::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: repeating-linear-gradient(
+    -45deg, transparent, transparent 10px,
+    rgba(239,68,68,0.05) 10px, rgba(239,68,68,0.05) 20px
+  );
+}
+.comparison-card.new {
+  border-color: var(--accent-purple);
+  box-shadow: var(--shadow-glow);
+}
+.comparison-card h3 {
+  font-size: 1.2rem; font-weight: 700; margin-bottom: 20px;
+}
+.comparison-card.old h3 { color: #ef4444; }
+.comparison-card.new h3 { color: var(--accent-green); }
+.comparison-card ul { list-style: none; }
+.comparison-card ul li {
+  padding: 8px 0; font-size: 0.95rem;
+  color: var(--text-secondary);
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.comparison-card ul li::before { font-size: 1rem; flex-shrink: 0; margin-top: 2px; }
+.comparison-card.old ul li::before { content: '\2717'; color: #ef4444; }
+.comparison-card.new ul li::before { content: '\2713'; color: var(--accent-green); }
+
+/* ===== FEATURES ===== */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+  gap: 24px;
+}
+.feature-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 36px;
+  transition: all 0.3s;
+  position: relative;
+  overflow: hidden;
+}
+.feature-card:hover {
+  border-color: var(--border-glow);
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-glow);
+}
+.feature-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--gradient-primary);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.feature-card:hover::before { opacity: 1; }
+.feature-icon {
+  width: 52px; height: 52px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  margin-bottom: 20px;
+  background: rgba(124,58,237,0.12);
+}
+.feature-card h3 {
+  font-size: 1.15rem; font-weight: 700;
+  margin-bottom: 10px;
+}
+.feature-card p {
+  color: var(--text-secondary); font-size: 0.95rem;
+  line-height: 1.6;
+}
+.feature-card .tag {
+  display: inline-block; margin-top: 16px;
+  background: rgba(124,58,237,0.15);
+  color: var(--accent-purple-light);
+  padding: 4px 12px; border-radius: 100px;
+  font-size: 0.75rem; font-weight: 600;
+  text-transform: uppercase; letter-spacing: 1px;
+}
+
+/* ===== ROLES ===== */
+.roles-section { background: var(--bg-secondary); }
+.roles-grid {
+  display: flex; flex-wrap: wrap; gap: 12px; justify-content: center;
+  max-width: 800px; margin: 0 auto;
+}
+.role-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  padding: 10px 22px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  transition: all 0.3s;
+}
+.role-chip:hover {
+  border-color: var(--accent-purple);
+  color: var(--text-primary);
+  background: rgba(124,58,237,0.1);
+}
+.role-chip.highlight {
+  border-color: var(--accent-purple);
+  color: var(--accent-purple-light);
+  background: rgba(124,58,237,0.12);
+}
+
+/* ===== PRICING ===== */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+.pricing-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 40px 32px;
+  position: relative;
+  transition: all 0.3s;
+}
+.pricing-card:hover { transform: translateY(-4px); }
+.pricing-card.featured {
+  border-color: var(--accent-purple);
+  box-shadow: var(--shadow-glow);
+}
+.pricing-card.featured::before {
+  content: 'MOST POPULAR';
+  position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+  background: var(--gradient-hero);
+  color: #fff; padding: 6px 20px;
+  border-radius: 100px; font-size: 0.7rem;
+  font-weight: 700; letter-spacing: 1.5px;
+}
+.pricing-tier {
+  font-size: 0.85rem; text-transform: uppercase;
+  letter-spacing: 1.5px; font-weight: 600;
+  color: var(--accent-purple-light);
+  margin-bottom: 8px;
+}
+.pricing-card h3 {
+  font-size: 1.3rem; font-weight: 700; margin-bottom: 8px;
+}
+.pricing-price {
+  font-size: 3rem; font-weight: 900;
+  margin-bottom: 4px; letter-spacing: -2px;
+}
+.pricing-price span { font-size: 1rem; font-weight: 400; color: var(--text-muted); }
+.pricing-note { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 28px; }
+.pricing-features { list-style: none; margin-bottom: 32px; }
+.pricing-features li {
+  padding: 8px 0; font-size: 0.92rem;
+  color: var(--text-secondary);
+  display: flex; align-items: flex-start; gap: 10px;
+}
+.pricing-features li::before {
+  content: '\2713'; color: var(--accent-green);
+  font-weight: 700; flex-shrink: 0;
+}
+.pricing-btn {
+  width: 100%; padding: 14px;
+  border-radius: 10px; font-size: 1rem;
+  font-weight: 700; cursor: pointer;
+  border: none; text-align: center;
+  transition: all 0.3s; text-decoration: none;
+  display: block;
+}
+.pricing-btn.primary { background: var(--gradient-primary); color: #fff; }
+.pricing-btn.primary:hover { box-shadow: 0 8px 32px rgba(124,58,237,0.4); transform: translateY(-1px); }
+.pricing-btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+.pricing-btn.secondary:hover { border-color: var(--border-glow); background: rgba(124,58,237,0.08); }
+
+/* ===== QUALIFICATION FORM ===== */
+.qualify-section {
+  background: var(--bg-secondary);
+  position: relative;
+}
+.form-wrapper {
+  max-width: 720px;
+  margin: 0 auto;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  padding: 48px 40px;
+  box-shadow: var(--shadow);
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.form-group {
+  margin-bottom: 24px;
+}
+.form-group label {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 8px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.form-group label .required {
+  color: var(--accent-pink);
+}
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 14px 16px;
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  transition: border-color 0.3s, box-shadow 0.3s;
+  outline: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.form-group select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23a0a0b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
+  cursor: pointer;
+}
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 3px rgba(124,58,237,0.15);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: var(--text-muted);
+}
+.form-group textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+.form-divider {
+  border: none;
+  border-top: 1px solid var(--border-color);
+  margin: 12px 0 28px;
+}
+.form-section-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: var(--accent-purple-light);
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+.form-submit {
+  width: 100%;
+  padding: 16px;
+  background: var(--gradient-primary);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.3s;
+  margin-top: 8px;
+}
+.form-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px rgba(124,58,237,0.4);
+}
+.form-privacy {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 16px;
+}
+
+/* ===== ENRICHMENT SOURCES ===== */
+.sources-bar {
+  display: flex; justify-content: center; align-items: center;
+  gap: 40px; flex-wrap: wrap; padding: 40px 0;
+  max-width: 900px; margin: 0 auto;
+}
+.source-item {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 0.95rem; color: var(--text-muted);
+  font-weight: 500;
+}
+.source-item .source-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(124,58,237,0.1);
+  font-size: 1.1rem;
+}
+
+/* ===== FOOTER ===== */
+footer {
+  border-top: 1px solid var(--border-color);
+  padding: 60px 0 40px;
+  background: var(--bg-secondary);
+}
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  gap: 48px;
+  margin-bottom: 48px;
+}
+.footer-brand .nav-logo { margin-bottom: 16px; display: block; font-size: 1.5rem; }
+.footer-brand p { color: var(--text-muted); font-size: 0.9rem; line-height: 1.7; max-width: 300px; }
+.footer-col h4 {
+  font-size: 0.8rem; text-transform: uppercase;
+  letter-spacing: 1.5px; color: var(--text-secondary);
+  font-weight: 600; margin-bottom: 16px;
+}
+.footer-col a {
+  display: block; color: var(--text-muted);
+  text-decoration: none; font-size: 0.9rem;
+  padding: 4px 0; transition: color 0.3s;
+}
+.footer-col a:hover { color: var(--accent-purple-light); }
+.footer-bottom {
+  border-top: 1px solid var(--border-color);
+  padding-top: 24px;
+  display: flex; justify-content: space-between;
+  align-items: center; flex-wrap: wrap; gap: 16px;
+}
+.footer-bottom p { color: var(--text-muted); font-size: 0.8rem; }
+
+/* ===== SUCCESS STATE ===== */
+.form-success {
+  display: none;
+  text-align: center;
+  padding: 40px 20px;
+}
+.form-success.show { display: block; }
+.form-success .checkmark {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: rgba(16,185,129,0.15);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem;
+  margin: 0 auto 24px;
+}
+.form-success h3 { font-size: 1.5rem; margin-bottom: 12px; }
+.form-success p { color: var(--text-secondary); font-size: 1rem; }
+
+/* ===== CONDITIONAL FIELDS ===== */
+.conditional-field { display: none; }
+.conditional-field.visible { display: block; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 768px) {
+  nav .nav-links { display: none; }
+  .hero { padding: 120px 0 80px; }
+  .hero h1 { font-size: 2.2rem; letter-spacing: -1px; }
+  .comparison-grid { grid-template-columns: 1fr; }
+  .features-grid { grid-template-columns: 1fr; }
+  .pricing-grid { grid-template-columns: 1fr; max-width: 400px; }
+  .form-row { grid-template-columns: 1fr; }
+  .form-wrapper { padding: 32px 24px; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .social-proof { gap: 24px; }
+  section { padding: 60px 0; }
+}
+@media (max-width: 480px) {
+  .footer-grid { grid-template-columns: 1fr; }
+  .hero-ctas { flex-direction: column; align-items: center; }
+  .btn-primary, .btn-secondary { width: 100%; justify-content: center; }
+}
+
+/* ===== ANIMATIONS ===== */
+.fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fade-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+</style>
+</head>
+<body>
+
+<!-- Ambient Background -->
+<div class="ambient-bg">
+  <div class="orb"></div>
+  <div class="orb"></div>
+  <div class="orb"></div>
+</div>
+
+<!-- Navigation -->
+<nav>
+  <div class="container">
+    <div class="nav-logo"><span>PAIP</span> ATS</div>
+    <div class="nav-links">
+      <a href="#features">Features</a>
+      <a href="#how-it-works">How It Works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#qualify" class="nav-cta">Request Access</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-badge">
+      <span class="dot"></span>
+      Now onboarding Physical AI companies
+    </div>
+    <h1>
+      The Only ATS Built for<br>
+      <span class="gradient-text">Physical AI & Robotics</span> Talent
+    </h1>
+    <p class="subtitle">
+      No resumes. Candidates submit Projects, Papers & Code. Our AI generates
+      Hiring Intelligence Reports that tell you more in 30 seconds than a resume ever could.
+    </p>
+    <div class="hero-ctas">
+      <a href="#qualify" class="btn-primary">Request Early Access &#8594;</a>
+      <a href="#how-it-works" class="btn-secondary">See How It Works</a>
+    </div>
+    <div class="social-proof">
+      <div class="proof-stat">
+        <div class="number">52+</div>
+        <div class="label">API Endpoints</div>
+      </div>
+      <div class="proof-stat">
+        <div class="number">7</div>
+        <div class="label">Enrichment Sources</div>
+      </div>
+      <div class="proof-stat">
+        <div class="number">19</div>
+        <div class="label">Role-Specific AI Questions</div>
+      </div>
+      <div class="proof-stat">
+        <div class="number">0</div>
+        <div class="label">Resumes Required</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- No Resumes Section -->
+<section class="no-resumes" id="how-it-works">
+  <div class="container">
+    <div class="section-label">&#9670; The Problem We Solve</div>
+    <h2 class="section-title">Resumes Don't Work for<br>Physical AI Talent</h2>
+    <p class="section-subtitle">
+      A SLAM engineer's real signal is in their code, papers, and system design decisions &mdash;
+      not a 1-page PDF. We built the ATS around that truth.
+    </p>
+    <div class="comparison-grid fade-up">
+      <div class="comparison-card old">
+        <h3>&#10060; Traditional ATS</h3>
+        <ul>
+          <li>Resume keyword matching</li>
+          <li>Generic screening questions</li>
+          <li>No technical depth assessment</li>
+          <li>Can't evaluate research impact</li>
+          <li>Ignores GitHub, papers, models</li>
+          <li>Same tool for every industry</li>
+        </ul>
+      </div>
+      <div class="comparison-card new">
+        <h3>&#9989; PAIP Hiring Intelligence</h3>
+        <ul>
+          <li>Projects, Papers & Code analysis</li>
+          <li>19 role-specific AI questions</li>
+          <li>AI assessment: Junior to Staff-level depth</li>
+          <li>Research Impact Score (h-index, citations, venues)</li>
+          <li>7-source enrichment (GitHub, arXiv, ORCID, HuggingFace...)</li>
+          <li>Purpose-built for Physical AI & Robotics</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features -->
+<section id="features">
+  <div class="container">
+    <div style="text-align:center; margin-bottom:60px;">
+      <div class="section-label">&#9670; Platform Capabilities</div>
+      <h2 class="section-title">Everything You Need to Hire<br>World-Class Robotics Talent</h2>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#129302;</div>
+        <h3>AI Hiring Intelligence Reports</h3>
+        <p>Candidates answer role-specific questions and submit work artifacts. Our AI generates a full assessment with strengths, gaps, technical depth, and recommendation.</p>
+        <span class="tag">Core Moat</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#128300;</div>
+        <h3>7-Source Talent Enrichment</h3>
+        <p>One click enriches candidates from GitHub, arXiv, ORCID, Google Scholar, HuggingFace, Semantic Scholar, and Papers with Code. See the full picture instantly.</p>
+        <span class="tag">Automated</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#127942;</div>
+        <h3>Research Impact Scoring</h3>
+        <p>Multi-factor scoring: h-index, citations, publication venues (ICRA, IROS, CoRL), GitHub activity, HuggingFace contributions. Tier classification from Early Career to World-Class.</p>
+        <span class="tag">Quantified</span>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#127919;</div>
+        <h3>AI Candidate-Job Matching</h3>
+        <p>Match candidates to roles using expertise, skills, research focus, experience level, and tier. Ranked results with full score breakdown.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#128269;</div>
+        <h3>Boolean Search & Sourcing</h3>
+        <p>Build complex Boolean queries for GitHub, LinkedIn, and Google Scholar. Save searches, auto-run on schedule, and import results directly as candidates.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#128202;</div>
+        <h3>Pipeline Analytics</h3>
+        <p>Full funnel visibility: conversion rates, time-to-hire, source effectiveness, interview metrics, offer tracking, and expertise breakdowns.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#128274;</div>
+        <h3>Confidential / Stealth Jobs</h3>
+        <p>Post stealth roles that hide your company name until candidates show interest. Perfect for unannounced robotics programs.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#128231;</div>
+        <h3>Email Campaigns</h3>
+        <p>Draft, schedule, and send targeted outreach to candidate segments. Track sent counts and manage campaign history.</p>
+      </div>
+      <div class="feature-card fade-up">
+        <div class="feature-icon">&#127760;</div>
+        <h3>Public Career Page</h3>
+        <p>Branded job listings with our unique application flow. Candidates submit work artifacts instead of resumes. Dynamic link types for papers, repos, models, datasets, and more.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Enrichment Sources -->
+<section style="padding: 40px 0 60px;">
+  <div class="container" style="text-align:center;">
+    <p style="font-size:0.8rem; text-transform:uppercase; letter-spacing:2px; color:var(--text-muted); font-weight:600; margin-bottom:24px;">Enrichment Sources</p>
+    <div class="sources-bar">
+      <div class="source-item"><div class="source-icon">&#128025;</div>GitHub</div>
+      <div class="source-item"><div class="source-icon">&#128196;</div>arXiv</div>
+      <div class="source-item"><div class="source-icon">&#127891;</div>ORCID</div>
+      <div class="source-item"><div class="source-icon">&#128218;</div>Google Scholar</div>
+      <div class="source-item"><div class="source-icon">&#129303;</div>HuggingFace</div>
+      <div class="source-item"><div class="source-icon">&#128300;</div>Semantic Scholar</div>
+      <div class="source-item"><div class="source-icon">&#128187;</div>Papers with Code</div>
+    </div>
+  </div>
+</section>
+
+<!-- Roles Section -->
+<section class="roles-section">
+  <div class="container" style="text-align:center;">
+    <div class="section-label">&#9670; Specialized For</div>
+    <h2 class="section-title">19 Physical AI Roles Covered</h2>
+    <p class="section-subtitle" style="margin-left:auto; margin-right:auto;">
+      Each role gets a custom AI assessment question designed to reveal systems thinking, technical depth, and problem-solving approach.
+    </p>
+    <div class="roles-grid fade-up">
+      <span class="role-chip highlight">Robotics Engineer</span>
+      <span class="role-chip highlight">Autonomous Vehicle Engineer</span>
+      <span class="role-chip highlight">SLAM Engineer</span>
+      <span class="role-chip">Motion Planning Engineer</span>
+      <span class="role-chip">Perception Engineer</span>
+      <span class="role-chip">Controls Engineer</span>
+      <span class="role-chip highlight">Humanoid Robotics</span>
+      <span class="role-chip">Sensor Fusion Engineer</span>
+      <span class="role-chip">Robot Learning / RL</span>
+      <span class="role-chip">Simulation Engineer</span>
+      <span class="role-chip">Edge AI / Embedded ML</span>
+      <span class="role-chip">Multi-Robot Systems</span>
+      <span class="role-chip">Computer Vision Engineer</span>
+      <span class="role-chip">NLP / LLM Engineer</span>
+      <span class="role-chip">ML Infrastructure</span>
+      <span class="role-chip">Research Scientist</span>
+      <span class="role-chip">Robotics Software</span>
+      <span class="role-chip">AI Safety</span>
+      <span class="role-chip">General AI/ML</span>
+    </div>
+  </div>
+</section>
+
+<!-- Pricing -->
+<section id="pricing">
+  <div class="container" style="text-align:center;">
+    <div class="section-label">&#9670; Pricing</div>
+    <h2 class="section-title">Built for Teams Hiring<br>the Hardest-to-Find Talent</h2>
+    <p class="section-subtitle" style="margin-left:auto; margin-right:auto; margin-bottom: 60px;">
+      Founding customer pricing. Lock in early access rates before general availability.
+    </p>
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="pricing-card fade-up">
+        <div class="pricing-tier">Starter</div>
+        <h3>For Early-Stage Robotics Teams</h3>
+        <div class="pricing-price">$499<span>/mo per seat</span></div>
+        <div class="pricing-note">Billed annually &middot; $399/mo founding rate</div>
+        <ul class="pricing-features">
+          <li>Core ATS (Candidates, Jobs, Pipeline)</li>
+          <li>Public Career Page & Apply Flow</li>
+          <li>Interview & Offer Management</li>
+          <li>Email Campaigns (3/mo)</li>
+          <li>Dashboard & Basic Analytics</li>
+          <li>Boolean Search (10 searches/mo)</li>
+          <li>Up to 500 candidates</li>
+          <li>5 active job postings</li>
+        </ul>
+        <a href="#qualify" class="pricing-btn secondary">Get Started</a>
+      </div>
+      <!-- Professional -->
+      <div class="pricing-card featured fade-up">
+        <div class="pricing-tier">Professional</div>
+        <h3>For Scaling Physical AI Companies</h3>
+        <div class="pricing-price">$999<span>/mo per seat</span></div>
+        <div class="pricing-note">Billed annually &middot; $799/mo founding rate</div>
+        <ul class="pricing-features">
+          <li>Everything in Starter</li>
+          <li><strong>AI Hiring Intelligence Reports</strong></li>
+          <li><strong>AI Assessment (100/mo)</strong></li>
+          <li>7-Source Talent Enrichment (500/mo)</li>
+          <li>Research Impact Scoring</li>
+          <li>AI Candidate-Job Matching</li>
+          <li>Auto Skill Extraction</li>
+          <li>Full Pipeline Analytics</li>
+          <li>Confidential/Stealth Jobs</li>
+          <li>Up to 5,000 candidates</li>
+          <li>25 active job postings</li>
+        </ul>
+        <a href="#qualify" class="pricing-btn primary">Request Access</a>
+      </div>
+      <!-- Enterprise -->
+      <div class="pricing-card fade-up">
+        <div class="pricing-tier">Enterprise</div>
+        <h3>For Large Robotics Organizations</h3>
+        <div class="pricing-price">$2,499<span>/mo per seat</span></div>
+        <div class="pricing-note">3-seat minimum &middot; Custom founding rates</div>
+        <ul class="pricing-features">
+          <li>Everything in Professional</li>
+          <li>Unlimited AI Assessments</li>
+          <li>Unlimited Enrichments</li>
+          <li>Unlimited Candidates & Jobs</li>
+          <li>Custom Intelligence Questions</li>
+          <li>Priority API Access</li>
+          <li>Dedicated Onboarding</li>
+          <li>SSO / SAML (Roadmap)</li>
+          <li>Custom Analytics & Reporting</li>
+          <li>SLA & Priority Support</li>
+        </ul>
+        <a href="#qualify" class="pricing-btn secondary">Contact Sales</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Qualification Form -->
+<section class="qualify-section" id="qualify">
+  <div class="container" style="text-align:center;">
+    <div class="section-label">&#9670; Request Access</div>
+    <h2 class="section-title">Let's See If We're a Fit</h2>
+    <p class="section-subtitle" style="margin-left:auto; margin-right:auto; margin-bottom:48px;">
+      We're onboarding a limited number of founding customers. Tell us about your team
+      and hiring needs so we can tailor your experience.
+    </p>
+
+    <div class="form-wrapper" style="text-align:left;">
+      <form id="qualifyForm" onsubmit="return handleSubmit(event)">
+
+        <!-- Contact Info -->
+        <div class="form-section-label">Your Information</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Full Name <span class="required">*</span></label>
+            <input type="text" name="full_name" placeholder="Jane Chen" required>
+          </div>
+          <div class="form-group">
+            <label>Work Email <span class="required">*</span></label>
+            <input type="email" name="email" placeholder="jane@company.com" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Job Title <span class="required">*</span></label>
+            <input type="text" name="title" placeholder="VP of Engineering, Head of Talent..." required>
+          </div>
+          <div class="form-group">
+            <label>Phone</label>
+            <input type="tel" name="phone" placeholder="+1 (555) 000-0000">
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <!-- Company Qualification -->
+        <div class="form-section-label">Company Details</div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Company Name <span class="required">*</span></label>
+            <input type="text" name="company" placeholder="Acme Robotics" required>
+          </div>
+          <div class="form-group">
+            <label>Company Website</label>
+            <input type="url" name="website" placeholder="https://acmerobotics.com">
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Industry Vertical <span class="required">*</span></label>
+            <select name="industry" required onchange="toggleOtherIndustry(this)">
+              <option value="" disabled selected>Select your focus area</option>
+              <option value="humanoid_robotics">Humanoid Robotics</option>
+              <option value="autonomous_vehicles">Autonomous Vehicles / Self-Driving</option>
+              <option value="industrial_robotics">Industrial Robotics & Automation</option>
+              <option value="drone_uav">Drones / UAV / Aerial Systems</option>
+              <option value="surgical_medical">Surgical & Medical Robotics</option>
+              <option value="warehouse_logistics">Warehouse & Logistics Robotics</option>
+              <option value="agri_robotics">Agriculture Robotics</option>
+              <option value="space_robotics">Space & Planetary Robotics</option>
+              <option value="defense_robotics">Defense & Security Robotics</option>
+              <option value="consumer_robotics">Consumer Robotics</option>
+              <option value="ai_ml_infra">AI/ML Infrastructure & Tooling</option>
+              <option value="simulation_digital_twin">Simulation & Digital Twin</option>
+              <option value="sensor_hardware">Sensor & Hardware Systems</option>
+              <option value="other">Other (specify below)</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Company Stage <span class="required">*</span></label>
+            <select name="company_stage" required>
+              <option value="" disabled selected>Select stage</option>
+              <option value="pre_seed">Pre-Seed / Stealth</option>
+              <option value="seed">Seed</option>
+              <option value="series_a">Series A</option>
+              <option value="series_b">Series B</option>
+              <option value="series_c_plus">Series C+</option>
+              <option value="growth">Growth / Late Stage</option>
+              <option value="public">Public Company</option>
+              <option value="government">Government / Research Lab</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group conditional-field" id="otherIndustryField">
+          <label>Specify Your Industry</label>
+          <input type="text" name="other_industry" placeholder="e.g., Underwater Robotics, Exoskeletons...">
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Company Size <span class="required">*</span></label>
+            <select name="company_size" required>
+              <option value="" disabled selected>Select size</option>
+              <option value="1_10">1-10 employees</option>
+              <option value="11_50">11-50 employees</option>
+              <option value="51_200">51-200 employees</option>
+              <option value="201_500">201-500 employees</option>
+              <option value="501_1000">501-1,000 employees</option>
+              <option value="1000_plus">1,000+ employees</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Engineering Team Size</label>
+            <select name="eng_team_size">
+              <option value="" disabled selected>Select eng team size</option>
+              <option value="1_5">1-5 engineers</option>
+              <option value="6_20">6-20 engineers</option>
+              <option value="21_50">21-50 engineers</option>
+              <option value="51_100">51-100 engineers</option>
+              <option value="100_plus">100+ engineers</option>
+            </select>
+          </div>
+        </div>
+
+        <hr class="form-divider">
+
+        <!-- Hiring Needs -->
+        <div class="form-section-label">Hiring Needs & Urgency</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Open Physical AI / Robotics Roles <span class="required">*</span></label>
+            <select name="open_roles" required>
+              <option value="" disabled selected>How many roles?</option>
+              <option value="1_3">1-3 roles</option>
+              <option value="4_10">4-10 roles</option>
+              <option value="11_25">11-25 roles</option>
+              <option value="26_50">26-50 roles</option>
+              <option value="50_plus">50+ roles</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Hiring Timeline <span class="required">*</span></label>
+            <select name="timeline" required>
+              <option value="" disabled selected>When do you need to hire?</option>
+              <option value="immediately">Immediately (backfill / urgent)</option>
+              <option value="this_quarter">This quarter</option>
+              <option value="next_quarter">Next quarter</option>
+              <option value="this_year">Within this year</option>
+              <option value="exploring">Just exploring tools</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Which roles are hardest to fill? <span class="required">*</span></label>
+          <select name="hardest_roles" required>
+            <option value="" disabled selected>Select primary hiring pain</option>
+            <option value="robotics_engineers">Robotics Engineers (controls, motion planning)</option>
+            <option value="perception_slam">Perception / SLAM Engineers</option>
+            <option value="av_engineers">Autonomous Vehicle Engineers</option>
+            <option value="ml_researchers">ML Researchers / Research Scientists</option>
+            <option value="humanoid_specialists">Humanoid Robotics Specialists</option>
+            <option value="simulation_engineers">Simulation Engineers (Isaac Sim, MuJoCo)</option>
+            <option value="sensor_fusion">Sensor Fusion / Hardware-Software</option>
+            <option value="rl_engineers">Reinforcement Learning Engineers</option>
+            <option value="mlops_infra">MLOps / ML Infrastructure</option>
+            <option value="leadership">Engineering Leadership (Directors, VPs)</option>
+            <option value="multiple">Multiple of the above</option>
+          </select>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Recruiter Seats Needed</label>
+            <select name="seats_needed">
+              <option value="" disabled selected>How many recruiters?</option>
+              <option value="1">1 seat</option>
+              <option value="2">2 seats</option>
+              <option value="3_5">3-5 seats</option>
+              <option value="6_10">6-10 seats</option>
+              <option value="10_plus">10+ seats</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Current ATS</label>
+            <select name="current_ats" onchange="toggleOtherATS(this)">
+              <option value="" disabled selected>What do you use today?</option>
+              <option value="none">None / Spreadsheets</option>
+              <option value="greenhouse">Greenhouse</option>
+              <option value="lever">Lever</option>
+              <option value="ashby">Ashby</option>
+              <option value="workday">Workday</option>
+              <option value="icims">iCIMS</option>
+              <option value="jobvite">Jobvite</option>
+              <option value="bamboohr">BambooHR</option>
+              <option value="rippling">Rippling</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group conditional-field" id="otherATSField">
+          <label>Which ATS?</label>
+          <input type="text" name="other_ats" placeholder="e.g., Breezy, Recruitee, custom...">
+        </div>
+
+        <div class="form-group">
+          <label>Biggest Hiring Pain Point</label>
+          <select name="pain_point">
+            <option value="" disabled selected>What's your #1 challenge?</option>
+            <option value="finding_candidates">Finding qualified Physical AI candidates</option>
+            <option value="evaluating_depth">Evaluating technical depth (resumes don't show it)</option>
+            <option value="too_slow">Hiring process too slow / losing candidates</option>
+            <option value="no_pipeline_visibility">No visibility into pipeline metrics</option>
+            <option value="sourcing_tooling">Sourcing tooling is generic / not technical enough</option>
+            <option value="competing_offers">Competing with FAANG / top labs for talent</option>
+            <option value="scaling_team">Scaling recruiting ops as company grows</option>
+            <option value="academic_industry">Bridging academic talent to industry roles</option>
+          </select>
+        </div>
+
+        <hr class="form-divider">
+
+        <!-- Budget & Interest -->
+        <div class="form-section-label">Budget & Interest Level</div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label>Annual Recruiting Tool Budget</label>
+            <select name="budget">
+              <option value="" disabled selected>Select range</option>
+              <option value="under_5k">Under $5,000/yr</option>
+              <option value="5k_15k">$5,000 - $15,000/yr</option>
+              <option value="15k_50k">$15,000 - $50,000/yr</option>
+              <option value="50k_100k">$50,000 - $100,000/yr</option>
+              <option value="100k_plus">$100,000+/yr</option>
+              <option value="no_budget_yet">No budget set yet</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Interest Level <span class="required">*</span></label>
+            <select name="interest_level" required>
+              <option value="" disabled selected>Where are you in the process?</option>
+              <option value="ready_to_buy">Ready to start &mdash; let's go</option>
+              <option value="evaluating">Actively evaluating tools</option>
+              <option value="building_case">Building business case internally</option>
+              <option value="researching">Early research phase</option>
+              <option value="curious">Just curious / want a demo</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Interested Tier</label>
+          <select name="interested_tier">
+            <option value="" disabled selected>Which plan interests you?</option>
+            <option value="starter">Starter ($499/mo) &mdash; Core ATS</option>
+            <option value="professional">Professional ($999/mo) &mdash; AI Intelligence + Enrichment</option>
+            <option value="enterprise">Enterprise ($2,499/mo) &mdash; Unlimited + Custom</option>
+            <option value="founding">Founding Customer Rate (tell me more)</option>
+            <option value="unsure">Not sure yet &mdash; help me decide</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label>Anything else we should know?</label>
+          <textarea name="notes" placeholder="Tell us about your team, specific needs, integrations you need, or questions you have..."></textarea>
+        </div>
+
+        <div class="form-group">
+          <label>How did you hear about us?</label>
+          <select name="source">
+            <option value="" disabled selected>Select source</option>
+            <option value="linkedin">LinkedIn</option>
+            <option value="twitter">Twitter / X</option>
+            <option value="referral">Referral from someone</option>
+            <option value="google">Google Search</option>
+            <option value="conference">Conference / Event</option>
+            <option value="robotics_community">Robotics Community (ROS Discourse, etc.)</option>
+            <option value="vc_portfolio">VC / Investor Portfolio</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+
+        <button type="submit" class="form-submit">Submit &amp; Request Access &#8594;</button>
+        <p class="form-privacy">We'll respond within 24 hours. No spam, ever. Your data stays private.</p>
+      </form>
+
+      <!-- Success State -->
+      <div class="form-success" id="formSuccess">
+        <div class="checkmark">&#10004;</div>
+        <h3>Application Received</h3>
+        <p>We'll review your information and get back to you within 24 hours with next steps, pricing details, and access to the platform.</p>
+        <p style="margin-top:20px; color:var(--accent-purple-light); font-weight:600;">Welcome to the future of Physical AI hiring.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="nav-logo"><span>PAIP</span> ATS</div>
+        <p>The #1 Hiring Intelligence Platform for Physical AI, Robotics, Autonomous Systems & Humanoid talent. No resumes &mdash; Projects, Papers & Code.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Platform</h4>
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#qualify">Request Access</a>
+      </div>
+      <div class="footer-col">
+        <h4>Use Cases</h4>
+        <a href="#qualify">Robotics Startups</a>
+        <a href="#qualify">AV Companies</a>
+        <a href="#qualify">Research Labs</a>
+        <a href="#qualify">Enterprise Teams</a>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="mailto:hello@paipats.com">Contact Us</a>
+        <a href="#qualify">Partner With Us</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms of Service</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 PAIP ATS. All rights reserved. Built for the companies building the future.</p>
+      <p style="color:var(--text-muted); font-size:0.8rem;">Physical AI &middot; Robotics &middot; Autonomous Systems &middot; Humanoids</p>
+    </div>
+  </div>
+</footer>
+
+<script>
+// ===== CONDITIONAL FIELD TOGGLES =====
+function toggleOtherIndustry(select) {
+  const field = document.getElementById('otherIndustryField');
+  field.classList.toggle('visible', select.value === 'other');
+}
+function toggleOtherATS(select) {
+  const field = document.getElementById('otherATSField');
+  field.classList.toggle('visible', select.value === 'other');
+}
+
+// ===== FORM SUBMISSION =====
+function handleSubmit(e) {
+  e.preventDefault();
+  const form = e.target;
+  const data = new FormData(form);
+  const payload = {};
+  data.forEach((value, key) => { payload[key] = value; });
+
+  // Lead scoring
+  let score = 0;
+  const timeline = payload.timeline;
+  if (timeline === 'immediately') score += 30;
+  else if (timeline === 'this_quarter') score += 20;
+  else if (timeline === 'next_quarter') score += 10;
+
+  const interest = payload.interest_level;
+  if (interest === 'ready_to_buy') score += 30;
+  else if (interest === 'evaluating') score += 20;
+  else if (interest === 'building_case') score += 10;
+
+  const roles = payload.open_roles;
+  if (roles === '50_plus') score += 20;
+  else if (roles === '26_50') score += 15;
+  else if (roles === '11_25') score += 12;
+  else if (roles === '4_10') score += 8;
+  else if (roles === '1_3') score += 4;
+
+  const budget = payload.budget;
+  if (budget === '100k_plus') score += 20;
+  else if (budget === '50k_100k') score += 15;
+  else if (budget === '15k_50k') score += 10;
+  else if (budget === '5k_15k') score += 5;
+
+  payload.lead_score = score;
+  payload.lead_tier = score >= 60 ? 'HOT' : score >= 35 ? 'WARM' : 'NURTURE';
+  payload.submitted_at = new Date().toISOString();
+
+  // ===== SEND TO YOUR BACKEND =====
+  // Option 1: Send to your PAIP ATS backend
+  // fetch('https://new-paip-ats.onrender.com/api/leads', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(payload)
+  // });
+
+  // Option 2: Send to Formspree (free form backend)
+  // fetch('https://formspree.io/f/YOUR_FORM_ID', {
+  //   method: 'POST',
+  //   headers: { 'Content-Type': 'application/json' },
+  //   body: JSON.stringify(payload)
+  // });
+
+  // Option 3: Send via email using EmailJS
+  // emailjs.send('service_id', 'template_id', payload);
+
+  // Option 4: Log to console (for testing)
+  console.log('=== NEW LEAD ===');
+  console.log('Lead Score:', score, '| Tier:', payload.lead_tier);
+  console.log('Payload:', JSON.stringify(payload, null, 2));
+
+  // Option 5: Send to Google Sheets via Apps Script
+  // fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
+  //   method: 'POST',
+  //   body: JSON.stringify(payload)
+  // });
+
+  // Show success state
+  form.style.display = 'none';
+  document.getElementById('formSuccess').classList.add('show');
+
+  // Scroll to success message
+  document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+}
+
+// ===== SCROLL ANIMATIONS =====
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -50px 0px' });
+
+document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+// ===== SMOOTH SCROLL FOR NAV =====
+document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+  anchor.addEventListener('click', function(e) {
+    e.preventDefault();
+    const target = document.querySelector(this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
+});
+</script>
+
+</body>
+</html>
