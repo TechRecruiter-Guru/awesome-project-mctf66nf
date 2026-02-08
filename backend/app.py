@@ -2911,6 +2911,49 @@ def submit_public_application():
         notes=data.get('cover_letter', '')
     )
     db.session.add(application)
+    db.session.flush()  # Get application ID
+
+    # Store work artifact links
+    import json as json_module
+    work_links_data = []
+    link_fields = [
+        ('github_url', 'github'), ('linkedin_url', 'linkedin'),
+        ('portfolio_url', 'portfolio'), ('huggingface_url', 'huggingface'),
+        ('kaggle_url', 'kaggle'), ('papers_with_code_url', 'paper'),
+        ('devpost_url', 'other')
+    ]
+    for field, link_type in link_fields:
+        url = data.get(field)
+        if url:
+            link = CandidateLink(candidate_id=candidate.id, link_type=link_type, url=url, title=field.replace('_url', '').replace('_', ' ').title())
+            db.session.add(link)
+            work_links_data.append({'link_type': link_type, 'url': url, 'title': link.title})
+
+    # Auto-generate Hiring Intelligence Submission
+    hiring_intelligence = data.get('hiring_intelligence', '')
+    position = data.get('position', job.title if job else '')
+    role_q = PHYSICAL_AI_ROLE_QUESTIONS.get(position, PHYSICAL_AI_ROLE_QUESTIONS.get(job.title, {}))
+
+    submission_data = {
+        'candidate_name': f"{candidate.first_name} {candidate.last_name}",
+        'candidate_email': candidate.email,
+        'position': position,
+        'hidden_signal': data.get('hidden_signal', ''),
+        'work_links': work_links_data,
+        'intelligence_response': {
+            'question_label': role_q.get('label', 'Hiring Intelligence'),
+            'question_text': role_q.get('question', ''),
+            'response_text': hiring_intelligence
+        },
+        'generated_at': datetime.utcnow().isoformat()
+    }
+
+    submission = HiringIntelligenceSubmission(
+        application_id=application.id,
+        submission_data=json_module.dumps(submission_data),
+        status='pending'
+    )
+    db.session.add(submission)
 
     try:
         db.session.commit()

@@ -1004,13 +1004,20 @@ function App() {
           className={activeTab === 'applications' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('applications')}
         >
-          📋 Applications ({stats.total_applications || 0})
+          Applications ({stats.total_applications || 0})
+        </button>
+        <button
+          className={activeTab === 'intelligence' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('intelligence')}
+          style={activeTab === 'intelligence' ? { backgroundColor: '#7c3aed', color: 'white' } : {}}
+        >
+          Intelligence
         </button>
         <button
           className={activeTab === 'analytics' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('analytics')}
         >
-          📈 Analytics
+          Analytics
         </button>
         <button
           className={activeTab === 'campaigns' ? 'tab active' : 'tab'}
@@ -1067,6 +1074,7 @@ function App() {
           />
         )}
         {activeTab === 'applications' && <ApplicationsView />}
+        {activeTab === 'intelligence' && <IntelligenceSubmissionsView />}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'campaigns' && <CampaignsView />}
         {activeTab === 'interviews' && <InterviewsView />}
@@ -1083,6 +1091,625 @@ function App() {
 }
 
 // Applications View
+// ==================== INTELLIGENCE REPORT MODAL ====================
+
+function IntelligenceReportModal({ submission, applicationData, onClose, onUpdate }) {
+  const [missingSignal, setMissingSignal] = useState(submission.missing_signal || '');
+  const [passedToScreen, setPassedToScreen] = useState(submission.passed_to_screen || false);
+  const [passedToInterview, setPassedToInterview] = useState(submission.passed_to_interview || false);
+  const [receivedOffer, setReceivedOffer] = useState(submission.received_offer || false);
+  const [saving, setSaving] = useState(false);
+  const [analyzing, setAnalyzing] = useState(false);
+  const [localSubmission, setLocalSubmission] = useState(submission);
+
+  const submissionData = localSubmission.submission_data ? JSON.parse(localSubmission.submission_data) : {};
+  const workLinks = submissionData.work_links || [];
+  const intelligenceResponse = submissionData.intelligence_response || {};
+
+  // Parse AI analysis results
+  const extractedSkills = localSubmission.extracted_skills ? JSON.parse(localSubmission.extracted_skills) : null;
+  const keyPhrases = localSubmission.key_phrases ? JSON.parse(localSubmission.key_phrases) : null;
+  const aiAssessment = localSubmission.ai_assessment ? JSON.parse(localSubmission.ai_assessment) : null;
+  const artifactAnalysis = localSubmission.artifact_analysis ? JSON.parse(localSubmission.artifact_analysis) : null;
+
+  const saveFeedback = async () => {
+    setSaving(true);
+    try {
+      await axios.put(`${API_URL}/api/intelligence-submissions/${submission.id}`, {
+        missing_signal: missingSignal,
+        passed_to_screen: passedToScreen,
+        passed_to_interview: passedToInterview,
+        received_offer: receivedOffer,
+        status: 'reviewed'
+      });
+      alert('Feedback saved successfully!');
+      onUpdate();
+    } catch (err) {
+      alert('Error saving feedback: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const generateAIAnalysis = async () => {
+    if (!window.confirm('Generate AI-powered analysis? This will use Claude API to extract skills, analyze artifacts, and provide hiring recommendations.')) {
+      return;
+    }
+
+    setAnalyzing(true);
+    try {
+      const response = await axios.post(`${API_URL}/api/intelligence-submissions/${localSubmission.id}/analyze`);
+      setLocalSubmission(response.data.submission);
+      alert('AI Analysis completed successfully!');
+      onUpdate();
+    } catch (err) {
+      console.error('AI Analysis error:', err);
+      alert('Error generating AI analysis: ' + (err.response?.data?.error || err.message));
+    } finally {
+      setAnalyzing(false);
+    }
+  };
+
+  const downloadReport = () => {
+    const candidateName = submissionData.candidate_name || 'Unknown';
+    const position = submissionData.position || 'Position';
+
+    let reportHTML = `<!DOCTYPE html><html><head><meta charset="UTF-8"><title>Hiring Intelligence Report - ${candidateName}</title>
+<style>body{font-family:system-ui,-apple-system,sans-serif;max-width:900px;margin:40px auto;padding:20px;line-height:1.6;color:#333}h1{color:#0f1724;border-bottom:3px solid #667eea;padding-bottom:10px}h2{color:#0f1724;margin-top:30px;border-bottom:2px solid #667eea;padding-bottom:8px}.header-info{background:#f8fafc;padding:20px;border-radius:8px;margin:20px 0}.info-row{display:grid;grid-template-columns:150px 1fr;margin:8px 0}.label{font-weight:600;color:#6b7280}.link{color:#0b63ff;text-decoration:none;word-break:break-all}.skill-badge{display:inline-block;background:#8b5cf6;color:white;padding:4px 12px;border-radius:12px;margin:4px;font-size:13px}.section{background:#f8fafc;padding:16px;border-radius:8px;margin:16px 0;border:1px solid #e2e8f0}.response-text{white-space:pre-wrap;background:white;padding:16px;border-radius:6px;border:1px solid #e2e8f0}.link-item{background:white;padding:12px;margin:8px 0;border-radius:6px;border:1px solid #e2e8f0}.link-type{background:#667eea;color:white;padding:3px 8px;border-radius:4px;font-size:11px;font-weight:600;text-transform:uppercase}</style></head><body>
+<h1>Hiring Intelligence Report</h1><p style="color:#6b7280;font-style:italic">Resume Replacement Document - Built from Impact Intelligence, Not Keywords</p>
+<div class="header-info"><div class="info-row"><span class="label">Candidate:</span><span><strong>${candidateName}</strong></span></div><div class="info-row"><span class="label">Position:</span><span><strong>${position}</strong></span></div>
+${applicationData?.candidate_email ? `<div class="info-row"><span class="label">Email:</span><span><a href="mailto:${applicationData.candidate_email}" class="link">${applicationData.candidate_email}</a></span></div>` : ''}
+${submissionData.hidden_signal ? `<div class="info-row"><span class="label">Hidden Signal:</span><span><strong style="color:#92400e">${submissionData.hidden_signal}</strong></span></div>` : ''}</div>
+${workLinks.length > 0 ? `<h2>Projects, Papers & Code</h2><div class="section">${workLinks.map(link => `<div class="link-item"><span class="link-type">${link.link_type}</span>${link.title ? `<strong style="margin-left:10px">${link.title}</strong><br>` : ''}<a href="${link.url}" target="_blank" class="link">${link.url}</a></div>`).join('')}</div>` : ''}
+${intelligenceResponse.response_text ? `<h2>Judgment & Reasoning Intelligence</h2>${intelligenceResponse.question_label ? `<p><strong>Question:</strong> ${intelligenceResponse.question_label}</p>` : ''}<div class="response-text">${intelligenceResponse.response_text}</div>` : ''}
+${localSubmission.ai_analyzed && extractedSkills && extractedSkills.length > 0 ? `<h2>AI-Extracted Technical Skills</h2><div class="section">${extractedSkills.map(skill => `<span class="skill-badge">${skill}</span>`).join('')}</div>` : ''}
+${localSubmission.ai_analyzed && aiAssessment ? `<h2>AI Hiring Manager Assessment</h2><div class="section" style="background:#f5f3ff;border:2px solid #8b5cf6;padding:20px">
+${aiAssessment.recommendation ? `<div style="background:${aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#d1fae5' : aiAssessment.recommendation.includes('RECOMMEND') ? '#dbeafe' : '#fef3c7'};padding:12px 16px;border-radius:8px;margin-bottom:16px;font-weight:700;font-size:15px">Recommendation: ${aiAssessment.recommendation}</div>` : ''}
+${aiAssessment.strengths && aiAssessment.strengths.length > 0 ? `<h3 style="color:#166534">Strengths Identified</h3><ul>${aiAssessment.strengths.map(s => `<li>${s}</li>`).join('')}</ul>` : ''}
+${aiAssessment.potential_gaps && aiAssessment.potential_gaps.length > 0 ? `<h3 style="color:#92400e">Potential Gaps or Concerns</h3><ul>${aiAssessment.potential_gaps.map(g => `<li>${g}</li>`).join('')}</ul>` : ''}
+${aiAssessment.technical_depth ? `<p><strong>Technical Depth:</strong> ${aiAssessment.technical_depth}</p>` : ''}
+${aiAssessment.systems_thinking ? `<p><strong>Systems Thinking:</strong> ${aiAssessment.systems_thinking}</p>` : ''}
+${aiAssessment.next_steps ? `<p><strong>Next Steps:</strong> ${aiAssessment.next_steps}</p>` : ''}
+</div>` : ''}
+<hr style="margin:40px 0;border:none;border-top:1px solid #e2e8f0"><p style="text-align:center;color:#6b7280;font-size:13px">Generated from PhysicalAIPros.com Hiring Intelligence System</p></body></html>`;
+
+    const blob = new Blob([reportHTML], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hiring-intelligence-report-${candidateName.replace(/\s+/g, '-')}-${Date.now()}.html`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    alert('Report downloaded! Open the HTML file in your browser to view.');
+  };
+
+  const copyShareableLink = () => {
+    const shareText = `Hiring Intelligence Report\n\nCandidate: ${submissionData.candidate_name || 'Unknown'}\nPosition: ${submissionData.position || 'N/A'}\nEmail: ${applicationData?.candidate_email || 'N/A'}\n\nView full report in PhysicalAIPros.com portal\nSubmission ID: ${localSubmission.id}\n${workLinks.length > 0 ? `\nProjects, Papers & Code:\n${workLinks.map((link, i) => `${i + 1}. [${link.link_type}] ${link.url}${link.title ? ` - ${link.title}` : ''}`).join('\n')}\n` : ''}${localSubmission.ai_analyzed && extractedSkills && extractedSkills.length > 0 ? `\nAI-Extracted Skills: ${extractedSkills.join(', ')}\n` : ''}\nGenerated from PhysicalAIPros.com Hiring Intelligence System`;
+
+    navigator.clipboard.writeText(shareText).then(() => {
+      alert('Shareable report summary copied to clipboard!');
+    }).catch(err => {
+      alert('Failed to copy to clipboard. Please try again.');
+    });
+  };
+
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, width: '100%', height: '100%',
+      backgroundColor: 'rgba(0, 0, 0, 0.6)', display: 'flex', alignItems: 'center',
+      justifyContent: 'center', zIndex: 2000, overflowY: 'auto'
+    }}>
+      <div style={{
+        backgroundColor: 'white', borderRadius: '16px', padding: '32px', maxWidth: '1000px',
+        maxHeight: '95vh', overflowY: 'auto', width: '95%',
+        boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)'
+      }}>
+        {/* HEADER */}
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '24px', flexWrap: 'wrap', gap: '12px' }}>
+          <div>
+            <h1 style={{ margin: 0, fontSize: '28px', color: '#0f1724', fontWeight: '700' }}>
+              Hiring Intelligence Report
+            </h1>
+            <p style={{ margin: '8px 0 0 0', fontSize: '14px', color: '#6b7280' }}>
+              Resume Replacement Document - Built from Impact Intelligence, Not Keywords
+            </p>
+          </div>
+          <div style={{ display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            {!localSubmission.ai_analyzed && (
+              <button onClick={generateAIAnalysis} disabled={analyzing} style={{
+                backgroundColor: analyzing ? '#9ca3af' : '#8b5cf6', color: 'white', border: 'none',
+                borderRadius: '8px', padding: '10px 20px', cursor: analyzing ? 'not-allowed' : 'pointer',
+                fontSize: '14px', fontWeight: '600'
+              }}>
+                {analyzing ? 'Analyzing...' : 'Generate AI Assessment'}
+              </button>
+            )}
+            {localSubmission.ai_analyzed && (
+              <div style={{ backgroundColor: '#d1fae5', color: '#065f46', padding: '10px 16px',
+                borderRadius: '8px', fontSize: '13px', fontWeight: '600', border: '1px solid #a7f3d0' }}>
+                AI Analyzed
+              </div>
+            )}
+            <button onClick={downloadReport} style={{
+              backgroundColor: '#10b981', color: 'white', border: 'none', borderRadius: '8px',
+              padding: '10px 20px', cursor: 'pointer', fontSize: '14px', fontWeight: '600'
+            }}>
+              Download Report
+            </button>
+            <button onClick={copyShareableLink} style={{
+              backgroundColor: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px',
+              padding: '10px 20px', cursor: 'pointer', fontSize: '14px', fontWeight: '600'
+            }}>
+              Share Report
+            </button>
+            <button onClick={onClose} style={{
+              backgroundColor: 'transparent', border: '2px solid #e5e7eb', borderRadius: '8px',
+              padding: '8px 16px', cursor: 'pointer', fontSize: '1rem', fontWeight: '600', color: '#6b7280'
+            }}>
+              Close
+            </button>
+          </div>
+        </div>
+
+        {/* CANDIDATE INFO HEADER */}
+        <div style={{ backgroundColor: '#f8fafc', borderRadius: '12px', padding: '20px', marginBottom: '24px', border: '1px solid #e2e8f0' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+            <div>
+              <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>CANDIDATE</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#0f1724' }}>
+                {submissionData.candidate_name || applicationData?.candidate_name || 'Unknown'}
+              </p>
+            </div>
+            <div>
+              <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>POSITION</p>
+              <p style={{ margin: 0, fontSize: '20px', fontWeight: '700', color: '#0f1724' }}>
+                {submissionData.position || applicationData?.position || applicationData?.job_title || '-'}
+              </p>
+            </div>
+            {applicationData?.candidate_email && (
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>EMAIL</p>
+                <p style={{ margin: 0, fontSize: '14px' }}>
+                  <a href={`mailto:${applicationData.candidate_email}`} style={{ color: '#0b63ff', textDecoration: 'none' }}>
+                    {applicationData.candidate_email}
+                  </a>
+                </p>
+              </div>
+            )}
+            {submissionData.hidden_signal && (
+              <div>
+                <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>HIDDEN SIGNAL (SELF-IDENTIFIED)</p>
+                <p style={{ margin: 0, fontSize: '14px', color: '#92400e', fontWeight: '600' }}>
+                  {submissionData.hidden_signal}
+                </p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* WORK ARTIFACTS INTELLIGENCE */}
+        {workLinks.length > 0 && (
+          <div style={{ marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #667eea' }}>
+              Projects, Papers & Code
+            </h2>
+            <div style={{ backgroundColor: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0' }}>
+              {workLinks.map((link, index) => (
+                <div key={index} style={{
+                  backgroundColor: 'white', padding: '12px', borderRadius: '8px',
+                  marginBottom: index < workLinks.length - 1 ? '12px' : 0, border: '1px solid #e2e8f0'
+                }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+                    <span style={{ backgroundColor: '#667eea', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase' }}>
+                      {link.link_type}
+                    </span>
+                    {link.title && <span style={{ fontWeight: '600', color: '#0f1724' }}>{link.title}</span>}
+                  </div>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#0b63ff', textDecoration: 'none', fontSize: '14px', wordBreak: 'break-all' }}>
+                    {link.url}
+                  </a>
+                </div>
+              ))}
+              <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#e0e7ff', borderRadius: '8px', fontSize: '13px', color: '#3730a3', lineHeight: '1.5' }}>
+                <strong>Intelligence Context:</strong> Candidate provided {workLinks.length} link{workLinks.length > 1 ? 's' : ''} (GitHub repos, research papers, projects, portfolio) for verification.
+                These links enable direct assessment of code quality, research depth, and technical judgment - far superior to resume keywords.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* JUDGMENT & REASONING INTELLIGENCE */}
+        {intelligenceResponse.response_text && (
+          <div style={{ marginBottom: '24px' }}>
+            <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #667eea' }}>
+              Judgment & Reasoning Intelligence
+            </h2>
+            <div style={{ backgroundColor: '#f0f4ff', borderRadius: '12px', padding: '20px', border: '2px solid #667eea' }}>
+              {intelligenceResponse.question_label && (
+                <div style={{ marginBottom: '12px', paddingBottom: '12px', borderBottom: '1px solid #c7d2fe' }}>
+                  <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>ROLE-SPECIFIC INTELLIGENCE QUESTION</p>
+                  <p style={{ margin: 0, fontSize: '14px', fontWeight: '600', color: '#4338ca' }}>{intelligenceResponse.question_label}</p>
+                  {intelligenceResponse.question_text && (
+                    <p style={{ margin: '8px 0 0 0', fontSize: '13px', color: '#6b7280', fontStyle: 'italic' }}>"{intelligenceResponse.question_text}"</p>
+                  )}
+                </div>
+              )}
+              <div style={{ backgroundColor: 'white', padding: '16px', borderRadius: '8px', fontSize: '14px', lineHeight: '1.7', color: '#0f1724', whiteSpace: 'pre-wrap', wordWrap: 'break-word', border: '1px solid #c7d2fe' }}>
+                {intelligenceResponse.response_text}
+              </div>
+              <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#e0e7ff', borderRadius: '8px', fontSize: '13px', color: '#3730a3', lineHeight: '1.5' }}>
+                <strong>Intelligence Context:</strong> This response reveals early signal detection patterns, root cause isolation logic, and intervention decision-making. Look for evidence of systems-level thinking, not just technical keywords.
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* AI-POWERED ANALYSIS SECTIONS */}
+        {localSubmission.ai_analyzed && (
+          <>
+            {/* EXTRACTED SKILLS */}
+            {extractedSkills && extractedSkills.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #8b5cf6' }}>
+                  AI-Extracted Technical Skills
+                </h2>
+                <div style={{ backgroundColor: '#f5f3ff', borderRadius: '12px', padding: '16px', border: '1px solid #ddd6fe' }}>
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                    {extractedSkills.map((skill, index) => (
+                      <span key={index} style={{ backgroundColor: '#8b5cf6', color: 'white', padding: '6px 14px', borderRadius: '20px', fontSize: '13px', fontWeight: '600' }}>
+                        {skill}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {/* KEY PHRASES */}
+            {keyPhrases && keyPhrases.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #8b5cf6' }}>
+                  Key Technical Phrases & Signals
+                </h2>
+                <div style={{ backgroundColor: '#f5f3ff', borderRadius: '12px', padding: '16px', border: '1px solid #ddd6fe' }}>
+                  {keyPhrases.map((item, index) => (
+                    <div key={index} style={{ backgroundColor: 'white', padding: '12px', borderRadius: '8px', marginBottom: index < keyPhrases.length - 1 ? '12px' : 0, border: '1px solid #ddd6fe' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                        <span style={{
+                          backgroundColor: item.importance === 'high' ? '#dc2626' : item.importance === 'medium' ? '#f59e0b' : '#6b7280',
+                          color: 'white', padding: '2px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase'
+                        }}>
+                          {item.importance || 'medium'}
+                        </span>
+                        <span style={{ fontWeight: '700', color: '#581c87' }}>"{item.phrase}"</span>
+                      </div>
+                      <p style={{ margin: 0, fontSize: '13px', color: '#6b7280', lineHeight: '1.5' }}>{item.context}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* ARTIFACT ANALYSIS */}
+            {artifactAnalysis && artifactAnalysis.length > 0 && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #8b5cf6' }}>
+                  AI Analysis: Projects, Papers & Code
+                </h2>
+                <div style={{ backgroundColor: '#f5f3ff', borderRadius: '12px', padding: '16px', border: '1px solid #ddd6fe' }}>
+                  {artifactAnalysis.map((artifact, index) => (
+                    <div key={index} style={{ backgroundColor: 'white', padding: '16px', borderRadius: '8px', marginBottom: index < artifactAnalysis.length - 1 ? '16px' : 0, border: '1px solid #ddd6fe' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
+                        <span style={{ backgroundColor: '#8b5cf6', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase' }}>
+                          {artifact.type}
+                        </span>
+                        <span style={{
+                          backgroundColor: artifact.relevance === 'high' ? '#10b981' : artifact.relevance === 'medium' ? '#f59e0b' : '#6b7280',
+                          color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600'
+                        }}>
+                          Relevance: {artifact.relevance || 'medium'}
+                        </span>
+                      </div>
+                      <a href={artifact.url} target="_blank" rel="noopener noreferrer" style={{ color: '#8b5cf6', textDecoration: 'none', fontSize: '13px', wordBreak: 'break-all', display: 'block', marginBottom: '8px' }}>
+                        {artifact.url}
+                      </a>
+                      <p style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#0f1724', lineHeight: '1.6' }}>{artifact.summary}</p>
+                      {artifact.quality_indicators && (
+                        <div style={{ backgroundColor: '#f0fdf4', padding: '8px', borderRadius: '6px', fontSize: '13px', color: '#166534', border: '1px solid #bbf7d0' }}>
+                          <strong>Quality:</strong> {artifact.quality_indicators}
+                        </div>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* AI ASSESSMENT */}
+            {aiAssessment && (
+              <div style={{ marginBottom: '24px' }}>
+                <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #8b5cf6' }}>
+                  AI Hiring Manager Assessment
+                </h2>
+                <div style={{ backgroundColor: '#f5f3ff', borderRadius: '12px', padding: '20px', border: '2px solid #8b5cf6' }}>
+                  {/* Recommendation Banner */}
+                  {aiAssessment.recommendation && (
+                    <div style={{
+                      backgroundColor: aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#d1fae5' :
+                                      aiAssessment.recommendation.includes('WITH CAUTION') ? '#fed7aa' :
+                                      aiAssessment.recommendation.includes('RECOMMEND') ? '#dbeafe' : '#fef3c7',
+                      color: aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#065f46' :
+                             aiAssessment.recommendation.includes('WITH CAUTION') ? '#9a3412' :
+                             aiAssessment.recommendation.includes('RECOMMEND') ? '#1e40af' : '#92400e',
+                      padding: '12px 16px', borderRadius: '8px', marginBottom: '16px', fontWeight: '700', fontSize: '15px',
+                      border: `2px solid ${aiAssessment.recommendation.includes('HIGHLY RECOMMEND') ? '#a7f3d0' :
+                                          aiAssessment.recommendation.includes('WITH CAUTION') ? '#fdba74' :
+                                          aiAssessment.recommendation.includes('RECOMMEND') ? '#93c5fd' : '#fde68a'}`
+                    }}>
+                      Recommendation: {aiAssessment.recommendation}
+                    </div>
+                  )}
+
+                  {/* Strengths */}
+                  {aiAssessment.strengths && aiAssessment.strengths.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: '700', color: '#166534' }}>Strengths Identified</h3>
+                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                        {aiAssessment.strengths.map((strength, idx) => (
+                          <li key={idx} style={{ marginBottom: '6px', fontSize: '14px', lineHeight: '1.6', color: '#0f1724' }}>{strength}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Potential Gaps */}
+                  {aiAssessment.potential_gaps && aiAssessment.potential_gaps.length > 0 && (
+                    <div style={{ marginBottom: '16px' }}>
+                      <h3 style={{ margin: '0 0 8px 0', fontSize: '15px', fontWeight: '700', color: '#92400e' }}>Potential Gaps or Concerns</h3>
+                      <ul style={{ margin: 0, paddingLeft: '20px' }}>
+                        {aiAssessment.potential_gaps.map((gap, idx) => (
+                          <li key={idx} style={{ marginBottom: '6px', fontSize: '14px', lineHeight: '1.6', color: '#0f1724' }}>{gap}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {/* Technical Depth & Systems Thinking */}
+                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px', marginBottom: '16px' }}>
+                    {aiAssessment.technical_depth && (
+                      <div style={{ backgroundColor: 'white', padding: '12px', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
+                        <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>TECHNICAL DEPTH</p>
+                        <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#581c87' }}>{aiAssessment.technical_depth}</p>
+                      </div>
+                    )}
+                    {aiAssessment.systems_thinking && (
+                      <div style={{ backgroundColor: 'white', padding: '12px', borderRadius: '8px', border: '1px solid #ddd6fe' }}>
+                        <p style={{ margin: '0 0 4px 0', fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>SYSTEMS THINKING</p>
+                        <p style={{ margin: 0, fontSize: '14px', fontWeight: '700', color: '#581c87' }}>{aiAssessment.systems_thinking}</p>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Next Steps */}
+                  {aiAssessment.next_steps && (
+                    <div style={{ backgroundColor: '#e0e7ff', padding: '12px', borderRadius: '8px', border: '1px solid #c7d2fe' }}>
+                      <p style={{ margin: '0 0 6px 0', fontSize: '13px', fontWeight: '700', color: '#3730a3' }}>Suggested Next Steps</p>
+                      <p style={{ margin: 0, fontSize: '13px', lineHeight: '1.6', color: '#4338ca' }}>{aiAssessment.next_steps}</p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* RECRUITER FEEDBACK SECTION */}
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #f59e0b' }}>
+            Recruiter Feedback & Funnel Tracking
+          </h2>
+          <div style={{ backgroundColor: '#fffbeb', borderRadius: '12px', padding: '20px', border: '2px solid #f59e0b' }}>
+            <div style={{ marginBottom: '16px' }}>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '8px', color: '#0f1724' }}>
+                What 1 Signal is Missing? (1 word or short phrase)
+              </label>
+              <input
+                type="text"
+                value={missingSignal}
+                onChange={(e) => setMissingSignal(e.target.value)}
+                placeholder="e.g., hardware, fieldwork, distributed systems, production scale"
+                style={{ width: '100%', padding: '12px', borderRadius: '8px', border: '1px solid #fbbf24', fontSize: '14px', fontFamily: 'inherit', boxSizing: 'border-box' }}
+              />
+              <p style={{ margin: '6px 0 0 0', fontSize: '13px', color: '#92400e' }}>Keep it concise - this helps refine candidate sourcing patterns</p>
+            </div>
+
+            <div>
+              <label style={{ display: 'block', fontWeight: '600', marginBottom: '12px', color: '#0f1724' }}>Funnel Progression</label>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={passedToScreen} onChange={(e) => setPassedToScreen(e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                  <span style={{ fontSize: '14px', color: '#0f1724' }}>Passed to Phone Screen</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={passedToInterview} onChange={(e) => setPassedToInterview(e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                  <span style={{ fontSize: '14px', color: '#0f1724' }}>Passed to Onsite Interview</span>
+                </label>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer' }}>
+                  <input type="checkbox" checked={receivedOffer} onChange={(e) => setReceivedOffer(e.target.checked)} style={{ width: '18px', height: '18px', cursor: 'pointer' }} />
+                  <span style={{ fontSize: '14px', color: '#0f1724' }}>Received Offer</span>
+                </label>
+              </div>
+            </div>
+
+            <button onClick={saveFeedback} disabled={saving} style={{
+              marginTop: '16px', padding: '12px 24px', backgroundColor: '#f59e0b', color: 'white',
+              border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600', fontSize: '14px',
+              opacity: saving ? 0.6 : 1
+            }}>
+              {saving ? 'Saving...' : 'Save Feedback'}
+            </button>
+          </div>
+        </div>
+
+        {/* FOOTER INFO */}
+        <div style={{ backgroundColor: '#f3f4f6', padding: '16px', borderRadius: '8px', fontSize: '12px', color: '#6b7280' }}>
+          <p style={{ margin: '0 0 6px 0' }}>
+            <strong>Submission ID:</strong> {submission.id} |
+            <strong> Created:</strong> {submission.created_at ? new Date(submission.created_at).toLocaleString() : '-'} |
+            <strong> Status:</strong> {submission.status}
+          </p>
+          <p style={{ margin: 0, fontStyle: 'italic' }}>
+            This intelligence report replaces traditional resumes by focusing on cognitive patterns, judgment signals, and verifiable work artifacts. No more keyword matching.
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ==================== INTELLIGENCE SUBMISSIONS VIEW ====================
+
+function IntelligenceSubmissionsView() {
+  const [submissions, setSubmissions] = useState([]);
+  const [applications, setApplications] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [selectedSubmission, setSelectedSubmission] = useState(null);
+  const [viewingReport, setViewingReport] = useState(false);
+
+  useEffect(() => {
+    fetchSubmissions();
+    fetchApplications();
+  }, []);
+
+  const fetchSubmissions = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/intelligence-submissions`);
+      setSubmissions(response.data.submissions || []);
+    } catch (err) {
+      console.error('Error fetching intelligence submissions:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const fetchApplications = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/applications`);
+      setApplications(response.data.applications || []);
+    } catch (err) {
+      console.error('Error fetching applications:', err);
+    }
+  };
+
+  const getApplicationData = (applicationId) => {
+    return applications.find(app => app.id === applicationId);
+  };
+
+  const viewIntelligenceReport = async (submission) => {
+    setSelectedSubmission(submission);
+    setViewingReport(true);
+  };
+
+  if (loading) return <div className="loading">Loading intelligence submissions...</div>;
+
+  return (
+    <div>
+      <div className="view-header">
+        <h2>Hiring Intelligence Submissions</h2>
+        <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '8px' }}>
+          Resume Replacement Reports - The Future of Hiring Manager Submissions
+        </p>
+      </div>
+
+      {submissions.length === 0 ? (
+        <div className="empty-state">
+          <p>No intelligence submissions yet</p>
+          <p style={{ fontSize: '14px', color: '#6b7280', marginTop: '8px' }}>
+            Submissions are automatically generated when candidates complete the hiring intelligence form
+          </p>
+        </div>
+      ) : (
+        <div style={{ overflowX: 'auto' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'white', borderRadius: '8px', overflow: 'hidden' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#f3f4f6', borderBottom: '2px solid #e5e7eb' }}>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Candidate</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Position</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Status</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Submitted</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Funnel</th>
+                <th style={{ padding: '12px', textAlign: 'left', fontWeight: '600' }}>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {submissions.map((submission) => {
+                const appData = getApplicationData(submission.application_id);
+                const submissionData = submission.submission_data ? JSON.parse(submission.submission_data) : {};
+
+                return (
+                  <tr key={submission.id} style={{ borderBottom: '1px solid #e5e7eb' }}>
+                    <td style={{ padding: '12px' }}>
+                      <strong>{submissionData.candidate_name || appData?.candidate_name || 'Unknown'}</strong>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {submissionData.position || appData?.position || appData?.job_title || '-'}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <span style={{
+                        backgroundColor: submission.status === 'reviewed' ? '#dcfce7' : '#fef3c7',
+                        color: submission.status === 'reviewed' ? '#166534' : '#92400e',
+                        padding: '4px 8px', borderRadius: '4px', fontSize: '0.85rem', fontWeight: '600'
+                      }}>
+                        {submission.status || 'pending'}
+                      </span>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      {submission.created_at ? new Date(submission.created_at).toLocaleDateString() : '-'}
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <div style={{ display: 'flex', gap: '4px', fontSize: '0.85rem' }}>
+                        <span title="Passed to Screen">{submission.passed_to_screen ? 'S' : '-'}</span>
+                        <span title="Passed to Interview">{submission.passed_to_interview ? 'I' : '-'}</span>
+                        <span title="Received Offer">{submission.received_offer ? 'O' : '-'}</span>
+                      </div>
+                    </td>
+                    <td style={{ padding: '12px' }}>
+                      <button
+                        onClick={() => viewIntelligenceReport(submission)}
+                        style={{
+                          padding: '6px 12px', backgroundColor: '#7c3aed', color: 'white', border: 'none',
+                          borderRadius: '4px', cursor: 'pointer', fontSize: '0.85rem', fontWeight: '600'
+                        }}
+                      >
+                        View Report
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* INTELLIGENCE REPORT MODAL */}
+      {viewingReport && selectedSubmission && (
+        <IntelligenceReportModal
+          submission={selectedSubmission}
+          applicationData={getApplicationData(selectedSubmission.application_id)}
+          onClose={() => { setViewingReport(false); setSelectedSubmission(null); }}
+          onUpdate={fetchSubmissions}
+        />
+      )}
+    </div>
+  );
+}
+
+// ==================== APPLICATIONS VIEW ====================
+
 function ApplicationsView() {
   const [applications, setApplications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -1090,10 +1717,13 @@ function ApplicationsView() {
   const [filterJobId, setFilterJobId] = useState('all');
   const [jobs, setJobs] = useState([]);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [intelligenceSubmissions, setIntelligenceSubmissions] = useState([]);
+  const [viewingIntelligence, setViewingIntelligence] = useState(null);
 
   useEffect(() => {
     fetchApplications();
     fetchJobs();
+    fetchIntelligenceSubmissions();
   }, []);
 
   const fetchApplications = async () => {
@@ -1114,6 +1744,28 @@ function ApplicationsView() {
       setJobs(response.data.jobs || []);
     } catch (err) {
       console.error('Error fetching jobs:', err);
+    }
+  };
+
+  const fetchIntelligenceSubmissions = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/intelligence-submissions`);
+      setIntelligenceSubmissions(response.data.submissions || []);
+    } catch (err) {
+      console.error('Error fetching intelligence submissions:', err);
+    }
+  };
+
+  const getIntelligenceSubmission = (applicationId) => {
+    return intelligenceSubmissions.find(sub => sub.application_id === applicationId);
+  };
+
+  const viewIntelligenceReport = (app) => {
+    const submission = getIntelligenceSubmission(app.id);
+    if (submission) {
+      setViewingIntelligence({ submission, applicationData: app });
+    } else {
+      alert('No hiring intelligence submission found for this application');
     }
   };
 
@@ -1263,20 +1915,39 @@ function ApplicationsView() {
                     ) : '-'}
                   </td>
                   <td style={{ padding: '12px' }}>
-                    <button
-                      onClick={() => setSelectedApplication(app)}
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#2563eb',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                        cursor: 'pointer',
-                        fontSize: '0.85rem'
-                      }}
-                    >
-                      View Details
-                    </button>
+                    <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                      <button
+                        onClick={() => setSelectedApplication(app)}
+                        style={{
+                          padding: '6px 12px',
+                          backgroundColor: '#2563eb',
+                          color: 'white',
+                          border: 'none',
+                          borderRadius: '4px',
+                          cursor: 'pointer',
+                          fontSize: '0.85rem'
+                        }}
+                      >
+                        View Details
+                      </button>
+                      {getIntelligenceSubmission(app.id) && (
+                        <button
+                          onClick={() => viewIntelligenceReport(app)}
+                          style={{
+                            padding: '6px 12px',
+                            backgroundColor: '#7c3aed',
+                            color: 'white',
+                            border: 'none',
+                            borderRadius: '4px',
+                            cursor: 'pointer',
+                            fontSize: '0.85rem',
+                            fontWeight: '600'
+                          }}
+                        >
+                          Intelligence
+                        </button>
+                      )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -1493,6 +2164,16 @@ function ApplicationsView() {
             </div>
           </div>
         </div>
+      )}
+
+      {/* INTELLIGENCE REPORT MODAL */}
+      {viewingIntelligence && (
+        <IntelligenceReportModal
+          submission={viewingIntelligence.submission}
+          applicationData={viewingIntelligence.applicationData}
+          onClose={() => setViewingIntelligence(null)}
+          onUpdate={fetchIntelligenceSubmissions}
+        />
       )}
     </div>
   );
