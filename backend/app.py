@@ -2929,6 +2929,23 @@ def submit_public_application():
             db.session.add(link)
             work_links_data.append({'link_type': link_type, 'url': url, 'title': link.title})
 
+    # Process additional dynamic links from the frontend
+    additional_links = data.get('additional_links', [])
+    for al in additional_links:
+        if al.get('url'):
+            link = CandidateLink(
+                candidate_id=candidate.id,
+                link_type=al.get('link_type', 'other'),
+                url=al['url'],
+                title=al.get('title', '')
+            )
+            db.session.add(link)
+            work_links_data.append({
+                'link_type': al.get('link_type', 'other'),
+                'url': al['url'],
+                'title': al.get('title', '')
+            })
+
     # Auto-generate Hiring Intelligence Submission
     hiring_intelligence = data.get('hiring_intelligence', '')
     position = data.get('position', job.title if job else '')
@@ -3001,7 +3018,7 @@ def update_intelligence_submission(submission_id):
     """Update a hiring intelligence submission (recruiter feedback)"""
     submission = HiringIntelligenceSubmission.query.get_or_404(submission_id)
     data = request.get_json()
-    for field in ['status', 'missing_signal', 'recruiter_notes', 'passed_to_screen', 'passed_to_interview', 'received_offer']:
+    for field in ['status', 'missing_signal', 'recruiter_notes', 'passed_to_screen', 'passed_to_interview', 'received_offer', 'submission_data']:
         if field in data:
             setattr(submission, field, data[field])
     if data.get('status') == 'reviewed' and not submission.reviewed_at:
@@ -3349,6 +3366,183 @@ def seed_sample_data():
             pub = Publication(**p)
             db.session.add(pub)
 
+        db.session.flush()
+
+        # ==================== SEED APPLICATIONS + INTELLIGENCE SUBMISSIONS ====================
+        import json as json_module
+
+        jobs_list = Job.query.order_by(Job.id).all()
+
+        # Create sample applications with intelligence submissions for demo
+        intelligence_seeds = [
+            {
+                "candidate_idx": 0, "job_idx": 0,  # Anika Patel -> Humanoid Roboticist @ Figure AI
+                "work_links": [
+                    {"link_type": "github", "url": "https://github.com/anikapatel/bipedal-rl", "title": "Bipedal RL Controller"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2024.12345", "title": "Deep RL for Bipedal Locomotion on Uneven Terrain"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2023.98765", "title": "Whole-Body Control for Humanoid Manipulation"},
+                    {"link_type": "demo", "url": "https://youtube.com/watch?v=demo123", "title": "Figure 01 Walking Demo"}
+                ],
+                "response_text": "When integrating perception, control, and actuation for humanoid systems, the earliest indicator I monitor is the divergence between predicted and actual joint torque profiles during the first 50ms of a new motion primitive. This reveals cascading instability before it propagates to higher-level controllers. In my bipedal locomotion work, I noticed that ankle torque prediction errors above 15% reliably predicted full-body instability within 200ms. My intervention pattern: immediately shift to a conservative stance controller while the learning system adapts its internal model. This saved us from 3 hardware-damaging falls during real-robot testing at Stanford.",
+                "hidden_signal": "I rebuilt Figure's sim-to-real pipeline from scratch after the original failed on uneven terrain",
+                "extracted_skills": ["PyTorch", "Isaac Gym", "MuJoCo", "Bipedal Control", "Reinforcement Learning", "Sim-to-Real Transfer", "ROS2", "Whole-Body Control", "C++", "Python", "Trajectory Optimization"],
+                "key_phrases": [
+                    {"phrase": "joint torque profile divergence", "importance": "high", "context": "Candidate identifies a specific, non-obvious early indicator for system instability - shows deep domain expertise"},
+                    {"phrase": "conservative stance controller", "importance": "high", "context": "Demonstrates graceful degradation thinking - prioritizes hardware safety over performance"},
+                    {"phrase": "sim-to-real pipeline from scratch", "importance": "high", "context": "Hidden signal reveals initiative and ability to rebuild critical infrastructure"}
+                ],
+                "artifact_analysis": [
+                    {"type": "github", "url": "https://github.com/anikapatel/bipedal-rl", "summary": "Well-structured RL codebase for bipedal locomotion with clear documentation, comprehensive tests, and modular architecture. 847 stars, 12 contributors.", "relevance": "high", "quality_indicators": "Clean code architecture, CI/CD pipeline, extensive README with math notation"},
+                    {"type": "paper", "url": "https://arxiv.org/abs/2024.12345", "summary": "ICRA 2024 paper on deep RL for bipedal locomotion. Strong experimental section with real-robot validation.", "relevance": "high", "quality_indicators": "Top-tier venue, 45 citations, real-world validation"},
+                    {"type": "demo", "url": "https://youtube.com/watch?v=demo123", "summary": "Video demonstration of bipedal walking on various terrains including gravel, slopes, and stairs.", "relevance": "medium", "quality_indicators": "Real hardware demo, not simulation only"}
+                ],
+                "ai_assessment": {
+                    "recommendation": "HIGHLY RECOMMEND - FAST TRACK",
+                    "strengths": [
+                        "Deep systems-level understanding of humanoid control - identifies non-obvious failure indicators",
+                        "Proven sim-to-real transfer experience with real hardware",
+                        "Strong publication record at top robotics venues (ICRA, CoRL)",
+                        "Open-source contributions demonstrate code quality and collaboration ability",
+                        "Initiative shown in rebuilding critical infrastructure (hidden signal)"
+                    ],
+                    "potential_gaps": [
+                        "Limited mention of manipulation tasks - focus appears primarily on locomotion",
+                        "No explicit mention of production deployment at scale"
+                    ],
+                    "technical_depth": "Expert - Demonstrates mastery of both theoretical foundations and practical implementation",
+                    "systems_thinking": "Exceptional - Identifies cross-system failure propagation patterns and designs graceful degradation strategies",
+                    "next_steps": "Schedule technical deep-dive on whole-body manipulation. Ask about experience with hardware failure recovery and production-grade safety systems."
+                }
+            },
+            {
+                "candidate_idx": 1, "job_idx": 2,  # Jin Nakamura -> Perception/SLAM @ Boston Dynamics
+                "work_links": [
+                    {"link_type": "github", "url": "https://github.com/jnakamura/edge-slam", "title": "Edge SLAM Framework"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2023.54321", "title": "Real-Time Visual SLAM on Edge Devices"},
+                    {"link_type": "dataset", "url": "https://huggingface.co/datasets/jnakamura/indoor-slam-benchmark", "title": "Indoor SLAM Benchmark Dataset"}
+                ],
+                "response_text": "In SLAM drift scenarios, my go-to method is analyzing the information matrix eigenvalue spectrum of the factor graph. When the smallest eigenvalue drops below a threshold I've empirically determined for each sensor configuration, it tells me the system is becoming under-constrained. The critical cue for differentiating root cause: if eigenvalue degradation is uniform across spatial dimensions, it's typically sensor bias (IMU drift). If it's directionally biased, it's usually map quality degradation from repetitive environments. If it's sudden and localized, it's a missed loop closure. At Toyota Research, this diagnostic saved us 2 weeks of debugging on the warehouse mapping project.",
+                "hidden_signal": "I optimized our SLAM pipeline to run on Jetson Orin at 30fps - the team said it was impossible",
+                "extracted_skills": ["Visual SLAM", "LiDAR SLAM", "Factor Graphs", "GTSAM", "Edge Computing", "Jetson Orin", "C++", "CUDA", "TensorRT", "ROS2", "Point Cloud Processing"],
+                "key_phrases": [
+                    {"phrase": "information matrix eigenvalue spectrum", "importance": "high", "context": "Highly specific SLAM diagnostic - indicates deep mathematical understanding beyond surface-level SLAM usage"},
+                    {"phrase": "directionally biased degradation", "importance": "high", "context": "Shows systematic root cause analysis methodology for spatial mapping failures"},
+                    {"phrase": "30fps on Jetson Orin", "importance": "medium", "context": "Hidden signal reveals edge optimization capability - critical for mobile robots"}
+                ],
+                "artifact_analysis": [
+                    {"type": "github", "url": "https://github.com/jnakamura/edge-slam", "summary": "Production-quality SLAM framework optimized for edge devices. Impressive benchmarks against ORB-SLAM3 and RTAB-Map.", "relevance": "high", "quality_indicators": "2.3k stars, used by 3 robotics companies, comprehensive benchmarks"},
+                    {"type": "paper", "url": "https://arxiv.org/abs/2023.54321", "summary": "Novel approach to visual SLAM optimization for resource-constrained hardware. Real-time performance on embedded GPUs.", "relevance": "high", "quality_indicators": "IROS 2023, 89 citations, reproducible results"}
+                ],
+                "ai_assessment": {
+                    "recommendation": "HIGHLY RECOMMEND",
+                    "strengths": [
+                        "Exceptional diagnostic methodology for SLAM systems - goes beyond standard tooling",
+                        "Proven edge deployment experience (Jetson Orin optimization)",
+                        "Strong mathematical foundations in factor graph optimization",
+                        "Open-source SLAM framework with real industry adoption"
+                    ],
+                    "potential_gaps": [
+                        "Experience appears focused on indoor/warehouse environments - unclear about outdoor/adverse weather SLAM",
+                        "No mention of multi-robot SLAM or collaborative mapping"
+                    ],
+                    "technical_depth": "Expert - Deep understanding of SLAM mathematical foundations and practical optimization",
+                    "systems_thinking": "Strong - Systematic root cause isolation methodology across sensor, map, and algorithm domains",
+                    "next_steps": "Schedule hands-on SLAM challenge. Explore experience with outdoor environments and dynamic obstacle handling."
+                }
+            },
+            {
+                "candidate_idx": 2, "job_idx": 4,  # Sofia Andersen -> AV Engineer @ Stealth AV
+                "work_links": [
+                    {"link_type": "github", "url": "https://github.com/sandersen/lidar-camera-fusion", "title": "LiDAR-Camera Fusion Library"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2024.67890", "title": "Multi-Modal Sensor Fusion for Robust AV Perception"},
+                    {"link_type": "project", "url": "https://sandersen.dev/av-perception-demo", "title": "AV Perception Pipeline Demo"}
+                ],
+                "response_text": "When an AV faces conflicting inputs between perception and motion planning, I anchor my decision hierarchy on a risk-weighted confidence framework. The motion planner gets priority when: perception confidence drops below a tuned threshold AND the planner has a valid safe trajectory from its last high-confidence cycle. Perception gets priority when: multiple sensor modalities agree on a novel obstacle even if it contradicts the prior map. The non-obvious signal I watch: the rate of change of the perception-planner disagreement score. A sudden spike (not gradual drift) usually indicates a real environmental change rather than sensor noise. At Waymo, this framework reduced our false emergency stops by 34% while maintaining safety margins.",
+                "hidden_signal": "I discovered a critical sensor calibration drift that was causing 12% of our false positives - fixed it and it became standard protocol",
+                "extracted_skills": ["LiDAR Processing", "Camera-LiDAR Fusion", "3D Object Detection", "Sensor Calibration", "Python", "C++", "TensorRT", "CUDA", "Point Cloud Processing", "ROS2"],
+                "key_phrases": [
+                    {"phrase": "risk-weighted confidence framework", "importance": "high", "context": "Structured decision-making methodology for safety-critical autonomous systems"},
+                    {"phrase": "rate of change of disagreement score", "importance": "high", "context": "Novel meta-signal for distinguishing real events from noise - systems-level thinking"},
+                    {"phrase": "reduced false emergency stops by 34%", "importance": "medium", "context": "Quantified impact at Waymo - demonstrates measurable engineering outcomes"}
+                ],
+                "artifact_analysis": [
+                    {"type": "github", "url": "https://github.com/sandersen/lidar-camera-fusion", "summary": "Robust sensor fusion library with uncertainty-aware fusion pipeline. Good test coverage.", "relevance": "high", "quality_indicators": "340 stars, well-documented API, unit tests"},
+                    {"type": "paper", "url": "https://arxiv.org/abs/2024.67890", "summary": "CVPR 2024 paper on multi-modal perception for adverse weather driving. State-of-the-art results on nuScenes.", "relevance": "high", "quality_indicators": "Top-tier venue, strong experimental methodology"}
+                ],
+                "ai_assessment": {
+                    "recommendation": "RECOMMEND - STRONG CANDIDATE",
+                    "strengths": [
+                        "Structured safety-critical decision framework - essential for AV development",
+                        "Quantified impact at Waymo (34% reduction in false emergency stops)",
+                        "Strong sensor fusion expertise across LiDAR and camera modalities",
+                        "Initiative in identifying and fixing systematic calibration issues"
+                    ],
+                    "potential_gaps": [
+                        "Heavy focus on perception - less evidence of end-to-end planning integration",
+                        "No mention of V2X or infrastructure-aware perception"
+                    ],
+                    "technical_depth": "Advanced - Strong combination of theoretical understanding and practical deployment",
+                    "systems_thinking": "Strong - Risk-weighted confidence framework shows mature systems engineering approach",
+                    "next_steps": "Explore experience with planning integration and safety validation frameworks. Ask about scaling from prototype to production fleet."
+                }
+            }
+        ]
+
+        intelligence_created = 0
+        for seed in intelligence_seeds:
+            cand = candidates_list[seed['candidate_idx']]
+            job_obj = jobs_list[seed['job_idx']] if seed['job_idx'] < len(jobs_list) else jobs_list[0]
+            role_q = PHYSICAL_AI_ROLE_QUESTIONS.get(job_obj.title, {})
+
+            # Create Application
+            app_record = Application(
+                job_id=job_obj.id,
+                candidate_id=cand.id,
+                status='screening',
+                source='landing_page',
+                overall_score=85
+            )
+            db.session.add(app_record)
+            db.session.flush()
+
+            # Create CandidateLinks
+            for wl in seed['work_links']:
+                cl = CandidateLink(candidate_id=cand.id, link_type=wl['link_type'], url=wl['url'], title=wl.get('title', ''))
+                db.session.add(cl)
+
+            # Create HiringIntelligenceSubmission with full AI analysis
+            submission_data = {
+                'candidate_name': f"{cand.first_name} {cand.last_name}",
+                'candidate_email': cand.email,
+                'position': job_obj.title,
+                'hidden_signal': seed.get('hidden_signal', ''),
+                'work_links': seed['work_links'],
+                'intelligence_response': {
+                    'question_label': role_q.get('label', 'Hiring Intelligence'),
+                    'question_text': role_q.get('question', ''),
+                    'response_text': seed['response_text']
+                },
+                'generated_at': datetime.utcnow().isoformat()
+            }
+
+            his = HiringIntelligenceSubmission(
+                application_id=app_record.id,
+                submission_data=json_module.dumps(submission_data),
+                status='reviewed',
+                missing_signal='hardware testing',
+                passed_to_screen=True,
+                passed_to_interview=seed['candidate_idx'] < 2,
+                received_offer=seed['candidate_idx'] == 0,
+                extracted_skills=json_module.dumps(seed.get('extracted_skills', [])),
+                key_phrases=json_module.dumps(seed.get('key_phrases', [])),
+                artifact_analysis=json_module.dumps(seed.get('artifact_analysis', [])),
+                ai_assessment=json_module.dumps(seed.get('ai_assessment', {})),
+                ai_analyzed=True,
+                ai_analyzed_at=datetime.utcnow()
+            )
+            db.session.add(his)
+            intelligence_created += 1
+
         db.session.commit()
 
         return jsonify({
@@ -3357,7 +3551,214 @@ def seed_sample_data():
             "candidates_created": created_candidates,
             "jobs_created": created_jobs,
             "publications_created": len(pubs_data),
+            "intelligence_submissions_created": intelligence_created,
             "stealth_jobs": 4
+        }), 201
+
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({"success": False, "error": str(e)}), 500
+
+
+@app.route('/api/seed-intelligence', methods=['POST'])
+def seed_intelligence_data():
+    """Seed intelligence submissions for existing candidates/jobs — works even when DB already has data"""
+    import json as json_module
+
+    # Check if intelligence submissions already exist
+    try:
+        existing = HiringIntelligenceSubmission.query.count()
+        if existing > 0:
+            return jsonify({
+                "message": f"Intelligence submissions already exist ({existing} records). Delete them first to re-seed.",
+                "existing_count": existing
+            }), 409
+    except Exception:
+        pass  # Table may not exist yet, create_all will handle it
+
+    candidates_list = Candidate.query.order_by(Candidate.id).all()
+    jobs_list = Job.query.order_by(Job.id).all()
+
+    if len(candidates_list) < 3 or len(jobs_list) < 3:
+        return jsonify({"error": "Need at least 3 candidates and 3 jobs. Run /api/seed-data first."}), 400
+
+    try:
+        intelligence_seeds = [
+            {
+                "candidate_idx": 0, "job_idx": 0,
+                "work_links": [
+                    {"link_type": "github", "url": "https://github.com/anikapatel/bipedal-rl", "title": "Bipedal RL Controller"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2024.12345", "title": "Deep RL for Bipedal Locomotion on Uneven Terrain"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2023.98765", "title": "Whole-Body Control for Humanoid Manipulation"},
+                    {"link_type": "demo", "url": "https://youtube.com/watch?v=demo123", "title": "Figure 01 Walking Demo"}
+                ],
+                "response_text": "When integrating perception, control, and actuation for humanoid systems, the earliest indicator I monitor is the divergence between predicted and actual joint torque profiles during the first 50ms of a new motion primitive. This reveals cascading instability before it propagates to higher-level controllers. In my bipedal locomotion work, I noticed that ankle torque prediction errors above 15% reliably predicted full-body instability within 200ms. My intervention pattern: immediately shift to a conservative stance controller while the learning system adapts its internal model. This saved us from 3 hardware-damaging falls during real-robot testing at Stanford.",
+                "hidden_signal": "I rebuilt Figure's sim-to-real pipeline from scratch after the original failed on uneven terrain",
+                "extracted_skills": ["PyTorch", "Isaac Gym", "MuJoCo", "Bipedal Control", "Reinforcement Learning", "Sim-to-Real Transfer", "ROS2", "Whole-Body Control", "C++", "Python", "Trajectory Optimization"],
+                "key_phrases": [
+                    {"phrase": "joint torque profile divergence", "importance": "high", "context": "Identifies a specific, non-obvious early indicator for system instability - deep domain expertise"},
+                    {"phrase": "conservative stance controller", "importance": "high", "context": "Demonstrates graceful degradation thinking - prioritizes hardware safety over performance"},
+                    {"phrase": "sim-to-real pipeline from scratch", "importance": "high", "context": "Hidden signal reveals initiative and ability to rebuild critical infrastructure"}
+                ],
+                "artifact_analysis": [
+                    {"type": "github", "url": "https://github.com/anikapatel/bipedal-rl", "summary": "Well-structured RL codebase for bipedal locomotion with clear documentation, comprehensive tests, and modular architecture. 847 stars, 12 contributors.", "relevance": "high", "quality_indicators": "Clean code architecture, CI/CD pipeline, extensive README with math notation"},
+                    {"type": "paper", "url": "https://arxiv.org/abs/2024.12345", "summary": "ICRA 2024 paper on deep RL for bipedal locomotion. Strong experimental section with real-robot validation.", "relevance": "high", "quality_indicators": "Top-tier venue, 45 citations, real-world validation"},
+                    {"type": "demo", "url": "https://youtube.com/watch?v=demo123", "summary": "Video demonstration of bipedal walking on various terrains including gravel, slopes, and stairs.", "relevance": "medium", "quality_indicators": "Real hardware demo, not simulation only"}
+                ],
+                "ai_assessment": {
+                    "recommendation": "HIGHLY RECOMMEND - FAST TRACK",
+                    "strengths": [
+                        "Deep systems-level understanding of humanoid control - identifies non-obvious failure indicators",
+                        "Proven sim-to-real transfer experience with real hardware",
+                        "Strong publication record at top robotics venues (ICRA, CoRL)",
+                        "Open-source contributions demonstrate code quality and collaboration ability",
+                        "Initiative shown in rebuilding critical infrastructure (hidden signal)"
+                    ],
+                    "potential_gaps": [
+                        "Limited mention of manipulation tasks - focus appears primarily on locomotion",
+                        "No explicit mention of production deployment at scale"
+                    ],
+                    "technical_depth": "Expert - Demonstrates mastery of both theoretical foundations and practical implementation",
+                    "systems_thinking": "Exceptional - Identifies cross-system failure propagation patterns and designs graceful degradation strategies",
+                    "next_steps": "Schedule technical deep-dive on whole-body manipulation. Ask about experience with hardware failure recovery and production-grade safety systems."
+                }
+            },
+            {
+                "candidate_idx": 1, "job_idx": min(2, len(jobs_list) - 1),
+                "work_links": [
+                    {"link_type": "github", "url": "https://github.com/jnakamura/edge-slam", "title": "Edge SLAM Framework"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2023.54321", "title": "Real-Time Visual SLAM on Edge Devices"},
+                    {"link_type": "dataset", "url": "https://huggingface.co/datasets/jnakamura/indoor-slam-benchmark", "title": "Indoor SLAM Benchmark Dataset"}
+                ],
+                "response_text": "In SLAM drift scenarios, my go-to method is analyzing the information matrix eigenvalue spectrum of the factor graph. When the smallest eigenvalue drops below a threshold I've empirically determined for each sensor configuration, it tells me the system is becoming under-constrained. The critical cue for differentiating root cause: if eigenvalue degradation is uniform across spatial dimensions, it's typically sensor bias (IMU drift). If it's directionally biased, it's usually map quality degradation from repetitive environments. If it's sudden and localized, it's a missed loop closure. At Toyota Research, this diagnostic saved us 2 weeks of debugging on the warehouse mapping project.",
+                "hidden_signal": "I optimized our SLAM pipeline to run on Jetson Orin at 30fps - the team said it was impossible",
+                "extracted_skills": ["Visual SLAM", "LiDAR SLAM", "Factor Graphs", "GTSAM", "Edge Computing", "Jetson Orin", "C++", "CUDA", "TensorRT", "ROS2", "Point Cloud Processing"],
+                "key_phrases": [
+                    {"phrase": "information matrix eigenvalue spectrum", "importance": "high", "context": "Highly specific SLAM diagnostic - indicates deep mathematical understanding beyond surface-level SLAM usage"},
+                    {"phrase": "directionally biased degradation", "importance": "high", "context": "Shows systematic root cause analysis methodology for spatial mapping failures"},
+                    {"phrase": "30fps on Jetson Orin", "importance": "medium", "context": "Hidden signal reveals edge optimization capability - critical for mobile robots"}
+                ],
+                "artifact_analysis": [
+                    {"type": "github", "url": "https://github.com/jnakamura/edge-slam", "summary": "Production-quality SLAM framework optimized for edge devices. Impressive benchmarks against ORB-SLAM3 and RTAB-Map.", "relevance": "high", "quality_indicators": "2.3k stars, used by 3 robotics companies, comprehensive benchmarks"},
+                    {"type": "paper", "url": "https://arxiv.org/abs/2023.54321", "summary": "Novel approach to visual SLAM optimization for resource-constrained hardware. Real-time performance on embedded GPUs.", "relevance": "high", "quality_indicators": "IROS 2023, 89 citations, reproducible results"}
+                ],
+                "ai_assessment": {
+                    "recommendation": "HIGHLY RECOMMEND",
+                    "strengths": [
+                        "Exceptional diagnostic methodology for SLAM systems - goes beyond standard tooling",
+                        "Proven edge deployment experience (Jetson Orin optimization)",
+                        "Strong mathematical foundations in factor graph optimization",
+                        "Open-source SLAM framework with real industry adoption"
+                    ],
+                    "potential_gaps": [
+                        "Experience appears focused on indoor/warehouse environments - unclear about outdoor/adverse weather SLAM",
+                        "No mention of multi-robot SLAM or collaborative mapping"
+                    ],
+                    "technical_depth": "Expert - Deep understanding of SLAM mathematical foundations and practical optimization",
+                    "systems_thinking": "Strong - Systematic root cause isolation methodology across sensor, map, and algorithm domains",
+                    "next_steps": "Schedule hands-on SLAM challenge. Explore experience with outdoor environments and dynamic obstacle handling."
+                }
+            },
+            {
+                "candidate_idx": 2, "job_idx": min(4, len(jobs_list) - 1),
+                "work_links": [
+                    {"link_type": "github", "url": "https://github.com/sandersen/lidar-camera-fusion", "title": "LiDAR-Camera Fusion Library"},
+                    {"link_type": "paper", "url": "https://arxiv.org/abs/2024.67890", "title": "Multi-Modal Sensor Fusion for Robust AV Perception"},
+                    {"link_type": "project", "url": "https://sandersen.dev/av-perception-demo", "title": "AV Perception Pipeline Demo"}
+                ],
+                "response_text": "When an AV faces conflicting inputs between perception and motion planning, I anchor my decision hierarchy on a risk-weighted confidence framework. The motion planner gets priority when: perception confidence drops below a tuned threshold AND the planner has a valid safe trajectory from its last high-confidence cycle. Perception gets priority when: multiple sensor modalities agree on a novel obstacle even if it contradicts the prior map. The non-obvious signal I watch: the rate of change of the perception-planner disagreement score. A sudden spike (not gradual drift) usually indicates a real environmental change rather than sensor noise. At Waymo, this framework reduced our false emergency stops by 34% while maintaining safety margins.",
+                "hidden_signal": "I discovered a critical sensor calibration drift causing 12% of false positives - fixed it and it became standard protocol",
+                "extracted_skills": ["LiDAR Processing", "Camera-LiDAR Fusion", "3D Object Detection", "Sensor Calibration", "Python", "C++", "TensorRT", "CUDA", "Point Cloud Processing", "ROS2"],
+                "key_phrases": [
+                    {"phrase": "risk-weighted confidence framework", "importance": "high", "context": "Structured decision-making methodology for safety-critical autonomous systems"},
+                    {"phrase": "rate of change of disagreement score", "importance": "high", "context": "Novel meta-signal for distinguishing real events from noise - systems-level thinking"},
+                    {"phrase": "reduced false emergency stops by 34%", "importance": "medium", "context": "Quantified impact at Waymo - demonstrates measurable engineering outcomes"}
+                ],
+                "artifact_analysis": [
+                    {"type": "github", "url": "https://github.com/sandersen/lidar-camera-fusion", "summary": "Robust sensor fusion library with uncertainty-aware fusion pipeline. Good test coverage.", "relevance": "high", "quality_indicators": "340 stars, well-documented API, unit tests"},
+                    {"type": "paper", "url": "https://arxiv.org/abs/2024.67890", "summary": "CVPR 2024 paper on multi-modal perception for adverse weather driving. State-of-the-art results on nuScenes.", "relevance": "high", "quality_indicators": "Top-tier venue, strong experimental methodology"}
+                ],
+                "ai_assessment": {
+                    "recommendation": "RECOMMEND - STRONG CANDIDATE",
+                    "strengths": [
+                        "Structured safety-critical decision framework - essential for AV development",
+                        "Quantified impact at Waymo (34% reduction in false emergency stops)",
+                        "Strong sensor fusion expertise across LiDAR and camera modalities",
+                        "Initiative in identifying and fixing systematic calibration issues"
+                    ],
+                    "potential_gaps": [
+                        "Heavy focus on perception - less evidence of end-to-end planning integration",
+                        "No mention of V2X or infrastructure-aware perception"
+                    ],
+                    "technical_depth": "Advanced - Strong combination of theoretical understanding and practical deployment",
+                    "systems_thinking": "Strong - Risk-weighted confidence framework shows mature systems engineering approach",
+                    "next_steps": "Explore experience with planning integration and safety validation frameworks. Ask about scaling from prototype to production fleet."
+                }
+            }
+        ]
+
+        intelligence_created = 0
+        for seed in intelligence_seeds:
+            cand = candidates_list[seed['candidate_idx']]
+            job_obj = jobs_list[seed['job_idx']]
+            role_q = PHYSICAL_AI_ROLE_QUESTIONS.get(job_obj.title, {})
+
+            # Check for existing application
+            existing_app = Application.query.filter_by(candidate_id=cand.id, job_id=job_obj.id).first()
+            if existing_app:
+                continue
+
+            app_record = Application(
+                job_id=job_obj.id,
+                candidate_id=cand.id,
+                status='screening',
+                source='landing_page',
+                overall_score=85
+            )
+            db.session.add(app_record)
+            db.session.flush()
+
+            for wl in seed['work_links']:
+                cl = CandidateLink(candidate_id=cand.id, link_type=wl['link_type'], url=wl['url'], title=wl.get('title', ''))
+                db.session.add(cl)
+
+            submission_data = {
+                'candidate_name': f"{cand.first_name} {cand.last_name}",
+                'candidate_email': cand.email,
+                'position': job_obj.title,
+                'hidden_signal': seed.get('hidden_signal', ''),
+                'work_links': seed['work_links'],
+                'intelligence_response': {
+                    'question_label': role_q.get('label', 'Hiring Intelligence'),
+                    'question_text': role_q.get('question', ''),
+                    'response_text': seed['response_text']
+                },
+                'generated_at': datetime.utcnow().isoformat()
+            }
+
+            his = HiringIntelligenceSubmission(
+                application_id=app_record.id,
+                submission_data=json_module.dumps(submission_data),
+                status='reviewed',
+                missing_signal='hardware testing',
+                passed_to_screen=True,
+                passed_to_interview=seed['candidate_idx'] < 2,
+                received_offer=seed['candidate_idx'] == 0,
+                extracted_skills=json_module.dumps(seed.get('extracted_skills', [])),
+                key_phrases=json_module.dumps(seed.get('key_phrases', [])),
+                artifact_analysis=json_module.dumps(seed.get('artifact_analysis', [])),
+                ai_assessment=json_module.dumps(seed.get('ai_assessment', {})),
+                ai_analyzed=True,
+                ai_analyzed_at=datetime.utcnow()
+            )
+            db.session.add(his)
+            intelligence_created += 1
+
+        db.session.commit()
+        return jsonify({
+            "success": True,
+            "message": f"Intelligence submissions seeded successfully!",
+            "intelligence_submissions_created": intelligence_created
         }), 201
 
     except Exception as e:

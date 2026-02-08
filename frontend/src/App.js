@@ -324,6 +324,37 @@ function JobDetailPage({ jobId, onBack }) {
     hidden_signal: ''
   });
   const [intelligencePrompt, setIntelligencePrompt] = useState(null);
+  const [additionalLinks, setAdditionalLinks] = useState([]);
+  const [newLinkType, setNewLinkType] = useState('paper');
+  const [newLinkUrl, setNewLinkUrl] = useState('');
+  const [newLinkTitle, setNewLinkTitle] = useState('');
+
+  const LINK_TYPES = [
+    { value: 'paper', label: 'Research Paper' },
+    { value: 'github', label: 'GitHub Repo' },
+    { value: 'project', label: 'Project' },
+    { value: 'demo', label: 'Demo / Video' },
+    { value: 'blog', label: 'Blog Post / Write-up' },
+    { value: 'arxiv', label: 'arXiv Paper' },
+    { value: 'model', label: 'Model (HF/Weights)' },
+    { value: 'dataset', label: 'Dataset' },
+    { value: 'competition', label: 'Competition Entry' },
+    { value: 'thesis', label: 'Thesis / Dissertation' },
+    { value: 'patent', label: 'Patent' },
+    { value: 'other', label: 'Other' }
+  ];
+
+  const addLink = () => {
+    if (!newLinkUrl.trim()) { alert('Please enter a URL'); return; }
+    setAdditionalLinks(prev => [...prev, { link_type: newLinkType, url: newLinkUrl.trim(), title: newLinkTitle.trim() || '' }]);
+    setNewLinkUrl('');
+    setNewLinkTitle('');
+    setNewLinkType('paper');
+  };
+
+  const removeLink = (index) => {
+    setAdditionalLinks(prev => prev.filter((_, i) => i !== index));
+  };
 
   useEffect(() => {
     fetchJob();
@@ -360,7 +391,8 @@ function JobDetailPage({ jobId, onBack }) {
       ...formData,
       job_id: parseInt(jobId),
       job_title: job.title,
-      years_experience: formData.years_experience ? parseInt(formData.years_experience) : null
+      years_experience: formData.years_experience ? parseInt(formData.years_experience) : null,
+      additional_links: additionalLinks
     };
 
     console.log('📤 Submitting application data:', submissionData);
@@ -557,6 +589,92 @@ function JobDetailPage({ jobId, onBack }) {
                 <div className="form-group">
                   <label>Devpost (Hackathons)</label>
                   <input type="url" name="devpost_url" value={formData.devpost_url} onChange={handleInputChange} placeholder="https://devpost.com/yourusername" />
+                </div>
+              </div>
+
+              {/* DYNAMIC ADD MORE LINKS */}
+              <div style={{ marginTop: '16px', paddingTop: '16px', borderTop: '1px solid #e2e8f0' }}>
+                <h4 style={{ margin: '0 0 8px 0', fontSize: '14px', color: '#0f1724', fontWeight: '600' }}>
+                  + Add More Papers, Projects & Code
+                </h4>
+                <p style={{ color: '#6b7280', margin: '0 0 12px 0', fontSize: '12px' }}>
+                  Add any additional work artifacts — research papers, side projects, demos, competition entries, datasets, patents, or anything that shows your capabilities.
+                </p>
+
+                {/* Existing additional links */}
+                {additionalLinks.length > 0 && (
+                  <div style={{ marginBottom: '12px' }}>
+                    {additionalLinks.map((link, i) => (
+                      <div key={i} style={{
+                        display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px',
+                        backgroundColor: 'white', padding: '8px 12px', borderRadius: '6px', border: '1px solid #e2e8f0'
+                      }}>
+                        <span style={{
+                          backgroundColor: '#667eea', color: 'white', padding: '2px 8px', borderRadius: '4px',
+                          fontSize: '11px', fontWeight: '600', textTransform: 'uppercase', whiteSpace: 'nowrap'
+                        }}>
+                          {link.link_type}
+                        </span>
+                        {link.title && <span style={{ fontWeight: '600', fontSize: '13px', color: '#0f1724' }}>{link.title}</span>}
+                        <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#0b63ff', fontSize: '13px', textDecoration: 'none', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', flex: 1 }}>
+                          {link.url}
+                        </a>
+                        <button type="button" onClick={() => removeLink(i)} style={{
+                          backgroundColor: '#fee2e2', color: '#dc2626', border: 'none', borderRadius: '4px',
+                          padding: '4px 8px', cursor: 'pointer', fontSize: '12px', fontWeight: '600', whiteSpace: 'nowrap'
+                        }}>
+                          Remove
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* Add new link form */}
+                <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                  <div style={{ flex: '0 0 160px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px', fontWeight: '600' }}>Type</label>
+                    <select
+                      value={newLinkType}
+                      onChange={(e) => setNewLinkType(e.target.value)}
+                      style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '13px' }}
+                    >
+                      {LINK_TYPES.map(lt => (
+                        <option key={lt.value} value={lt.value}>{lt.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                  <div style={{ flex: '1 1 200px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px', fontWeight: '600' }}>URL</label>
+                    <input
+                      type="url"
+                      value={newLinkUrl}
+                      onChange={(e) => setNewLinkUrl(e.target.value)}
+                      placeholder="https://..."
+                      style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '13px', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                  <div style={{ flex: '1 1 150px' }}>
+                    <label style={{ display: 'block', fontSize: '12px', color: '#6b7280', marginBottom: '4px', fontWeight: '600' }}>Title (optional)</label>
+                    <input
+                      type="text"
+                      value={newLinkTitle}
+                      onChange={(e) => setNewLinkTitle(e.target.value)}
+                      placeholder="e.g. My SLAM Paper"
+                      style={{ width: '100%', padding: '8px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '13px', boxSizing: 'border-box' }}
+                    />
+                  </div>
+                  <button
+                    type="button"
+                    onClick={addLink}
+                    style={{
+                      backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '6px',
+                      padding: '8px 16px', cursor: 'pointer', fontSize: '13px', fontWeight: '600',
+                      whiteSpace: 'nowrap', height: '36px'
+                    }}
+                  >
+                    + Add Link
+                  </button>
                 </div>
               </div>
             </div>
@@ -1102,9 +1220,51 @@ function IntelligenceReportModal({ submission, applicationData, onClose, onUpdat
   const [analyzing, setAnalyzing] = useState(false);
   const [localSubmission, setLocalSubmission] = useState(submission);
 
+  const [addLinkType, setAddLinkType] = useState('paper');
+  const [addLinkUrl, setAddLinkUrl] = useState('');
+  const [addLinkTitle, setAddLinkTitle] = useState('');
+  const [localWorkLinks, setLocalWorkLinks] = useState([]);
+
   const submissionData = localSubmission.submission_data ? JSON.parse(localSubmission.submission_data) : {};
-  const workLinks = submissionData.work_links || [];
+  const workLinks = localWorkLinks.length > 0 ? localWorkLinks : (submissionData.work_links || []);
   const intelligenceResponse = submissionData.intelligence_response || {};
+
+  // Initialize localWorkLinks from submission data
+  if (localWorkLinks.length === 0 && submissionData.work_links && submissionData.work_links.length > 0) {
+    setLocalWorkLinks([...submissionData.work_links]);
+  }
+
+  const REPORT_LINK_TYPES = [
+    { value: 'paper', label: 'Research Paper' },
+    { value: 'github', label: 'GitHub Repo' },
+    { value: 'arxiv', label: 'arXiv Paper' },
+    { value: 'project', label: 'Project' },
+    { value: 'demo', label: 'Demo / Video' },
+    { value: 'blog', label: 'Blog Post' },
+    { value: 'model', label: 'Model' },
+    { value: 'dataset', label: 'Dataset' },
+    { value: 'competition', label: 'Competition' },
+    { value: 'thesis', label: 'Thesis' },
+    { value: 'patent', label: 'Patent' },
+    { value: 'other', label: 'Other' }
+  ];
+
+  const addWorkLink = () => {
+    if (!addLinkUrl.trim()) return;
+    const updated = [...workLinks, { link_type: addLinkType, url: addLinkUrl.trim(), title: addLinkTitle.trim() || '' }];
+    setLocalWorkLinks(updated);
+    // Also persist back into submission_data
+    const updatedData = { ...submissionData, work_links: updated };
+    const updatedSubmission = { ...localSubmission, submission_data: JSON.stringify(updatedData) };
+    setLocalSubmission(updatedSubmission);
+    // Save to backend
+    axios.put(`${API_URL}/api/intelligence-submissions/${submission.id}`, {
+      submission_data: JSON.stringify(updatedData)
+    }).catch(err => console.error('Error saving link:', err));
+    setAddLinkUrl('');
+    setAddLinkTitle('');
+    setAddLinkType('paper');
+  };
 
   // Parse AI analysis results
   const extractedSkills = localSubmission.extracted_skills ? JSON.parse(localSubmission.extracted_skills) : null;
@@ -1290,35 +1450,62 @@ ${aiAssessment.next_steps ? `<p><strong>Next Steps:</strong> ${aiAssessment.next
         </div>
 
         {/* WORK ARTIFACTS INTELLIGENCE */}
-        {workLinks.length > 0 && (
-          <div style={{ marginBottom: '24px' }}>
-            <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #667eea' }}>
-              Projects, Papers & Code
-            </h2>
-            <div style={{ backgroundColor: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0' }}>
-              {workLinks.map((link, index) => (
-                <div key={index} style={{
-                  backgroundColor: 'white', padding: '12px', borderRadius: '8px',
-                  marginBottom: index < workLinks.length - 1 ? '12px' : 0, border: '1px solid #e2e8f0'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
-                    <span style={{ backgroundColor: '#667eea', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase' }}>
-                      {link.link_type}
-                    </span>
-                    {link.title && <span style={{ fontWeight: '600', color: '#0f1724' }}>{link.title}</span>}
-                  </div>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#0b63ff', textDecoration: 'none', fontSize: '14px', wordBreak: 'break-all' }}>
-                    {link.url}
-                  </a>
+        <div style={{ marginBottom: '24px' }}>
+          <h2 style={{ fontSize: '18px', fontWeight: '700', color: '#0f1724', marginBottom: '12px', paddingBottom: '8px', borderBottom: '2px solid #667eea' }}>
+            Projects, Papers & Code
+          </h2>
+          <div style={{ backgroundColor: '#f8fafc', borderRadius: '12px', padding: '16px', border: '1px solid #e2e8f0' }}>
+            {workLinks.length > 0 ? workLinks.map((link, index) => (
+              <div key={index} style={{
+                backgroundColor: 'white', padding: '12px', borderRadius: '8px',
+                marginBottom: '12px', border: '1px solid #e2e8f0'
+              }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '4px' }}>
+                  <span style={{ backgroundColor: '#667eea', color: 'white', padding: '4px 8px', borderRadius: '4px', fontSize: '11px', fontWeight: '600', textTransform: 'uppercase' }}>
+                    {link.link_type}
+                  </span>
+                  {link.title && <span style={{ fontWeight: '600', color: '#0f1724' }}>{link.title}</span>}
                 </div>
-              ))}
-              <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#e0e7ff', borderRadius: '8px', fontSize: '13px', color: '#3730a3', lineHeight: '1.5' }}>
-                <strong>Intelligence Context:</strong> Candidate provided {workLinks.length} link{workLinks.length > 1 ? 's' : ''} (GitHub repos, research papers, projects, portfolio) for verification.
-                These links enable direct assessment of code quality, research depth, and technical judgment - far superior to resume keywords.
+                <a href={link.url} target="_blank" rel="noopener noreferrer" style={{ color: '#0b63ff', textDecoration: 'none', fontSize: '14px', wordBreak: 'break-all' }}>
+                  {link.url}
+                </a>
+              </div>
+            )) : (
+              <p style={{ color: '#6b7280', fontSize: '14px', margin: '0 0 12px 0' }}>No work artifact links submitted yet. Add links below.</p>
+            )}
+
+            {/* ADD MORE LINKS - Recruiter can add papers, projects, code */}
+            <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #e2e8f0' }}>
+              <p style={{ margin: '0 0 10px 0', fontSize: '13px', fontWeight: '600', color: '#4338ca' }}>+ Add More Papers, Projects & Code</p>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'flex-end' }}>
+                <div style={{ flex: '0 0 140px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginBottom: '4px', fontWeight: '600' }}>Type</label>
+                  <select value={addLinkType} onChange={(e) => setAddLinkType(e.target.value)} style={{ width: '100%', padding: '7px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px' }}>
+                    {REPORT_LINK_TYPES.map(lt => <option key={lt.value} value={lt.value}>{lt.label}</option>)}
+                  </select>
+                </div>
+                <div style={{ flex: '1 1 180px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginBottom: '4px', fontWeight: '600' }}>URL</label>
+                  <input type="url" value={addLinkUrl} onChange={(e) => setAddLinkUrl(e.target.value)} placeholder="https://..." style={{ width: '100%', padding: '7px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px', boxSizing: 'border-box' }} />
+                </div>
+                <div style={{ flex: '1 1 130px' }}>
+                  <label style={{ display: 'block', fontSize: '11px', color: '#6b7280', marginBottom: '4px', fontWeight: '600' }}>Title (optional)</label>
+                  <input type="text" value={addLinkTitle} onChange={(e) => setAddLinkTitle(e.target.value)} placeholder="e.g. SLAM Paper" style={{ width: '100%', padding: '7px', borderRadius: '6px', border: '1px solid #e2e8f0', fontSize: '12px', boxSizing: 'border-box' }} />
+                </div>
+                <button onClick={addWorkLink} style={{ backgroundColor: '#667eea', color: 'white', border: 'none', borderRadius: '6px', padding: '7px 14px', cursor: 'pointer', fontSize: '12px', fontWeight: '600', whiteSpace: 'nowrap', height: '33px' }}>
+                  + Add
+                </button>
               </div>
             </div>
+
+            {workLinks.length > 0 && (
+              <div style={{ marginTop: '12px', padding: '12px', backgroundColor: '#e0e7ff', borderRadius: '8px', fontSize: '13px', color: '#3730a3', lineHeight: '1.5' }}>
+                <strong>Intelligence Context:</strong> {workLinks.length} work artifact{workLinks.length > 1 ? 's' : ''} (GitHub repos, research papers, projects, portfolio) available for verification.
+                These links enable direct assessment of code quality, research depth, and technical judgment - far superior to resume keywords.
+              </div>
+            )}
           </div>
-        )}
+        </div>
 
         {/* JUDGMENT & REASONING INTELLIGENCE */}
         {intelligenceResponse.response_text && (
