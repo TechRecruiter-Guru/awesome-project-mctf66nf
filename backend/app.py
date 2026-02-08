@@ -1923,6 +1923,16 @@ def get_stats():
     active_candidates = Candidate.query.filter(Candidate.status.in_(['reviewing', 'interviewing'])).count()
     open_jobs = Job.query.filter_by(status='open').count()
 
+    # Intelligence submissions count
+    intelligence_count = 0
+    try:
+        from sqlalchemy import inspect
+        inspector = inspect(db.engine)
+        if 'hiring_intelligence_submission' in inspector.get_table_names():
+            intelligence_count = HiringIntelligenceSubmission.query.count()
+    except Exception:
+        pass
+
     # Top expertise areas
     candidates = Candidate.query.all()
     expertise_counts = {}
@@ -1930,12 +1940,21 @@ def get_stats():
         if c.primary_expertise:
             expertise_counts[c.primary_expertise] = expertise_counts.get(c.primary_expertise, 0) + 1
 
+    # Recent activity (last 7 days)
+    from datetime import timedelta
+    week_ago = datetime.utcnow() - timedelta(days=7)
+    recent_applications = Application.query.filter(Application.applied_date >= week_ago).count()
+    recent_candidates = Candidate.query.filter(Candidate.created_at >= week_ago).count() if hasattr(Candidate, 'created_at') else 0
+
     return jsonify({
         "total_candidates": total_candidates,
         "total_jobs": total_jobs,
         "total_applications": total_applications,
         "active_candidates": active_candidates,
         "open_jobs": open_jobs,
+        "intelligence_submissions": intelligence_count,
+        "recent_applications_7d": recent_applications,
+        "recent_candidates_7d": recent_candidates,
         "top_expertise_areas": expertise_counts
     })
 

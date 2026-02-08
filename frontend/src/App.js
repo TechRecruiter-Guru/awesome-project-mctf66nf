@@ -223,8 +223,8 @@ function PublicJobsPage() {
   return (
     <div className="public-jobs-page">
       <div className="jobs-header">
-        <h1>🚀 AI/ML Career Opportunities</h1>
-        <p>Discover transformative roles in AI, Machine Learning, and Robotics at PAIP</p>
+        <h1>Physical AI & Robotics Careers</h1>
+        <p>Discover transformative roles in Robotics, Autonomous Systems, Humanoids & AI/ML</p>
       </div>
 
       <div className="jobs-search">
@@ -986,7 +986,7 @@ function JobDetailPage({ jobId, onBack }) {
         </div>
 
         <div className="landing-footer">
-          <p>Powered by AI/ML ATS</p>
+          <p>Powered by Physical AI Hiring Intelligence</p>
         </div>
       </div>
     </div>
@@ -1096,7 +1096,7 @@ function App() {
             API: {apiStatus}
           </div>
         </div>
-        <p className="tagline">The Leader in AI/ML Early Talent Detection | Recruiter Portal</p>
+        <p className="tagline">The Leader in Physical AI & Robotics Talent Intelligence | Recruiter Portal</p>
       </header>
 
       <nav className="nav-tabs">
@@ -1202,7 +1202,7 @@ function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Built for recruiting AI/ML talent through research profiles 🎓 | Open Source Project</p>
+        <p>Built for Physical AI, Robotics & Autonomous Systems talent | No resumes — Projects, Papers & Code</p>
       </footer>
     </div>
   );
@@ -2368,6 +2368,20 @@ function ApplicationsView() {
 
 // Dashboard View
 function DashboardView({ stats }) {
+  const [intelligenceCount, setIntelligenceCount] = useState(0);
+
+  useEffect(() => {
+    const fetchIntelligenceCount = async () => {
+      try {
+        const response = await axios.get(`${API_URL}/api/intelligence-submissions`);
+        setIntelligenceCount((response.data.submissions || []).length);
+      } catch (err) {
+        // Table may not exist yet
+      }
+    };
+    fetchIntelligenceCount();
+  }, []);
+
   return (
     <div className="dashboard">
       <h2>Dashboard Overview</h2>
@@ -2386,21 +2400,71 @@ function DashboardView({ stats }) {
         </div>
         <div className="stat-card">
           <div className="stat-value">{stats.active_candidates || 0}</div>
-          <div className="stat-label">Active Candidates</div>
+          <div className="stat-label">Active in Pipeline</div>
+        </div>
+        <div className="stat-card" style={{ borderLeft: '4px solid #7c3aed' }}>
+          <div className="stat-value" style={{ color: '#7c3aed' }}>{intelligenceCount}</div>
+          <div className="stat-label">Intelligence Reports</div>
+        </div>
+        <div className="stat-card" style={{ borderLeft: '4px solid #059669' }}>
+          <div className="stat-value" style={{ color: '#059669' }}>{stats.open_jobs || 0}</div>
+          <div className="stat-label">Open Requisitions</div>
         </div>
       </div>
 
-      <div className="unique-features">
-        <h3>🌟 Physical AI Hiring Intelligence</h3>
-        <ul>
-          <li>🤗 <strong>Hugging Face Enrichment</strong> - Models, datasets, spaces — find builders not on LinkedIn</li>
-          <li>🔬 <strong>Semantic Scholar</strong> - ICRA, IROS, RSS, CoRL papers with free API</li>
-          <li>📝 <strong>Papers With Code</strong> - Find who implements robotics papers, not just publishes</li>
-          <li>🎯 <strong>AI Match + Pipeline</strong> - Match candidates to jobs, move to pipeline with one click</li>
-          <li>🏆 <strong>Impact Scoring</strong> - H-index, citations, GitHub, Hugging Face combined score</li>
-          <li>📄 <strong>No Resume Required</strong> - Projects, papers, and code tell the real story</li>
-        </ul>
+      {/* QUICK ACTIONS */}
+      <div style={{ marginTop: '24px', display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
+        <div style={{ background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)', borderRadius: '12px', padding: '24px', color: 'white' }}>
+          <h3 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: '700' }}>Hiring Intelligence</h3>
+          <p style={{ margin: '0 0 16px', fontSize: '14px', opacity: 0.9 }}>
+            No resumes. We assess through Projects, Papers & Code with AI-powered analysis.
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>19 Role Questions</span>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>AI Assessment</span>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Artifact Analysis</span>
+          </div>
+        </div>
+        <div style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', borderRadius: '12px', padding: '24px', color: 'white' }}>
+          <h3 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: '700' }}>Talent Enrichment</h3>
+          <p style={{ margin: '0 0 16px', fontSize: '14px', opacity: 0.9 }}>
+            Enrich candidates from Hugging Face, Semantic Scholar, and Papers With Code.
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Hugging Face</span>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Semantic Scholar</span>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Papers+Code</span>
+          </div>
+        </div>
+        <div style={{ background: 'linear-gradient(135deg, #f59e0b 0%, #d97706 100%)', borderRadius: '12px', padding: '24px', color: 'white' }}>
+          <h3 style={{ margin: '0 0 8px', fontSize: '18px', fontWeight: '700' }}>Physical AI Focus</h3>
+          <p style={{ margin: '0 0 16px', fontSize: '14px', opacity: 0.9 }}>
+            Built for Robotics, Humanoids, Autonomous Systems, and AI/ML talent.
+          </p>
+          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Robotics</span>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Humanoids</span>
+            <span style={{ backgroundColor: 'rgba(255,255,255,0.2)', padding: '4px 10px', borderRadius: '12px', fontSize: '12px', fontWeight: '600' }}>Autonomous</span>
+          </div>
+        </div>
       </div>
+
+      {/* TOP EXPERTISE BREAKDOWN */}
+      {stats.top_expertise_areas && Object.keys(stats.top_expertise_areas).length > 0 && (
+        <div style={{ marginTop: '24px', background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+          <h3 style={{ margin: '0 0 16px', fontSize: '16px', color: '#0f1724' }}>Talent by Expertise Area</h3>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+            {Object.entries(stats.top_expertise_areas).sort((a, b) => b[1] - a[1]).map(([area, count]) => (
+              <span key={area} style={{
+                backgroundColor: '#f5f3ff', color: '#7c3aed', padding: '6px 14px', borderRadius: '20px',
+                fontSize: '13px', fontWeight: '600', border: '1px solid #ddd6fe'
+              }}>
+                {area}: {count}
+              </span>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }
@@ -3123,7 +3187,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
   return (
     <div className="jobs-view">
       <div className="view-header">
-        <h2>AI/ML Job Positions</h2>
+        <h2>Physical AI & Robotics Positions</h2>
         <button className="btn-primary" onClick={() => setShowForm(!showForm)}>
           {showForm ? 'Cancel' : '+ Add Job'}
         </button>
@@ -3291,7 +3355,7 @@ function JobsView({ jobs, loading, onDelete, showForm, setShowForm, onRefresh })
         <div className="loading">Loading jobs...</div>
       ) : jobs.length === 0 ? (
         <div className="empty-state">
-          <p>No job positions yet. Add your first AI/ML role!</p>
+          <p>No job positions yet. Add your first Physical AI / Robotics role!</p>
         </div>
       ) : (
         <div className="jobs-list">
@@ -3461,30 +3525,158 @@ function AnalyticsView() {
   };
 
   if (loading) return <div className="loading">Loading analytics...</div>;
+  if (!analytics) return <div className="empty-state"><p>Unable to load analytics data</p></div>;
+
+  const pipeline = analytics.pipeline || {};
+  const statuses = analytics.candidate_statuses || {};
+  const jobStatuses = analytics.job_statuses || {};
+  const interviews = analytics.interviews || {};
+  const offers = analytics.offers || {};
+  const rates = analytics.conversion_rates || {};
+  const topExpertise = analytics.top_expertise || {};
+
+  const StatCard = ({ value, label, color, icon }) => (
+    <div style={{ background: 'white', padding: '20px', borderRadius: '12px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderLeft: `4px solid ${color}` }}>
+      <div style={{ fontSize: '13px', color: '#6b7280', fontWeight: '600', marginBottom: '4px' }}>{icon} {label}</div>
+      <div style={{ fontSize: '28px', fontWeight: '800', color }}>{value}</div>
+    </div>
+  );
+
+  const totalCandidateStatuses = Object.values(statuses).reduce((a, b) => a + b, 0);
 
   return (
-    <div className="view-header">
-      <h2>📈 Analytics Dashboard</h2>
-      {analytics && (
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))', gap: '20px', marginTop: '20px' }}>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#667eea' }}>{analytics.total_candidates}</div>
-            <div style={{ color: '#666', marginTop: '4px' }}>Total Candidates</div>
+    <div>
+      <div className="view-header">
+        <h2>Analytics & Pipeline Intelligence</h2>
+      </div>
+
+      {/* PIPELINE OVERVIEW */}
+      <h3 style={{ margin: '20px 0 12px', fontSize: '16px', color: '#0f1724' }}>Pipeline Overview</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))', gap: '16px', marginBottom: '24px' }}>
+        <StatCard value={pipeline.total_candidates || 0} label="Total Candidates" color="#667eea" icon="" />
+        <StatCard value={pipeline.total_jobs || 0} label="Total Jobs" color="#3b82f6" icon="" />
+        <StatCard value={pipeline.total_applications || 0} label="Applications" color="#8b5cf6" icon="" />
+        <StatCard value={jobStatuses.open || 0} label="Open Positions" color="#10b981" icon="" />
+        <StatCard value={interviews.upcoming || 0} label="Upcoming Interviews" color="#f59e0b" icon="" />
+        <StatCard value={offers.pending || 0} label="Pending Offers" color="#ef4444" icon="" />
+      </div>
+
+      {/* CANDIDATE PIPELINE FUNNEL */}
+      <h3 style={{ margin: '24px 0 12px', fontSize: '16px', color: '#0f1724' }}>Candidate Pipeline Funnel</h3>
+      <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', marginBottom: '24px' }}>
+        {['new', 'reviewing', 'interviewing', 'offer', 'hired', 'rejected'].map(status => {
+          const count = statuses[status] || 0;
+          const pct = totalCandidateStatuses > 0 ? Math.round((count / totalCandidateStatuses) * 100) : 0;
+          const colors = { new: '#3b82f6', reviewing: '#f59e0b', interviewing: '#8b5cf6', offer: '#10b981', hired: '#059669', rejected: '#ef4444' };
+          return (
+            <div key={status} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '12px' }}>
+              <div style={{ width: '100px', fontSize: '13px', fontWeight: '600', color: '#374151', textTransform: 'capitalize' }}>{status}</div>
+              <div style={{ flex: 1, height: '24px', backgroundColor: '#f3f4f6', borderRadius: '12px', overflow: 'hidden' }}>
+                <div style={{ width: `${Math.max(pct, 2)}%`, height: '100%', backgroundColor: colors[status] || '#6b7280', borderRadius: '12px', transition: 'width 0.5s ease', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  {pct >= 10 && <span style={{ color: 'white', fontSize: '11px', fontWeight: '700' }}>{count}</span>}
+                </div>
+              </div>
+              <div style={{ width: '60px', textAlign: 'right', fontSize: '13px', fontWeight: '700', color: colors[status] }}>{count} ({pct}%)</div>
+            </div>
+          );
+        })}
+      </div>
+
+      {/* CONVERSION RATES & OFFERS */}
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '20px', marginBottom: '24px' }}>
+        <div>
+          <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#0f1724' }}>Conversion Rates</h3>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ fontSize: '13px', color: '#374151', fontWeight: '600' }}>Interview Rate</span>
+                <span style={{ fontSize: '14px', fontWeight: '700', color: '#8b5cf6' }}>{rates.interview_rate || 0}%</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                <div style={{ width: `${Math.min(rates.interview_rate || 0, 100)}%`, height: '100%', backgroundColor: '#8b5cf6', borderRadius: '4px' }}></div>
+              </div>
+            </div>
+            <div style={{ marginBottom: '16px' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ fontSize: '13px', color: '#374151', fontWeight: '600' }}>Offer Rate</span>
+                <span style={{ fontSize: '14px', fontWeight: '700', color: '#f59e0b' }}>{rates.offer_rate || 0}%</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                <div style={{ width: `${Math.min(rates.offer_rate || 0, 100)}%`, height: '100%', backgroundColor: '#f59e0b', borderRadius: '4px' }}></div>
+              </div>
+            </div>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '4px' }}>
+                <span style={{ fontSize: '13px', color: '#374151', fontWeight: '600' }}>Hire Rate (Offer to Hire)</span>
+                <span style={{ fontSize: '14px', fontWeight: '700', color: '#10b981' }}>{rates.hire_rate || 0}%</span>
+              </div>
+              <div style={{ height: '8px', backgroundColor: '#f3f4f6', borderRadius: '4px' }}>
+                <div style={{ width: `${Math.min(rates.hire_rate || 0, 100)}%`, height: '100%', backgroundColor: '#10b981', borderRadius: '4px' }}></div>
+              </div>
+            </div>
           </div>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#667eea' }}>{analytics.total_jobs}</div>
-            <div style={{ color: '#666', marginTop: '4px' }}>Total Jobs</div>
+        </div>
+
+        <div>
+          <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#0f1724' }}>Interviews & Offers</h3>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
+              <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#f5f3ff', borderRadius: '8px' }}>
+                <div style={{ fontSize: '24px', fontWeight: '800', color: '#7c3aed' }}>{interviews.total || 0}</div>
+                <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>Total Interviews</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#ecfdf5', borderRadius: '8px' }}>
+                <div style={{ fontSize: '24px', fontWeight: '800', color: '#059669' }}>{interviews.completed || 0}</div>
+                <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>Completed</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#eff6ff', borderRadius: '8px' }}>
+                <div style={{ fontSize: '24px', fontWeight: '800', color: '#2563eb' }}>{offers.total || 0}</div>
+                <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>Total Offers</div>
+              </div>
+              <div style={{ textAlign: 'center', padding: '12px', backgroundColor: '#fef3c7', borderRadius: '8px' }}>
+                <div style={{ fontSize: '24px', fontWeight: '800', color: '#d97706' }}>{offers.accepted || 0}</div>
+                <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600' }}>Accepted</div>
+              </div>
+            </div>
           </div>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#10b981' }}>{analytics.hired_candidates}</div>
-            <div style={{ color: '#666', marginTop: '4px' }}>Hired Candidates</div>
-          </div>
-          <div style={{ background: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 2px 8px rgba(0,0,0,0.1)' }}>
-            <div style={{ fontSize: '24px', fontWeight: 'bold', color: '#f59e0b' }}>{analytics.avg_time_to_hire}</div>
-            <div style={{ color: '#666', marginTop: '4px' }}>Avg Days to Hire</div>
+        </div>
+      </div>
+
+      {/* TOP EXPERTISE AREAS */}
+      {Object.keys(topExpertise).length > 0 && (
+        <div>
+          <h3 style={{ margin: '0 0 12px', fontSize: '16px', color: '#0f1724' }}>Top Expertise Areas</h3>
+          <div style={{ background: 'white', borderRadius: '12px', padding: '20px', boxShadow: '0 2px 8px rgba(0,0,0,0.08)' }}>
+            {Object.entries(topExpertise).sort((a, b) => b[1] - a[1]).map(([area, count]) => {
+              const maxCount = Math.max(...Object.values(topExpertise));
+              const pct = maxCount > 0 ? Math.round((count / maxCount) * 100) : 0;
+              return (
+                <div key={area} style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '10px' }}>
+                  <div style={{ width: '200px', fontSize: '13px', fontWeight: '600', color: '#374151' }}>{area}</div>
+                  <div style={{ flex: 1, height: '20px', backgroundColor: '#f3f4f6', borderRadius: '10px', overflow: 'hidden' }}>
+                    <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #667eea, #764ba2)', borderRadius: '10px' }}></div>
+                  </div>
+                  <div style={{ width: '40px', textAlign: 'right', fontSize: '14px', fontWeight: '700', color: '#667eea' }}>{count}</div>
+                </div>
+              );
+            })}
           </div>
         </div>
       )}
+
+      {/* JOB STATUS BREAKDOWN */}
+      <h3 style={{ margin: '24px 0 12px', fontSize: '16px', color: '#0f1724' }}>Job Status Breakdown</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '12px', marginBottom: '24px' }}>
+        {Object.entries(jobStatuses).map(([status, count]) => {
+          const colors = { open: '#10b981', closed: '#6b7280', filled: '#059669', on_hold: '#f59e0b' };
+          return (
+            <div key={status} style={{ background: 'white', padding: '16px', borderRadius: '10px', textAlign: 'center', boxShadow: '0 2px 8px rgba(0,0,0,0.08)', borderTop: `3px solid ${colors[status] || '#6b7280'}` }}>
+              <div style={{ fontSize: '22px', fontWeight: '800', color: colors[status] || '#6b7280' }}>{count}</div>
+              <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600', textTransform: 'capitalize', marginTop: '4px' }}>{status.replace('_', ' ')}</div>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -3694,48 +3886,51 @@ function OffersView() {
 function AboutView() {
   return (
     <div className="about-view">
-      <h2>About This ATS</h2>
+      <h2>About PhysicalAIPros.com ATS</h2>
       <p>
-        This is an <strong>AI/ML-focused Applicant Tracking System</strong> designed specifically
-        for recruiting researchers, scientists, and AI/ML practitioners.
+        The <strong>first Applicant Tracking System built for Physical AI, Robotics, Autonomous Systems & Humanoids</strong>.
+        No resumes. We assess talent through Projects, Papers & Code.
       </p>
 
       <h3>What Makes This ATS Different?</h3>
       <p>
-        Traditional ATS platforms miss critical information when recruiting AI/ML talent.
-        This system integrates with:
+        Traditional ATS platforms use keyword matching on resumes. We replace resumes entirely with
+        Hiring Intelligence Reports that capture judgment, systems thinking, and verifiable work artifacts.
       </p>
       <ul>
-        <li><strong>Google Scholar</strong> - Track publications and citations</li>
-        <li><strong>arXiv</strong> - Research paper preprints</li>
-        <li><strong>ResearchGate</strong> - Academic networking profiles</li>
-        <li><strong>ORCID</strong> - Persistent digital identifiers for researchers</li>
+        <li><strong>Hugging Face Enrichment</strong> - Models, datasets, spaces — find builders not on LinkedIn</li>
+        <li><strong>Semantic Scholar</strong> - ICRA, IROS, RSS, CoRL papers with free API</li>
+        <li><strong>Papers With Code</strong> - Find who implements robotics papers, not just publishes</li>
+        <li><strong>Claude AI Analysis</strong> - AI-powered hiring manager reports with recommendations</li>
       </ul>
 
       <h3>Key Features</h3>
       <ul>
-        <li>Track candidates' research profiles and publications</li>
-        <li>H-index and citation metrics</li>
-        <li>Research area categorization (Computer Vision, NLP, RL, etc.)</li>
-        <li>Publication history linked to candidates</li>
-        <li>Research-based scoring system</li>
-        <li>Integration-ready for academic APIs</li>
+        <li>19 role-specific intelligence questions (Humanoid Roboticist, SLAM Engineer, etc.)</li>
+        <li>AI Hiring Manager Assessment (strengths, gaps, technical depth, systems thinking)</li>
+        <li>Recruiter Feedback & Funnel Tracking on every submission</li>
+        <li>Work artifact link collection with 12 link types</li>
+        <li>Impact scoring: H-index + citations + GitHub + Hugging Face combined</li>
+        <li>AI Match candidates to jobs with one-click pipeline moves</li>
+        <li>Download & share intelligence reports as HTML</li>
       </ul>
 
-      <h3>Future Integrations (Roadmap)</h3>
+      <h3>Niche Focus Areas</h3>
       <ul>
-        <li>🔄 Google Scholar API integration</li>
-        <li>🔄 arXiv API for automatic paper fetching</li>
-        <li>🔄 AI-powered candidate-job matching</li>
-        <li>🔄 Research impact scoring algorithm</li>
-        <li>🔄 Conference publication tracking (NeurIPS, ICML, CVPR, etc.)</li>
+        <li>Humanoid Robotics & Bipedal Locomotion</li>
+        <li>Autonomous Vehicles & Sensor Fusion</li>
+        <li>SLAM, Perception & Computer Vision for Robots</li>
+        <li>Reinforcement Learning & Sim-to-Real Transfer</li>
+        <li>Motion Planning & Robot Control</li>
+        <li>Edge AI & Embedded Systems for Robotics</li>
+        <li>Multi-Robot Systems & Swarm Intelligence</li>
       </ul>
 
       <div className="cta-section">
-        <h3>Open Source & Contributor-Friendly</h3>
+        <h3>Built for the Physical AI Revolution</h3>
         <p>
-          This project is open source and welcomes contributions! Check out the GitHub repository
-          to contribute features, integrations, or improvements.
+          The talent that builds humanoids, autonomous vehicles, and robotic systems
+          doesn't fit in a resume. We built the hiring infrastructure they deserve.
         </p>
       </div>
     </div>
@@ -3766,7 +3961,7 @@ function LoginPage({ onLogin }) {
       <div className="login-container">
         <div className="login-box">
           <h1>🔐 PAIP Recruiter Portal</h1>
-          <p>The Leader in AI/ML Early Talent Detection - Login Required</p>
+          <p>Physical AI & Robotics Hiring Intelligence - Login Required</p>
 
           <form onSubmit={handleSubmit}>
             <input
