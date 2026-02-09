@@ -39,11 +39,15 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved,
     try {
       const searchName = prompt('Enter a name for this search (optional):');
 
+      const totalResults = (results.results?.GitHub?.total_count || 0)
+        + (results.results?.['Semantic Scholar']?.total_count || 0)
+        + (results.results?.arXiv?.total_count || 0);
+
       const response = await axios.post(`${API_URL}/api/saved-searches`, {
         query: booleanQuery,
         data_sources: results.sources || [],
         name: searchName || `Search ${new Date().toLocaleDateString()}`,
-        total_results: results.results?.GitHub?.total_count || 0,
+        total_results: totalResults,
         github_results_count: results.results?.GitHub?.results?.length || 0
       });
 
@@ -61,31 +65,76 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved,
     }
   };
 
+  const getAllExportableResults = () => {
+    if (!results || !results.results) return [];
+    const allCandidates = [];
+
+    // GitHub results
+    if (results.results.GitHub?.results) {
+      results.results.GitHub.results.forEach(user => {
+        allCandidates.push({
+          username: user.username,
+          name: user.name,
+          profile_url: user.profile_url,
+          email: user.email,
+          bio: user.bio,
+          location: user.location,
+          company: user.company,
+          followers: user.followers,
+          following: user.following,
+          public_repos: user.public_repos,
+          languages: user.languages || [],
+          source: 'GitHub'
+        });
+      });
+    }
+
+    // Semantic Scholar results
+    if (results.results['Semantic Scholar']?.results) {
+      results.results['Semantic Scholar'].results.forEach(author => {
+        allCandidates.push({
+          name: author.name,
+          profile_url: author.profile_url,
+          author_id: author.author_id,
+          h_index: author.h_index,
+          citation_count: author.citation_count,
+          paper_count: author.paper_count,
+          affiliation: author.affiliation,
+          affiliations: author.affiliations,
+          source: 'Semantic Scholar'
+        });
+      });
+    }
+
+    // arXiv results
+    if (results.results.arXiv?.results) {
+      results.results.arXiv.results.forEach(author => {
+        allCandidates.push({
+          name: author.name,
+          profile_url: author.profile_url,
+          affiliation: author.affiliation,
+          paper_count: author.paper_count,
+          top_papers: author.top_papers,
+          categories: author.categories,
+          source: 'arXiv'
+        });
+      });
+    }
+
+    return allCandidates;
+  };
+
   const handleExportCandidates = async () => {
-    if (!results || !results.results?.GitHub?.results) {
-      alert('No GitHub results to export!');
+    const allCandidates = getAllExportableResults();
+    if (allCandidates.length === 0) {
+      alert('No results to export!');
       return;
     }
 
     setIsExporting(true);
     try {
-      // Send complete enriched profile data
-      const candidates = results.results.GitHub.results.map(user => ({
-        username: user.username,
-        name: user.name,
-        profile_url: user.profile_url,
-        email: user.email,
-        bio: user.bio,
-        location: user.location,
-        company: user.company,
-        followers: user.followers,
-        following: user.following,
-        public_repos: user.public_repos,
-        languages: user.languages || []
-      }));
-
       const response = await axios.post(`${API_URL}/api/export-candidates`, {
-        candidates: candidates
+        candidates: allCandidates
       });
 
       alert(`Successfully exported ${response.data.created} candidates! (${response.data.skipped} skipped as duplicates)`);
@@ -276,6 +325,132 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved,
                       )}
                     </div>
                   )}
+
+                  {/* Semantic Scholar Results */}
+                  {results.results['Semantic Scholar'] && (
+                    <div className="p-4 bg-indigo-900 rounded-lg">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        📚 Semantic Scholar Results
+                        <span className="px-2 py-0.5 bg-green-500 text-white text-xs rounded-full">LIVE</span>
+                      </h4>
+                      {results.results['Semantic Scholar'].error ? (
+                        <p className="text-gray-300 text-sm">{results.results['Semantic Scholar'].message}</p>
+                      ) : (
+                        <>
+                          <p className="text-gray-300 text-sm mb-3">
+                            {results.results['Semantic Scholar'].message}
+                          </p>
+                          <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {results.results['Semantic Scholar'].results.map((author, idx) => (
+                              <div key={idx} className="bg-indigo-800 p-4 rounded-lg">
+                                <div className="flex items-start gap-3 mb-2">
+                                  <div className="w-12 h-12 rounded-full bg-indigo-600 flex items-center justify-center text-white text-lg font-bold">
+                                    {author.name.charAt(0)}
+                                  </div>
+                                  <div className="flex-1">
+                                    <a
+                                      href={author.profile_url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-blue-300 hover:text-blue-200 font-medium text-lg"
+                                    >
+                                      {author.name}
+                                    </a>
+                                    {author.affiliation && (
+                                      <p className="text-gray-400 text-sm">{author.affiliation}</p>
+                                    )}
+                                  </div>
+                                </div>
+                                <div className="flex flex-wrap gap-2 text-xs">
+                                  <span className="bg-indigo-700 px-2 py-1 rounded text-indigo-200">
+                                    h-index: {author.h_index}
+                                  </span>
+                                  <span className="bg-indigo-700 px-2 py-1 rounded text-indigo-200">
+                                    {author.citation_count?.toLocaleString()} citations
+                                  </span>
+                                  <span className="bg-indigo-700 px-2 py-1 rounded text-indigo-200">
+                                    {author.paper_count} papers
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
+
+                  {/* arXiv Results */}
+                  {results.results.arXiv && (
+                    <div className="p-4 bg-red-900 rounded-lg">
+                      <h4 className="font-semibold text-white mb-3 flex items-center gap-2">
+                        📄 arXiv Results
+                        <span className="px-2 py-0.5 bg-green-500 text-white text-xs rounded-full">LIVE</span>
+                      </h4>
+                      {results.results.arXiv.error ? (
+                        <p className="text-gray-300 text-sm">{results.results.arXiv.message}</p>
+                      ) : (
+                        <>
+                          <p className="text-gray-300 text-sm mb-3">
+                            {results.results.arXiv.message}
+                          </p>
+                          <div className="space-y-3 max-h-96 overflow-y-auto">
+                            {results.results.arXiv.results.map((author, idx) => (
+                              <div key={idx} className="bg-red-800 p-4 rounded-lg">
+                                <div className="flex items-start gap-3 mb-2">
+                                  <div className="w-12 h-12 rounded-full bg-red-700 flex items-center justify-center text-white text-lg font-bold">
+                                    {author.name.charAt(0)}
+                                  </div>
+                                  <div className="flex-1">
+                                    <a
+                                      href={author.profile_url}
+                                      target="_blank"
+                                      rel="noopener noreferrer"
+                                      className="text-red-200 hover:text-red-100 font-medium text-lg"
+                                    >
+                                      {author.name}
+                                    </a>
+                                    {author.affiliation && (
+                                      <p className="text-gray-400 text-sm">{author.affiliation}</p>
+                                    )}
+                                  </div>
+                                  <div className="text-right text-xs text-gray-400">
+                                    <div>{author.paper_count} matching papers</div>
+                                  </div>
+                                </div>
+
+                                {author.top_papers && author.top_papers.length > 0 && (
+                                  <div className="mt-2 space-y-1">
+                                    {author.top_papers.map((paper, pidx) => (
+                                      <a
+                                        key={pidx}
+                                        href={paper.url}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="block text-sm text-gray-300 hover:text-white truncate"
+                                      >
+                                        {paper.year && <span className="text-gray-500">[{paper.year}]</span>} {paper.title}
+                                      </a>
+                                    ))}
+                                  </div>
+                                )}
+
+                                {author.categories && author.categories.length > 0 && (
+                                  <div className="flex flex-wrap gap-1 mt-2">
+                                    {author.categories.map((cat, cidx) => (
+                                      <span key={cidx} className="bg-red-700 px-2 py-0.5 rounded text-xs text-red-200">
+                                        {cat}
+                                      </span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            ))}
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
 
@@ -291,7 +466,7 @@ function ExecuteSearchButton({ booleanQuery, onExecute, disabled, onSearchSaved,
 
                 <button
                   onClick={handleExportCandidates}
-                  disabled={isExporting || !results?.results?.GitHub?.results}
+                  disabled={isExporting || getAllExportableResults().length === 0}
                   className="py-3 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-medium disabled:bg-gray-300 disabled:cursor-not-allowed"
                 >
                   {isExporting ? '📤 Exporting...' : '📤 Export to Candidates'}

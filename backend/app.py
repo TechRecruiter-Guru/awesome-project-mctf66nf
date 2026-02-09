@@ -2004,6 +2004,22 @@ def execute_boolean_search():
             'results': []
         }
 
+    # Semantic Scholar Search (free API, real results)
+    if 'Semantic Scholar' in data_sources:
+        try:
+            s2_results = search_semantic_scholar(query)
+            results['results']['Semantic Scholar'] = s2_results
+        except Exception as e:
+            results['results']['Semantic Scholar'] = {'error': str(e), 'results': []}
+
+    # arXiv Search (free API, real results)
+    if 'arXiv' in data_sources:
+        try:
+            arxiv_results = search_arxiv(query)
+            results['results']['arXiv'] = arxiv_results
+        except Exception as e:
+            results['results']['arXiv'] = {'error': str(e), 'results': []}
+
     return jsonify(results), 200
 
 
@@ -2163,6 +2179,158 @@ def extract_keywords_from_boolean(query):
     return keywords
 
 
+def search_semantic_scholar(query):
+    """Search Semantic Scholar for authors matching the Boolean query - free API, no key required"""
+    keywords = extract_keywords_from_boolean(query)
+    search_query = ' '.join(keywords[:5])
+
+    headers = {
+        'User-Agent': 'AI-ML-ATS-BooleanSearch'
+    }
+    s2_api_key = os.environ.get('SEMANTIC_SCHOLAR_API_KEY')
+    if s2_api_key:
+        headers['x-api-key'] = s2_api_key
+
+    # Search for authors by keyword
+    author_url = f'https://api.semanticscholar.org/graph/v1/author/search?query={search_query}&limit=10&fields=name,hIndex,citationCount,paperCount,affiliations,homepage,url'
+    response = requests.get(author_url, headers=headers, timeout=15)
+
+    if response.status_code == 200:
+        data = response.json()
+        authors = data.get('data', [])
+
+        enriched_authors = []
+        for author in authors:
+            author_id = author.get('authorId', '')
+            affiliations = author.get('affiliations', [])
+            enriched_authors.append({
+                'name': author.get('name', 'Unknown'),
+                'author_id': author_id,
+                'profile_url': f'https://www.semanticscholar.org/author/{author_id}',
+                'h_index': author.get('hIndex', 0),
+                'citation_count': author.get('citationCount', 0),
+                'paper_count': author.get('paperCount', 0),
+                'affiliations': affiliations,
+                'affiliation': affiliations[0] if affiliations else None,
+                'homepage': author.get('homepage'),
+                'source': 'Semantic Scholar'
+            })
+
+        return {
+            'total_count': data.get('total', len(enriched_authors)),
+            'results': enriched_authors,
+            'search_query': search_query,
+            'message': f'Found {len(enriched_authors)} researchers on Semantic Scholar'
+        }
+    elif response.status_code == 429:
+        return {
+            'error': 'Rate limited',
+            'message': 'Semantic Scholar API rate limit reached. Add a SEMANTIC_SCHOLAR_API_KEY for higher limits.',
+            'results': []
+        }
+    else:
+        return {
+            'error': f'Semantic Scholar API error: {response.status_code}',
+            'message': 'Semantic Scholar search failed.',
+            'results': []
+        }
+
+
+def search_arxiv(query):
+    """Search arXiv for papers and extract author profiles - free API, no key required"""
+    import urllib.parse
+    import xml.etree.ElementTree as ET
+
+    keywords = extract_keywords_from_boolean(query)
+    search_query = ' AND '.join([f'all:{kw}' for kw in keywords[:5]])
+    encoded_query = urllib.parse.quote(search_query)
+
+    # arXiv API - search for papers, extract unique authors
+    arxiv_url = f'http://export.arxiv.org/api/query?search_query={encoded_query}&start=0&max_results=25&sortBy=relevance&sortOrder=descending'
+    response = requests.get(arxiv_url, headers={'User-Agent': 'AI-ML-ATS-BooleanSearch'}, timeout=15)
+
+    if response.status_code == 200:
+        root = ET.fromstring(response.text)
+        ns = {'atom': 'http://www.w3.org/2005/Atom', 'arxiv': 'http://arxiv.org/schemas/atom'}
+
+        # Extract unique authors from papers with their paper metadata
+        author_papers = {}  # name -> {author_info, papers: []}
+        for entry in root.findall('atom:entry', ns):
+            title = entry.find('atom:title', ns)
+            title_text = title.text.strip().replace('\n', ' ') if title is not None else ''
+            paper_id_el = entry.find('atom:id', ns)
+            paper_id = paper_id_el.text.split('/')[-1] if paper_id_el is not None else ''
+            published = entry.find('atom:published', ns)
+            year = published.text[:4] if published is not None else ''
+            summary = entry.find('atom:summary', ns)
+            summary_text = summary.text.strip()[:200] if summary is not None else ''
+
+            # Get categories
+            categories = [cat.get('term', '') for cat in entry.findall('atom:category', ns)]
+            primary_category = categories[0] if categories else ''
+
+            paper_link = ''
+            for link in entry.findall('atom:link', ns):
+                if link.get('type') == 'text/html':
+                    paper_link = link.get('href', '')
+                    break
+
+            for author_el in entry.findall('atom:author', ns):
+                name_el = author_el.find('atom:name', ns)
+                name = name_el.text.strip() if name_el is not None else 'Unknown'
+                affiliation_el = author_el.find('arxiv:affiliation', ns)
+                affiliation = affiliation_el.text.strip() if affiliation_el is not None else None
+
+                if name not in author_papers:
+                    author_papers[name] = {
+                        'name': name,
+                        'affiliation': affiliation,
+                        'papers': [],
+                        'categories': set()
+                    }
+                elif affiliation and not author_papers[name]['affiliation']:
+                    author_papers[name]['affiliation'] = affiliation
+
+                author_papers[name]['papers'].append({
+                    'title': title_text,
+                    'arxiv_id': paper_id,
+                    'year': year,
+                    'url': paper_link or f'https://arxiv.org/abs/{paper_id}',
+                    'summary': summary_text,
+                    'category': primary_category
+                })
+                author_papers[name]['categories'].update(categories)
+
+        # Sort authors by number of matching papers (most prolific first)
+        sorted_authors = sorted(author_papers.values(), key=lambda a: len(a['papers']), reverse=True)
+
+        enriched_authors = []
+        for author in sorted_authors[:10]:  # Top 10 authors
+            search_name = author['name'].replace(' ', '+')
+            enriched_authors.append({
+                'name': author['name'],
+                'profile_url': f'https://arxiv.org/search/?query={search_name}&searchtype=author',
+                'affiliation': author['affiliation'],
+                'paper_count': len(author['papers']),
+                'top_papers': author['papers'][:3],
+                'categories': list(author['categories'])[:5],
+                'source': 'arXiv'
+            })
+
+        return {
+            'total_count': len(enriched_authors),
+            'results': enriched_authors,
+            'search_query': search_query,
+            'message': f'Found {len(enriched_authors)} researchers from {len(list(root.findall("atom:entry", ns)))} arXiv papers'
+        }
+    else:
+        return {
+            'error': f'arXiv API error: {response.status_code}',
+            'message': 'arXiv search failed.',
+            'results': []
+        }
+
+
 @app.route('/api/saved-searches', methods=['POST'])
 def save_search():
     """Save a Boolean search"""
@@ -2204,7 +2372,7 @@ def delete_saved_search(search_id):
 
 @app.route('/api/export-candidates', methods=['POST'])
 def export_candidates():
-    """Export GitHub users to candidates"""
+    """Export search results to candidates - supports GitHub, Semantic Scholar, and arXiv sources"""
     data = request.get_json()
 
     if not data or 'candidates' not in data:
@@ -2215,83 +2383,152 @@ def export_candidates():
     skipped_candidates = []
 
     for candidate_data in candidates_data:
-        # Check if candidate already exists by GitHub URL
-        github_url = candidate_data.get('profile_url')
-        if github_url:
-            existing = Candidate.query.filter_by(github_url=github_url).first()
+        source = candidate_data.get('source', 'GitHub')
+        profile_url = candidate_data.get('profile_url', '')
+        full_name = candidate_data.get('name', 'Unknown')
+
+        # Check for duplicates by profile URL
+        if profile_url:
+            existing = Candidate.query.filter(
+                (Candidate.github_url == profile_url) |
+                (Candidate.notes.contains(profile_url))
+            ).first()
             if existing:
                 skipped_candidates.append({
-                    'name': candidate_data.get('name'),
+                    'name': full_name,
                     'reason': 'Already exists'
                 })
                 continue
 
-        # Get data from enriched GitHub profile
-        username = candidate_data.get('username', 'unknown')
-        full_name = candidate_data.get('name', username)
-        github_email = candidate_data.get('email')
-
-        # Generate email - use GitHub email if available, otherwise placeholder
-        if github_email:
-            email = github_email
+        # Generate unique email
+        name_slug = full_name.lower().replace(' ', '.').replace("'", '')
+        if source == 'Semantic Scholar':
+            email = f"{name_slug}@semanticscholar.candidate"
+        elif source == 'arXiv':
+            email = f"{name_slug}@arxiv.candidate"
         else:
-            email = f"{username}@github.user"
+            github_email = candidate_data.get('email')
+            username = candidate_data.get('username', 'unknown')
+            email = github_email if github_email else f"{username}@github.user"
 
-        # Check if email exists
+        # Ensure email uniqueness
         if Candidate.query.filter_by(email=email).first():
-            email = f"{username}_{int(datetime.utcnow().timestamp())}@github.user"
+            email = f"{name_slug}_{int(datetime.utcnow().timestamp())}@{source.lower().replace(' ', '')}.candidate"
 
-        # Smart expertise detection based on languages
-        languages = candidate_data.get('languages', [])
-        expertise = candidate_data.get('expertise')
-        if not expertise and languages:
-            # Map languages to expertise areas
-            lang_map = {
-                'Python': 'Machine Learning / Data Science',
-                'JavaScript': 'Full Stack Development',
-                'TypeScript': 'Full Stack Development',
-                'Java': 'Backend Development',
-                'Go': 'Backend / Systems Programming',
-                'Rust': 'Systems Programming',
-                'C++': 'Systems / High Performance Computing',
-                'C': 'Systems Programming',
-                'Swift': 'iOS Development',
-                'Kotlin': 'Android Development',
-                'Ruby': 'Backend Development',
-                'PHP': 'Web Development'
-            }
-            expertise = lang_map.get(languages[0], 'Software Engineering')
-
-        # Build bio/notes with imported info
+        # Build expertise and notes based on source
         bio_parts = []
-        if candidate_data.get('bio'):
-            bio_parts.append(candidate_data['bio'])
-        bio_parts.append(f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}")
-        if languages:
-            bio_parts.append(f"Languages: {', '.join(languages)}")
+        expertise = candidate_data.get('expertise')
+        languages = candidate_data.get('languages', [])
+        skills_list = []
+
+        if source == 'Semantic Scholar':
+            h_index = candidate_data.get('h_index', 0)
+            citation_count = candidate_data.get('citation_count', 0)
+            paper_count = candidate_data.get('paper_count', 0)
+            affiliation = candidate_data.get('affiliation')
+
+            bio_parts.append(f"Semantic Scholar: h-index {h_index}, {citation_count} citations, {paper_count} papers")
+            if affiliation:
+                bio_parts.append(f"Affiliation: {affiliation}")
+            bio_parts.append(f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}")
+            bio_parts.append(f"Profile: {profile_url}")
+
+            if not expertise:
+                expertise = 'Research / Academia'
+
+        elif source == 'arXiv':
+            paper_count = candidate_data.get('paper_count', 0)
+            affiliation = candidate_data.get('affiliation')
+            categories = candidate_data.get('categories', [])
+            top_papers = candidate_data.get('top_papers', [])
+
+            bio_parts.append(f"arXiv: {paper_count} matching papers")
+            if affiliation:
+                bio_parts.append(f"Affiliation: {affiliation}")
+            if categories:
+                bio_parts.append(f"Categories: {', '.join(categories[:3])}")
+                skills_list = categories[:5]
+            if top_papers:
+                paper_titles = [p.get('title', '') for p in top_papers[:2]]
+                bio_parts.append(f"Top papers: {'; '.join(paper_titles)}")
+            bio_parts.append(f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}")
+            bio_parts.append(f"Profile: {profile_url}")
+
+            if not expertise:
+                # Map arXiv categories to expertise
+                cat_map = {
+                    'cs.AI': 'Artificial Intelligence',
+                    'cs.LG': 'Machine Learning',
+                    'cs.CV': 'Computer Vision',
+                    'cs.CL': 'Natural Language Processing',
+                    'cs.RO': 'Robotics',
+                    'cs.NE': 'Neural Networks',
+                    'stat.ML': 'Machine Learning',
+                }
+                expertise = 'Research / Academia'
+                for cat in categories:
+                    if cat in cat_map:
+                        expertise = cat_map[cat]
+                        break
+
+        else:
+            # GitHub source (existing logic)
+            username = candidate_data.get('username', 'unknown')
+            if not expertise and languages:
+                lang_map = {
+                    'Python': 'Machine Learning / Data Science',
+                    'JavaScript': 'Full Stack Development',
+                    'TypeScript': 'Full Stack Development',
+                    'Java': 'Backend Development',
+                    'Go': 'Backend / Systems Programming',
+                    'Rust': 'Systems Programming',
+                    'C++': 'Systems / High Performance Computing',
+                    'C': 'Systems Programming',
+                    'Swift': 'iOS Development',
+                    'Kotlin': 'Android Development',
+                    'Ruby': 'Backend Development',
+                    'PHP': 'Web Development'
+                }
+                expertise = lang_map.get(languages[0], 'Software Engineering')
+
+            if candidate_data.get('bio'):
+                bio_parts.append(candidate_data['bio'])
+            bio_parts.append(f"Imported from Boolean search on {datetime.utcnow().strftime('%Y-%m-%d')}")
+            if languages:
+                bio_parts.append(f"Languages: {', '.join(languages)}")
 
         # Create new candidate with enriched data
         try:
-            candidate = Candidate(
+            candidate_kwargs = dict(
                 first_name=full_name.split()[0] if ' ' in full_name else full_name,
-                last_name=full_name.split()[-1] if ' ' in full_name and len(full_name.split()) > 1 else 'User',
+                last_name=full_name.split()[-1] if ' ' in full_name and len(full_name.split()) > 1 else '',
                 email=email,
-                github_url=github_url,
-                location=candidate_data.get('location'),
-                company=candidate_data.get('company'),
+                github_url=profile_url if source == 'GitHub' else None,
+                location=candidate_data.get('location') or candidate_data.get('affiliation'),
+                company=candidate_data.get('company') or candidate_data.get('affiliation'),
                 bio=candidate_data.get('bio'),
                 github_followers=candidate_data.get('followers', 0),
                 github_repos=candidate_data.get('public_repos', 0),
                 primary_expertise=expertise or 'Software Engineering',
-                skills=','.join(languages) if languages else None,
+                skills=','.join(skills_list or languages) if (skills_list or languages) else None,
                 status='new',
                 notes=' | '.join(bio_parts)
             )
+
+            # Add academic IDs when available
+            if source == 'Semantic Scholar':
+                candidate_kwargs['semantic_scholar_id'] = candidate_data.get('author_id')
+                candidate_kwargs['s2_h_index'] = candidate_data.get('h_index', 0)
+                candidate_kwargs['s2_citation_count'] = candidate_data.get('citation_count', 0)
+                candidate_kwargs['s2_paper_count'] = candidate_data.get('paper_count', 0)
+
+            candidate = Candidate(**candidate_kwargs)
 
             db.session.add(candidate)
             db.session.commit()
             created_candidates.append(candidate.to_dict())
         except Exception as e:
+            db.session.rollback()
             skipped_candidates.append({
                 'name': full_name,
                 'reason': str(e)

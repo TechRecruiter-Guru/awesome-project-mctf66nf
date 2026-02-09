@@ -9,6 +9,8 @@ function DataSourceSelector({ onDataSourceChange }) {
     { name: 'LinkedIn', icon: '💼' },
     { name: 'GitHub', icon: '💻' },
     { name: 'Google Scholar', icon: '🎓' },
+    { name: 'Semantic Scholar', icon: '📚', badge: 'LIVE API' },
+    { name: 'arXiv', icon: '📄', badge: 'LIVE API' },
   ];
 
   const handleToggleSource = (source) => {
@@ -50,6 +52,11 @@ function DataSourceSelector({ onDataSourceChange }) {
             />
             <span className="ml-3 text-2xl">{source.icon}</span>
             <span className="ml-2 text-gray-800 font-medium">{source.name}</span>
+            {source.badge && (
+              <span className="ml-2 px-2 py-0.5 bg-green-100 text-green-700 text-xs font-semibold rounded-full">
+                {source.badge}
+              </span>
+            )}
           </label>
         ))}
 
