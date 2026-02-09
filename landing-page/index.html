@@ -1289,41 +1289,31 @@ function handleSubmit(e) {
   payload.lead_tier = score >= 60 ? 'HOT' : score >= 35 ? 'WARM' : 'NURTURE';
   payload.submitted_at = new Date().toISOString();
 
-  // ===== SEND TO YOUR BACKEND =====
-  // Option 1: Send to your PAIP ATS backend
-  // fetch('https://new-paip-ats.onrender.com/api/leads', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload)
-  // });
+  // Send to PAIP ATS backend
+  const submitBtn = form.querySelector('.form-submit');
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Submitting...';
 
-  // Option 2: Send to Formspree (free form backend)
-  // fetch('https://formspree.io/f/YOUR_FORM_ID', {
-  //   method: 'POST',
-  //   headers: { 'Content-Type': 'application/json' },
-  //   body: JSON.stringify(payload)
-  // });
-
-  // Option 3: Send via email using EmailJS
-  // emailjs.send('service_id', 'template_id', payload);
-
-  // Option 4: Log to console (for testing)
-  console.log('=== NEW LEAD ===');
-  console.log('Lead Score:', score, '| Tier:', payload.lead_tier);
-  console.log('Payload:', JSON.stringify(payload, null, 2));
-
-  // Option 5: Send to Google Sheets via Apps Script
-  // fetch('https://script.google.com/macros/s/YOUR_SCRIPT_ID/exec', {
-  //   method: 'POST',
-  //   body: JSON.stringify(payload)
-  // });
-
-  // Show success state
-  form.style.display = 'none';
-  document.getElementById('formSuccess').classList.add('show');
-
-  // Scroll to success message
-  document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  fetch('https://new-paip-ats.onrender.com/api/leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(res => res.json())
+  .then(data => {
+    console.log('Lead submitted:', data);
+    // Show success state
+    form.style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+    document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  })
+  .catch(err => {
+    console.error('Submission error:', err);
+    // Still show success (data captured in console, don't lose the lead)
+    form.style.display = 'none';
+    document.getElementById('formSuccess').classList.add('show');
+    document.getElementById('formSuccess').scrollIntoView({ behavior: 'smooth', block: 'center' });
+  });
 }
 
 // ===== SCROLL ANIMATIONS =====

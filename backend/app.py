@@ -3785,6 +3785,196 @@ def seed_intelligence_data():
         return jsonify({"success": False, "error": str(e)}), 500
 
 
+# ==================== LEAD MODEL ====================
+
+class Lead(db.Model):
+    """Landing page lead capture with qualification scoring"""
+    id = db.Column(db.Integer, primary_key=True)
+
+    # Contact info
+    full_name = db.Column(db.String(200), nullable=False)
+    email = db.Column(db.String(300), nullable=False)
+    title = db.Column(db.String(200))
+    phone = db.Column(db.String(50))
+
+    # Company info
+    company = db.Column(db.String(200))
+    website = db.Column(db.String(500))
+    industry = db.Column(db.String(100))
+    other_industry = db.Column(db.String(200))
+    company_stage = db.Column(db.String(50))
+    company_size = db.Column(db.String(50))
+    eng_team_size = db.Column(db.String(50))
+
+    # Hiring needs
+    open_roles = db.Column(db.String(50))
+    timeline = db.Column(db.String(50))
+    hardest_roles = db.Column(db.String(100))
+    seats_needed = db.Column(db.String(50))
+    current_ats = db.Column(db.String(100))
+    other_ats = db.Column(db.String(200))
+    pain_point = db.Column(db.String(100))
+
+    # Budget & interest
+    budget = db.Column(db.String(50))
+    interest_level = db.Column(db.String(50))
+    interested_tier = db.Column(db.String(50))
+    notes = db.Column(db.Text)
+    source = db.Column(db.String(100))
+
+    # Scoring
+    lead_score = db.Column(db.Integer, default=0)
+    lead_tier = db.Column(db.String(20), default='NURTURE')  # HOT, WARM, NURTURE
+
+    # Meta
+    status = db.Column(db.String(50), default='new')  # new, contacted, demo_scheduled, converted, disqualified
+    admin_notes = db.Column(db.Text)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'full_name': self.full_name,
+            'email': self.email,
+            'title': self.title,
+            'phone': self.phone,
+            'company': self.company,
+            'website': self.website,
+            'industry': self.industry,
+            'other_industry': self.other_industry,
+            'company_stage': self.company_stage,
+            'company_size': self.company_size,
+            'eng_team_size': self.eng_team_size,
+            'open_roles': self.open_roles,
+            'timeline': self.timeline,
+            'hardest_roles': self.hardest_roles,
+            'seats_needed': self.seats_needed,
+            'current_ats': self.current_ats,
+            'other_ats': self.other_ats,
+            'pain_point': self.pain_point,
+            'budget': self.budget,
+            'interest_level': self.interest_level,
+            'interested_tier': self.interested_tier,
+            'notes': self.notes,
+            'source': self.source,
+            'lead_score': self.lead_score,
+            'lead_tier': self.lead_tier,
+            'status': self.status,
+            'admin_notes': self.admin_notes,
+            'created_at': self.created_at.isoformat(),
+            'updated_at': self.updated_at.isoformat() if self.updated_at else None
+        }
+
+
+# ==================== LEAD ENDPOINTS ====================
+
+@app.route('/api/leads', methods=['POST'])
+def create_lead():
+    """Capture lead from landing page qualification form"""
+    data = request.get_json()
+
+    if not data or not data.get('full_name') or not data.get('email'):
+        return jsonify({"error": "Full name and email are required"}), 400
+
+    # Check for duplicate email
+    existing = Lead.query.filter_by(email=data['email']).first()
+    if existing:
+        return jsonify({
+            "success": True,
+            "message": "Thanks! We already have your information and will be in touch soon.",
+            "duplicate": True
+        }), 200
+
+    lead = Lead(
+        full_name=data.get('full_name', ''),
+        email=data.get('email', ''),
+        title=data.get('title', ''),
+        phone=data.get('phone', ''),
+        company=data.get('company', ''),
+        website=data.get('website', ''),
+        industry=data.get('industry', ''),
+        other_industry=data.get('other_industry', ''),
+        company_stage=data.get('company_stage', ''),
+        company_size=data.get('company_size', ''),
+        eng_team_size=data.get('eng_team_size', ''),
+        open_roles=data.get('open_roles', ''),
+        timeline=data.get('timeline', ''),
+        hardest_roles=data.get('hardest_roles', ''),
+        seats_needed=data.get('seats_needed', ''),
+        current_ats=data.get('current_ats', ''),
+        other_ats=data.get('other_ats', ''),
+        pain_point=data.get('pain_point', ''),
+        budget=data.get('budget', ''),
+        interest_level=data.get('interest_level', ''),
+        interested_tier=data.get('interested_tier', ''),
+        notes=data.get('notes', ''),
+        source=data.get('source', ''),
+        lead_score=data.get('lead_score', 0),
+        lead_tier=data.get('lead_tier', 'NURTURE')
+    )
+
+    db.session.add(lead)
+    db.session.commit()
+
+    return jsonify({
+        "success": True,
+        "message": "Application received! We'll be in touch within 24 hours.",
+        "lead_id": lead.id,
+        "lead_tier": lead.lead_tier,
+        "lead_score": lead.lead_score
+    }), 201
+
+
+@app.route('/api/leads', methods=['GET'])
+def get_leads():
+    """Get all leads (recruiter dashboard)"""
+    tier_filter = request.args.get('tier')
+    status_filter = request.args.get('status')
+
+    query = Lead.query
+
+    if tier_filter:
+        query = query.filter_by(lead_tier=tier_filter)
+    if status_filter:
+        query = query.filter_by(status=status_filter)
+
+    leads = query.order_by(Lead.lead_score.desc(), Lead.created_at.desc()).all()
+
+    return jsonify({
+        'leads': [l.to_dict() for l in leads],
+        'total': len(leads),
+        'by_tier': {
+            'HOT': Lead.query.filter_by(lead_tier='HOT').count(),
+            'WARM': Lead.query.filter_by(lead_tier='WARM').count(),
+            'NURTURE': Lead.query.filter_by(lead_tier='NURTURE').count()
+        }
+    })
+
+
+@app.route('/api/leads/<int:lead_id>', methods=['PUT'])
+def update_lead(lead_id):
+    """Update lead status or add admin notes"""
+    lead = Lead.query.get_or_404(lead_id)
+    data = request.get_json()
+
+    for field in ['status', 'admin_notes', 'lead_tier']:
+        if field in data:
+            setattr(lead, field, data[field])
+
+    db.session.commit()
+    return jsonify(lead.to_dict())
+
+
+@app.route('/api/leads/<int:lead_id>', methods=['DELETE'])
+def delete_lead(lead_id):
+    """Delete a lead"""
+    lead = Lead.query.get_or_404(lead_id)
+    db.session.delete(lead)
+    db.session.commit()
+    return jsonify({"success": True})
+
+
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
     is_dev = 'sqlite' in (app.config.get('SQLALCHEMY_DATABASE_URI') or '')

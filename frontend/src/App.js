@@ -1162,6 +1162,13 @@ function App() {
           🔍 Search
         </button>
         <button
+          className={activeTab === 'leads' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('leads')}
+          style={activeTab === 'leads' ? {background: 'linear-gradient(135deg, #f59e0b, #f97316)', color: '#fff'} : {}}
+        >
+          🎯 Leads
+        </button>
+        <button
           className={activeTab === 'about' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('about')}
         >
@@ -1198,6 +1205,7 @@ function App() {
         {activeTab === 'interviews' && <InterviewsView />}
         {activeTab === 'offers' && <OffersView />}
         {activeTab === 'boolean' && <BooleanGenerator onStatsRefresh={fetchStats} />}
+        {activeTab === 'leads' && <LeadsView />}
         {activeTab === 'about' && <AboutView />}
       </main>
 
@@ -3877,6 +3885,179 @@ function OffersView() {
             </div>
           </div>
         ))
+      )}
+    </div>
+  );
+}
+
+// Leads View - Landing page lead management
+function LeadsView() {
+  const [leads, setLeads] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [tierFilter, setTierFilter] = useState('all');
+  const [statusFilter, setStatusFilter] = useState('all');
+  const [tierCounts, setTierCounts] = useState({ HOT: 0, WARM: 0, NURTURE: 0 });
+
+  const API = process.env.REACT_APP_API_URL || '';
+
+  useEffect(() => {
+    fetchLeads();
+  }, []);
+
+  const fetchLeads = async () => {
+    try {
+      const res = await fetch(`${API}/api/leads`);
+      const data = await res.json();
+      setLeads(data.leads || []);
+      setTierCounts(data.by_tier || { HOT: 0, WARM: 0, NURTURE: 0 });
+    } catch (err) { console.error('Error fetching leads:', err); }
+    setLoading(false);
+  };
+
+  const updateLead = async (id, updates) => {
+    try {
+      await fetch(`${API}/api/leads/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates)
+      });
+      fetchLeads();
+    } catch (err) { console.error('Error updating lead:', err); }
+  };
+
+  const deleteLead = async (id) => {
+    if (!window.confirm('Delete this lead?')) return;
+    try {
+      await fetch(`${API}/api/leads/${id}`, { method: 'DELETE' });
+      fetchLeads();
+    } catch (err) { console.error('Error deleting lead:', err); }
+  };
+
+  const filtered = leads.filter(l => {
+    if (tierFilter !== 'all' && l.lead_tier !== tierFilter) return false;
+    if (statusFilter !== 'all' && l.status !== statusFilter) return false;
+    return true;
+  });
+
+  const tierColors = { HOT: '#ef4444', WARM: '#f59e0b', NURTURE: '#6b7280' };
+  const tierBgs = { HOT: 'rgba(239,68,68,0.15)', WARM: 'rgba(245,158,11,0.15)', NURTURE: 'rgba(107,114,128,0.15)' };
+
+  const formatLabel = (val) => (val || '').replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+
+  if (loading) return <div style={{textAlign:'center', padding:'60px'}}>Loading leads...</div>;
+
+  return (
+    <div>
+      <div style={{display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:'24px', flexWrap:'wrap', gap:'16px'}}>
+        <h2 style={{margin:0}}>🎯 Landing Page Leads</h2>
+        <div style={{display:'flex', gap:'8px', flexWrap:'wrap'}}>
+          <span style={{padding:'6px 16px', borderRadius:'20px', background:tierBgs.HOT, color:tierColors.HOT, fontWeight:700, fontSize:'0.85rem'}}>
+            🔥 HOT: {tierCounts.HOT}
+          </span>
+          <span style={{padding:'6px 16px', borderRadius:'20px', background:tierBgs.WARM, color:tierColors.WARM, fontWeight:700, fontSize:'0.85rem'}}>
+            🌡️ WARM: {tierCounts.WARM}
+          </span>
+          <span style={{padding:'6px 16px', borderRadius:'20px', background:tierBgs.NURTURE, color:tierColors.NURTURE, fontWeight:700, fontSize:'0.85rem'}}>
+            🌱 NURTURE: {tierCounts.NURTURE}
+          </span>
+        </div>
+      </div>
+
+      <div style={{display:'flex', gap:'12px', marginBottom:'20px', flexWrap:'wrap'}}>
+        <select value={tierFilter} onChange={e => setTierFilter(e.target.value)}
+          style={{padding:'8px 14px', borderRadius:'8px', border:'1px solid #ddd', fontSize:'0.9rem'}}>
+          <option value="all">All Tiers</option>
+          <option value="HOT">🔥 HOT</option>
+          <option value="WARM">🌡️ WARM</option>
+          <option value="NURTURE">🌱 NURTURE</option>
+        </select>
+        <select value={statusFilter} onChange={e => setStatusFilter(e.target.value)}
+          style={{padding:'8px 14px', borderRadius:'8px', border:'1px solid #ddd', fontSize:'0.9rem'}}>
+          <option value="all">All Statuses</option>
+          <option value="new">New</option>
+          <option value="contacted">Contacted</option>
+          <option value="demo_scheduled">Demo Scheduled</option>
+          <option value="converted">Converted</option>
+          <option value="disqualified">Disqualified</option>
+        </select>
+        <span style={{padding:'8px 0', color:'#888', fontSize:'0.9rem'}}>{filtered.length} lead{filtered.length !== 1 ? 's' : ''}</span>
+      </div>
+
+      {filtered.length === 0 ? (
+        <div style={{textAlign:'center', padding:'60px 20px', background:'#f8f9fa', borderRadius:'12px'}}>
+          <p style={{fontSize:'1.2rem', fontWeight:600, marginBottom:'8px'}}>No leads yet</p>
+          <p style={{color:'#888'}}>Leads from your landing page qualification form will appear here.</p>
+        </div>
+      ) : (
+        <div style={{display:'flex', flexDirection:'column', gap:'12px'}}>
+          {filtered.map(lead => (
+            <div key={lead.id} style={{background:'#fff', border:'1px solid #e5e7eb', borderRadius:'12px', padding:'20px', borderLeft:`4px solid ${tierColors[lead.lead_tier] || '#6b7280'}`}}>
+              <div style={{display:'flex', justifyContent:'space-between', alignItems:'flex-start', flexWrap:'wrap', gap:'12px'}}>
+                <div style={{flex:1, minWidth:'250px'}}>
+                  <div style={{display:'flex', alignItems:'center', gap:'10px', marginBottom:'6px', flexWrap:'wrap'}}>
+                    <strong style={{fontSize:'1.1rem'}}>{lead.full_name}</strong>
+                    <span style={{padding:'3px 10px', borderRadius:'12px', background:tierBgs[lead.lead_tier], color:tierColors[lead.lead_tier], fontWeight:700, fontSize:'0.75rem'}}>
+                      {lead.lead_tier} ({lead.lead_score})
+                    </span>
+                    <span style={{padding:'3px 10px', borderRadius:'12px', background:'rgba(124,58,237,0.1)', color:'#7c3aed', fontWeight:600, fontSize:'0.75rem'}}>
+                      {formatLabel(lead.status)}
+                    </span>
+                  </div>
+                  <div style={{color:'#666', fontSize:'0.9rem', marginBottom:'4px'}}>
+                    {lead.title && <span>{lead.title}</span>}
+                    {lead.title && lead.company && <span> at </span>}
+                    {lead.company && <strong>{lead.company}</strong>}
+                  </div>
+                  <div style={{color:'#888', fontSize:'0.85rem'}}>
+                    {lead.email}
+                    {lead.phone && <span> · {lead.phone}</span>}
+                    {lead.website && <span> · <a href={lead.website} target="_blank" rel="noreferrer" style={{color:'#7c3aed'}}>{lead.website}</a></span>}
+                  </div>
+                </div>
+                <div style={{display:'flex', gap:'6px', flexWrap:'wrap', alignItems:'center'}}>
+                  <select value={lead.status} onChange={e => updateLead(lead.id, { status: e.target.value })}
+                    style={{padding:'6px 10px', borderRadius:'6px', border:'1px solid #ddd', fontSize:'0.8rem', cursor:'pointer'}}>
+                    <option value="new">New</option>
+                    <option value="contacted">Contacted</option>
+                    <option value="demo_scheduled">Demo Scheduled</option>
+                    <option value="converted">Converted</option>
+                    <option value="disqualified">Disqualified</option>
+                  </select>
+                  <button onClick={() => deleteLead(lead.id)}
+                    style={{padding:'6px 10px', borderRadius:'6px', border:'1px solid #fca5a5', background:'#fef2f2', color:'#ef4444', cursor:'pointer', fontSize:'0.8rem'}}>
+                    ✕
+                  </button>
+                </div>
+              </div>
+
+              <div style={{display:'grid', gridTemplateColumns:'repeat(auto-fit, minmax(180px, 1fr))', gap:'8px', marginTop:'12px', padding:'12px', background:'#f9fafb', borderRadius:'8px', fontSize:'0.82rem', color:'#555'}}>
+                {lead.industry && <div><strong>Industry:</strong> {formatLabel(lead.industry)}</div>}
+                {lead.company_stage && <div><strong>Stage:</strong> {formatLabel(lead.company_stage)}</div>}
+                {lead.company_size && <div><strong>Size:</strong> {formatLabel(lead.company_size)}</div>}
+                {lead.open_roles && <div><strong>Open Roles:</strong> {formatLabel(lead.open_roles)}</div>}
+                {lead.timeline && <div><strong>Timeline:</strong> {formatLabel(lead.timeline)}</div>}
+                {lead.hardest_roles && <div><strong>Hardest Roles:</strong> {formatLabel(lead.hardest_roles)}</div>}
+                {lead.current_ats && <div><strong>Current ATS:</strong> {formatLabel(lead.current_ats)}</div>}
+                {lead.pain_point && <div><strong>Pain Point:</strong> {formatLabel(lead.pain_point)}</div>}
+                {lead.budget && <div><strong>Budget:</strong> {formatLabel(lead.budget)}</div>}
+                {lead.interest_level && <div><strong>Interest:</strong> {formatLabel(lead.interest_level)}</div>}
+                {lead.interested_tier && <div><strong>Interested Tier:</strong> {formatLabel(lead.interested_tier)}</div>}
+                {lead.seats_needed && <div><strong>Seats:</strong> {formatLabel(lead.seats_needed)}</div>}
+                {lead.source && <div><strong>Source:</strong> {formatLabel(lead.source)}</div>}
+              </div>
+
+              {lead.notes && (
+                <div style={{marginTop:'8px', padding:'10px 12px', background:'#fefce8', borderRadius:'8px', fontSize:'0.85rem', color:'#854d0e'}}>
+                  <strong>Notes:</strong> {lead.notes}
+                </div>
+              )}
+
+              <div style={{marginTop:'8px', fontSize:'0.78rem', color:'#aaa'}}>
+                Submitted: {new Date(lead.created_at).toLocaleString()}
+              </div>
+            </div>
+          ))}
+        </div>
       )}
     </div>
   );
