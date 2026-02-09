@@ -2504,6 +2504,7 @@ def export_candidates():
                 last_name=full_name.split()[-1] if ' ' in full_name and len(full_name.split()) > 1 else '',
                 email=email,
                 github_url=profile_url if source == 'GitHub' else None,
+                portfolio_url=profile_url,
                 location=candidate_data.get('location') or candidate_data.get('affiliation'),
                 company=candidate_data.get('company') or candidate_data.get('affiliation'),
                 bio=candidate_data.get('bio'),
@@ -2515,12 +2516,18 @@ def export_candidates():
                 notes=' | '.join(bio_parts)
             )
 
-            # Add academic IDs when available
+            # Add academic source links and metrics
             if source == 'Semantic Scholar':
                 candidate_kwargs['semantic_scholar_id'] = candidate_data.get('author_id')
+                candidate_kwargs['google_scholar_url'] = profile_url
                 candidate_kwargs['s2_h_index'] = candidate_data.get('h_index', 0)
                 candidate_kwargs['s2_citation_count'] = candidate_data.get('citation_count', 0)
                 candidate_kwargs['s2_paper_count'] = candidate_data.get('paper_count', 0)
+                candidate_kwargs['h_index'] = candidate_data.get('h_index', 0)
+                candidate_kwargs['citation_count'] = candidate_data.get('citation_count', 0)
+            elif source == 'arXiv':
+                candidate_kwargs['arxiv_author_id'] = candidate_data.get('name', '')
+                candidate_kwargs['google_scholar_url'] = profile_url
 
             candidate = Candidate(**candidate_kwargs)
 
