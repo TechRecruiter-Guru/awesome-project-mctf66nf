@@ -5,6 +5,8 @@ from datetime import datetime
 import os
 import requests
 import re
+import hmac
+import hashlib
 
 app = Flask(__name__)
 CORS(app)
@@ -368,6 +370,68 @@ class SavedSearch(db.Model):
             'github_results_count': self.github_results_count,
             'created_at': self.created_at.isoformat(),
             'last_executed': self.last_executed.isoformat()
+        }
+
+
+class BiasAlert(db.Model):
+    """Bias alerts from agent platform analysis"""
+    id = db.Column(db.Integer, primary_key=True)
+    alert_type = db.Column(db.String(100), nullable=False)  # gender_bias, ethnicity_bias, age_bias, etc.
+    severity = db.Column(db.String(50), nullable=False, default='medium')  # low, medium, high, critical
+    source_agent = db.Column(db.String(200))  # Which agent flagged this
+    candidate_id = db.Column(db.Integer, db.ForeignKey('candidate.id'), nullable=True)
+    job_id = db.Column(db.Integer, db.ForeignKey('job.id'), nullable=True)
+    description = db.Column(db.Text, nullable=False)
+    recommendation = db.Column(db.Text)
+    raw_payload = db.Column(db.Text)  # JSON string of full agent payload
+    status = db.Column(db.String(50), default='open')  # open, acknowledged, resolved, dismissed
+    resolved_by = db.Column(db.String(200))
+    resolved_at = db.Column(db.DateTime)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'alert_type': self.alert_type,
+            'severity': self.severity,
+            'source_agent': self.source_agent,
+            'candidate_id': self.candidate_id,
+            'job_id': self.job_id,
+            'description': self.description,
+            'recommendation': self.recommendation,
+            'status': self.status,
+            'resolved_by': self.resolved_by,
+            'resolved_at': self.resolved_at.isoformat() if self.resolved_at else None,
+            'created_at': self.created_at.isoformat()
+        }
+
+
+class AgentAuditLog(db.Model):
+    """Audit log for all agent platform interactions"""
+    id = db.Column(db.Integer, primary_key=True)
+    agent_name = db.Column(db.String(200), nullable=False)
+    action = db.Column(db.String(200), nullable=False)  # search, score, screen, bias_check, etc.
+    entity_type = db.Column(db.String(100))  # candidate, job, application
+    entity_id = db.Column(db.Integer)
+    input_summary = db.Column(db.Text)  # Brief summary of what was sent to the agent
+    output_summary = db.Column(db.Text)  # Brief summary of agent response
+    raw_payload = db.Column(db.Text)  # Full JSON payload
+    status = db.Column(db.String(50), default='success')  # success, error, timeout
+    duration_ms = db.Column(db.Integer)  # How long the agent took
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'agent_name': self.agent_name,
+            'action': self.action,
+            'entity_type': self.entity_type,
+            'entity_id': self.entity_id,
+            'input_summary': self.input_summary,
+            'output_summary': self.output_summary,
+            'status': self.status,
+            'duration_ms': self.duration_ms,
+            'created_at': self.created_at.isoformat()
         }
 
 
@@ -1956,6 +2020,191 @@ def get_stats():
         "recent_applications_7d": recent_applications,
         "recent_candidates_7d": recent_candidates,
         "top_expertise_areas": expertise_counts
+    })
+
+
+# ==================== AGENT PLATFORM WEBHOOKS ====================
+
+def verify_webhook_signature(payload_body, signature):
+    """Verify HMAC-SHA256 webhook signature from agent platform"""
+    secret = os.environ.get('AGENT_WEBHOOK_SECRET', '')
+    if not secret:
+        return True  # Skip verification if no secret configured (dev mode)
+    if not signature:
+        return False
+    expected = hmac.new(secret.encode(), payload_body, hashlib.sha256).hexdigest()
+    return hmac.compare_digest(f'sha256={expected}', signature)
+
+
+@app.route('/webhooks/agent-results', methods=['POST'])
+def webhook_agent_results():
+    """Receive and log results from agent platform runs"""
+    if not verify_webhook_signature(request.get_data(), request.headers.get('X-Webhook-Signature')):
+        return jsonify({"error": "Invalid signature"}), 401
+
+    data = request.get_json()
+    if not data:
+        return jsonify({"error": "Payload is required"}), 400
+
+    import json
+
+    agent_name = data.get('agent_name', 'unknown')
+    action = data.get('action', 'unknown')
+
+    # Log to audit trail
+    audit = AgentAuditLog(
+        agent_name=agent_name,
+        action=action,
+        entity_type=data.get('entity_type'),
+        entity_id=data.get('entity_id'),
+        input_summary=data.get('input_summary', ''),
+        output_summary=data.get('output_summary', ''),
+        raw_payload=json.dumps(data),
+        status=data.get('status', 'success'),
+        duration_ms=data.get('duration_ms')
+    )
+    db.session.add(audit)
+
+    # If results include candidate scoring, update the candidate
+    if action == 'score' and data.get('entity_type') == 'candidate' and data.get('entity_id'):
+        candidate = Candidate.query.get(data['entity_id'])
+        if candidate and data.get('score'):
+            candidate.rating = min(5, max(1, int(data['score'])))
+            if data.get('output_summary'):
+                existing_notes = candidate.notes or ''
+                candidate.notes = f"{existing_notes} | Agent ({agent_name}): {data['output_summary']}"
+
+    db.session.commit()
+
+    return jsonify({
+        "status": "received",
+        "audit_id": audit.id,
+        "agent": agent_name,
+        "action": action
+    }), 201
+
+
+@app.route('/webhooks/bias-alert', methods=['POST'])
+def webhook_bias_alert():
+    """Receive bias alerts from agent platform analysis"""
+    if not verify_webhook_signature(request.get_data(), request.headers.get('X-Webhook-Signature')):
+        return jsonify({"error": "Invalid signature"}), 401
+
+    data = request.get_json()
+    if not data or 'alert_type' not in data or 'description' not in data:
+        return jsonify({"error": "alert_type and description are required"}), 400
+
+    import json
+
+    alert = BiasAlert(
+        alert_type=data['alert_type'],
+        severity=data.get('severity', 'medium'),
+        source_agent=data.get('source_agent', 'unknown'),
+        candidate_id=data.get('candidate_id'),
+        job_id=data.get('job_id'),
+        description=data['description'],
+        recommendation=data.get('recommendation'),
+        raw_payload=json.dumps(data)
+    )
+    db.session.add(alert)
+
+    # Also log to audit trail
+    audit = AgentAuditLog(
+        agent_name=data.get('source_agent', 'unknown'),
+        action='bias_check',
+        entity_type='candidate' if data.get('candidate_id') else 'job',
+        entity_id=data.get('candidate_id') or data.get('job_id'),
+        input_summary=f"Bias alert: {data['alert_type']}",
+        output_summary=data['description'][:500],
+        raw_payload=json.dumps(data),
+        status='success'
+    )
+    db.session.add(audit)
+    db.session.commit()
+
+    return jsonify({
+        "status": "alert_created",
+        "alert_id": alert.id,
+        "severity": alert.severity
+    }), 201
+
+
+@app.route('/api/bias-alerts', methods=['GET'])
+def get_bias_alerts():
+    """Get all bias alerts, optionally filtered by status or severity"""
+    status_filter = request.args.get('status')
+    severity_filter = request.args.get('severity')
+
+    query = BiasAlert.query
+
+    if status_filter:
+        query = query.filter_by(status=status_filter)
+    if severity_filter:
+        query = query.filter_by(severity=severity_filter)
+
+    alerts = query.order_by(BiasAlert.created_at.desc()).all()
+    return jsonify([alert.to_dict() for alert in alerts])
+
+
+@app.route('/api/bias-alerts/<int:alert_id>', methods=['PATCH'])
+def update_bias_alert(alert_id):
+    """Update a bias alert status (acknowledge, resolve, dismiss)"""
+    alert = BiasAlert.query.get_or_404(alert_id)
+    data = request.get_json()
+
+    if data.get('status'):
+        alert.status = data['status']
+    if data.get('resolved_by'):
+        alert.resolved_by = data['resolved_by']
+    if data.get('status') in ('resolved', 'dismissed'):
+        alert.resolved_at = datetime.utcnow()
+
+    db.session.commit()
+    return jsonify(alert.to_dict())
+
+
+@app.route('/api/audit-log', methods=['GET'])
+def get_audit_log():
+    """Get agent audit log entries with optional filters"""
+    agent_filter = request.args.get('agent_name')
+    action_filter = request.args.get('action')
+    limit = request.args.get('limit', 50, type=int)
+
+    query = AgentAuditLog.query
+
+    if agent_filter:
+        query = query.filter_by(agent_name=agent_filter)
+    if action_filter:
+        query = query.filter_by(action=action_filter)
+
+    entries = query.order_by(AgentAuditLog.created_at.desc()).limit(limit).all()
+    return jsonify([entry.to_dict() for entry in entries])
+
+
+@app.route('/api/agent-config', methods=['GET'])
+def get_agent_config():
+    """Return current agent platform configuration and status"""
+    webhook_secret_set = bool(os.environ.get('AGENT_WEBHOOK_SECRET'))
+
+    # Count recent agent activity
+    from datetime import timedelta
+    day_ago = datetime.utcnow() - timedelta(days=1)
+    recent_events = AgentAuditLog.query.filter(AgentAuditLog.created_at >= day_ago).count()
+    open_alerts = BiasAlert.query.filter_by(status='open').count()
+
+    return jsonify({
+        "webhook_secret_configured": webhook_secret_set,
+        "endpoints": {
+            "agent_results": "/webhooks/agent-results",
+            "bias_alert": "/webhooks/bias-alert",
+            "bias_alerts_list": "/api/bias-alerts",
+            "audit_log": "/api/audit-log",
+            "agent_config": "/api/agent-config"
+        },
+        "stats": {
+            "events_last_24h": recent_events,
+            "open_bias_alerts": open_alerts
+        }
     })
 
 
