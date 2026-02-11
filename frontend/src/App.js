@@ -1011,10 +1011,21 @@ function App() {
   const [apiStatus, setApiStatus] = useState('checking...');
   const [showCandidateForm, setShowCandidateForm] = useState(false);
   const [showJobForm, setShowJobForm] = useState(false);
+  const [pendingReviewCount, setPendingReviewCount] = useState(0);
+
+  const fetchPendingReviewCount = async () => {
+    try {
+      const response = await axios.get(`${API_URL}/api/applications?status=reviewing`);
+      setPendingReviewCount((response.data.applications || []).length);
+    } catch (err) {
+      // Ignore errors
+    }
+  };
 
   useEffect(() => {
     checkApiHealth();
     fetchStats();
+    fetchPendingReviewCount();
     if (activeTab === 'candidates') {
       fetchCandidates();
     } else if (activeTab === 'jobs') {
@@ -1132,6 +1143,21 @@ function App() {
           Intelligence
         </button>
         <button
+          className={activeTab === 'pending-review' ? 'tab active' : 'tab'}
+          onClick={() => setActiveTab('pending-review')}
+          style={activeTab === 'pending-review' ? { background: 'linear-gradient(135deg, #dc2626, #ea580c)', color: 'white' } : {}}
+        >
+          Pending Review
+          {pendingReviewCount > 0 && (
+            <span style={{
+              marginLeft: '6px', background: activeTab === 'pending-review' ? 'rgba(255,255,255,0.3)' : '#dc2626',
+              color: 'white', padding: '1px 8px', borderRadius: '10px', fontSize: '12px', fontWeight: '700'
+            }}>
+              {pendingReviewCount}
+            </span>
+          )}
+        </button>
+        <button
           className={activeTab === 'analytics' ? 'tab active' : 'tab'}
           onClick={() => setActiveTab('analytics')}
         >
@@ -1177,7 +1203,7 @@ function App() {
       </nav>
 
       <main className="main-content">
-        {activeTab === 'dashboard' && <DashboardView stats={stats} />}
+        {activeTab === 'dashboard' && <DashboardView stats={stats} pendingReviewCount={pendingReviewCount} onGoToPendingReview={() => setActiveTab('pending-review')} />}
         {activeTab === 'candidates' && (
           <CandidatesView
             candidates={candidates}
@@ -1200,6 +1226,9 @@ function App() {
         )}
         {activeTab === 'applications' && <ApplicationsView />}
         {activeTab === 'intelligence' && <IntelligenceSubmissionsView />}
+        {activeTab === 'pending-review' && (
+          <PendingReviewView onRefreshStats={() => { fetchStats(); fetchPendingReviewCount(); }} />
+        )}
         {activeTab === 'analytics' && <AnalyticsView />}
         {activeTab === 'campaigns' && <CampaignsView />}
         {activeTab === 'interviews' && <InterviewsView />}
@@ -2374,8 +2403,359 @@ function ApplicationsView() {
   );
 }
 
+// ==================== PENDING REVIEW VIEW ====================
+
+function PendingReviewView({ onRefreshStats }) {
+  const [pendingReview, setPendingReview] = useState([]);
+  const [selectedCandidate, setSelectedCandidate] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [actionLoading, setActionLoading] = useState(null);
+
+  const fetchPendingReview = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.get(`${API_URL}/api/applications?status=reviewing`);
+      setPendingReview(response.data.applications || []);
+    } catch (err) {
+      console.error('Error fetching pending reviews:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchPendingReview();
+  }, []);
+
+  const handleAdvance = async (applicationId) => {
+    setActionLoading(applicationId);
+    try {
+      await axios.put(`${API_URL}/api/applications/${applicationId}`, {
+        status: 'interview',
+        stage: 'interview_scheduled'
+      });
+      setSelectedCandidate(null);
+      fetchPendingReview();
+      if (onRefreshStats) onRefreshStats();
+    } catch (err) {
+      console.error('Error advancing candidate:', err);
+      alert('Failed to advance candidate.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  const handleReject = async (applicationId) => {
+    if (!window.confirm('Are you sure you want to reject this candidate?')) return;
+    setActionLoading(applicationId);
+    try {
+      await axios.put(`${API_URL}/api/applications/${applicationId}`, {
+        status: 'rejected'
+      });
+      setSelectedCandidate(null);
+      fetchPendingReview();
+      if (onRefreshStats) onRefreshStats();
+    } catch (err) {
+      console.error('Error rejecting candidate:', err);
+      alert('Failed to reject candidate.');
+    } finally {
+      setActionLoading(null);
+    }
+  };
+
+  if (selectedCandidate) {
+    return (
+      <CandidateDetailView
+        application={selectedCandidate}
+        onBack={() => setSelectedCandidate(null)}
+        onAdvance={handleAdvance}
+        onReject={handleReject}
+        actionLoading={actionLoading}
+      />
+    );
+  }
+
+  return (
+    <div style={{ padding: '0' }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '24px' }}>
+        <div>
+          <h2 style={{ margin: '0 0 4px' }}>Pending Human Review</h2>
+          <p style={{ margin: 0, color: '#6b7280', fontSize: '14px' }}>
+            Candidates recommended by AI agent for your review
+          </p>
+        </div>
+        <button
+          onClick={fetchPendingReview}
+          style={{ padding: '8px 16px', background: '#3b82f6', color: 'white', border: 'none', borderRadius: '8px', cursor: 'pointer', fontWeight: '600' }}
+        >
+          Refresh
+        </button>
+      </div>
+
+      {loading ? (
+        <div style={{ textAlign: 'center', padding: '48px', color: '#6b7280' }}>Loading pending reviews...</div>
+      ) : pendingReview.length === 0 ? (
+        <div style={{ textAlign: 'center', padding: '48px', background: '#f0fdf4', borderRadius: '12px', border: '1px solid #bbf7d0' }}>
+          <div style={{ fontSize: '48px', marginBottom: '12px' }}>✅</div>
+          <h3 style={{ color: '#15803d', margin: '0 0 8px' }}>All Caught Up!</h3>
+          <p style={{ color: '#6b7280', margin: 0 }}>No candidates pending review right now.</p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+          {pendingReview.map(app => (
+            <div
+              key={app.id}
+              onClick={() => setSelectedCandidate(app)}
+              style={{
+                background: 'white', borderRadius: '12px', padding: '20px', border: '1px solid #e5e7eb',
+                cursor: 'pointer', transition: 'all 0.2s', boxShadow: '0 1px 3px rgba(0,0,0,0.05)'
+              }}
+              onMouseOver={e => { e.currentTarget.style.borderColor = '#3b82f6'; e.currentTarget.style.boxShadow = '0 4px 12px rgba(59,130,246,0.15)'; }}
+              onMouseOut={e => { e.currentTarget.style.borderColor = '#e5e7eb'; e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.05)'; }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                <div style={{ flex: 1 }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '8px' }}>
+                    <h3 style={{ margin: 0, fontSize: '18px', color: '#1f2937' }}>
+                      {app.candidate_name || 'Unknown Candidate'}
+                    </h3>
+                    {app.overall_score && (
+                      <span style={{
+                        background: app.overall_score >= 80 ? '#dcfce7' : app.overall_score >= 60 ? '#fef9c3' : '#fee2e2',
+                        color: app.overall_score >= 80 ? '#15803d' : app.overall_score >= 60 ? '#a16207' : '#dc2626',
+                        padding: '2px 10px', borderRadius: '12px', fontSize: '13px', fontWeight: '700'
+                      }}>
+                        Score: {app.overall_score}
+                      </span>
+                    )}
+                  </div>
+                  <div style={{ display: 'flex', gap: '16px', fontSize: '14px', color: '#6b7280', flexWrap: 'wrap' }}>
+                    {app.job_title && <span>Position: <strong>{app.job_title}</strong></span>}
+                    {app.source && <span>Source: {app.source}</span>}
+                    {app.applied_date && <span>Applied: {new Date(app.applied_date).toLocaleDateString()}</span>}
+                  </div>
+                  {app.candidate?.primary_expertise && (
+                    <div style={{ marginTop: '8px', fontSize: '13px', color: '#6b7280' }}>
+                      Expertise: <span style={{ color: '#4b5563', fontWeight: '500' }}>{app.candidate.primary_expertise}</span>
+                    </div>
+                  )}
+                </div>
+                <div style={{ color: '#3b82f6', fontSize: '20px', fontWeight: '700' }}>→</div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+
+function CandidateDetailView({ application, onBack, onAdvance, onReject, actionLoading }) {
+  const candidate = application.candidate || {};
+  const profileUrl = candidate.portfolio_url || candidate.github_url || candidate.google_scholar_url;
+
+  return (
+    <div style={{ padding: '0' }}>
+      <button
+        onClick={onBack}
+        style={{ marginBottom: '20px', background: 'none', border: 'none', color: '#3b82f6', cursor: 'pointer', fontSize: '15px', fontWeight: '600', padding: 0 }}
+      >
+        ← Back to Pending Review
+      </button>
+
+      <div style={{ background: 'white', borderRadius: '16px', border: '1px solid #e5e7eb', overflow: 'hidden' }}>
+        {/* Header */}
+        <div style={{ background: 'linear-gradient(135deg, #1e40af, #7c3aed)', padding: '32px', color: 'white' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+            <div>
+              <h2 style={{ margin: '0 0 4px', fontSize: '28px' }}>
+                {candidate.full_name || application.candidate_name || 'Unknown'}
+              </h2>
+              {candidate.primary_expertise && (
+                <p style={{ margin: '0 0 8px', opacity: 0.9, fontSize: '16px' }}>{candidate.primary_expertise}</p>
+              )}
+              <div style={{ display: 'flex', gap: '16px', fontSize: '14px', opacity: 0.8, flexWrap: 'wrap' }}>
+                {candidate.location && <span>📍 {candidate.location}</span>}
+                {candidate.company && <span>🏢 {candidate.company}</span>}
+                {candidate.email && <span>📧 {candidate.email}</span>}
+              </div>
+            </div>
+            {application.overall_score && (
+              <div style={{ textAlign: 'center', background: 'rgba(255,255,255,0.2)', padding: '12px 20px', borderRadius: '12px' }}>
+                <div style={{ fontSize: '32px', fontWeight: '800' }}>{application.overall_score}</div>
+                <div style={{ fontSize: '12px', opacity: 0.9 }}>AI Score</div>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Profile Links */}
+        {profileUrl && (
+          <div style={{ padding: '16px 32px', background: '#f9fafb', borderBottom: '1px solid #e5e7eb', display: 'flex', gap: '12px', flexWrap: 'wrap' }}>
+            {candidate.github_url && (
+              <a href={candidate.github_url} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#24292e', color: 'white', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+                💻 GitHub
+              </a>
+            )}
+            {candidate.google_scholar_url && (
+              <a href={candidate.google_scholar_url} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#4338ca', color: 'white', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+                📚 Scholar Profile
+              </a>
+            )}
+            {candidate.portfolio_url && candidate.portfolio_url !== candidate.github_url && candidate.portfolio_url !== candidate.google_scholar_url && (
+              <a href={candidate.portfolio_url} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#0369a1', color: 'white', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+                🔗 Portfolio
+              </a>
+            )}
+            {candidate.linkedin_url && (
+              <a href={candidate.linkedin_url} target="_blank" rel="noopener noreferrer"
+                style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', padding: '6px 14px', background: '#0a66c2', color: 'white', borderRadius: '8px', textDecoration: 'none', fontSize: '13px', fontWeight: '600' }}>
+                💼 LinkedIn
+              </a>
+            )}
+          </div>
+        )}
+
+        {/* Body */}
+        <div style={{ padding: '32px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', marginBottom: '24px' }}>
+            {/* Scores */}
+            <div style={{ background: '#f9fafb', borderRadius: '12px', padding: '20px' }}>
+              <h4 style={{ margin: '0 0 16px', color: '#374151' }}>Scores</h4>
+              <div style={{ display: 'grid', gap: '8px' }}>
+                {application.technical_score != null && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Technical</span>
+                    <strong>{application.technical_score}</strong>
+                  </div>
+                )}
+                {application.research_score != null && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Research</span>
+                    <strong>{application.research_score}</strong>
+                  </div>
+                )}
+                {application.culture_fit_score != null && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Culture Fit</span>
+                    <strong>{application.culture_fit_score}</strong>
+                  </div>
+                )}
+                {candidate.h_index != null && candidate.h_index > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>h-index</span>
+                    <strong>{candidate.h_index}</strong>
+                  </div>
+                )}
+                {candidate.citation_count != null && candidate.citation_count > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Citations</span>
+                    <strong>{candidate.citation_count?.toLocaleString()}</strong>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Details */}
+            <div style={{ background: '#f9fafb', borderRadius: '12px', padding: '20px' }}>
+              <h4 style={{ margin: '0 0 16px', color: '#374151' }}>Details</h4>
+              <div style={{ display: 'grid', gap: '8px' }}>
+                {application.job_title && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Position</span>
+                    <strong>{application.job_title}</strong>
+                  </div>
+                )}
+                {application.source && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Source</span>
+                    <strong>{application.source}</strong>
+                  </div>
+                )}
+                {candidate.github_repos > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Repos</span>
+                    <strong>{candidate.github_repos}</strong>
+                  </div>
+                )}
+                {candidate.github_followers > 0 && (
+                  <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                    <span style={{ color: '#6b7280' }}>Followers</span>
+                    <strong>{candidate.github_followers}</strong>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Skills */}
+          {candidate.skills && (
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ margin: '0 0 12px', color: '#374151' }}>Skills</h4>
+              <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
+                {candidate.skills.split(',').map((skill, i) => (
+                  <span key={i} style={{ background: '#dbeafe', color: '#1e40af', padding: '4px 12px', borderRadius: '16px', fontSize: '13px', fontWeight: '500' }}>
+                    {skill.trim()}
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Bio / Notes */}
+          {(candidate.bio || candidate.notes) && (
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ margin: '0 0 12px', color: '#374151' }}>Notes</h4>
+              {candidate.bio && <p style={{ color: '#4b5563', margin: '0 0 8px', fontStyle: 'italic' }}>{candidate.bio}</p>}
+              {candidate.notes && <p style={{ color: '#6b7280', margin: 0, fontSize: '13px' }}>{candidate.notes}</p>}
+            </div>
+          )}
+
+          {application.notes && (
+            <div style={{ marginBottom: '24px' }}>
+              <h4 style={{ margin: '0 0 12px', color: '#374151' }}>Application Notes</h4>
+              <p style={{ color: '#4b5563', margin: 0 }}>{application.notes}</p>
+            </div>
+          )}
+
+          {/* Action Buttons */}
+          <div style={{ display: 'flex', gap: '12px', marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #e5e7eb' }}>
+            <button
+              onClick={() => onAdvance(application.id)}
+              disabled={actionLoading === application.id}
+              style={{
+                flex: 1, padding: '14px', background: '#059669', color: 'white', border: 'none',
+                borderRadius: '10px', fontSize: '16px', fontWeight: '700', cursor: 'pointer',
+                opacity: actionLoading === application.id ? 0.6 : 1
+              }}
+            >
+              {actionLoading === application.id ? 'Processing...' : 'Advance to Interview'}
+            </button>
+            <button
+              onClick={() => onReject(application.id)}
+              disabled={actionLoading === application.id}
+              style={{
+                flex: 1, padding: '14px', background: '#dc2626', color: 'white', border: 'none',
+                borderRadius: '10px', fontSize: '16px', fontWeight: '700', cursor: 'pointer',
+                opacity: actionLoading === application.id ? 0.6 : 1
+              }}
+            >
+              {actionLoading === application.id ? 'Processing...' : 'Reject'}
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
 // Dashboard View
-function DashboardView({ stats }) {
+function DashboardView({ stats, pendingReviewCount, onGoToPendingReview }) {
   const [intelligenceCount, setIntelligenceCount] = useState(0);
 
   useEffect(() => {
@@ -2392,6 +2772,43 @@ function DashboardView({ stats }) {
 
   return (
     <div className="dashboard">
+      {/* Pending Review Alert Banner */}
+      {pendingReviewCount > 0 && (
+        <div
+          onClick={onGoToPendingReview}
+          style={{
+            background: 'linear-gradient(135deg, #fef2f2, #fff7ed)',
+            border: '2px solid #fca5a5',
+            borderRadius: '12px',
+            padding: '16px 24px',
+            marginBottom: '24px',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            cursor: 'pointer',
+            transition: 'all 0.2s'
+          }}
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+            <span style={{ fontSize: '28px' }}>⚠️</span>
+            <div>
+              <strong style={{ color: '#dc2626', fontSize: '16px' }}>
+                {pendingReviewCount} candidate{pendingReviewCount !== 1 ? 's' : ''} pending human review
+              </strong>
+              <p style={{ margin: '2px 0 0', color: '#92400e', fontSize: '13px' }}>
+                AI agent has recommended these candidates — click to review
+              </p>
+            </div>
+          </div>
+          <span style={{
+            background: '#dc2626', color: 'white', padding: '8px 20px', borderRadius: '8px',
+            fontWeight: '700', fontSize: '14px'
+          }}>
+            Review Now →
+          </span>
+        </div>
+      )}
+
       <h2>Dashboard Overview</h2>
       <div className="stats-grid">
         <div className="stat-card">

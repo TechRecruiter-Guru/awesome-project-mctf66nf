@@ -1857,11 +1857,24 @@ def reveal_job_company(job_id):
 
 @app.route('/api/applications', methods=['GET'])
 def get_applications():
-    """Get all applications"""
-    applications = Application.query.order_by(Application.applied_date.desc()).all()
+    """Get all applications, optionally filtered by status"""
+    status_filter = request.args.get('status')
+    query = Application.query
+    if status_filter:
+        query = query.filter_by(status=status_filter)
+    applications = query.order_by(Application.applied_date.desc()).all()
+
+    # Include candidate details for pending review views
+    enriched = []
+    for a in applications:
+        app_dict = a.to_dict()
+        if a.candidate:
+            app_dict['candidate'] = a.candidate.to_dict()
+        enriched.append(app_dict)
+
     return jsonify({
-        "applications": [a.to_dict() for a in applications],
-        "total": len(applications)
+        "applications": enriched,
+        "total": len(enriched)
     })
 
 
