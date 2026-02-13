@@ -183,6 +183,57 @@ jobs = [
     }
 ]
 
+# Reflex Robotics — added via David Schwebel connection
+reflex_robotics_jobs = [
+    {
+        "title": "Humanoid Robotics Engineer",
+        "company": "Reflex Robotics",
+        "location": "Austin, TX",
+        "job_type": "full-time",
+        "description": "Design and build humanoid robot systems. Work on full-body manipulation, locomotion, and real-time control for commercial humanoid robots.",
+        "requirements": "MS/PhD in Robotics, Mechanical Engineering, or CS. Experience with ROS, motion planning, sim-to-real transfer.",
+        "required_expertise": "Robotics",
+        "required_skills": '["ROS","motion planning","sim-to-real","control systems","humanoid","manipulation"]',
+        "education_required": "Masters",
+        "research_focus": "Humanoid Robotics",
+        "salary_min": 180000,
+        "salary_max": 300000,
+        "confidential": False
+    },
+    {
+        "title": "ML Engineer — Robot Learning",
+        "company": "Reflex Robotics",
+        "location": "Austin, TX",
+        "job_type": "full-time",
+        "description": "Develop machine learning models for robot learning, imitation learning, and reinforcement learning applied to humanoid manipulation tasks.",
+        "requirements": "Strong ML/DL background, experience with PyTorch, familiarity with robot learning or embodied AI. Publications preferred.",
+        "required_expertise": "Machine Learning",
+        "required_skills": '["PyTorch","reinforcement learning","imitation learning","robot learning","embodied AI"]',
+        "education_required": "Masters",
+        "research_focus": "Robot Learning",
+        "salary_min": 200000,
+        "salary_max": 350000,
+        "confidential": False
+    }
+]
+
+# Leads from LinkedIn connections
+linkedin_leads = [
+    {
+        "full_name": "David Schwebel",
+        "email": "david.schwebel@reflexrobotics.com",
+        "title": "Chief Revenue Officer (CRO)",
+        "company": "Reflex Robotics",
+        "industry": "robotics",
+        "company_stage": "growth",
+        "interest_level": "high",
+        "source": "linkedin_connection",
+        "notes": "1st degree LinkedIn connection. CRO at Reflex Robotics, also Executive Director of Solutions Community with MHI. Strong Physical AI contact — potential client for PAIP ATS.",
+        "hardest_roles": "robotics_engineers",
+        "timeline": "active"
+    }
+]
+
 # Sample Publications
 publications = [
     {
@@ -261,6 +312,33 @@ def populate_database():
             print(f"  ❌ Error adding {job['title']}: {str(e)}")
 
     print(f"\n📊 Added {len(job_ids)} jobs\n")
+
+    # Add Reflex Robotics jobs
+    print("🤖 Adding Reflex Robotics jobs (from David Schwebel connection)...")
+    for job in reflex_robotics_jobs:
+        try:
+            response = requests.post(f"{API_URL}/api/jobs", json=job)
+            if response.status_code == 201:
+                data = response.json()
+                job_ids.append(data['id'])
+                print(f"  ✅ Added: {job['title']} at {job['company']} (ID: {data['id']})")
+            else:
+                print(f"  ❌ Failed to add {job['title']}: {response.text}")
+        except Exception as e:
+            print(f"  ❌ Error adding {job['title']}: {str(e)}")
+
+    # Add LinkedIn leads
+    print("\n🎯 Adding LinkedIn leads...")
+    for lead in linkedin_leads:
+        try:
+            response = requests.post(f"{API_URL}/api/leads", json=lead)
+            if response.status_code == 201:
+                data = response.json()
+                print(f"  ✅ Added lead: {lead['full_name']} ({lead['company']}) — Tier: {data.get('lead_tier', 'N/A')}")
+            else:
+                print(f"  ❌ Failed to add lead {lead['full_name']}: {response.text}")
+        except Exception as e:
+            print(f"  ❌ Error adding lead {lead['full_name']}: {str(e)}")
 
     # Add publications
     print("📄 Adding publications...")
