@@ -408,44 +408,149 @@ def root():
             white-space: pre-wrap;
         }
         .pricing {
-            background: white;
-            padding: 60px 20px;
+            background: #f4f6fb;
+            padding: 80px 20px;
+        }
+        .pricing-header-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            font-size: 0.8em;
+            font-weight: 700;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            padding: 6px 18px;
+            border-radius: 20px;
+            margin-bottom: 18px;
         }
         .pricing-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-            margin-top: 40px;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 28px;
+            margin-top: 48px;
+            align-items: start;
         }
         .pricing-card {
-            border: 2px solid #e9ecef;
-            border-radius: 10px;
-            padding: 40px 30px;
-            text-align: center;
-            transition: transform 0.3s, box-shadow 0.3s;
+            background: white;
+            border: 1.5px solid #e4e8f0;
+            border-radius: 18px;
+            padding: 40px 32px 36px;
+            text-align: left;
+            transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+            position: relative;
+            overflow: hidden;
+        }
+        .pricing-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: #e4e8f0;
+            border-radius: 18px 18px 0 0;
         }
         .pricing-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            transform: translateY(-6px);
+            box-shadow: 0 20px 50px rgba(102,126,234,0.13);
+            border-color: #b8c4f8;
         }
         .pricing-card.featured {
             border-color: #667eea;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 0 12px 40px rgba(102,126,234,0.18);
+        }
+        .pricing-card.featured::before {
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+        .pricing-card.featured:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 24px 60px rgba(102,126,234,0.25);
+        }
+        .featured-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             color: white;
-            transform: scale(1.05);
+            font-size: 0.72em;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 12px;
+        }
+        .plan-name {
+            font-size: 1.15em;
+            font-weight: 700;
+            color: #1a1d2e;
+            margin-bottom: 6px;
+            letter-spacing: -0.01em;
+        }
+        .plan-tagline {
+            font-size: 0.88em;
+            color: #7a829a;
+            margin-bottom: 22px;
+            line-height: 1.5;
         }
         .price {
-            font-size: 3em;
-            font-weight: 700;
-            margin: 20px 0;
+            font-size: 2.8em;
+            font-weight: 800;
+            color: #1a1d2e;
+            letter-spacing: -0.03em;
+            line-height: 1;
+            margin-bottom: 4px;
+        }
+        .price-note {
+            font-size: 0.82em;
+            color: #9aa0b4;
+            margin-bottom: 24px;
+        }
+        .price-divider {
+            border: none;
+            border-top: 1.5px solid #f0f2f8;
+            margin: 22px 0;
         }
         .features {
             list-style: none;
-            margin: 30px 0;
+            margin: 0 0 28px;
+            padding: 0;
         }
         .features li {
-            padding: 10px 0;
-            border-bottom: 1px solid rgba(0,0,0,0.1);
+            padding: 9px 0;
+            border-bottom: 1px solid #f4f6fb;
+            font-size: 0.92em;
+            color: #3d4460;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            line-height: 1.45;
+        }
+        .features li:last-child {
+            border-bottom: none;
+        }
+        .features li::before {
+            content: '✓';
+            color: #667eea;
+            font-weight: 800;
+            font-size: 0.95em;
+            flex-shrink: 0;
+            margin-top: 1px;
+        }
+        .pricing-card.featured .features li::before {
+            color: #667eea;
+        }
+        .delivery-tag {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: #f0f4ff;
+            color: #667eea;
+            font-size: 0.8em;
+            font-weight: 600;
+            padding: 5px 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .delivery-tag.urgent {
+            background: #fff3f3;
+            color: #e74c3c;
         }
         .stats {
             background: #667eea;
@@ -773,146 +878,144 @@ def root():
 
     <div class="pricing" id="pricing">
         <div class="container">
-            <h2>💰 Pricing: AI Hiring Audit Trail Recovery</h2>
-            <p style="text-align: center; margin-bottom: 20px;">
-                One-time fee. Complete documentation package. Delivered in 2 weeks.
+            <div style="text-align: center; margin-bottom: 10px;">
+                <span class="pricing-header-badge">Consulting Services</span>
+            </div>
+            <h2 style="font-size: 2.2em; letter-spacing: -0.02em; color: #1a1d2e; margin-bottom: 12px;">AI Hiring Audit Trail Recovery</h2>
+            <p style="text-align: center; color: #7a829a; font-size: 1.05em; max-width: 540px; margin: 0 auto 8px;">
+                One-time fee. Complete documentation package. No retainer. No surprises.
+            </p>
+            <p style="text-align: center; color: #667eea; font-size: 0.9em; font-weight: 600; margin-bottom: 0;">
+                ✅ Clients accepted on a rolling basis — limited availability
             </p>
 
             <div class="pricing-grid">
+
+                <!-- BASIC -->
                 <div class="pricing-card">
-                    <h3>Basic Recovery</h3>
+                    <div class="plan-name">Basic Recovery</div>
+                    <div class="plan-tagline">Single AI screening tool · 1–2 compliance gaps</div>
                     <div class="price">$2,500</div>
-                    <p>Perfect for single AI screening tool (HireVue, MyInterview, etc.)</p>
-
-                    <!-- VALUE BREAKDOWN -->
-                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
-                        <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Recover missing audit trails</strong><br>
-                            <span style="font-size: 0.85em; color: #666;">
-                                Complete documentation package<br>
-                                Defensible in EEOC investigations<br>
-                                Delivered in 2 weeks
-                            </span>
-                        </p>
-                    </div>
-
+                    <div class="price-note">One-time · Delivered in 2 weeks</div>
+                    <div class="delivery-tag">📅 2-week delivery</div>
+                    <hr class="price-divider">
                     <ul class="features">
-                        <li>AI screening tool audit trail analysis</li>
-                        <li>Documentation gap assessment</li>
+                        <li>Audit trail gap analysis for one AI tool</li>
+                        <li>Documentation review &amp; inventory</li>
                         <li>Standard audit trail templates</li>
                         <li>EEOC response documentation</li>
-                        <li>Email support (2 weeks)</li>
+                        <li>Email support throughout engagement</li>
                     </ul>
-                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Basic%20Recovery%20-%20AI%20Audit%20Trail&body=Hi%20JP%2C%0D%0A%0D%0AI'm%20interested%20in%20the%20Basic%20Recovery%20package%20($2%2C500).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20etc.)%0D%0ANumber%20of%20Candidates%20Screened%2FYear%3A%20%0D%0A%0D%0AWhen%20can%20we%20start%3F" class="cta-button">Get Started</a>
+                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Basic%20Recovery%20-%20AI%20Audit%20Trail&body=Hi%20JP%2C%0D%0A%0D%0AI'm%20interested%20in%20the%20Basic%20Recovery%20package%20($2%2C500).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20etc.)%0D%0ANumber%20of%20Candidates%20Screened%2FYear%3A%20%0D%0A%0D%0AWhen%20can%20we%20start%3F" class="cta-button" style="width: 100%; box-sizing: border-box; text-align: center; display: block;">Get Started →</a>
                 </div>
 
+                <!-- STANDARD (FEATURED) -->
                 <div class="pricing-card featured">
-                    <h3>Standard Recovery</h3>
+                    <div class="featured-badge">⭐ Most Popular</div>
+                    <div class="plan-name">Standard Recovery</div>
+                    <div class="plan-tagline">Multiple AI tools · Full defensibility binder included</div>
                     <div class="price">$3,500</div>
-                    <p style="margin-bottom: 5px;">Most popular - Multiple AI tools + complete documentation</p>
-                    <p style="font-size: 0.85em; color: #667eea; margin: 0;">⭐ Recommended</p>
-
-                    <!-- VALUE BREAKDOWN -->
-                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
-                        <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Complete audit trail recovery</strong><br>
-                            <span style="font-size: 0.85em; color: #666;">
-                                Custom documentation for your tools<br>
-                                Defensibility binder included<br>
-                                Team training on maintaining trails
-                            </span>
-                        </p>
-                    </div>
-
+                    <div class="price-note">One-time · Delivered in 2 weeks</div>
+                    <div class="delivery-tag">📅 2-week delivery</div>
+                    <hr class="price-divider">
                     <ul class="features">
-                        <li><strong>Everything in Basic, PLUS:</strong></li>
-                        <li>Custom audit trail documentation</li>
+                        <li>Everything in Basic</li>
+                        <li>Custom audit trail documentation for all tools</li>
                         <li>EEOC investigation response kit</li>
-                        <li>1-hour documentation training</li>
+                        <li>1-hour documentation training session</li>
                         <li>Complete defensibility binder</li>
-                        <li>Priority support</li>
+                        <li>Priority support &amp; direct line</li>
                     </ul>
-                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Standard%20Recovery%20-%20AI%20Audit%20Trail&body=Hi%20JP%2C%0D%0A%0D%0AI'm%20interested%20in%20the%20Standard%20Recovery%20package%20($3%2C500).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20Spark%20Hire%2C%20etc.)%0D%0ANumber%20of%20Candidates%20Screened%2FYear%3A%20%0D%0AUrgency%3A%20(Active%20complaint%3F%20Preventive%3F)%0D%0A%0D%0ACan%20we%20start%20this%20week%3F" class="cta-button">Get Started</a>
+                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=Standard%20Recovery%20-%20AI%20Audit%20Trail&body=Hi%20JP%2C%0D%0A%0D%0AI'm%20interested%20in%20the%20Standard%20Recovery%20package%20($3%2C500).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20Spark%20Hire%2C%20etc.)%0D%0ANumber%20of%20Candidates%20Screened%2FYear%3A%20%0D%0AUrgency%3A%20(Active%20complaint%3F%20Preventive%3F)%0D%0A%0D%0ACan%20we%20start%20this%20week%3F" class="cta-button" style="width: 100%; box-sizing: border-box; text-align: center; display: block;">Get Started →</a>
                 </div>
 
+                <!-- PREMIUM -->
                 <div class="pricing-card">
-                    <h3>Premium Recovery</h3>
+                    <div class="plan-name">Premium Recovery</div>
+                    <div class="plan-tagline">Active EEOC complaint · Expedited · Ongoing support</div>
                     <div class="price">$5,000</div>
-                    <p>Urgent/Active EEOC complaints - Expedited delivery</p>
-
-                    <!-- VALUE BREAKDOWN -->
-                    <div style="background: #f0f7ff; padding: 15px; border-radius: 10px; margin: 15px 0; border-left: 4px solid #667eea;">
-                        <p style="font-size: 0.95em; color: #333; margin: 0; line-height: 1.6;">
-                            <strong style="color: #667eea;">💡 Emergency audit trail recovery</strong><br>
-                            <span style="font-size: 0.85em; color: #666;">
-                                Complete package in 1 week<br>
-                                EEOC response ready<br>
-                                Ongoing support included
-                            </span>
-                        </p>
-                    </div>
-
+                    <div class="price-note">One-time · Expedited delivery in 1 week</div>
+                    <div class="delivery-tag urgent">🚨 1-week expedited</div>
+                    <hr class="price-divider">
                     <ul class="features">
-                        <li><strong>Everything in Standard, PLUS:</strong></li>
-                        <li>Expedited delivery (1 week)</li>
+                        <li>Everything in Standard</li>
+                        <li>Expedited 1-week delivery</li>
                         <li>EEOC complaint response coordination</li>
                         <li>Quarterly documentation reviews (3 months)</li>
                         <li>Priority phone + email support</li>
-                        <li>Updates as tools/regulations change</li>
+                        <li>Updates as regulations evolve</li>
                     </ul>
-                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=URGENT%20-%20Premium%20Recovery&body=Hi%20JP%2C%0D%0A%0D%0AI%20need%20URGENT%20audit%20trail%20recovery%20($5%2C000%20Premium).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20%0D%0A%0D%0AURGENT%20SITUATION%3A%0D%0A%5B%20%5D%20Active%20EEOC%20complaint%0D%0A%5B%20%5D%20Candidate%20threatening%20lawsuit%0D%0A%5B%20%5D%20Internal%20audit%20found%20gaps%0D%0A%5B%20%5D%20Other%3A%20______________%0D%0A%0D%0ACan%20you%20start%20TODAY%3F" class="cta-button">Get Started</a>
+                    <a href="mailto:CGTPA.JP@GMAIL.COM?subject=URGENT%20-%20Premium%20Recovery&body=Hi%20JP%2C%0D%0A%0D%0AI%20need%20URGENT%20audit%20trail%20recovery%20($5%2C000%20Premium).%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Tools%20We%20Use%3A%20%0D%0A%0D%0AURGENT%20SITUATION%3A%0D%0A%5B%20%5D%20Active%20EEOC%20complaint%0D%0A%5B%20%5D%20Candidate%20threatening%20lawsuit%0D%0A%5B%20%5D%20Internal%20audit%20found%20gaps%0D%0A%5B%20%5D%20Other%3A%20______________%0D%0A%0D%0ACan%20you%20start%20TODAY%3F" class="cta-button" style="width: 100%; box-sizing: border-box; text-align: center; display: block;">Get Started →</a>
+                </div>
+
+            </div>
+
+            <!-- ADD-ONS -->
+            <div style="background: white; border: 1.5px solid #e4e8f0; border-radius: 18px; padding: 40px; margin-top: 32px;">
+                <div style="text-align: center; margin-bottom: 28px;">
+                    <div style="font-size: 0.78em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9aa0b4; margin-bottom: 8px;">OPTIONAL</div>
+                    <h3 style="font-size: 1.3em; color: #1a1d2e; margin: 0;">Add-On Services</h3>
+                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 20px;">
+                    <div style="background: #f8f9ff; border: 1.5px solid #e4e8f0; border-radius: 14px; padding: 24px;">
+                        <div style="font-size: 0.8em; font-weight: 700; color: #667eea; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">🔄 Ongoing Monitoring</div>
+                        <div style="font-size: 1.8em; font-weight: 800; color: #1a1d2e; letter-spacing: -0.03em;">$500<span style="font-size: 0.45em; color: #9aa0b4; font-weight: 500;">/month</span></div>
+                        <ul style="list-style: none; padding: 0; margin: 16px 0 0; color: #5a6070; font-size: 0.88em; line-height: 1.9;">
+                            <li>✓ Quarterly policy reviews</li>
+                            <li>✓ Updates when laws change</li>
+                            <li>✓ Unlimited email support</li>
+                            <li>✓ Annual re-audit included</li>
+                        </ul>
+                    </div>
+                    <div style="background: #fff8f8; border: 1.5px solid #fde0e0; border-radius: 14px; padding: 24px;">
+                        <div style="font-size: 0.8em; font-weight: 700; color: #e74c3c; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 8px;">🚨 Emergency EEOC Response</div>
+                        <div style="font-size: 1.8em; font-weight: 800; color: #1a1d2e; letter-spacing: -0.03em;">$1,500<span style="font-size: 0.45em; color: #9aa0b4; font-weight: 500;">/one-time</span></div>
+                        <ul style="list-style: none; padding: 0; margin: 16px 0 0; color: #5a6070; font-size: 0.88em; line-height: 1.9;">
+                            <li>✓ Active complaint documentation</li>
+                            <li>✓ Expert witness coordination</li>
+                            <li>✓ Response strategy preparation</li>
+                            <li>✓ 48-hour turnaround</li>
+                        </ul>
+                    </div>
                 </div>
             </div>
 
-            <!-- OPTIONAL ADD-ONS -->
-            <div style="background: #fff; padding: 40px; border-radius: 15px; margin-top: 40px; border: 2px solid #e0e0e0;">
-                <h3 style="color: #667eea; margin-bottom: 20px; text-align: center;">📦 Optional Add-Ons</h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 25px; margin-top: 30px;">
-                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; border-left: 4px solid #667eea;">
-                        <h4 style="color: #667eea; margin-bottom: 10px;">🔄 Ongoing Monitoring</h4>
-                        <div style="font-size: 1.5em; font-weight: bold; color: #333; margin-bottom: 10px;">$500<span style="font-size: 0.6em; color: #666;">/month</span></div>
-                        <ul style="list-style: none; padding: 0; margin: 15px 0; color: #666; font-size: 0.95em;">
-                            <li style="margin: 8px 0;">✓ Quarterly policy reviews</li>
-                            <li style="margin: 8px 0;">✓ Updates when laws change</li>
-                            <li style="margin: 8px 0;">✓ Monthly compliance newsletter</li>
-                            <li style="margin: 8px 0;">✓ Unlimited email support</li>
-                            <li style="margin: 8px 0;">✓ Annual re-audit</li>
-                        </ul>
-                    </div>
-                    <div style="background: #fff5f5; padding: 25px; border-radius: 12px; border-left: 4px solid #e74c3c;">
-                        <h4 style="color: #e74c3c; margin-bottom: 10px;">🚨 Emergency EEOC Response</h4>
-                        <div style="font-size: 1.5em; font-weight: bold; color: #333; margin-bottom: 10px;">$1,500<span style="font-size: 0.6em; color: #666;">/one-time</span></div>
-                        <ul style="list-style: none; padding: 0; margin: 15px 0; color: #666; font-size: 0.95em;">
-                            <li style="margin: 8px 0;">✓ Active complaint response</li>
-                            <li style="margin: 8px 0;">✓ Documentation preparation</li>
-                            <li style="margin: 8px 0;">✓ Expert witness coordination</li>
-                            <li style="margin: 8px 0;">✓ Response strategy consultation</li>
-                            <li style="margin: 8px 0;">✓ 48-hour turnaround</li>
-                        </ul>
-                    </div>
+            <!-- PAYMENT OPTIONS -->
+            <div style="background: white; border: 1.5px solid #e4e8f0; border-radius: 18px; padding: 44px 40px; margin-top: 32px;">
+                <div style="text-align: center; margin-bottom: 32px;">
+                    <div style="font-size: 0.78em; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #9aa0b4; margin-bottom: 8px;">SECURE PAYMENT</div>
+                    <h3 style="font-size: 1.35em; color: #1a1d2e; margin: 0 0 8px;">Payment Options</h3>
+                    <p style="color: #7a829a; font-size: 0.92em; margin: 0;">Send payment after we confirm your scope on a quick call.</p>
                 </div>
-                <p style="text-align: center; margin-top: 25px; color: #666; font-size: 0.95em;">
-                    <em>Add-ons can be purchased during or after your initial audit.</em>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 18px; max-width: 700px; margin: 0 auto;">
+
+                    <!-- PayPal -->
+                    <div style="border: 1.5px solid #e4e8f0; border-radius: 14px; padding: 24px; text-align: center; transition: border-color 0.2s;">
+                        <div style="width: 44px; height: 44px; background: #f0f4ff; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 1.4em;">💵</div>
+                        <div style="font-size: 0.72em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa0b4; margin-bottom: 6px;">PayPal</div>
+                        <div style="font-family: 'Courier New', monospace; font-size: 0.95em; font-weight: 600; color: #1a1d2e; word-break: break-all;">CGTPA.JP@GMAIL.COM</div>
+                    </div>
+
+                    <!-- Venmo -->
+                    <div style="border: 1.5px solid #e4e8f0; border-radius: 14px; padding: 24px; text-align: center;">
+                        <div style="width: 44px; height: 44px; background: #f0faf5; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 1.4em;">📱</div>
+                        <div style="font-size: 0.72em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa0b4; margin-bottom: 6px;">Venmo</div>
+                        <a href="https://venmo.com/u/Vanguardlab" target="_blank" style="font-size: 1.05em; font-weight: 700; color: #667eea; text-decoration: none;">@Vanguardlab</a>
+                    </div>
+
+                    <!-- Invoice -->
+                    <div style="border: 1.5px solid #e4e8f0; border-radius: 14px; padding: 24px; text-align: center;">
+                        <div style="width: 44px; height: 44px; background: #fdf8f0; border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 14px; font-size: 1.4em;">📄</div>
+                        <div style="font-size: 0.72em; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #9aa0b4; margin-bottom: 6px;">Invoice / ACH</div>
+                        <div style="font-size: 0.88em; color: #5a6070; line-height: 1.4;">W-9 available on request</div>
+                    </div>
+
+                </div>
+                <p style="text-align: center; margin-top: 28px; font-size: 0.875em; color: #9aa0b4;">
+                    After payment, you'll receive a service agreement &amp; kickoff call within 24 hours.
                 </p>
             </div>
 
-            <div style="background: #f8f9fa; padding: 40px; border-radius: 15px; margin-top: 40px; text-align: center;">
-                <h3 style="color: #667eea; margin-bottom: 20px;">💳 Payment Options</h3>
-                <p style="margin-bottom: 25px; color: #666;">We accept PayPal and Venmo for your convenience.</p>
-                <div style="display: flex; gap: 30px; justify-content: center; flex-wrap: wrap;">
-                    <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
-                        <h4 style="color: #667eea; margin-bottom: 15px;">💵 PayPal</h4>
-                        <p style="font-family: monospace; font-size: 1.1em; color: #333; margin: 0;">CGTPA.JP@GMAIL.COM</p>
-                    </div>
-                    <div style="background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); min-width: 250px;">
-                        <h4 style="color: #667eea; margin-bottom: 15px;">📱 Venmo</h4>
-                        <p style="margin: 0;"><a href="https://venmo.com/code?user_id=3601436252309200316&created=1767963331" style="color: #667eea; text-decoration: none; font-weight: 600;">@YourVenmo →</a></p>
-                    </div>
-                </div>
-                <p style="margin-top: 25px; font-size: 0.95em; color: #666;">
-                    <em>After payment, we'll send your service agreement and schedule your kickoff call within 24 hours.</em>
-                </p>
-            </div>
         </div>
     </div>
 
