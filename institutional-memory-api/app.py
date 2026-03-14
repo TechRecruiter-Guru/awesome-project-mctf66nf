@@ -932,29 +932,6 @@ def root():
         </div>
     </div>
 
-    <!-- EARLY ACCESS / FOUNDING CUSTOMER OFFER -->
-    <div style="background: #f8f9fa; padding: 80px 20px;">
-        <div class="container">
-            <h2 style="text-align: center; color: #667eea; font-size: 2em; margin-bottom: 20px;">✅ Available Now - Limited Spots This Month</h2>
-            <p style="text-align: center; font-size: 1.2em; color: #666; max-width: 700px; margin: 0 auto 50px;">
-                We're accepting <strong>5 new clients in January 2026</strong> for audit trail recovery. Get your documentation package delivered <strong style="color: #e74c3c;">WITHIN 48 HOURS!</strong>
-            </p>
-
-            <div style="text-align: center; margin-top: 50px; padding: 40px; background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 15px;">
-                <h3 style="color: white; font-size: 1.8em; margin-bottom: 20px;">🚨 I NEED Audit Trail Recovery IMMEDIATELY</h3>
-                <p style="color: white; font-size: 1.1em; margin-bottom: 30px; opacity: 0.95;">
-                    Facing EEOC complaint? Internal audit found gaps? Missing documentation for AI screening tools?
-                </p>
-                <a href="mailto:CGTPA.JP@GMAIL.COM?subject=URGENT%20-%20Need%20Audit%20Trail%20Recovery%20IMMEDIATELY&body=Hi%20JP%2C%0D%0A%0D%0AI%20need%20audit%20trail%20recovery%20URGENTLY.%0D%0A%0D%0ACompany%20Name%3A%20%0D%0AAI%20Screening%20Tools%20We%20Use%3A%20(HireVue%2C%20MyInterview%2C%20etc.)%0D%0A%0D%0AURGENT%20SITUATION%3A%0D%0A%5B%20%5D%20Active%20EEOC%20complaint%0D%0A%5B%20%5D%20Candidate%20threatening%20lawsuit%0D%0A%5B%20%5D%20Internal%20audit%20found%20documentation%20gaps%0D%0A%5B%20%5D%20Regulator%20inquiry%0D%0A%5B%20%5D%20Other%3A%20______________%0D%0A%0D%0AHow%20soon%20can%20you%20deliver%3F%0D%0A%0D%0APhone%3A%20" style="display: inline-block; background: white; color: #e74c3c; padding: 18px 50px; font-size: 1.2em; font-weight: 600; text-decoration: none; border-radius: 10px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);">
-                    Contact Me NOW →
-                </a>
-                <p style="color: white; margin-top: 20px; font-size: 0.95em; opacity: 0.9;">
-                    <strong>48-hour turnaround available.</strong> Response within 2 hours for urgent requests.
-                </p>
-            </div>
-        </div>
-    </div>
-
     <!-- ATS INTEGRATIONS -->
     <div style="background: white; padding: 60px 20px; text-align: center;">
         <div class="container">
