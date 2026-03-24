@@ -20,65 +20,63 @@ Human Layer:         Offer calls · Culture reads · Hiring Council · Hard conv
 
 | Week | What | Why First |
 |------|------|-----------|
-| 1 | ATS live (Ashby), all 5–8 roles loaded with scorecards | No pipeline visibility = no credibility |
+| 1 | ATS live, all 5–8 roles loaded with scorecards | No pipeline visibility = no credibility |
 | 2 | Comp bands + leveling for every open role | Every pending offer is broken without this |
-| 3 | Hiring Council formed; interview kits distributed | Scales hiring quality without burning managers |
-| 4 | 30/60/90 onboarding rails in Notion | 90-day retention is bleeding; stop the leak now |
-| Month 2 | Quarterly performance cadence + headcount planning process | Signals what "good" looks like before first reviews |
-| Month 3 | Employer brand engine + offboarding/alumni system | Compounds over time; plant seeds early |
+| 3 | Hiring Council formed; interview kits distributed | Scales quality without burning managers |
+| 4 | 30/60/90 onboarding rails in Notion | 90-day retention is bleeding; stop it now |
+| Month 2 | Quarterly performance cadence + headcount planning | Signals what "good" looks like before first reviews |
+| Month 3 | Employer brand engine + offboarding/alumni system | Compounds over time |
 
 ### Zero-Cost Foundation + Paid Acceleration
 
-**Zero-cost foundation (runs indefinitely for $0):**
+**Zero-cost foundation (runs for $0 indefinitely):**
 
 | Tool | Purpose |
 |------|---------|
-| Notion (free tier) | HRIS, pipeline tracking, interview kits, onboarding wiki, comp band wiki |
-| Claude.ai (free) | Resume screening prompts, JD drafts, comp research, scorecard analysis |
+| Notion (free) | HRIS, pipeline tracking, interview kits, onboarding wiki, comp band wiki |
+| Claude.ai (free) | Resume screening, JD drafts, comp research, scorecard analysis |
 | Google Sheets (free) | Headcount plan, comp band model, attrition tracker |
 | LinkedIn (free + Boolean) | IC-level sourcing, candidate research |
 | Slack (existing) | Hiring Council updates, pipeline alerts, pulse check-ins |
 | Typeform (free tier) | Exit interviews, stay surveys, candidate NPS |
-| Zapier (free tier) | Core automations (5 zaps: ATS stage → Slack alert, form → Notion) |
-| Buffer (free tier) | Employer brand content scheduling (3 channels) |
+| Zapier (free tier) | Core automations (ATS stage → Slack alert, form → Notion) |
+| Buffer (free tier) | Employer brand content scheduling |
 
 **Paid layer — $3,000/month allocated to highest-ROI gaps only:**
 
 | Tool | Purpose | Cost |
 |------|---------|------|
 | Ashby | ATS with pipeline analytics, structured offers, reporting | $400 |
-| Gem | LinkedIn outreach sequences at scale; IC-level sourcing automation | $800 |
-| LinkedIn Recruiter Lite | Senior/specialist targeted search beyond free tier | $500 |
+| Gem | LinkedIn outreach sequences at scale for IC sourcing | $800 |
+| LinkedIn Recruiter Lite | Senior/specialist targeted search | $500 |
 | Lattice (Grow) | Comp bands, leveling, engagement surveys, performance snapshots | $600 |
 | Charlie HR | Performance check-ins, 1:1 templates, review automation | $150 |
-| Reserve | Job board boosts, niche Slack community sponsorships, ad hoc | $550 |
+| Reserve | Job board boosts, niche community sponsorships, ad hoc | $550 |
 | **Total** | | **$3,000** |
 
-The free foundation means every dollar of the $3K budget generates *additive* ROI — not baseline maintenance. If budget tightens, the zero-cost layer keeps running.
+The free foundation means every dollar of $3K generates additive ROI — not baseline maintenance. If budget tightens, the free layer keeps running.
 
 ### The Hiring Council
 
-Department heads have 2–3 hours/week available for recruiting. Unstructured, that time evaporates into ad hoc calls. Structured, it becomes the company's quality control layer.
+Department heads have 2–3 hours/week for recruiting. Unstructured, that time evaporates. Structured, it becomes quality control.
 
-**Structure:** 4–5 rotating senior ICs across departments (not just the hiring manager). Serve 2-month rotating terms. Total time commitment: **2 hours/week maximum.**
+**Structure:** 4–5 rotating senior ICs across departments. 2-month rotating terms. Total time commitment: **2 hours/week maximum.**
 
 | Weekly Block | Activity | Time |
 |---|---|---|
-| Monday 30 min | Async: review AI-screened candidate shortlist in Ashby | 30 min |
-| Wednesday 60 min | Live panel interviews (2 candidates max, back-to-back) | 60 min |
-| Thursday 30 min | Async: submit scorecard and debrief notes in Notion | 30 min |
+| Monday | Async: review AI-screened shortlist in Ashby | 30 min |
+| Wednesday | Live panel: 2 candidates back-to-back | 60 min |
+| Thursday | Async: submit scorecard + debrief notes in Notion | 30 min |
 
-**Rules:** No scheduling outside these windows. I prep everything — candidates briefed, scorecards loaded, Loom walkthroughs provided. Council members show up and evaluate. Nothing else.
-
-This also creates a culture where hiring is a shared company value, not a department head tax.
+**Rules:** No scheduling outside these windows. I prep everything. Council members show up and evaluate. Nothing else.
 
 ### Overlooked Infrastructure (Often Skipped, Always Regretted)
 
-- **Headcount planning process:** Quarterly headcount review with leadership — new roles require a 1-page business case (problem, cost-to-leave-open, hiring profile). Prevents reactive, unscoped hiring.
-- **Compliance basics:** Offer letter templates (reviewed by employment counsel once), I-9 process, background check policy, EEOC tracking in Ashby. Boring, critical, done in Week 1.
-- **Candidate experience for rejections:** Every declined candidate gets a personalized 2-sentence Loom from me within 48 hours. They become brand ambassadors or future applicants. Costs 3 minutes. Often ignored entirely.
-- **Internal mobility framework:** Posted on Notion: what promotion at each level requires, how to apply for open roles internally before external posting. Closes 10–15% of roles for free. Massively improves retention.
-- **Offboarding + alumni network:** Structured exit interview (Typeform + 30-min call), 90-day alumni check-in, Single Grain Alumni LinkedIn group. Boomerang hires are the most efficient hires. Former employees who leave well are the best recruiters.
+- **Headcount planning:** Quarterly review — new roles require a 1-page business case (problem, cost-to-leave-open, hiring profile). Prevents reactive unscoped hiring.
+- **Compliance basics:** Offer letter templates (employment counsel review once), I-9, background check policy, EEOC tracking. Done in Week 1.
+- **Candidate experience for rejections:** Personalized 2-sentence Loom within 48 hours of decline. Costs 3 minutes. Rejected candidates become future applicants and brand ambassadors.
+- **Internal mobility framework:** Posted on Notion — what promotion at each level requires, how to apply for open roles before external posting. Closes 10–15% of roles for free.
+- **Offboarding + alumni network:** Structured exit interview, 90-day alumni check-in, Single Grain Alumni LinkedIn group. Boomerang hires are the most efficient hires.
 
 ---
 
@@ -86,150 +84,65 @@ This also creates a culture where hiring is a shared company value, not a depart
 
 ### Pipeline Beyond Job Boards
 
-Single Grain's strongest sourcing asset is Eric's 1M+ combined podcast audience. A listener who self-selects into growth content is pre-qualified on culture.
+Eric's 1M+ combined podcast audience is the strongest untapped sourcing channel. A listener who self-selects into growth content is pre-qualified on culture.
 
-**CEO Brand Pipeline (zero incremental cost):**
-- 15-second hiring drops at the end of relevant Marketing School episodes
-- Monthly "we're building this" LinkedIn post tagged #SGHiring — reshared by Eric's agency founder network
-- YouTube: *"What it's actually like to work at an AI-native agency"* — Eric narrates, I produce; evergreen candidate magnet
-- Newsletter: "Who we're looking for this quarter" — transparent, specific, no corporate speak
+**CEO Brand Pipeline (zero incremental cost):** Episode hiring drops · Monthly #SGHiring LinkedIn post · YouTube "what it's like" evergreen video · Newsletter "who we're looking for" section
 
-**Sourcing by Role Tier:**
+**Sourcing by Tier:** IC via Gem sequences + free LinkedIn Boolean · Senior via direct ex-Wpromote/ex-Directive outreach · Manager+ via Eric's warm network and employee referrals
 
-| Tier | Channel | Volume |
-|------|---------|--------|
-| IC (Paid, SEO, Content) | Gem sequences, podcast referrals, free LinkedIn Boolean | 15–20 sourced/week |
-| Senior IC / Lead | Direct outreach: ex-Wpromote, ex-Directive, ex-in-house F500 | 5–10 targeted/week |
-| Manager+ | Eric's warm network, employee referrals, retained search if critical | Warm only |
+**Referral program:** $2,500 per hire passing 90 days. Cash. Announced at all-hands. Closes 20–30% of roles.
 
-**Referral program:** $2,500 per hire passing 90 days, paid in cash. Announced at all-hands. Closes 20–30% of roles at near-zero cost.
+### Beat Claude — Redesigned as "AI Collaboration Challenge"
 
-### Beat Claude — Redesigned
-
-**Current problem:** Ad hoc, no rubric, creates candidate anxiety without generating quality signal.
-
-**Redesigned as "AI Collaboration Challenge":** Candidates receive Claude's output on a real (anonymized) strategy problem and must: (1) identify where Claude got it wrong, (2) extend the analysis with their own judgment, (3) write the exec recommendation they'd actually send. 48-hour async. Scored via rubric: problem framing 30%, AI critique quality 30%, synthesis and judgment 40%.
-
-Surfaces AI fluency *and* strategic thinking. Candidates who ace it self-select in hard. Those who can't aren't a culture fit.
+Candidates receive Claude's output on a real (anonymized) strategy problem. They must: (1) identify where Claude got it wrong, (2) extend the analysis with their judgment, (3) write the exec recommendation they'd actually send. 48-hour async. Rubric: problem framing 30%, AI critique quality 30%, synthesis 40%.
 
 ### Offer Acceptance: 65% → 85%+
 
-The gap is almost always a surprise — on comp, scope, or timeline.
-
-- **Comp transparency at screen:** Share band at the first call. Eliminates 80% of late-stage losses.
-- **Pre-close call:** Hiring manager (or Council member) calls the finalist 48 hours before written offer.
-- **"Future state" framing:** Every offer includes a 90-second narrative on what the role looks like in 18 months as TES scales.
-- **CEO Loom for senior roles:** 2-minute personalized video from Eric. Costs him 10 minutes. Closes deals comp alone cannot.
+- Comp transparency at screen stage (eliminates 80% of late-stage surprises)
+- Pre-close call 48 hours before written offer
+- "Future state" framing — what the role looks like in 18 months during TES scale
+- CEO Loom for senior roles (2 min, closes deals comp alone cannot)
 
 ### Compensation Philosophy
 
-*"Market-anchored, equity-lite, growth-rich."* 65th percentile vs. agency peers — not FAANG, not apologetic. We win on: $1,500/year learning budget, $100/month AI tools stipend, profit-sharing tied to TES milestones (transparent formula, not discretionary), and real flexibility. The pitch: AI makes you more productive — higher output per hour, not more hours.
+65th percentile vs. agency peers. Supplement: $1,500/year learning budget, $100/month AI tools stipend, profit-sharing tied to TES milestones (transparent formula, not discretionary).
 
 ---
 
 ## 3. Performance, Retention & Culture
 
-### Performance Cadence (No Annual-Only Reviews)
+### Performance Cadence
 
-| Cadence | Format | Owner | Time |
-|---------|--------|-------|------|
-| Weekly | 30-min manager 1:1 (Notion template: wins / blocks / mood signal) | Manager | 30 min |
-| Monthly | 5-question pulse in Charlie HR | Me (automated) | 3 min async |
-| Quarterly | Performance snapshot: competency ratings + goals check-in | Manager + IC | 30 min |
-| Annual | Comp review + leveling calibration (cross-dept) | Me + leadership | Full day |
+Weekly 1:1 (Notion template) · Monthly pulse in Charlie HR (3 min async) · Quarterly performance snapshot (30 min) · Annual comp + leveling calibration
 
-### Compensation Bands (Posted Internally, Refreshed Annually)
+### Comp Bands (Posted Internally)
 
-Benchmarked via Radford agency data + Levels.fyi proxy.
+| L1 Associate | L2 Practitioner | L3 Senior | L4 Lead/Principal | L5 Director |
+|---|---|---|---|---|
+| $55K–$70K | $70K–$90K | $90K–$115K | $115K–$145K | $145K–$185K |
 
-| Level | Title | Band |
-|-------|-------|------|
-| L1 | Associate (0–2 yrs) | $55K–$70K |
-| L2 | Practitioner (2–4 yrs) | $70K–$90K |
-| L3 | Senior (4–7 yrs) | $90K–$115K |
-| L4 | Lead / Principal (7+ yrs) | $115K–$145K |
-| L5 | Director | $145K–$185K |
+### Retention
 
-Bands posted on internal Notion wiki. Radical transparency reduces flight risk — people who know their level and path stop shopping.
-
-### Retention Strategy
-
-**Signals before departures:** Claude analyzes monthly pulse data + tenure correlation and flags patterns to me. I run stay interviews at 6 months (not exit interviews — always too late): *What would make you leave? What keeps you here? What's one thing we'd change?*
-
-**Structural burnout mitigation:**
-- No-meeting Fridays (protected, not aspirational)
-- Client load caps by level (Senior IC: max 4 active clients, published in Notion)
-- Mandatory minimum PTO: 10 days/year, tracked quarterly
-
-**AI upskilling as retention:** Monthly "AI Office Hours" — 45 minutes, cross-functional, showcasing internal AI wins. Converts the AI mandate from threat into career accelerator.
+Stay interviews at 6 months · AI-analyzed pulse + tenure correlation for early flight risk signals · No-meeting Fridays · Client load caps (Senior IC: max 4 clients) · Monthly AI Office Hours as career accelerator
 
 ### Culture During TES Transition
 
-- **Dual-track town halls:** Every all-hands covers "Agency wins this month" AND "TES milestone progress" — both exist, both matter, neither is subordinate.
-- **Hire for TES-readiness:** Interview question for every senior role: *"If this service became a product, how would you build it?"* Filters for systems thinkers before day one.
-- **Celebrate efficiency gains publicly:** Time saved by AI = Slack win, not quiet optimization. Reframes AI as status, not threat.
+Dual-track town halls (agency wins AND TES milestones) · "Productize this service" interview question filters TES-ready candidates · AI efficiency wins celebrated publicly in Slack
 
 ---
 
 ## 4. 90-Day Plan & Metrics
 
-### Highest-Leverage First Move: Data Infrastructure
+**Day 30:** ATS + scorecards · Comp bands · Hiring Council formed · Beat Claude rubric · Onboarding wiki · First employer brand post
 
-ATS up, all roles loaded, pipeline visible — in 3 days. Without data, every opinion is a guess. This is the unlock for everything else.
+**Day 60:** 2–3 offers via new process · First onboarding cohort · Pulse NPS baseline · Time-to-fill trending toward 35 days · Referral program launched · Internal mobility framework posted
 
-### Milestones
+**Day 90:** Time-to-fill ≤35 days · Offer acceptance ≥78% · 90-day retention ≥85% · Quarterly reviews live · Headcount planning process running · Alumni network seeded · CEO monthly People Signal running
 
-**Day 30:** Ashby live with scorecards for all open roles · Comp bands drafted · Hiring Council formed and scheduled · Beat Claude rubric redesigned · Onboarding wiki skeleton live · First employer brand post published
+**KPIs:** Time-to-fill · Offer acceptance · Source mix (referral ≥25%) · 90-day retention · Regrettable attrition · Internal mobility rate · Pulse NPS · % team with active goals · eNPS · AI fluency score
 
-**Day 60:** 2–3 offers extended via comp-transparent process · First cohort through structured onboarding · Baseline pulse NPS established · Time-to-fill trending toward 35 days · Referral program announced at all-hands · Internal mobility framework posted
-
-**Day 90:** Time-to-fill ≤35 days · Offer acceptance ≥78% · 90-day retention ≥85% for new-process hires · Quarterly review cadence live · Headcount planning process in place · Alumni network seeded · CEO monthly People Signal running
-
-### KPI Framework
-
-| Category | Metric | 90-Day Target |
-|----------|--------|--------------|
-| Recruiting | Time-to-fill | ≤35 days |
-| Recruiting | Offer acceptance rate | ≥78% |
-| Recruiting | Source mix (% referral) | ≥25% |
-| Retention | 90-day new hire retention | ≥85% |
-| Retention | Regrettable attrition | Baseline + trend |
-| Mobility | % open roles posted internally first | 100% |
-| Performance | Monthly pulse NPS | Baseline Q1 |
-| Performance | % team with active goals | ≥80% |
-| Culture | eNPS (quarterly) | Baseline Q1 |
-| Culture | AI fluency score | Baseline + target |
-
-### CEO Reporting Format
-
-**Monthly "People Signal" — async Slack on the 1st:**
-
-```
-PEOPLE SIGNAL — [Month]
-
-RECRUITING
-  Time-to-fill: 38 days [🟡 improving from 52]
-  Offer acceptance: 76% [🟡 target: 78%]
-  Open roles: 6 [3 in final stage]
-
-RETENTION
-  90-day retention (new hires): 88% [🟢]
-  Attrition: 1 this month (non-regrettable)
-
-TEAM HEALTH
-  Pulse NPS: 42 [🟢 +4 from last month]
-
-HIGHLIGHT
-  Hiring Council Week 3: 4 candidates evaluated, 2 advancing. Council member feedback
-  quality measurably better than pre-structure ad hoc calls.
-
-RISK + MITIGATION
-  [Dept] pulse score dropped 8 pts. Stay interviews running this week.
-  Likely: client load spike. Addressing with manager.
-```
-
-Eric sees signal, not noise. Red triggers a synchronous conversation. Everything else is async.
+**CEO Reporting:** Monthly async "People Signal" in Slack — 4 metrics (🟢🟡🔴), 1 highlight, 1 risk + mitigation. Red = synchronous conversation.
 
 ---
 
-*Built for one operator, $3K/month, zero headcount. The free foundation runs indefinitely. The paid layer accelerates. The Hiring Council scales quality without burning managers. Within 12 months, this feels like a team of five.*
+*Built for one operator, $3K/month, zero headcount. The free foundation runs indefinitely. The paid layer accelerates. The Hiring Council scales quality without burning managers.*
