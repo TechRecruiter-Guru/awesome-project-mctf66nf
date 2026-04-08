@@ -976,7 +976,7 @@ export default function HomePage() {
                         Watch John walk through the full SafetyCase.AI workflow — from PDF upload to investor-ready compliance website in under 5 minutes.
                       </p>
                       <div className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-full text-sm font-semibold opacity-75">
-                        <span>⏳</span> Video coming soon
+                        <span>⏳</span> 
                       </div>
                     </div>
                   </div>
