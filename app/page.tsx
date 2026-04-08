@@ -958,7 +958,7 @@ export default function HomePage() {
                   style={{ borderRadius: '12px' }}
                 >
                   <source
-                    src="https://safetycaseai.physicalaipros.com/SafetyCaseAIMinutesNotMonths.mp4"
+                    src="https://physicalaipros.com/SafetyCaseAIMinutesNotMonths.mp4"
                     type="video/mp4"
                   />
                   Your browser does not support the video tag.
