@@ -947,23 +947,25 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Spotify Podcast Player */}
+            {/* Product Demo Video */}
             <div>
               <div className="rounded-lg overflow-hidden shadow-2xl mb-4">
-                <iframe
-                  src="https://open.spotify.com/embed/episode/16oFIlMqrLP9cwxROdxrjB"
-                  width="100%"
-                  height="232"
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                  loading="lazy"
-                  title="SafetyCase.AI — If you build Physical AI (Physical AI Pros Podcast)"
+                <video
+                  controls
+                  playsInline
+                  preload="metadata"
+                  className="w-full h-auto"
                   style={{ borderRadius: '12px' }}
-                />
+                >
+                  <source
+                    src="https://safetycaseai.physicalaipros.com/SafetyCaseAI__Minutes,_Not_Months.mp4"
+                    type="video/mp4"
+                  />
+                  Your browser does not support the video tag.
+                </video>
               </div>
               <p className="text-gray-600 text-center text-sm">
-                🎙️ Listen: <em>SafetyCaseAI — If you build Physical AI</em> · Physical AI Pros Podcast
+                🎥 Watch: <em>SafetyCaseAI — Minutes, Not Months</em>
               </p>
               <p className="text-gray-500 text-center text-xs mt-2 italic">
                 "Military precision. AGI-powered execution. Your safety case website — delivered today."
