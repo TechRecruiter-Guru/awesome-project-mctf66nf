@@ -947,45 +947,28 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Founder Video — swap VIDEO_URL below once NotebookLM/Loom video is produced */}
-            {(() => {
-              const VIDEO_URL = ''; // TODO: paste Loom share URL or hosted video URL here
-              return VIDEO_URL ? (
-                <div>
-                  <div className="relative w-full rounded-lg overflow-hidden shadow-2xl mb-4" style={{ paddingTop: '56.25%' }}>
-                    <iframe
-                      src={https://open.spotify.com/episode/16oFIlMqrLP9cwxROdxrjB?si=wB_lmdhNS0mkL06XR64gHg}
-                      className="absolute inset-0 w-full h-full"
-                      frameBorder="0"
-                      allowFullScreen
-                      allow="autoplay; fullscreen"
-                      title="SafetyCase.AI — 2-Minute Demo with John Polhill III"
-                    />
-                  </div>
-                  <p className="text-gray-600 text-center text-sm">
-                    See how SafetyCase.AI turns your safety PDF into an investor-ready compliance website in minutes.
-                  </p>
-                </div>
-              ) : (
-                <div>
-                  <div className="bg-gradient-to-br from-gray-900 to-gray-700 rounded-lg w-full h-96 flex items-center justify-center mb-4 shadow-2xl border border-gray-600">
-                    <div className="text-center text-white px-8">
-                      <div className="text-6xl mb-4">🎥</div>
-                      <p className="font-bold text-xl mb-2">2-Minute Product Demo</p>
-                      <p className="text-sm text-gray-300 mb-4">
-                        Watch John walk through the full SafetyCase.AI workflow — from PDF upload to investor-ready compliance website in under 5 minutes.
-                      </p>
-                      <div className="inline-flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-full text-sm font-semibold opacity-75">
-                        <span>⏳</span> 
-                      </div>
-                    </div>
-                  </div>
-                  <p className="text-gray-600 text-center italic text-sm">
-                    "Military precision. AGI-powered execution. Your safety case website — delivered today."
-                  </p>
-                </div>
-              );
-            })()}
+            {/* Spotify Podcast Player */}
+            <div>
+              <div className="rounded-lg overflow-hidden shadow-2xl mb-4">
+                <iframe
+                  src="https://open.spotify.com/embed/episode/16oFIlMqrLP9cwxROdxrjB"
+                  width="100%"
+                  height="232"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  title="SafetyCase.AI — If you build Physical AI (Physical AI Pros Podcast)"
+                  style={{ borderRadius: '12px' }}
+                />
+              </div>
+              <p className="text-gray-600 text-center text-sm">
+                🎙️ Listen: <em>SafetyCaseAI — If you build Physical AI</em> · Physical AI Pros Podcast
+              </p>
+              <p className="text-gray-500 text-center text-xs mt-2 italic">
+                "Military precision. AGI-powered execution. Your safety case website — delivered today."
+              </p>
+            </div>
           </div>
 
           <div className="mt-12 grid md:grid-cols-3 gap-6 text-center">
