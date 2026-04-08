@@ -954,7 +954,7 @@ export default function HomePage() {
                 <div>
                   <div className="relative w-full rounded-lg overflow-hidden shadow-2xl mb-4" style={{ paddingTop: '56.25%' }}>
                     <iframe
-                      src={VIDEO_URL}
+                      src={https://open.spotify.com/episode/16oFIlMqrLP9cwxROdxrjB?si=wB_lmdhNS0mkL06XR64gHg}
                       className="absolute inset-0 w-full h-full"
                       frameBorder="0"
                       allowFullScreen
