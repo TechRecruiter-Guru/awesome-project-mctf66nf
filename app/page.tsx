@@ -89,14 +89,11 @@ export default function HomePage() {
           <p className="text-lg mb-8 opacity-95 max-w-2xl mx-auto">
             <strong>Full Stack Bundle: $15K</strong> (vs. $590K traditional path) • 92% cost savings • 14-day hiring velocity
           </p>
-          <div className="flex justify-center gap-4 mb-6 flex-wrap">
-            <a href="/schedule" className="bg-yellow-400 text-purple-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-colors shadow-xl">
-              📞 Schedule Strategy Call
-            </a>
-            <a href="#bundle" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors shadow-xl">
+          <div className="flex justify-center gap-4 mb-6">
+            <a href="#bundle" className="bg-yellow-400 text-purple-900 px-8 py-4 rounded-lg font-bold text-lg hover:bg-yellow-300 transition-colors shadow-xl">
               See $15K Bundle →
             </a>
-            <a href="#templates" className="bg-white/90 text-primary-700 px-8 py-4 rounded-lg font-bold text-lg hover:bg-white transition-colors">
+            <a href="#templates" className="bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors">
               View Templates ($2K)
             </a>
           </div>
@@ -824,13 +821,13 @@ export default function HomePage() {
           {/* CTA */}
           <div className="text-center">
             <a
-              href="/schedule"
-              className="inline-block bg-yellow-400 text-purple-900 px-12 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-2xl hover:scale-105 transform transition-all"
+              href="mailto:john@physicalaipros.com?subject=Series%20B%20Ready%20Package%20Inquiry"
+              className="inline-block bg-yellow-400 text-purple-900 px-12 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-2xl"
             >
-              📞 Schedule Strategy Call →
+              Schedule Strategy Call →
             </a>
             <p className="mt-4 text-sm opacity-75">
-              30-minute call · No sales pitch · Custom roadmap for your company
+              Limited to 3 clients per quarter · Email john@physicalaipros.com
             </p>
           </div>
         </div>
@@ -950,17 +947,26 @@ export default function HomePage() {
               </div>
             </div>
 
-            {/* Video Placeholder */}
+            {/* Spotify Podcast Player */}
             <div>
-              <div className="bg-gray-800 rounded-lg w-full h-96 flex items-center justify-center mb-4">
-                <div className="text-center text-white">
-                  <div className="text-6xl mb-4">🎥</div>
-                  <p className="font-semibold text-xl">2-Minute Loom Video Goes Here</p>
-                  <p className="text-sm mt-2 text-gray-300">Show demo website walkthrough + introduce yourself</p>
-                </div>
+              <div className="rounded-lg overflow-hidden shadow-2xl mb-4">
+                <iframe
+                  src="https://open.spotify.com/embed/episode/16oFIlMqrLP9cwxROdxrjB"
+                  width="100%"
+                  height="232"
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+                  loading="lazy"
+                  title="SafetyCase.AI — If you build Physical AI (Physical AI Pros Podcast)"
+                  style={{ borderRadius: '12px' }}
+                />
               </div>
-              <p className="text-gray-600 text-center italic">
-                "This 2-minute video will be your highest-converting element. Show the demo, explain what customers get, introduce yourself as the veteran founder."
+              <p className="text-gray-600 text-center text-sm">
+                🎙️ Listen: <em>SafetyCaseAI — If you build Physical AI</em> · Physical AI Pros Podcast
+              </p>
+              <p className="text-gray-500 text-center text-xs mt-2 italic">
+                "Military precision. AGI-powered execution. Your safety case website — delivered today."
               </p>
             </div>
           </div>
@@ -989,26 +995,18 @@ export default function HomePage() {
       <div className="py-16 bg-primary-600 text-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold mb-4">
-            Ready to Compress 12 Months into 90 Days?
+            Ready to Create Your Safety Case Website?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Schedule a strategy call to discuss your compliance + hiring needs. No pitch, just insights.
+            Join leading Physical AI companies using SafetyCaseAI for their
+            compliance documentation.
           </p>
-          <div className="flex justify-center gap-4 flex-wrap">
-            <a
-              href="/schedule"
-              className="inline-block bg-yellow-400 text-purple-900 px-10 py-5 rounded-lg font-bold text-xl hover:bg-yellow-300 transition-colors shadow-xl"
-            >
-              📞 Schedule Free Strategy Call
-            </a>
-            <a
-              href="#templates"
-              className="inline-block bg-white text-primary-600 px-10 py-5 rounded-lg font-bold text-xl hover:bg-gray-100 transition-colors shadow-xl"
-            >
-              View Templates ($2K)
-            </a>
-          </div>
-          <p className="mt-6 text-sm opacity-75">30-minute call • No sales pitch • Custom roadmap</p>
+          <a
+            href="#templates"
+            className="inline-block bg-white text-primary-600 px-8 py-4 rounded-lg font-bold text-lg hover:bg-gray-100 transition-colors"
+          >
+            Get Started Now
+          </a>
         </div>
       </div>
 
