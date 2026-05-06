@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume – Research Sourcer, OpenAI</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #1a1a1a;
+      --mid: #444;
+      --light: #777;
+      --rule: #d4d4d4;
+      --accent: #10a37f; /* OpenAI green */
+      --bg: #ffffff;
+      --page-max: 900px;
+    }
+
+    body {
+      font-family: "Georgia", "Times New Roman", serif;
+      font-size: 14px;
+      line-height: 1.6;
+      color: var(--black);
+      background: var(--bg);
+      padding: 48px 24px;
+    }
+
+    .page {
+      max-width: var(--page-max);
+      margin: 0 auto;
+    }
+
+    /* ── Header ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--black);
+      padding-bottom: 16px;
+      margin-bottom: 20px;
+    }
+
+    .header-left h1 {
+      font-size: 28px;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--black);
+    }
+
+    .header-left .title {
+      font-size: 13px;
+      color: var(--mid);
+      margin-top: 4px;
+      font-style: italic;
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 12.5px;
+      color: var(--mid);
+      line-height: 1.8;
+    }
+
+    .header-right a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* ── Section ── */
+    section {
+      margin-bottom: 22px;
+    }
+
+    .section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 4px;
+      margin-bottom: 12px;
+    }
+
+    /* ── Summary ── */
+    .summary p {
+      font-size: 13.5px;
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    /* ── Skills grid ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 6px 24px;
+    }
+
+    .skill-item {
+      font-size: 12.5px;
+      color: var(--dark);
+      padding-left: 12px;
+      position: relative;
+    }
+
+    .skill-item::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 11px;
+    }
+
+    /* ── Experience ── */
+    .job {
+      margin-bottom: 18px;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .job-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .job-dates {
+      font-size: 12px;
+      color: var(--light);
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    .job-company {
+      font-size: 13px;
+      color: var(--mid);
+      font-style: italic;
+      margin-bottom: 6px;
+    }
+
+    .job ul {
+      padding-left: 16px;
+      list-style: none;
+    }
+
+    .job ul li {
+      font-size: 13px;
+      color: var(--dark);
+      margin-bottom: 4px;
+      padding-left: 12px;
+      position: relative;
+    }
+
+    .job ul li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--light);
+    }
+
+    strong.metric {
+      color: var(--black);
+      font-weight: 700;
+    }
+
+    /* ── Education / Misc ── */
+    .edu-row, .misc-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .edu-row .school { font-weight: 700; }
+    .edu-row .degree { color: var(--mid); }
+    .edu-row .year   { color: var(--light); font-size: 12px; }
+
+    /* ── Print ── */
+    @media print {
+      body { padding: 0; }
+      .page { max-width: 100%; }
+    }
+
+    @media (max-width: 640px) {
+      .header { flex-direction: column; gap: 12px; }
+      .header-right { text-align: left; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .job-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <h1>[Your Name]</h1>
+      <div class="title">Research &amp; Technical Talent Sourcer · AI/ML Specialist</div>
+    </div>
+    <div class="header-right">
+      [City, State] &nbsp;|&nbsp; [phone]<br />
+      <a href="mailto:[email]">[email]</a><br />
+      <a href="https://linkedin.com/in/[handle]">linkedin.com/in/[handle]</a><br />
+      <a href="https://physicalaiprosnow.com">physicalaiprosnow.com</a>
+    </div>
+  </header>
+
+  <!-- ── SUMMARY ── -->
+  <section class="summary">
+    <div class="section-title">Profile</div>
+    <p>
+      Specialized talent sourcer with a decade of experience identifying and engaging world-class AI researchers,
+      ML scientists, and deep-technical engineers across academia and industry. Built and led sourcing functions for
+      highly technical, low-supply talent pools — mapping emerging research domains, cultivating long-horizon
+      relationships with passive researchers, and delivering exceptional candidate experiences at every stage.
+      Founder of <em>Physical AI Pros</em>, a recruiting firm purpose-built for the frontier AI and robotics
+      ecosystem; designed and shipped an AI-augmented ATS with Boolean search, academic-profile enrichment,
+      and research-mapping tooling. Passionate about the craft of deep sourcing: the research, the mapping,
+      the relationship — understanding it is a long game.
+    </p>
+  </section>
+
+  <!-- ── CORE COMPETENCIES ── -->
+  <section>
+    <div class="section-title">Core Competencies</div>
+    <div class="skills-grid">
+      <div class="skill-item">Research &amp; academic talent mapping</div>
+      <div class="skill-item">Boolean search &amp; X-ray sourcing</div>
+      <div class="skill-item">Passive candidate engagement</div>
+      <div class="skill-item">AI/ML domain expertise</div>
+      <div class="skill-item">Pipeline metrics &amp; funnel analytics</div>
+      <div class="skill-item">Stakeholder partnership</div>
+      <div class="skill-item">Conference &amp; community sourcing</div>
+      <div class="skill-item">Long-horizon relationship cultivation</div>
+      <div class="skill-item">Niche &amp; parallel search management</div>
+      <div class="skill-item">Outreach strategy &amp; personalization</div>
+      <div class="skill-item">arXiv / Google Scholar / Semantic Scholar</div>
+      <div class="skill-item">GitHub, ORCID, ResearchGate prospecting</div>
+    </div>
+  </section>
+
+  <!-- ── EXPERIENCE ── -->
+  <section>
+    <div class="section-title">Experience</div>
+
+    <!-- Job 1 -->
+    <div class="job">
+      <div class="job-header">
+        <span class="job-title">Founder &amp; Lead Technical Sourcer</span>
+        <span class="job-dates">2021 – Present</span>
+      </div>
+      <div class="job-company">Physical AI Pros · Remote</div>
+      <ul>
+        <li>Founded a specialized recruiting firm targeting the physical AI, robotics, and foundation-model ecosystem; built proprietary sourcing infrastructure including a Boolean-search generator, research-paper crawler, and academic-profile enrichment pipeline.</li>
+        <li>Sourced and placed <strong class="metric">1,000+ engineers and researchers</strong> at Tesla, Waymo, Boston Dynamics, Anduril, and frontier AI labs — mapping talent across RL, computer vision, motion planning, perception, and ML systems.</li>
+        <li>Designed top-of-funnel strategies for <strong class="metric">low-supply, high-demand research roles</strong>: PhD research scientists, post-docs transitioning to industry, and specialized ML engineers with 0–2 publications in target sub-fields.</li>
+        <li>Built and maintained long-horizon talent maps across NeurIPS, ICML, ICLR, CVPR, and CoRL; engaged researchers via personalized, domain-specific outreach that consistently achieved <strong class="metric">40%+ reply rates</strong> on passive candidates.</li>
+        <li>Partnered directly with hiring managers (VP Engineering, Head of Research, Chief Scientists) to define ideal candidate profiles, advise on market realities, and develop customized sourcing strategies for 8–12 concurrent niche searches.</li>
+        <li>Built and maintained a data-driven tracking system for pipeline health, conversion metrics, and time-to-offer; reduced average time-to-offer to <strong class="metric">14 days</strong> versus the 90-day industry standard.</li>
+        <li>Represented the firm at robotics and AI conferences (CES, ROSCon, ICRA, AWS re:Invent); built relationships with researchers, professors, and lab leads to surface talent 6–18 months before they enter the active market.</li>
+      </ul>
+    </div>
+
+    <!-- Job 2 -->
+    <div class="job">
+      <div class="job-header">
+        <span class="job-title">Senior Technical Sourcer, AI &amp; ML</span>
+        <span class="job-dates">2018 – 2021</span>
+      </div>
+      <div class="job-company">[Premier Tech Company / High-Growth AI Startup] · [City]</div>
+      <ul>
+        <li>Owned end-to-end sourcing for ML research and applied science roles — including Research Scientists, Staff ML Engineers, and Distinguished Engineers — across NLP, computer vision, reinforcement learning, and generative AI.</li>
+        <li>Mapped the global academic research community in target sub-fields; built structured talent intelligence on <strong class="metric">500+ researchers</strong> across 80 universities, tracking publications, citations, and lab affiliations.</li>
+        <li>Crafted multi-touch outreach sequences and personalized messaging informed by candidates' published work, resulting in <strong class="metric">3× higher response rates</strong> vs. generic recruiter outreach.</li>
+        <li>Managed 6–10 highly specialized, parallel searches simultaneously while maintaining rigorous documentation, stakeholder communication, and a high-quality candidate experience.</li>
+        <li>Partnered with research leadership to advise on compensation benchmarks, competitive positioning, and talent availability for emerging sub-fields (e.g., RLHF, diffusion models, embodied AI).</li>
+        <li>Attended NeurIPS, ICML, and ICLR annually; established direct relationships with leading PhD advisors and post-doctoral researchers that converted to hires 12–18 months later.</li>
+      </ul>
+    </div>
+
+    <!-- Job 3 -->
+    <div class="job">
+      <div class="job-header">
+        <span class="job-title">Technical Recruiter / Sourcer</span>
+        <span class="job-dates">2015 – 2018</span>
+      </div>
+      <div class="job-company">[Tech Company or Staffing Firm] · [City]</div>
+      <ul>
+        <li>Sourced software engineers, data scientists, and ML practitioners for [company/clients]; developed expertise in Boolean search, GitHub sourcing, and academic publication screening.</li>
+        <li>Consistently exceeded quarterly pipeline targets; promoted to senior sourcer after 18 months based on quality-of-hire metrics and stakeholder feedback.</li>
+        <li>Built internal sourcing playbooks for niche technical roles that were adopted team-wide.</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ── TOOLS & PLATFORMS ── -->
+  <section>
+    <div class="section-title">Tools &amp; Platforms</div>
+    <div class="skills-grid">
+      <div class="skill-item">LinkedIn Recruiter (Expert)</div>
+      <div class="skill-item">arXiv · Semantic Scholar · ORCID</div>
+      <div class="skill-item">GitHub · HuggingFace · Papers With Code</div>
+      <div class="skill-item">Greenhouse · Lever · Workday ATS</div>
+      <div class="skill-item">Google Scholar X-ray &amp; site search</div>
+      <div class="skill-item">Sourcing automation &amp; enrichment APIs</div>
+    </div>
+  </section>
+
+  <!-- ── EDUCATION ── -->
+  <section>
+    <div class="section-title">Education</div>
+    <div class="edu-row">
+      <span class="school">[University Name]</span>
+      <span class="degree">[Degree, Major]</span>
+      <span class="year">[Year]</span>
+    </div>
+  </section>
+
+  <!-- ── SELECTED DOMAIN KNOWLEDGE ── -->
+  <section>
+    <div class="section-title">AI Research Domain Fluency</div>
+    <div class="skills-grid">
+      <div class="skill-item">Large language models (LLMs)</div>
+      <div class="skill-item">Reinforcement learning from human feedback (RLHF)</div>
+      <div class="skill-item">Multimodal &amp; vision-language models</div>
+      <div class="skill-item">Diffusion models &amp; generative AI</div>
+      <div class="skill-item">Embodied AI &amp; physical robotics</div>
+      <div class="skill-item">AI safety &amp; alignment research</div>
+      <div class="skill-item">Neural scaling &amp; compute optimization</div>
+      <div class="skill-item">Interpretability &amp; evals</div>
+      <div class="skill-item">Agentic systems &amp; tool-use</div>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
