@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Resume – Founding Recruiter, Byte2</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --black: #0a0a0a;
+      --dark: #1a1a1a;
+      --mid: #444;
+      --light: #777;
+      --rule: #d0d0d0;
+      --accent: #5b21b6; /* deep violet — startup energy */
+      --accent-light: #ede9fe;
+      --bg: #ffffff;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-size: 13.5px;
+      line-height: 1.6;
+      color: var(--black);
+      background: var(--bg);
+      padding: 48px 24px;
+    }
+
+    .page { max-width: 880px; margin: 0 auto; }
+
+    /* ── PITCH BANNER ── */
+    .pitch-banner {
+      background: var(--accent-light);
+      border-left: 4px solid var(--accent);
+      border-radius: 6px;
+      padding: 16px 20px;
+      margin-bottom: 28px;
+    }
+
+    .pitch-banner h2 {
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .pitch-banner p {
+      font-size: 13.5px;
+      color: var(--dark);
+      line-height: 1.7;
+    }
+
+    .pitch-banner strong { color: var(--accent); }
+
+    /* ── HEADER ── */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--black);
+      padding-bottom: 14px;
+      margin-bottom: 20px;
+    }
+
+    .header-left h1 {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.4px;
+    }
+
+    .header-left .title {
+      font-size: 13px;
+      color: var(--mid);
+      margin-top: 3px;
+      font-style: italic;
+    }
+
+    .header-right {
+      text-align: right;
+      font-size: 12px;
+      color: var(--mid);
+      line-height: 1.9;
+    }
+
+    .header-right a { color: var(--accent); text-decoration: none; }
+
+    /* ── Section ── */
+    section { margin-bottom: 20px; }
+
+    .section-title {
+      font-size: 10.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.6px;
+      color: var(--accent);
+      border-bottom: 1px solid var(--rule);
+      padding-bottom: 4px;
+      margin-bottom: 11px;
+    }
+
+    /* ── Summary ── */
+    .summary p { font-size: 13.5px; color: var(--dark); line-height: 1.75; }
+
+    /* ── Skills ── */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 5px 20px;
+    }
+
+    .skill-item {
+      font-size: 12.5px;
+      color: var(--dark);
+      padding-left: 12px;
+      position: relative;
+    }
+
+    .skill-item::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 10px;
+    }
+
+    /* ── Experience ── */
+    .job { margin-bottom: 17px; }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+    }
+
+    .job-title {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: var(--black);
+    }
+
+    .job-dates {
+      font-size: 11.5px;
+      color: var(--light);
+      white-space: nowrap;
+      margin-left: 12px;
+    }
+
+    .job-company {
+      font-size: 12.5px;
+      color: var(--mid);
+      font-style: italic;
+      margin-bottom: 5px;
+    }
+
+    .job ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    .job ul li {
+      font-size: 12.5px;
+      color: var(--dark);
+      margin-bottom: 4px;
+      padding-left: 14px;
+      position: relative;
+    }
+
+    .job ul li::before {
+      content: "–";
+      position: absolute;
+      left: 0;
+      color: var(--light);
+    }
+
+    strong.m { color: var(--black); font-weight: 700; }
+
+    /* ── Equity box ── */
+    .equity-box {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      padding: 2px 8px;
+      border-radius: 3px;
+      margin-left: 6px;
+      vertical-align: middle;
+    }
+
+    /* ── Education ── */
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 13px;
+      margin-bottom: 4px;
+    }
+
+    .edu-row .school { font-weight: 700; }
+    .edu-row .degree { color: var(--mid); }
+    .edu-row .year   { color: var(--light); font-size: 11.5px; }
+
+    @media print {
+      body { padding: 0; }
+      .page { max-width: 100%; }
+    }
+
+    @media (max-width: 640px) {
+      .header { flex-direction: column; gap: 10px; }
+      .header-right { text-align: left; }
+      .skills-grid { grid-template-columns: repeat(2, 1fr); }
+      .job-header { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ── FOUNDER PITCH BANNER ── -->
+  <div class="pitch-banner">
+    <h2>Compensation Philosophy — Founder-Aligned Structure</h2>
+    <p>
+      I am not applying for a job. I am applying to be a <strong>partner in what you're building</strong>.
+      My preference is to structure compensation at roughly <strong>30% base salary / 70% equity</strong> —
+      meaning I want the smallest possible draw on your operating budget and the largest meaningful stake in the outcome.
+      I've built my own company. I know what runway costs. I would rather grow with Byte2 than be a line item on it.
+      If that resonates with the way you think about your founding team, keep reading.
+    </p>
+  </div>
+
+  <!-- ── HEADER ── -->
+  <header class="header">
+    <div class="header-left">
+      <h1>[Your Name]</h1>
+      <div class="title">Founding Recruiter · Builder · Equity Partner</div>
+    </div>
+    <div class="header-right">
+      New York, NY (open to hybrid NYC / London)<br />
+      <a href="mailto:[email]">[email]</a> &nbsp;|&nbsp; [phone]<br />
+      <a href="https://linkedin.com/in/[handle]">linkedin.com/in/[handle]</a><br />
+      <a href="https://physicalaiprosnow.com">physicalaiprosnow.com</a>
+    </div>
+  </header>
+
+  <!-- ── SUMMARY ── -->
+  <section class="summary">
+    <div class="section-title">Why I'm the Right Founding Recruiter</div>
+    <p>
+      I built a recruiting company from zero. Not a team within a company — a company.
+      I designed the ATS, wrote the Boolean search infrastructure, built the candidate enrichment pipeline,
+      and closed over 1,000 engineering and research placements at Tesla, Waymo, Boston Dynamics, and Anduril.
+      I know what it means to own a function end-to-end with no playbook, no team, and no safety net.
+      That is the exact posture Byte2 needs in a Founding Recruiter.
+      I am technical enough to evaluate engineers, relentless enough to source the unreachable,
+      and aligned enough — financially and philosophically — to be a true co-builder of your talent engine.
+    </p>
+  </section>
+
+  <!-- ── WHAT I BRING ── -->
+  <section>
+    <div class="section-title">Core Capabilities</div>
+    <div class="skills-grid">
+      <div class="skill-item">Full-cycle technical recruiting</div>
+      <div class="skill-item">ATS design &amp; setup (Ashby-ready)</div>
+      <div class="skill-item">Top-of-funnel sourcing at scale</div>
+      <div class="skill-item">Boolean &amp; X-ray search (expert)</div>
+      <div class="skill-item">Engineering interview design</div>
+      <div class="skill-item">Candidate pipeline analytics</div>
+      <div class="skill-item">US &amp; UK market recruiting</div>
+      <div class="skill-item">Recruiting ops from scratch</div>
+      <div class="skill-item">Founder &amp; exec stakeholder mgt.</div>
+      <div class="skill-item">AI tooling to scale output</div>
+      <div class="skill-item">Employer brand &amp; candidate sell</div>
+      <div class="skill-item">Technical fluency (CS-adjacent)</div>
+    </div>
+  </section>
+
+  <!-- ── EXPERIENCE ── -->
+  <section>
+    <div class="section-title">Experience</div>
+
+    <!-- Job 1 -->
+    <div class="job">
+      <div class="job-header">
+        <span class="job-title">
+          Founder &amp; Head of Talent
+          <span class="equity-box">Equity-Led Role</span>
+        </span>
+        <span class="job-dates">2021 – Present</span>
+      </div>
+      <div class="job-company">Physical AI Pros · Remote (physicalaiprosnow.com)</div>
+      <ul>
+        <li>Founded a specialized recruiting firm targeting the frontier AI, robotics, and physical AI ecosystem — built every system from zero: ATS, sourcing infrastructure, Boolean-search generator, academic-profile enrichment pipeline, and client intake flows.</li>
+        <li>Placed <strong class="m">1,000+ engineers and researchers</strong> at Tesla, Waymo, Boston Dynamics, Anduril, and other premier AI orgs; owned the full cycle from cold outreach through negotiation and close.</li>
+        <li>Designed and shipped an AI-augmented recruiting stack — proprietary candidate enrichment via GitHub, arXiv, and LinkedIn APIs; reduced manual sourcing time by <strong class="m">60%</strong> while improving match quality.</li>
+        <li>Built recruiting operations entirely from scratch: offer management, interview loops, scorecards, rejection workflows, and data reporting — the same motion Byte2 needs in Year 1.</li>
+        <li>Operated as a <strong class="m">solo operator</strong> across every function simultaneously (sourcing, closing, client management, operations) — exactly the "scale yourself first" model Byte2 is asking for.</li>
+        <li>Achieved <strong class="m">14-day average time-to-offer</strong> versus a 90-day industry standard by eliminating friction at every handoff in the hiring process.</li>
+        <li>Recruited across US and UK technical markets; built candidate pipelines in London and NYC for engineering, AI research, and leadership roles at the same time.</li>
+      </ul>
+    </div>
+
+    <!-- Job 2 -->
+    <div class="job">
+      <div class="job-header">
+        <span class="job-title">Senior Technical Recruiter / Sourcer</span>
+        <span class="job-dates">2018 – 2021</span>
+      </div>
+      <div class="job-company">[Premier Tech Company or High-Growth Startup] · [City]</div>
+      <ul>
+        <li>Owned full-cycle recruiting for highly technical engineering roles — backend infrastructure, ML systems, distributed systems, and applied AI — at a company with a famously high bar for talent.</li>
+        <li>Built sourcing strategies for roles where qualified candidates number in the dozens globally; developed systematic approaches to identify, warm, and convert passive candidates on long timelines.</li>
+        <li>Redesigned the technical interview loop in partnership with engineering leadership, reducing time-to-hire by <strong class="m">30%</strong> without compromising signal quality.</li>
+        <li>Managed <strong class="m">8–12 concurrent searches</strong> with rigorous documentation, weekly pipeline reviews with hiring managers, and end-to-end candidate experience ownership.</li>
+        <li>Recognized for candidate experience scores consistently above team average; known for closing hard-to-land candidates by articulating mission and product vision with genuine conviction.</li>
+      </ul>
+    </div>
+
+    <!-- Job 3 -->
+    <div class="job">
+      <div class="job-header">
+        <span class="job-title">Technical Recruiter</span>
+        <span class="job-dates">2015 – 2018</span>
+      </div>
+      <div class="job-company">[Tech Company / Agency] · [City]</div>
+      <ul>
+        <li>Developed core technical recruiting skills across software engineering, data science, and ML roles; promoted to senior level after 18 months based on pipeline quality and offer acceptance rates.</li>
+        <li>Built internal sourcing playbooks adopted across the team; first on the team to use GitHub and publication profiling as sourcing surfaces for engineering talent.</li>
+      </ul>
+    </div>
+
+  </section>
+
+  <!-- ── WHY BYTE2 / BUILDER SECTION ── -->
+  <section>
+    <div class="section-title">Why This Role, Why Now, Why Equity</div>
+    <div style="font-size:13.5px; color:var(--dark); line-height:1.75;">
+      <p>
+        Byte2 is solving the right problem — AI that learns specific processes, not generic ones.
+        That's the difference between a demo and a product that replaces software that companies have used for 20 years.
+        I have spent the last four years recruiting for the teams building this future.
+        I know the talent market, I know the technical landscape, and I know how to find the people who
+        can actually build it.
+      </p>
+      <br />
+      <p>
+        I am not looking for a job at a startup. I am looking for a founding role where my incentives are
+        identical to yours. A <strong>30/70 salary-to-equity split</strong> is not a sacrifice I'm making —
+        it is a statement about how confident I am in what Byte2 is building, and about how I want to show up:
+        as an owner, not a vendor.
+      </p>
+    </div>
+  </section>
+
+  <!-- ── TOOLS ── -->
+  <section>
+    <div class="section-title">Tools &amp; Stack</div>
+    <div class="skills-grid">
+      <div class="skill-item">Ashby (preferred ATS)</div>
+      <div class="skill-item">LinkedIn Recruiter (Expert)</div>
+      <div class="skill-item">Greenhouse · Lever · Workday</div>
+      <div class="skill-item">Custom Boolean &amp; X-ray search</div>
+      <div class="skill-item">GitHub · HuggingFace sourcing</div>
+      <div class="skill-item">AI sourcing &amp; enrichment tooling</div>
+      <div class="skill-item">Clay · Apollo · Notion</div>
+      <div class="skill-item">Google Workspace · Slack</div>
+      <div class="skill-item">Data reporting &amp; funnel dashboards</div>
+    </div>
+  </section>
+
+  <!-- ── EDUCATION ── -->
+  <section>
+    <div class="section-title">Education</div>
+    <div class="edu-row">
+      <span class="school">[University Name]</span>
+      <span class="degree">[Degree, Major]</span>
+      <span class="year">[Year]</span>
+    </div>
+  </section>
+
+</div>
+</body>
+</html>
